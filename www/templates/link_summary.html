@@ -193,15 +193,26 @@
 
 					{% exec explode "," self.tags as tags_array %}
 
-					{% for id, tag in tags_array %}{% if id > 0 %}, {% endif %}<a href='{{ globals.base_url }}search?p=tags&amp;q={{ tag|urlencode }}'>{{ tag }}</a>{% endfor %}
+					{% for id, tag in tags_array %}
+
+					{% if id > 0 %}, {% endif %}
+					<a href='{{ globals.base_url }}search?p=tags&amp;q={{ tag|urlencode }}'>{{ tag }}</a>
+
+					{% endfor %}
 
 					{# Show link to analyze the tags #}
+
 					{% if globals.fancybox_enabled AND globals.sphinx_server AND self.is_editable OR self.author == current_user.user_id %}
-						&nbsp;[<a class="fancybox" href="{{ globals.base_url_general }}backend/tags_analysis?id={{ self.id }}" title="{% trans _('diagnóstico de etiquetas') %}"><strong>{% trans _('diagnosticar') %}</strong></a>]
+					&nbsp;[<a class="fancybox" href="{{ globals.base_url_general }}backend/tags_analysis?id={{ self.id }}" title="{% trans _('diagnóstico de etiquetas') %}"><strong>{% trans _('diagnosticar') %}</strong></a>]
 					{% endif %}
 				</span>
 				{% endif %}
 
+				{% endif %}
+
+				{% if self.poll.id %}
+					{% set poll = self.poll %}
+					{% include 'poll_vote.html' %}
 				{% endif %}
 
 				{# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}

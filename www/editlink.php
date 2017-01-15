@@ -54,6 +54,11 @@ function do_edit($link) {
 
     $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
+    if (empty($link->url)) {
+        $link->poll = new Poll;
+        $link->poll->read('link_id', $link->id);
+    }
+
     Haanga::Load('link/edit.html', compact('link', 'site_properties'));
 }
 
@@ -111,9 +116,9 @@ function do_save($link) {
     // change the status
     if (
         $_POST['status'] != $link->status
-        && ($_POST['status'] == 'autodiscard' || $current_user->admin || SitesMgr::is_owner())
+        && ($_POST['status'] === 'autodiscard' || $current_user->admin || SitesMgr::is_owner())
         && preg_match('/^[a-z]{4,}$/', $_POST['status'])
-        && ( ! $link->is_discarded() || $current_user->admin || SitesMgr::is_owner())
+        && (!$link->is_discarded() || $current_user->admin || SitesMgr::is_owner())
     ) {
         if (preg_match('/discard|abuse|duplicated|autodiscard/', $_POST['status'])) {
             // Insert a log entry if the link has been manually discarded
@@ -123,56 +128,71 @@ function do_save($link) {
         $link->status = $_POST['status'];
     }
 
-    if (! $errors) {
-        if (empty($link->uri)) {
-            $link->get_uri();
-        }
+    if ($errors) {
+        return show_edit_result($link, $errors);
+    }
 
-        // Check the blog_id
-        $blog_id = Blog::find_blog($link->url, $link->id);
+    if (empty($link->uri)) {
+        $link->get_uri();
+    }
 
-        if ($blog_id > 0 && $blog_id != $link->blog) {
-            $link->blog = $blog_id;
-        }
+    // Check the blog_id
+    $blog_id = Blog::find_blog($link->url, $link->id);
 
-        $db->transaction();
-        $link->store();
+    if ($blog_id > 0 && $blog_id != $link->blog) {
+        $link->blog = $blog_id;
+    }
 
-        // Disabled table tags
-        // tags_insert_string($link->id, $dblang, $link->tags, $link->date);
+    $db->transaction();
 
-        // Insert edit log/event if the link it's newer than 15 days
-        if ($globals['now'] - $link->date < 86400*15) {
-            if ($insert_discard_log) {
-                // Insert always a link and discard event if the status has been changed to discard
-                Log::insert('link_discard', $link->id, $current_user->user_id);
+    $link->store();
 
-                if ($link->author == $current_user->user_id) { // Don't save edit log if it's discarded by an admin
-                    Log::insert('link_edit', $link->id, $current_user->user_id);
-                }
-            } elseif ($link->votes > 0) {
-                Log::conditional_insert('link_edit', $link->id, $current_user->user_id, 60, serialize($link_old));
-            }
-        }
+    if (empty($link->url)) {
+        $poll = new Poll;
 
-        // Check this one is a draft, allows the user to save and send it to the queue
-        if ($link->votes == 0 && $link->status != 'queued' && $link->author == $current_user->user_id) {
-            $link->enqueue();
-        }
+        $poll->read('link_id', $link->id);
+        $poll->link_id = $link->id;
 
-        $db->commit();
+        try {
+            $poll->storeFromArray($_POST);
+        } catch (Exception $e) {
+            $db->rollback();
 
-        // Check image upload
-        if ($link->store_image_from_form('image')) {
-            $link->thumb_status = 'local';
-            $link->store_thumb_status();
+            return show_edit_result($link, array($e->getMessage()));
         }
     }
 
-    $link->read();
-    $link->permalink = $link->get_permalink();
+    // Disabled table tags
+    // tags_insert_string($link->id, $dblang, $link->tags, $link->date);
 
-    Haanga::Load('link/edit_result.html', compact('link', 'errors'));
+    // Insert edit log/event if the link it's newer than 15 days
+    if ($globals['now'] - $link->date < 86400*15) {
+        if ($insert_discard_log) {
+            // Insert always a link and discard event if the status has been changed to discard
+            Log::insert('link_discard', $link->id, $current_user->user_id);
+
+            if ($link->author == $current_user->user_id) { // Don't save edit log if it's discarded by an admin
+                Log::insert('link_edit', $link->id, $current_user->user_id);
+            }
+        } elseif ($link->votes > 0) {
+            Log::conditional_insert('link_edit', $link->id, $current_user->user_id, 60, serialize($link_old));
+        }
+    }
+
+    // Check this one is a draft, allows the user to save and send it to the queue
+    if ($link->votes == 0 && $link->status !== 'queued' && $link->author == $current_user->user_id) {
+        $link->enqueue();
+    }
+
+    $db->commit();
+
+    // Check image upload
+    if ($link->store_image_from_form('image')) {
+        $link->thumb_status = 'local';
+        $link->store_thumb_status();
+    }
+
+    return show_edit_result($link);
 }
 
 function link_edit_errors($link) {
@@ -182,7 +202,6 @@ function link_edit_errors($link) {
 
     if ($link->sub_id > 0 && ! SitesMgr::is_owner() && ! SitesMgr::can_send($link->sub_id)) {
         $errors[] = _('no se puede enviar a ese sub');
-        $error = true;
     }
 
     // only checks if the user is not special or god
@@ -192,7 +211,6 @@ function link_edit_errors($link) {
 
     if ($_POST['key'] !== md5($_POST['timestamp'].$link->randkey)) {
         $errors[] = _('clave incorrecta');
-        $error = true;
     }
 
     if (time() - $_POST['timestamp'] > 900) {
@@ -200,4 +218,11 @@ function link_edit_errors($link) {
     }
 
     return array_merge($errors, $link->check_field_errors());
+}
+
+function show_edit_result($link, array $errors = array()) {
+    $link->read();
+    $link->permalink = $link->get_permalink();
+
+    Haanga::Load('link/edit_result.html', compact('link', 'errors'));
 }

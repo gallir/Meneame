@@ -141,7 +141,7 @@
 				{% endif %}
 			</div>
 
-			{% endif %} {# if site_properties.intro_max_len > 0 #}
+			{% endif %} {# END if site_properties.intro_max_len > 0 #}
 
 			{% exec print_subs_form link.sub_id as dummy %}
 
@@ -172,6 +172,17 @@
 			<label>{% trans _('actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
 
 			{% endif %}
+
+			{% if link.poll %}
+
+            <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
+                <i class="fa fa-bar-chart"></i>
+            </button>
+
+            {% set poll = link.poll %}
+            {% include 'poll_form.html' %}
+
+            {% endif %}
 
 			{% if link.is_new %}
 			<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />&nbsp;&nbsp;

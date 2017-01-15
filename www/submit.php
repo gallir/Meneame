@@ -533,6 +533,10 @@ function do_submit1() {
 
     $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
+    if (empty($link->url)) {
+        $link->poll = new Poll;
+    }
+
     Haanga::Load('link/submit1.html', compact('link', 'site_properties', 'errors'));
 
     return true;
@@ -569,10 +573,30 @@ function do_submit2() {
     $link->site_properties = $site_properties;
     $link->content = $_POST['bodytext']; // Warn, has to call $link->check_field_errors later
 
-    if (link_errors($link)) {
+    $poll = new Poll;
+
+    $poll->read('link_id', $link->id);
+    $poll->link_id = $link->id;
+
+    $error = false;
+
+    try {
+        $poll->storeFromArray($_POST);
+    } catch (Exception $e) {
+        $error = true;
+        add_submit_error($e->getMessage());
+    }
+
+    if ($error || link_errors($link)) {
+        $db->rollback();
+
         // Show the edit form again
         $link->is_new = true; // Disable several options in the editing form
         $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
+
+        if ($poll->id) {
+            $link->poll = $poll;
+        }
 
         Haanga::Load('link/submit1.html', compact('link', 'errors'));
 
@@ -624,8 +648,7 @@ function do_submit3() {
         $link->enqueue();
     }
 
-    header('Location: '. $link->get_permalink());
-    die;
+    die(header('Location: '. $link->get_permalink()));
 }
 
 function check_link_key() {

@@ -17,17 +17,7 @@ function initFormPostEdit($form) {
         $textCounter.val($textarea.attr('maxlength') - $textarea.val().length);
     });
 
-    $form.find('[data-show-poll="true"]').on('click', function(e) {
-        e.preventDefault();
-
-        var $element = $form.find('.poll-edit');
-
-        if ($element.is(':visible')) {
-            $element.slideUp();
-        } else {
-            $element.hide().removeClass('hidden').slideDown();
-        }
-    });
+    showPoll();
 
     $form.ajaxForm({
         async: false,
@@ -79,6 +69,20 @@ function initPollVote($form) {
             }
 
             $form.closest('.poll-vote').replaceWith(response);
+        }
+    });
+}
+
+function showPoll() {
+    $('[data-show-poll="true"]').off('click').on('click', function(e) {
+        e.preventDefault();
+
+        var $element = $(this).closest('form').find('.poll-edit');
+
+        if ($element.is(':visible')) {
+            $element.slideUp();
+        } else {
+            $element.hide().removeClass('hidden').slideDown();
         }
     });
 }
@@ -268,9 +272,14 @@ function initPollVote($form) {
         });
     };
 
+    INIT.showPoll = function() {
+        showPoll();
+    };
+
     INIT.formRegister();
     INIT.showSubDescription();
     INIT.formSubsSearch();
     INIT.formPostEdit();
+    INIT.showPoll();
     INIT.formPollVote();
 })(jQuery);

@@ -46,6 +46,8 @@ class Link extends LCPBase {
 	var $thumb_status = 'unknown';
 	var $clicks = 0;
 
+	var $poll;
+
 	// sql fields to build an object from mysql
 	const SQL = " link_id as id, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,  UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, user_adchannel, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, UNIX_TIMESTAMP(creation.date) as sub_date_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, subs.page_mode as page_mode, favorite_link_id as favorite, favorite_link_readed as favorite_readed, clicks.counter as clicks, votes.vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM links
 	INNER JOIN users on (user_id = link_author)
@@ -682,7 +684,9 @@ class Link extends LCPBase {
 	function print_summary($type='full', $karma_best_comment = 0, $show_tags = true, $template = 'link_summary.html') {
 		global $current_user, $current_user, $globals, $db;
 
-		if(!$this->read) return;
+		if (!$this->read) {
+			return;
+		}
 
 		$this->is_votable();
 
@@ -691,22 +695,30 @@ class Link extends LCPBase {
 		if (!empty($this->max_len) &&  $this->max_len > 0) {
 			$this->truncate($this->max_len);
 		}
+
 		$this->content = $this->to_html($this->content);
 		$this->show_tags = $show_tags;
 		$this->relative_permalink	 = $this->get_relative_permalink();
 		$this->permalink	 = $this->get_permalink(false, $this->relative_permalink); // To avoid double verification
-		$this->show_shakebox = $type != 'preview' && $this->votes > 0;
+		$this->show_shakebox = $type !== 'preview' && $this->votes > 0;
 		$this->has_warning	 = !(!$this->check_warn() || $this->is_discarded());
 		$this->is_editable	= $this->is_editable();
 		$this->url_str	= preg_replace('/^www\./', '', parse_url($this->url, 1));
 		$this->has_thumb();
 		$this->map_editable = $this->geo && $this->is_map_editable();
-		$this->can_vote_negative = !$this->voted && $this->votes_enabled &&
-				$this->negatives_allowed($globals['link_id'] > 0) &&
-				$type != 'short' &&
-				$type != 'preview' &&
-				!$this->is_sponsored();
 
+		if (
+			!$this->voted
+			&& $this->votes_enabled
+			&& $this->negatives_allowed($globals['link_id'] > 0)
+			&& $type !== 'short'
+			&& $type !== 'preview'
+			&& !$this->is_sponsored()
+		) {
+			$this->can_vote_negative = true;
+		} else {
+			$this->can_vote_negative = false;
+		}
 
 		if ($this->status === 'abuse' || $this->has_warning) {
 			$this->negative_text = FALSE;
@@ -731,8 +743,15 @@ class Link extends LCPBase {
 
 		$this->get_box_class();
 
-		if ($this->do_inline_friend_votes)
+		if ($this->do_inline_friend_votes) {
 			$this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
+		}
+
+		$this->poll = new Poll;
+
+		if ($this->id) {
+			$this->poll->read('link_id', $this->id);
+		}
 
 		$sponsored = $this->is_sponsored();
 		$vars = compact('type', 'sponsored');
