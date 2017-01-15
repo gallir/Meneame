@@ -558,39 +558,72 @@ function do_most_clicked_sites() {
 function do_best_comments() {
 	global $db, $globals, $dblang;
 
-	if ($globals['mobile'] || $globals['bot']) return;
+	if ($globals['mobile'] || $globals['bot']) {
+		return;
+	}
 
 	$foo = new Comment();
 	$output = ' '; // Use a space to be sure it's memcached.
 
 	$key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
-	if(memcache_mprint($key)) return;
+
+	if (memcache_mprint($key)) {
+		return;
+	}
+
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
 	$min_date = date("Y-m-d H:i:00", $globals['now'] - 50000); // about 12 hours
-	$link_min_date = date("Y-m-d H:i:00", $globals['now'] - 86400*2); // 48 hours
-	$now = intval($globals['now']/60) * 60;
+	$link_min_date = date("Y-m-d H:i:00", $globals['now'] - 86400 * 2); // 48 hours
+	$now = intval($globals['now'] / 60) * 60;
+
 	// The order is not exactly the comment_karma
 	// but a time-decreasing function applied to the number of votes
-	$res = $db->get_results("select comment_id, comment_order, user_id, user_login, user_avatar, link_id, link_uri, link_title, link_comments, comment_karma*(1-($now-unix_timestamp(comment_date))*0.7/43000) as value, link_negatives/link_votes as rel from comments, links, users, sub_statuses where id = ".SitesMgr::my_id()." AND status in ('published', 'queued') AND link_id = link AND date > '$link_min_date' and comment_date > '$min_date' and LENGTH(comment_content) > 32 and link_negatives/link_votes < 0.5  and comment_karma > 50 and comment_link_id = link and comment_user_id = user_id and user_level != 'disabled' order by value desc limit 10");
-	if ($res && count($res) > 4) {
-		$objects = array();
-		$title = _('mejores comentarios');
-		$url = $globals['base_url'].'top_comments';
-		foreach ($res as $comment) {
-			$obj = new stdClass();
-			$obj->id = $foo->id = $comment->comment_id;
-			$obj->link = $foo->get_relative_individual_permalink();
-			$obj->user_id = $comment->user_id;
-			$obj->avatar = $comment->user_avatar;
-			$obj->title = $comment->link_title;
-			$obj->username = $comment->user_login;
-			$obj->tooltip = 'c';
-			$objects[] = $obj;
-		}
+	$res = $db->get_results(DbHelper::queryPlain('
+		SELECT `comment_id`, `comment_order`, `user_id`, `user_login`, `user_avatar`,
+			`link_id`, `link_uri`, `link_title`, `link_comments`, `link_negatives` / `link_votes` AS `rel`,
+			`comment_karma` * ( 1 - ('.$now.' - UNIX_TIMESTAMP(`comment_date`)) * 0.7 / 43000) AS `value`
+		FROM (`comments`, `links`, `users`, `sub_statuses`)
+		WHERE (
+			`id` = "'.SitesMgr::my_id().'"
+			AND `status` in ("published", "queued")
+			AND `link_id` = link
+			AND `date` > "'.$link_min_date.'"
+			AND `comment_date` > "'.$min_date.'"
+			AND LENGTH(`comment_content`) > 32
+			AND `link_negatives` / `link_votes` < 0.5
+			AND `comment_karma` > 50
+			AND `comment_link_id` = `link`
+			AND `comment_user_id` = `user_id`
+			AND `user_level` != "disabled"
+		)
+		ORDER BY `value` DESC
+		LIMIT 10;
+	'));
 
-		echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
+	if (!$res || (count($res) <= 4)) {
+		memcache_madd($key, $output, 300);
+		return;
 	}
+
+	$objects = array();
+	$title = _('mejores comentarios');
+	$url = $globals['base_url'].'top_comments';
+
+	foreach ($res as $comment) {
+		$obj = new stdClass();
+		$obj->id = $foo->id = $comment->comment_id;
+		$obj->link = $foo->get_relative_individual_permalink();
+		$obj->user_id = $comment->user_id;
+		$obj->avatar = $comment->user_avatar;
+		$obj->title = $comment->link_title;
+		$obj->username = $comment->user_login;
+		$obj->tooltip = 'c';
+
+		$objects[] = $obj;
+	}
+
+	echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
 
 	memcache_madd($key, $output, 300);
 }
@@ -811,40 +844,65 @@ function do_most_clicked_stories() {
 	memcache_madd($key, $output, 180);
 }
 
-function do_best_posts() {
+function do_best_posts($with_poll = false) {
 	global $db, $globals, $dblang;
 
-	if ($globals['mobile']) return;
+	if ($globals['mobile']) {
+		return;
+	}
 
 	$output = ' '; // Use a space to be sure it's memcached
-
 	$key = 'best_posts_'.$globals['site_shortname'].$globals['v'];
-	if(memcache_mprint($key)) return;
+
+	if (memcache_mprint($key)) {
+		return;
+	}
+
 	echo '<!-- Calculating '.__FUNCTION__.' -->';
 
-	$min_date = date("Y-m-d H:i:00", $globals['now'] - 86400); // about 24 hours
-	$res = $db->get_results("select post_id from posts, users where post_date > '$min_date' and  post_user_id = user_id and post_karma > 0 order by post_karma desc limit 10");
-	if ($res && count($res) > 4) {
-		$objects = array();
-		$title = _('mejores notas');
-		$url = post_get_base_url('_best');
-		foreach ($res as $p) {
-			$obj = new stdClass();
-			$post = new Post;
-			$post->id = $p->post_id;
-			$post->read();
-			$obj->id = $post->id;
-			$obj->link = post_get_base_url().$post->id;
-			$obj->user_id = $post->author;
-			$obj->avatar = $post->avatar;
-			$obj->title = text_to_summary($post->clean_content(), 80);
-			$obj->username = $post->username;
-			$obj->tooltip = 'p';
-			$objects[] = $obj;
-		}
+	// 24 hours to regular posts, 96 hours to posts with polls
+	$min_date = date('Y-m-d H:i:00', $globals['now'] - 86400 * ($with_poll ? 4 : 1));
 
-		echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
+	$res = $db->get_results(DbHelper::queryPlain('
+		SELECT `posts`.`post_id`
+		FROM (`posts`, `users`)
+		'.($with_poll ? ('JOIN `polls` ON (`polls`.`post_id` = `posts`.`post_id`)') : '').'
+		WHERE (
+			`post_date` > "'.$min_date.'"
+			AND `post_user_id` = `user_id`
+			AND `post_karma` > 0
+		)
+		ORDER BY `post_karma` DESC
+		LIMIT 10;
+	'));
+
+	if (!$res || (count($res) <= 4)) {
+		memcache_madd($key, $output, 300);
+		return;
 	}
+
+	$objects = array();
+	$title = _('mejores notas');
+	$url = post_get_base_url('_best');
+
+	foreach ($res as $p) {
+		$post = new Post;
+		$post->id = $p->post_id;
+		$post->read();
+
+		$obj = new stdClass();
+		$obj->id = $post->id;
+		$obj->link = post_get_base_url().$post->id;
+		$obj->user_id = $post->author;
+		$obj->avatar = $post->avatar;
+		$obj->title = text_to_summary($post->clean_content(), 80);
+		$obj->username = $post->username;
+		$obj->tooltip = 'p';
+
+		$objects[] = $obj;
+	}
+
+	echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
 
 	memcache_madd($key, $output, 300);
 }

@@ -75,21 +75,26 @@ switch ($argv[0]) {
 
     default:
         $tab_option = 4;
-        if ( (is_numeric($argv[0]) && ($post_id = intval($argv[0])) > 0)
-                || (is_numeric($argv[1]) && ($post_id = intval($argv[1])) > 0)  ) {
+
+        if (
+            (is_numeric($argv[0]) && ($post_id = intval($argv[0])) > 0)
+            || (is_numeric($argv[1]) && ($post_id = intval($argv[1])) > 0)
+        ) {
             // Individual post
             $user->id = $db->get_var("select post_user_id from posts where post_id=$post_id");
+
             if(!$user->read()) {
                 do_error(_('usuario no encontrado'), 404);
             }
+
             $post = Post::from_db($post_id);
             $globals['permalink'] = 'http://'.get_server_name().post_get_base_url($post_id);
-            // Fill title
             $summary = text_to_summary($db->get_var("SELECT post_content from posts where post_id = $post_id"), 250);
 
             $globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': ' . $summary;
             $globals['search_options']['u'] = $user->username;
             $page_title = text_to_summary($summary, 120);
+
             if ($user->avatar) {
                 $globals['thumbnail'] = get_avatar_url($user->id, $user->avatar, 80);
             }
@@ -100,6 +105,7 @@ switch ($argv[0]) {
             $limit = "";
             $rows = 1;
             $answers = $db->get_var("SELECT count(conversation_from) FROM conversations WHERE conversation_type='post' and conversation_to = $post_id");
+
             if ($answers < 5) {
                 $short_content = true;
             }
@@ -190,8 +196,7 @@ if ($tab_option == 4) {
         _('favoritos') => post_get_base_url("$user->username/_favorites"),
         _('conversación').$conversation_extra => post_get_base_url("$user->username/_conversation"),
         _('votos') => post_get_base_url("$user->username/_votes"),
-        sprintf(_('debates con %s'), $user->username) =>
-                $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login&amp;u2=$user->username",
+        sprintf(_('debates con %s'), $user->username) => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login&amp;u2=$user->username",
         sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
 
     );
@@ -220,7 +225,7 @@ echo '<div id="sidebar">';
 do_banner_right();
 
 if (!$short_content) {
-    do_best_posts();
+    do_best_posts($tab_option === 6);
     do_best_comments();
     do_banner_promotions();
 
@@ -229,6 +234,7 @@ if (!$short_content) {
         do_last_blogs();
     }
 }
+
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
