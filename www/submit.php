@@ -619,6 +619,7 @@ function do_submit2() {
 
     $link->read();
     $link->randkey = $_POST['randkey'];
+    $link->poll = true;
 
     $related = $link->get_related(6);
 
