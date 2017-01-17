@@ -1,15 +1,15 @@
-<div id="singlewrap">
-    <script type="text/javascript">
-    var img_src1 = '{{ globals.base_static }}img/common/indicator_orange.gif';
-    var img1 = new Image();
-    img1.src = img_src1;
-    </script>
+<script type="text/javascript">
+var img_src1 = '{{ globals.base_static }}img/common/indicator_orange.gif';
+var img1 = new Image();
+img1.src = img_src1;
+</script>
 
+<div id="singlewrap">
     {% if errors %}
 
     {% include 'link/errors.html' %}
 
-    <form class="genericform" action="">
+    <form class="genericform">
         <input class="button" type="button" onclick="window.location = '{% get_url 'editlink?id=' link.id '&amp;user=' link.author %}';" value="&#171; {% trans _('retroceder') %}" />
     </form>
 
