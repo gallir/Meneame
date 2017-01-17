@@ -15,7 +15,7 @@
 
     <form class="note" method="GET" action="{{ link.permalink }}" >
         <input type="hidden" name="id" value="{{ link.id }}" />
-        <input class="button" type="button" onclick="window.location = '{{ globals.base_url }}editlink?id={{ link.id }}&amp;user={{ link.author }}';" value="&#171; {% trans _('modificar') %}">&nbsp;&nbsp;
+        <input class="button" type="button" onclick="window.location = '{% get_url 'editlink?id=' link.id '&amp;user=' link.author %}';" value="&#171; {% trans _('modificar') %}">&nbsp;&nbsp;
         <input class="button" type="submit" value="{% trans _('ir a la noticia') %}" />
     </form>
 </div>

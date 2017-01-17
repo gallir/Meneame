@@ -10,7 +10,7 @@
     {% include 'link/errors.html' %}
 
     <form class="genericform" action="">
-        <input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />
+        <input class="button" type="button" onclick="window.location = '{% get_url 'editlink?id=' link.id '&amp;user=' link.author %}';" value="&#171; {% trans _('retroceder') %}" />
     </form>
 
     {% else %} {% if link %}
@@ -39,7 +39,7 @@
 
                 <br style="clear: both;" /><br style="clear: both;" />
 
-                <input class="button" type="button" onclick="window.location = '{{ globals.base_url }}/editlink?id={{ link.id }}&amp;user={{ link.author }}';" value="&#171; {% trans _('retroceder') %}"/>
+                <input class="button" type="button" onclick="window.location = '{% get_url 'editlink?id=' link.id '&amp;user=' link.author %}';" value="&#171; {% trans _('retroceder') %}"/>
                 &nbsp;&nbsp;
                 <input class="button" type="submit" value="{% trans _('enviar a la cola y finalizar') %} &#187;"/>
                 &nbsp;&nbsp;&nbsp;

@@ -10,6 +10,6 @@
     <br style="clear: both;" /><br/>
 
     <form class="genericform" action="">
-        <input class="button" type="button" onclick="window.location = '{{ globals.base_url }}/editlink?id={{ link.id }}&amp;user={{ link.author }}';" value="&#171; {% trans _('retroceder') %}" />
+        <input class="button" type="button" onclick="window.location = '{% get_url 'editlink?id=' link.id '&amp;user=' link.author %}';" value="&#171; {% trans _('retroceder') %}" />
     </form>
 </div>
