@@ -41,7 +41,7 @@ if (!empty($_POST['phase'])) {
             $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 
             echo '<div id="singlewrap">';
-                Haanga::Load('link/submit_empty_form.html', compact('link', 'errors'));
+                Haanga::Load('link/submit_empty_form.html', compact('globals', 'link', 'errors'));
             echo '</div>';
 
             break;
@@ -59,7 +59,7 @@ if (!empty($_POST['phase'])) {
             $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 
             echo '<div id="singlewrap">';
-                Haanga::Load('link/submit_empty_form.html', compact('link', 'errors'));
+                Haanga::Load('link/submit_empty_form.html', compact('globals', 'link', 'errors'));
             echo '</div>';
 
             break;
@@ -122,7 +122,7 @@ function do_submit0() {
         $show_help = false;
     }
 
-    Haanga::Load('link/submit0.html', compact('link', 'show_help'));
+    Haanga::Load('link/submit0.html', compact('globals', 'link', 'show_help'));
 
     return true;
 }
@@ -535,9 +535,13 @@ function do_submit1() {
 
     if (empty($link->url)) {
         $link->poll = new Poll;
+
+        if ($link->id) {
+            $link->poll->read('link_id', $link->id);
+        }
     }
 
-    Haanga::Load('link/submit1.html', compact('link', 'site_properties', 'errors'));
+    Haanga::Load('link/submit1.html', compact('globals', 'link', 'site_properties', 'errors'));
 
     return true;
 }
@@ -573,18 +577,19 @@ function do_submit2() {
     $link->site_properties = $site_properties;
     $link->content = $_POST['bodytext']; // Warn, has to call $link->check_field_errors later
 
+    $error = false;
     $poll = new Poll;
 
-    $poll->read('link_id', $link->id);
-    $poll->link_id = $link->id;
+    if (empty($link->url)) {
+        $poll->read('link_id', $link->id);
+        $poll->link_id = $link->id;
 
-    $error = false;
-
-    try {
-        $poll->storeFromArray($_POST);
-    } catch (Exception $e) {
-        $error = true;
-        add_submit_error($e->getMessage());
+        try {
+            $poll->storeFromArray($_POST);
+        } catch (Exception $e) {
+            $error = true;
+            add_submit_error($e->getMessage());
+        }
     }
 
     if ($error || link_errors($link)) {
@@ -594,11 +599,11 @@ function do_submit2() {
         $link->is_new = true; // Disable several options in the editing form
         $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-        if ($poll->id) {
+        if (empty($link->url)) {
             $link->poll = $poll;
         }
 
-        Haanga::Load('link/submit1.html', compact('link', 'errors'));
+        Haanga::Load('link/submit1.html', compact('globals', 'link', 'site_properties', 'errors'));
 
         return true;
     }
@@ -617,7 +622,7 @@ function do_submit2() {
 
     $related = $link->get_related(6);
 
-    Haanga::Load('link/submit2.html', compact('link', 'errors', 'related'));
+    Haanga::Load('link/submit2.html', compact('globals', 'link', 'site_properties', 'errors', 'related'));
 
     return true;
 }
@@ -704,7 +709,7 @@ function report_duplicated($url) {
     $link->id = $found;
     $link->read();
 
-    Haanga::Load('link/duplicated.html', compact('link'));
+    Haanga::Load('link/duplicated.html', compact('globals', 'link'));
 
     return true;
 }

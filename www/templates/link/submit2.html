@@ -1,55 +1,57 @@
 <div id="singlewrap">
+    <script type="text/javascript">
+    var img_src1 = '{{ globals.base_static }}img/common/indicator_orange.gif';
+    var img1 = new Image();
+    img1.src = img_src1;
+    </script>
 
-<script type="text/javascript">
-var img_src1='{{ globals.base_static }}img/common/indicator_orange.gif';
-var img1= new Image();
-img1.src = img_src1;
-</script>
+    {% if errors %}
 
-{% if errors %}
+    {% include 'link/errors.html' %}
 
-	{% include 'link/errors.html' %}
+    <form class="genericform" action="">
+        <input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />
+    </form>
 
-	<form class="genericform" action="">
-	<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />
-	</form>
+    {% else %} {% if link %}
 
-{% else %}{% if link %}
+    <h2>{% trans _('paso 3 de 3') %}</h2>
 
-	<h2>{% trans _('paso 3 de 3') %}</h2>
+    <div class="genericform">
+        <form action="submit" method="post" class="genericform" onSubmit="$('#working').html('{% trans _('enviando trackbacks') %}...&nbsp;<img src=\''+ img_src1 +'\'/>'); return true;">
+            <fieldset>
+                <legend><span class="sign">{% trans _('detalles de la historia') %}</span></legend>
 
-	<div class="genericform">
+                <div class="genericformtxt">
+                    <label>{% trans _('ATENCIÓN: esto es sólo una muestra. Puedes retroceder o enviar a la cola y finalizar') %}</label>&nbsp;&nbsp;
+                </div>
 
-	<form action="submit" method="post" class="genericform" onSubmit="$('#working') %}html('{% trans _('enviando trackbacks') %}...&nbsp;<img src=\''+ img_src1 +'\'/>'); return true;">
-	<fieldset><legend><span class="sign">{% trans _('detalles de la historia') %}</span></legend>
+                <div class="formnotice">
+                    {% exec link.print_summary 'preview' as dummy %}
+                </div>
 
-	<div class="genericformtxt"><label>{% trans _('ATENCIÓN: esto es sólo una muestra. Puedes retroceder o enviar a la cola y finalizar') %}</label>&nbsp;&nbsp;</div>
+                <input type="hidden" name="phase" value="3" />
+                <input type="hidden" name="key" value="{{ link.key }}" />
+                <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+                <input type="hidden" name="timestamp" value="{{ globals.now }}" />
+                <input type="hidden" name="id" value="{{ link.id }}" />
+                <input type="hidden" name="trackback" value="{{ _POST['trackback'] | escape }}" />
 
-	<div class="formnotice">
-	{% exec link.print_summary 'preview' as dummy %}
-	</div>
+                <br style="clear: both;" /><br style="clear: both;" />
 
-	<input type="hidden" name="phase" value="3" />
-	<input type="hidden" name="key" value="{{ link.key }}" />
-	<input type="hidden" name="randkey" value="{{ link.randkey }}" />
-	<input type="hidden" name="timestamp" value="{{ globals.now }}" />
-	<input type="hidden" name="id" value="{{ link.id }}" />
-	<input type="hidden" name="trackback" value="{{ _POST['trackback'] | escape }}" />
+                <input class="button" type="button" onclick="window.location = '{{ globals.base_url }}/editlink?id={{ link.id }}&amp;user={{ link.author }}';" value="&#171; {% trans _('retroceder') %}"/>
+                &nbsp;&nbsp;
+                <input class="button" type="submit" value="{% trans _('enviar a la cola y finalizar') %} &#187;"/>
+                &nbsp;&nbsp;&nbsp;
+                <span id="working">&nbsp;</span>
+            </fieldset>
+        </form>
 
+        {% if related %}
+            {% include "story/related.html" %}
+        {% endif %}
+    </div>
 
-	<br style="clear: both;" /><br style="clear: both;" />
-	<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}"/>&nbsp;&nbsp;
-	<input class="button" type="submit" value="{% trans _('enviar a la cola y finalizar') %} &#187;"/>&nbsp;&nbsp;&nbsp;<span id="working">&nbsp;</span>
-	</fieldset>
-	</form>
-
-	{% if related %}
-		{% include "story/related.html" %}
-	{% endif %}
-
-	</div>
-
-{% endif %} {% endif %}
-
+    {% endif %} {% endif %}
 </div>
 

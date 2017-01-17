@@ -43,7 +43,6 @@
             </p>
             {% endif %}
 
-
             <label for="title" accesskey="2">{% trans _('título de la noticia') %}:</label>
 
             <p>
@@ -97,14 +96,14 @@
 
                 <br/>
 
-                <input type="text" id="title" name="title" value="{{ link.title }}" style="width:100%" maxlength="120" />
+                <input type="text" id="title" name="title" value="{{ link.title }}" maxlength="120" class="form-control" required />
             </p>
 
             <label for="tags" accesskey="3">{% trans _('etiquetas') %}:</label>
 
             <p>
                 <span class="note"><strong>{% trans _('pocas palabras, separadas por «,»') %}</strong></span>
-                <br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" style="width:100%" maxlength="70" />
+                <br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" class="form-control" maxlength="70" required />
             </p>
 
             {% if site_properties.intro_max_len > 0 %}
@@ -121,9 +120,10 @@
 
                 <br/>
 
-                <textarea name="bodytext" rows="10" style="width:100%" id="bodytext" maxlength="{{ site_properties.intro_max_len }}"
+                <textarea name="bodytext" rows="10" id="bodytext" maxlength="{{ site_properties.intro_max_len }}"
                     onKeyDown="textCounter(document.thisform.bodytext, document.thisform.bodycounter, {{ site_properties.intro_max_len }})"
                     onKeyUp="textCounter(document.thisform.bodytext, document.thisform.bodycounter, {{ site_properties.intro_max_len }})"
+                    required
                 >{{ link.content }}</textarea>
             </p>
 
@@ -175,9 +175,11 @@
 
             {% if link.poll %}
 
-            <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
-                <i class="fa fa-bar-chart"></i>
-            </button>
+            <div class="pull-right">
+                <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
+                    <i class="fa fa-bar-chart"></i>
+                </button>
+            </div>
 
             {% set poll = link.poll %}
             {% include 'poll_form.html' %}

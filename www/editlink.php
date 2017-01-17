@@ -59,7 +59,7 @@ function do_edit($link) {
         $link->poll->read('link_id', $link->id);
     }
 
-    Haanga::Load('link/edit.html', compact('link', 'site_properties'));
+    Haanga::Load('link/edit.html', compact('globals', 'link', 'site_properties'));
 }
 
 function do_save($link) {
@@ -221,8 +221,10 @@ function link_edit_errors($link) {
 }
 
 function show_edit_result($link, array $errors = array()) {
+    global $globals;
+
     $link->read();
     $link->permalink = $link->get_permalink();
 
-    Haanga::Load('link/edit_result.html', compact('link', 'errors'));
+    Haanga::Load('link/edit_result.html', compact('globals', 'link', 'errors'));
 }

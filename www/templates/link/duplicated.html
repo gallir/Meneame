@@ -1,11 +1,15 @@
 <div id="singlewrap">
-<p class="error"><strong>{% trans _('noticia repetida') %}</strong></p>
-<p class="error-text">{% trans _('disculpas') %}</p>
+    <div class="error">
+        <i class="fa fa-exclamation-triangle"></i>
+        <strong>{% trans _('noticia repetida') %}</strong>
+        <span class="error-text">{% trans _('disculpas') %}</span>
+    </div>
 
-{% exec link.print_summary as dummy %}
-<br style="clear: both;" /><br/>
+    {% exec link.print_summary as dummy %}
 
-<form class="genericform" action="">
-<input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />
-</form>
+    <br style="clear: both;" /><br/>
+
+    <form class="genericform" action="">
+        <input class="button" type="button" onclick="window.location = '{{ globals.base_url }}/editlink?id={{ link.id }}&amp;user={{ link.author }}';" value="&#171; {% trans _('retroceder') %}" />
+    </form>
 </div>

@@ -190,6 +190,11 @@
 
         {% endif %}
 
+        {% if self.poll.id %}
+            {% set poll = self.poll %}
+            {% include 'poll_vote.html' %}
+        {% endif %}
+
         {# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
 
         <div class="news-details-wrapper">

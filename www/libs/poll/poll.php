@@ -64,10 +64,6 @@ class Poll
     {
         global $current_user;
 
-        $previous = $this->options;
-
-        $this->resetOptions();
-
         foreach ($options as $data) {
             $id = (int)$data['id'];
 
@@ -76,7 +72,7 @@ class Poll
             }
 
             if ($id) {
-                if (empty($previous[$id])) {
+                if (empty($this->options[$id])) {
                     syslog(LOG_WARNING, trim(preg_replace('/\s+/', ' ', '
                         HACKING: User '.$current_user->user_login.' ('.$current_user->user_id.')
                         is triying to modify an option ('.$id.') that not correspond to
@@ -86,7 +82,7 @@ class Poll
                     throw new Exception(_('Las opciones de la encuesta no son válidas'));
                 }
 
-                $option = $previous[$id];
+                $option = $this->options[$id];
             } else {
                 $option = new PollOption;
                 $option->id = -$this->index;
@@ -245,9 +241,7 @@ class Poll
     {
         global $globals;
 
-        $count = count(array_filter($this->options, function($value) {
-            return $value->option;
-        }));
+        $count = count($this->options);
 
         if (($count < 2) || ($count > $this->options_limit)) {
             throw new Exception(sprintf(_('Se debe indicar un mínimo de %s opciones y un máximo de %s'), 2, $this->options_limit));
@@ -255,7 +249,7 @@ class Poll
 
         $duplicated = array();
 
-        foreach ($this->options as $option) {
+        foreach ($this->getOptions() as $option) {
             if (mb_strlen($option->option) > $globals['polls_option_len_limit']) {
                 throw new Exception(sprintf(_('El límite de longitud por opción es de %s caracteres'), $globals['polls_option_len_limit']));
             }
@@ -411,6 +405,20 @@ class Poll
 
     private function storeOptions()
     {
+        global $db;
+
+        $ids = array_unique(array_map(function($value) {
+            return (int)$value->id;
+        }, $this->options));
+
+        $db->query(DbHelper::queryPlain('
+            DELETE FROM `polls_options`
+            WHERE (
+                `poll_id` = "'.$this->id.'"
+                AND `id` NOT IN ('.implode(',', $ids).')
+            );
+        '));
+
         foreach ($this->options as $option) {
             $option->poll_id = $this->id;
             $option->store();
@@ -470,6 +478,18 @@ class Poll
         if ($response) {
             $this->id = null;
         }
+
+        return $response ? true : false;
+    }
+
+    public function deleteOptions()
+    {
+        global $db;
+
+        $response = $db->query(DbHelper::queryPlain('
+            DELETE FROM `polls_options`
+            WHERE `poll_id` = "'.(int)$this->id.'";
+        '));
 
         return $response ? true : false;
     }
