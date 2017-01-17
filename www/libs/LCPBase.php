@@ -109,6 +109,14 @@ class LCPBase {
 		return preg_replace_callback($regexp, $callback, $string);
 	}
 
+	function to_html_paragraphs($string, $fancy = true)
+	{
+		$string = str_replace('<br />', "\n", $this->to_html($string, $fancy));
+		$string = str_replace("\n", '<br />', preg_replace("/\n{2,}/", '</p><p>', $string));
+
+		return '<p>'.$string.'</p>';
+	}
+
 	function truncate($length) {
 		$this->is_truncated  = FALSE;
 		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {

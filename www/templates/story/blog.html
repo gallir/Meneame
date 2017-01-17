@@ -1,0 +1,144 @@
+<div class="story-blog">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1">
+            <div class="main-content">
+                {% if self.status == 'abuse' OR self.has_warning %}
+
+                {% if self.status == 'abuse' %}
+
+                <div class="warn"><strong>{% trans _('Aviso') %}</strong>
+                    {% trans _('noticia descartada por violar las') %}
+                    <a href="{{ globals.legal }}#tos">{% trans _('normas de uso') %}</a>
+                </div>
+
+                {% else %} {% if self.has_warning %}
+
+                <div class="warn{% if self.comments > 10 AND globals.now - self.date < 864000 %} tooltip w:{{ self.id }}{% endif %}">
+                    {% if self.status == 'published' %}
+                        {% trans _('Envío erróneo o controvertido, por favor lee los comentarios.') %}
+                    {% else %} {% if self.author == current_user.user_id AND self.is_editable %}
+                        {% trans _('Este envío tiene varios votos negativos.') %} {% trans _('Tu karma no será afectado si la descartas manualmente.') %}
+                    {% else %} {% if self.negative_text %}
+                        {% trans  _('Este envío podría ser') %} <strong>{{ self.negative_text }}</strong>
+                    {% else %}
+                        {% trans _('Este envío tiene varios votos negativos.') %}
+                    {% endif %}
+
+                    <a href="{{ self.relative_permalink }}">{% trans _('Asegúrate') %}</a> {% trans _('antes de menear') %}
+
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                {% endif %} {# END if self.has_warning #}
+
+                {% endif %} {# END if self.status == 'abuse' #}
+
+                {% endif %} {# END if self.status == 'abuse' OR self.has_warning #}
+
+                <h1>{{ self.title }}</h1>
+
+                <div class="text">
+                    {% exec self.to_html_paragraphs self.content %}
+                </div>
+            </div>
+        </div>
+
+        <aside class="col-md-2 col-md-offset-1">
+            {% if self.show_shakebox %}
+            <div class="news-shakeit {{ self.box_class }}">
+                <div class="votes">
+                    <a id="a-votes-{{ self.id}}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
+                    {% trans _('meneos') %}
+                </div>
+
+                {% if not globals.bot %}
+                <div class="menealo" id="a-va-{{ self.id }}">
+                    {% if not self.votes_enabled %}
+
+                    <span class="closed">{% trans _('cerrado') %}</span>
+
+                    {% else %} {% if not self.voted %}
+
+                    <a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+
+                    {% else %} {% if self.voted > 0 %}
+
+                    <span id="a-shake-{{ self.id }}">{% trans _('¡hecho!') %}</span>
+
+                    {% else %}
+
+                    <span id="a-shake-{{ self.id }}" class="negative">{{ globals.negative_votes_values[self.voted] }}</span>
+
+                    {% endif %} {% endif %} {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="clics">
+                    {% if self.id >= globals.click_counter AND self.clicks > 0 %}
+
+                    {{ self.clicks }} {% trans _('clics') %}
+
+                    {% else %}
+                    &nbsp;
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if ! globals.bot %}
+
+            <div class="details">
+                <a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}">
+                    <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 80, false %}" data-2x="s:-40.:-80." class="avatar lazy img-responsive center-block" />
+                </a>
+
+                <a href="{% exec get_user_uri self.username, 'history' %}" class="author">{{ self.username }}</a>
+
+                <p class="format-tag">
+                    {% trans _('enviado') %}<br />
+                    <span data-ts="{{ self.sent_date }}" class="ts visible" title="{% trans _('enviado') %}: ">____</span>
+                </p>
+
+                {% if self.status == 'published' %}
+                <p class="format-tag">
+                    {% trans _('publicado') %}<br />
+                    <span data-ts="{{ self.sub_date }}" class="ts visible" title="{% trans _('publicado') %}: ">____</span>
+                </p>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="comments">
+                            <a href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»" class="format-tag">
+                                <i class="fa fa-comments"></i>
+
+                                {% if self.comments > 0 %}
+                                {{ self.comments }} {% trans _("comentarios") %}
+                                {% else %}
+                                {% trans _("sin comentarios") %}
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+        </aside>
+    </div>
+
+    {% if self.best_comment %}
+    <div class="best-comment">
+        <a class="tooltip c:{{ self.best_comment.comment_id }}" href="{{ self.relative_permalink }}/c0{{ self.best_comment.comment_order }}">
+            <strong>{{ self.best_comment.comment_order }}</strong>
+        </a>
+
+        {{ self.best_comment.content }}
+    </div>
+    {% endif %}
+
+    {% if globals.link %}
+    {% exec do_banner_story as dummy %}
+    {% endif %}
+</div>

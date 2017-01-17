@@ -25,12 +25,15 @@
 // They are automatically included
 //
 
-if (defined("config_done")) return TRUE; // If not "included_once"
+if (defined('config_done')) {
+    return TRUE; // If not "included_once"
+}
+
 define('config_done', 1);
 
 // WARN WARNING ALERT: we use $_SERVER['SERVER_NAME'] which is the first
 // server_name in NGInx and other servers
-// $globals['server_name']	= $_SERVER['SERVER_NAME'];
+// $globals['server_name']  = $_SERVER['SERVER_NAME'];
 
 // In case you have different domains and want to avoid Google penalization for duplicated content
 // $globals['canonical_server_name'] = 'www.canonical.com';
@@ -51,7 +54,7 @@ $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
 // Example for nginx:
 // rewrite /v_\d+/(.+)$ /$1 last;
 $globals['v'] = 40; // internal version, to for reloads
-$globals['lang'] = $dblang	= 'es';
+$globals['lang'] = $dblang  = 'es';
 
 $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
 
@@ -59,7 +62,6 @@ $globals['help_url'] = 'http://meneame.wikispaces.com/Comenzando';
 $globals['allowed_metas'] = false;
 // Must be an array, example
 // $globals['allowed_metas'] = array(100, 101, 102, 103);
-
 
 $globals['page_size'] = 20;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
@@ -101,7 +103,6 @@ $globals['click_counter'] = 1; // Put a value since which id should show in "lin
 //URL shortener (used in menea.me)
 //$globals['url_shortener'] = 'menea.me';
 
-
 // Specify you base url, "/" if is the root document
 // $globals['base_dir'] = '/meneame/';
 $globals['base_url'] = '/';
@@ -121,11 +122,9 @@ $globals['karma_news_start_decay'] =  7;
 $globals['karma_news_decay'] = 42;
 $globals['karma_clicks_bonus'] = 0.05; // Bonus to give due to clicks, it reaches this value when clicks/votes = 10;
 
-
 // Memcache, set hostname if enabled
 //$globals['memcache_host'] = 'localhost';
 $globals['memcache_port'] = 11211; // optional
-
 
 // Enable it if you to log every access to the scripts (progname will be "meneame_accesslog")
 //$globals['access_log'] = false;
@@ -145,7 +144,6 @@ $globals['comments_page_size'] = 100;
 $globals['comment_highlight_karma'] = 100;
 $globals['comment_hidden_karma'] = -100;
 
-
 // Upload images and files
 $globals['media_public'] = true;  // If true, anyone can read
 $globals['media_max_size'] = 1024*1024; // 1 MB;
@@ -155,8 +153,6 @@ $globals['media_max_upload_per_day'] = 10;
 $globals['media_thumb_size'] = 80;
 $globals['media_sublogo_height'] = 30;
 $globals['media_sublogo_height_mobile'] = 20;
-
-
 
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;
@@ -170,7 +166,6 @@ $globals['limit_user_24_hours'] = 12;
 $globals['limit_same_site_24_hours'] = 4;
 
 $globals['karma_propaganda'] = 12; // min user karma to avoid extra spam/propaganda checks in the submits
-
 
 $globals['karma_base']=6;
 $globals['karma_base_max']=9; // If not penalised, older users can get up to this value as base for the calculus
@@ -190,12 +185,8 @@ $globals['karma_points_per_published'] = 2; //karma added by each published when
 $globals['karma_points_per_published_max'] = 4;
 $globals['depublish_karma_divisor'] = 20; //karma is divided by this when depublish
 
-
 $globals['depublish_negative_karma'] = 6.0; //minimun karma of the vote to get it counted by discard.php
 $globals['depublish_positive_karma'] = 7.4; //minimun karma of the vote to get it counted by discard.php
-
-
-
 
 //$globals['tags'] = 'tecnología, internet, cultura, software libre, linux, open source, bitácoras, blogs, ciencia';
 $globals['max_sneakers'] = 250;
@@ -219,7 +210,6 @@ $globals['check_behind_proxy'] = false;
 //$globals['rss_redirect_published'] = false; // http://url.of.the.new.rss
 //$globals['rss_redirect_queued'] = false; // also valid for other links' status
 
-
 // If > 0 it shows negatives votes and date(vote) > $globals['show_negatives']
 //$globals['show_negatives'] = 0;
 $globals['min_karma_for_negatives'] = 5.5;
@@ -233,8 +223,6 @@ $globals['min_time_for_comments'] = 3600; // Time to wait until first comment (f
 //$globals['min_karma_for_sneaker'] = 5.2;
 $globals['min_karma_for_comment_votes'] = 5.5;
 
-
-
 $globals['new_user_links_limit'] = 1; //links allowed to submit in interval for new users
 $globals['new_user_links_interval'] = 3600;
 $globals['user_links_limit'] = 5;
@@ -243,6 +231,7 @@ $globals['user_links_clon_interval'] = 12; // hours forbidden to send with a clo
 
 $globals['user_comments_clon_interval'] = 0; // hours forbidden to comment with a clone
 
+$globals['link_blog_len_min'] = 2000; // Show blog template when a link without url has a length more than X
 
 //sneakme
 $globals['posts_len'] = 500;
@@ -275,7 +264,6 @@ $globals['cache_redirector'] = false;
 // Check it's writeable by the web server
 $globals['cache_dir'] = 'cache';
 
-
 // Haanga templates configuration
 $globals['haanga_cache'] = '/var/tmp';
 $globals['haanga_templates'] = 'templates';
@@ -293,7 +281,6 @@ $globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
 
 //$globals['xsendfile'] = 'X-Accel-Redirect';
 //$globals['xsendfile'] = 'X-Sendfile';
-
 
 $globals['show_popular_queued'] = true;
 $globals['show_popular_published'] = true;
@@ -328,14 +315,12 @@ $globals['captcha_first_login'] = false;
 // Show the link in the horizontal bar
 // $globals['facebook_page'] = 'http://facebook.com/meneameoficial';
 
-
 // Jaiku settings
 //$globals['jaiku_user'] = '';
 //$globals['jaiku_key'] = '';
 
 // posthubsubbub
 //$globals['pubsub'] = 'http://pubsubhubbub.appspot.com/';
-
 
 // Websnapr.com previews
 $globals['do_websnapr'] = false;
@@ -357,7 +342,6 @@ $globals['Amazon_S3_local_cache'] = true;
 $globals['Amazon_S3_upload'] = true;
 $globals['Amazon_S3_delete_allowed'] = false;
 
-
 // Main javascript file
 $globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
 $globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
@@ -365,7 +349,7 @@ $globals['js_main'] = 'main.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'mnm.php';
 // Load webfonts from the specified url
-$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Lato:300,400,700';
+$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Lato:300,400,700|PT+Serif';
 $globals['use_fontawesome_cdn'] = true; // If false serve fontawesome locally
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
@@ -391,14 +375,12 @@ $globals['new_source_bonus'] = 1.05;
 $globals['new_source_max_hours'] = 240;
 $globals['new_source_min_hours'] = 48;
 
-
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
 $globals['anon_to_user_votes'] = 0.2;
 $site_key = 12345679;
 // Check this
-$globals['anon_karma']	= 4;
-
+$globals['anon_karma']  = 4;
 
 $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
 //$globals['admin_account_id'] = 0; // Id of admin account (used in sneakme admin posts)
@@ -410,39 +392,42 @@ openlog('meneame', LOG_ODELAY, LOG_USER);
 // Don't touch behind this
 //////////////////////////////////////
 // Set an utf-8 locale if there is no utf-8 defined
-if (stripos(setlocale(LC_CTYPE, 0), "utf-8") === false) {
-	setlocale(LC_CTYPE, "en_US.UTF-8");
+if (stripos(setlocale(LC_CTYPE, 0), 'utf-8') === false) {
+    setlocale(LC_CTYPE, 'en_US.UTF-8');
 }
 
 // There is another config file, this is called for defaults (used by mobile)
-if (empty($globals['basic_config'])) {
-	define('mnmpath', dirname(__FILE__));
-	define('mnminclude', dirname(__FILE__).'/libs/');
-	ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
-
-    if (is_file(__DIR__.'/local.php')) {
-        require __DIR__.'/local.php';
-    }
-
-	if (php_sapi_name() === 'cli') {
-		$globals['cli'] = True;
-
-		/* Definition only for scripts executed 'off-line' */
-
-        if (is_file(__DIR__.'/cli-local.php')) {
-            require __DIR__.'/cli-local.php';
-        }
-	} else {
-		$globals['cli'] = False;
-
-        if (is_file(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
-            require __DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php';
-        }
-	}
-
-	include mnminclude.'init.php';
-	include mnminclude.'login.php';
-
-	// For production servers
-	$db->hide_errors();
+if (!empty($globals['basic_config'])) {
+    return;
 }
+
+define('mnmpath', dirname(__FILE__));
+define('mnminclude', dirname(__FILE__).'/libs/');
+
+ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
+
+if (is_file(__DIR__.'/local.php')) {
+    require __DIR__.'/local.php';
+}
+
+if (php_sapi_name() === 'cli') {
+    $globals['cli'] = true;
+
+    /* Definition only for scripts executed 'off-line' */
+
+    if (is_file(__DIR__.'/cli-local.php')) {
+        require __DIR__.'/cli-local.php';
+    }
+} else {
+    $globals['cli'] = False;
+
+    if (is_file(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
+        require __DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php';
+    }
+}
+
+include mnminclude.'init.php';
+include mnminclude.'login.php';
+
+// For production servers
+$db->hide_errors();

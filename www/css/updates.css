@@ -1065,6 +1065,66 @@ ul.slick-dots li button {
     margin-top: 10px;
 }
 
+.story-blog {
+    margin: 50px 0;
+}
+
+.story-blog .main-content h1 {
+    font-family: 'Open Sans';
+    font-weight: 300;
+    font-size: 50px;
+    line-height: 55px;
+    letter-spacing: -1.5px;
+    margin-bottom: 50px;
+    color: #000000;
+}
+
+.story-blog .main-content .text {
+    font-family: 'PT Serif', serif;
+    font-size: 21px;
+    letter-spacing: 0;
+    line-height: 31px;
+    color: #4A4A4A;
+}
+
+.story-blog .main-content .text p {
+    margin-bottom: 25px;
+}
+
+.story-blog aside {
+    position: relative;
+}
+
+.story-blog aside .news-shakeit {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0 auto;
+}
+
+.story-blog aside .details {
+    text-align: center;
+    font-family: 'Open Sans';
+    margin-top: 40px;
+}
+
+.story-blog aside .author {
+    font-size: 20px;
+    color: #000;
+}
+
+.story-blog aside .format-tag {
+    color: #BBB;
+    text-transform: uppercase;
+    font-weight: bold;
+    display: block;
+    margin-top: 15px;
+}
+
+.story-blog aside .comments {
+    margin-top: 20px;
+}
+
 .pagination-center {
     text-align: center;
     clear: both;
