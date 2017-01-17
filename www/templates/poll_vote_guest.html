@@ -2,7 +2,7 @@
     {% for option in poll.getOptions %}
     <div class="radio poll-option">
         <label>
-            <input type="radio" />
+            <input type="radio" name="option" />
             {{ option.option }}
         </label>
     </div>
