@@ -224,6 +224,7 @@ function show_edit_result($link, array $errors = array()) {
     global $globals;
 
     $link->read();
+    $link->poll = true;
     $link->permalink = $link->get_permalink();
 
     Haanga::Load('link/edit_result.html', compact('globals', 'link', 'errors'));
