@@ -134,6 +134,8 @@ if (empty($link->url)) {
 	$link->add_click(true); // Called with true so the probably nonexistent k is not checked
 }
 
+$link->poll = true;
+
 switch ($url_args[1]) {
 	case '':
 	case 'interview':

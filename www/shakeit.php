@@ -44,7 +44,8 @@ switch ($globals['meta']) {
 			Link::$original_status = true; // Show status in original sub
 			break;
 		}
-		// NOTE: If the user has no subscriptions it will fall into next: _*
+
+	// NOTE: If the user has no subscriptions it will fall into next: _*
 	case '_*':
 		$globals['tag_status'] = 'queued';
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
@@ -55,6 +56,7 @@ switch ($globals['meta']) {
 		$tab = 8;
 		Link::$original_status = true; // Show status in original sub
 		break;
+
 	case '_friends':
 		$globals['noindex'] = true;
 		$from_time = '"'.date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_votes']).'"';
@@ -65,6 +67,7 @@ switch ($globals['meta']) {
 		$tab = 2;
 		$globals['tag_status'] = 'queued';
 		break;
+
 	case '_popular':
 		// Show  the hihgher karma first
 		$globals['noindex'] = true;
@@ -76,6 +79,7 @@ switch ($globals['meta']) {
 		$tab = 3;
 		$globals['tag_status'] = 'queued';
 		break;
+
 	case '_discarded':
 		// Show only discarded in four days
 		$globals['noindex'] = true;
@@ -87,7 +91,7 @@ switch ($globals['meta']) {
 		$globals['tag_status'] = 'discard';
 		$rows = Link::count('discard') + Link::count('autodiscard') + Link::count('abuse');
 		break;
-	case '_all':
+
 	default:
 		$globals['tag_status'] = 'queued';
 		$order_by = "ORDER BY date DESC";
@@ -97,8 +101,8 @@ switch ($globals['meta']) {
 		break;
 }
 
-
 $pagetitle = _('noticias pendientes');
+
 if ($page > 1) {
     $pagetitle .= " ($page)";
 }
@@ -107,35 +111,37 @@ do_header($pagetitle, _('nuevas'), false, $tab);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
-do_sub_message_right();
-do_banner_right();
-if ($globals['show_popular_queued']) do_best_queued();
-do_last_subs('queued', 15, 'link_karma');
-//do_last_blogs();
-//do_best_comments();
-//do_categories_cloud('queued', 24);
-do_vertical_tags('queued');
+	do_sub_message_right();
+	do_banner_right();
+
+	if ($globals['show_popular_queued']) {
+		do_best_queued();
+	}
+
+	do_last_subs('queued', 15, 'link_karma');
+	//do_last_blogs();
+	//do_best_comments();
+	//do_categories_cloud('queued', 24);
+	do_vertical_tags('queued');
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
-
 
 echo '<div id="newswrap">'."\n";
 
 $sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE $where $order_by LIMIT $offset,$page_size) as ids on (ids.link = link_id)";
 
 $links = $db->object_iterator($sql, "Link");
+
 if ($links) {
-	foreach($links as $link) {
-		if ($link->votes == 0 && $link->author != $current_user->user_id) continue;
-		$link->max_len = 600;
-		if ($offset < 1000) {
-			$link->print_summary('full', 16);
-		} else {
-			$link->print_summary('full');
+	foreach ($links as $link) {
+		if ($link->votes == 0 && $link->author != $current_user->user_id) {
+			continue;
 		}
+
+		$link->max_len = 600;
+		$link->print_summary('full', ($offset < 1000) ? 16 : null);
 	}
 }
-
 
 do_pages($rows, $page_size);
 echo '</div>'."\n";

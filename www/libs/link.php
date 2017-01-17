@@ -747,18 +747,20 @@ class Link extends LCPBase {
 			$this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
 		}
 
-		$this->poll = new Poll;
+		if ($this->poll === true) {
+			$this->poll = new Poll;
 
-		if ($this->id) {
-			$this->poll->read('link_id', $this->id);
+			if ($this->id) {
+				$this->poll->read('link_id', $this->id);
+			}
 		}
 
 		$sponsored = $this->is_sponsored();
+
 		$vars = compact('type', 'sponsored');
 		$vars['self'] = $this;
 
 		return Haanga::Load($template, $vars);
-
 	}
 
 	function get_box_class() {
