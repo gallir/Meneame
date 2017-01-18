@@ -320,40 +320,40 @@ do_tabs("main",_('noticia'), true);
 
 if (empty($link->url) && (mb_strlen($link->content) > $globals['link_blog_len_min'])) {
     require __DIR__.'/story-blog.php';
+} else {
+    /*** SIDEBAR ****/
+    echo '<div id="sidebar">';
+        do_sub_message_right();
+        do_banner_right();
+
+        // GEO
+        if ($link->latlng) {
+            echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
+        }
+
+        if (!$current_user->user_id) {
+            do_most_clicked_stories();
+        }
+
+        do_banner_promotions();
+
+        if (! $current_user->user_id) {
+            do_best_stories();
+        }
+
+        do_rss_box();
+    echo '</div>';
+    /*** END SIDEBAR ***/
+
+    echo '<div id="newswrap">';
+
+    $link->print_summary();
 }
-
-/*** SIDEBAR ****/
-echo '<div id="sidebar">';
-    do_sub_message_right();
-    do_banner_right();
-
-    // GEO
-    if ($link->latlng) {
-        echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
-    }
-
-    if (!$current_user->user_id) {
-        do_most_clicked_stories();
-    }
-
-    do_banner_promotions();
-
-    if (! $current_user->user_id) {
-        do_best_stories();
-    }
-
-    do_rss_box();
-echo '</div>';
-/*** END SIDEBAR ***/
-
-echo '<div id="newswrap">';
-
-$link->print_summary();
 
 switch ($tab_option) {
     case 1:
     case 2:
-        echo '<div class="comments">';
+        echo '<div class="comments" id="comments-top">';
 
         if ($tab_option == 1) {
             print_external_analysis($link);
@@ -502,7 +502,7 @@ switch ($tab_option) {
     case 9:
         print_story_tabs($tab_option);
 
-        echo '<div class="comments">';
+        echo '<div class="comments" id="comments-top">';
 
         $sql = "SELECT conversation_to as id, count(*) as t FROM conversations, comments WHERE comment_link_id = $link->id AND comment_id = conversation_to AND conversation_type='comment' GROUP BY conversation_to ORDER BY t desc, id asc LIMIT ".$globals['comments_page_size'] ;
 
@@ -547,7 +547,7 @@ switch ($tab_option) {
 
     /////////////// TODO: in progress
     case 10:
-        echo '<div class="comments">';
+        echo '<div class="comments" id="comments-top">';
 
         include_once(mnminclude.'commenttree.php');
 
