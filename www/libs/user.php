@@ -529,12 +529,16 @@ class User {
 	function ranking() {
 		global $db;
 
-		if(!$this->read) $this->read();
+		if (!$this->read) {
+			$this->read();
+		}
+
 		return (int) $db->get_var("SELECT SQL_CACHE count(*) FROM users WHERE user_karma > $this->karma") + 1;
 	}
 
 	function blogs() {
 		global $db;
+
 		return $db->get_var("select  count(distinct link_blog) from links where link_author=$this->id");
 	}
 
@@ -552,6 +556,7 @@ class User {
 
 	function get_latlng() {
 		require_once(mnminclude.'geo.php');
+
 		return geo_latlng('user', $this->id);
 	}
 
@@ -561,59 +566,80 @@ class User {
 		$this->karma = min($globals['max_karma'], $this->karma + $inc);
 		$this->karma = max($globals['min_karma'], $this->karma);
 		$this->karma = round($this->karma, 2);
+
 		if (! empty($log) && mb_strlen($log) > 5) {
 			$this->karma_log .= "$log: $inc, " . _('nuevo karma') . ": $this->karma\n";
 			$this->karma_calculated = time();
 		}
-		$this->store();
 
+		$this->store();
 	}
 
 	static function friend_exists($from, $to) {
 		global $db;
-		if ($from == $to) return 0;
+
+		if ($from == $to) {
+			return 0;
+		}
+
 		return round($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
 	}
 
 	static function friend_insert($from, $to, $value = 1) {
 		global $db;
-		if ($from == $to) return 0;
-		if (intval($db->get_var("SELECT SQL_NO_CACHE count(*) from users where user_id in ($from, $to)")) != 2) return false;
+
+		if ($from == $to) {
+			return 0;
+		}
+
+		if (intval($db->get_var("SELECT SQL_NO_CACHE count(*) from users where user_id in ($from, $to)")) != 2) {
+			return false;
+		}
+
 		return $db->query("REPLACE INTO friends (friend_type, friend_from, friend_to, friend_value) VALUES ('manual', $from, $to, $value)");
 	}
 
 	static function friend_delete($from, $to) {
 		global $db;
+
 		return $db->query("DELETE FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to");
 	}
 
 	static function friend_add_delete($from, $to) {
-		if ($from == $to) return '';
+		if ($from == $to) {
+			return '';
+		}
+
 		switch (self::friend_exists($from, $to)) {
 			case 0:
 				self::friend_insert($from, $to);
-				if (self::friend_exists($to, $from) > 0) return FRIEND_BOTH;
-				else return FRIEND_YES;
+
+				return (self::friend_exists($to, $from) > 0) ? FRIEND_BOTH : FRIEND_YES;
+
 			case 1:
 				self::friend_insert($from, $to, -1);
 				return FRIEND_IGNORE;
+
 			case -1:
 				self::friend_delete($from, $to);
-				if (self::friend_exists($to, $from) > 0) return FRIEND_OTHER;
-				else return FRIEND_NO;
+
+				return (self::friend_exists($to, $from) > 0) ? FRIEND_OTHER : FRIEND_NO;
 		}
 	}
 
 
 	static function friend_teaser($from, $to) {
-		if ($from == $to) return '';
+		if ($from == $to) {
+			return '';
+		}
+
 		switch (self::friend_exists($from, $to)) {
 			case 0:
-				if (self::friend_exists($to, $from) > 0) return FRIEND_OTHER;
-				else return FRIEND_NO;
+				return (self::friend_exists($to, $from) > 0) ? FRIEND_OTHER : FRIEND_NO;
+
 			case 1:
-				if (self::friend_exists($to, $from) > 0) return FRIEND_BOTH;
-				else return FRIEND_YES;
+				return (self::friend_exists($to, $from) > 0) ? FRIEND_BOTH : FRIEND_YES;
+
 			case -1:
 				return FRIEND_IGNORE;
 		}
@@ -631,7 +657,9 @@ class User {
 		if ($value != false) {
 			$value = intval($value);
 			$extra = "and pref_value=$value";
-		} else $extra = '';
+		} else {
+			$extra = '';
+		}
 
 		return intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key' $extra limit 1"));
 	}
@@ -655,12 +683,16 @@ class User {
 
 	static function delete_pref($user, $key, $value = false) {
 		global $db;
+
 		$key = $db->escape($key);
 
 		if ($value != false) {
 			$value = intval($value);
 			$extra = "and pref_value=$value";
-		} else $extra = '';
+		} else {
+			$extra = '';
+		}
+
 		return $db->query("delete from prefs where pref_user_id=$user and pref_key='$key' $extra");
 	}
 }
