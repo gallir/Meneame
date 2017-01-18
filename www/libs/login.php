@@ -235,7 +235,7 @@ class UserAuth
             $db->query("UPDATE users SET user_pass = '$user->user_pass' WHERE user_id = $user->user_id LIMIT 1");
         }
 
-        foreach(get_object_vars($user) as $var => $value) {
+        foreach (get_object_vars($user) as $var => $value) {
             $this->$var = $value;
         }
 
@@ -251,16 +251,16 @@ class UserAuth
         $this->user_login = '';
         $this->admin = false;
         $this->authenticated = false;
+
         $this->SetIDCookie (0, false);
 
         //header("Pragma: no-cache");
-        header ('HTTP/1.1 303 Load');
-        header("Cache-Control: no-cache, must-revalidate");
-        header("Location: $url");
-        header("Expires: " . gmdate("r", $globals['now'] - 3600));
-        header('ETag: "logingout' . $globals['now'] . '"');
+        header('HTTP/1.1 303 Load');
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Expires: ' . gmdate('r', $globals['now'] - 3600));
+        header('ETag: "logingout'.$globals['now'].'"');
 
-        die;
+        die(header('Location: '.$url));
     }
 
     function Date()

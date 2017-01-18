@@ -10,10 +10,6 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'recaptcha2.php');
 
-if ($current_user->user_id) {
-	die(header('Location: '.(empty($_REQUEST['return']) ? $globals['base_url'] : $_REQUEST['return'])));
-}
-
 $globals['ads'] = false;
 
 // Clean return variable
@@ -21,15 +17,21 @@ if (!empty($_REQUEST['return'])) {
 	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
 }
 
-if ($_GET['op'] == 'logout') {
+if ($_GET['op'] === 'logout') {
 	// check the user is really authenticated (to avoid bucles due to bad caching)
 	if ($current_user->user_id > 0) {
 		$current_user->Logout($_REQUEST['return']);
-	} else {
-		header ('HTTP/1.1 303 Load');
-		setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
-		die(header("Location: ".$_COOKIE['return_site'].$globals['base_url']));
 	}
+
+	setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
+
+	header('HTTP/1.1 303 Load');
+
+	die(header('Location: '.$_COOKIE['return_site'].$globals['base_url']));
+}
+
+if ($current_user->user_id) {
+	die(header('Location: '.(empty($_REQUEST['return']) ? $globals['base_url'] : $_REQUEST['return'])));
 }
 
 // We need it because we modify headers
