@@ -1067,10 +1067,10 @@ ul.slick-dots li button {
 
 .story-blog {
     margin: 40px 0;
+    font-family: 'Open Sans';
 }
 
 .story-blog .main-content h1 {
-    font-family: 'Open Sans';
     font-weight: 300;
     font-size: 50px;
     line-height: 55px;
@@ -1104,7 +1104,6 @@ ul.slick-dots li button {
 
 .story-blog aside .details {
     text-align: center;
-    font-family: 'Open Sans';
     margin-top: 40px;
 }
 
@@ -1127,6 +1126,32 @@ ul.slick-dots li button {
 
 .story-blog aside .comments {
     margin-top: 20px;
+}
+
+.story-blog .best-comment .separator {
+    margin: 40px 0;
+}
+
+.story-blog .best-comment .separator span {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.story-blog .best-comment .text {
+    font-size: 24px;
+    color: #000000;
+    letter-spacing: -0.73px;
+    line-height: 33px;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.story-blog .best-comment .author {
+    text-align: left;
+}
+
+.story-blog .best-comment .date {
+    text-align: right;
 }
 
 .pagination-center {

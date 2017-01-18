@@ -30,7 +30,7 @@ if ($_GET['op'] === 'logout') {
 	die(header('Location: '.$_COOKIE['return_site'].$globals['base_url']));
 }
 
-if ($current_user->user_id) {
+if ($current_user->user_id > 0) {
 	die(header('Location: '.(empty($_REQUEST['return']) ? $globals['base_url'] : $_REQUEST['return'])));
 }
 

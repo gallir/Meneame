@@ -729,8 +729,22 @@ class Link extends LCPBase {
 			}
 		}
 
-		if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
-			$this->best_comment = $db->get_row("select SQL_CACHE comment_id, comment_order, substr(comment_content, 1, 225) as content from comments where comment_link_id = $this->id and comment_karma > $karma_best_comment and comment_votes > 0 order by comment_karma desc limit 1");
+		//if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
+		if (true) { // to tests always add the best comment
+			$this->best_comment = $db->get_row(DbHelper::queryPlain('
+				SELECT SQL_CACHE comment_id, comment_order, comment_content AS content_full,
+					comment_date, comment_modified, SUBSTR(comment_content, 1, 225) AS content,
+					user_id, user_login, user_avatar
+				FROM comments
+				JOIN users ON (user_id = comment_user_id)
+				WHERE (
+					comment_link_id = "'.$this->id.'"
+					AND comment_karma > "'.$karma_best_comment.'"
+					AND comment_votes > 0
+				)
+				ORDER BY comment_karma DESC
+				LIMIT 1;
+			'));
 		} else {
 			$this->best_comment  = FALSE;
 		}

@@ -22,7 +22,8 @@
 
 defined('config_done') or die();
 
-$link->print_summary('full', 0, true, 'story/blog.html');
+$link->related = $link->get_related();
+$link->print_summary('full', 50, true, 'story/blog.html');
 
 $globals['tag_status'] = $globals['link']->status;
 
