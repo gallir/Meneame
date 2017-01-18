@@ -223,20 +223,26 @@ $globals['min_time_for_comments'] = 3600; // Time to wait until first comment (f
 //$globals['min_karma_for_sneaker'] = 5.2;
 $globals['min_karma_for_comment_votes'] = 5.5;
 
+$globals['user_comments_clon_interval'] = 0; // hours forbidden to comment with a clone
+
+//links
+
 $globals['new_user_links_limit'] = 1; //links allowed to submit in interval for new users
 $globals['new_user_links_interval'] = 3600;
 $globals['user_links_limit'] = 5;
 $globals['user_links_interval'] = 7200;
 $globals['user_links_clon_interval'] = 12; // hours forbidden to send with a clone, 0 to allow it
 
-$globals['user_comments_clon_interval'] = 0; // hours forbidden to comment with a clone
+$globals['link_edit_time'] = 1800; // seconds to allow a regular user to edit a link
+$globals['link_edit_special_time'] = 10400; // seconds to allow a special user to edit a link
+$globals['link_edit_blogger_time'] = 10800; // seconds to allow a blogger user to edit a link
 
-$globals['link_blog_len_min'] = 2000; // Show blog template when a link without url has a length more than X
+$globals['link_blog_len_min'] = 1500; // Show blog template when a link without url has a length more than X
 
 //sneakme
 $globals['posts_len'] = 500;
 $globals['posts_period'] = 60;
-$globals['posts_edit_time'] = 3600;
+$globals['posts_edit_time'] = 600;
 $globals['posts_edit_time_admin'] = 864000;
 $globals['post_highlight_karma'] = 100;
 $globals['post_hide_karma'] = -50;
@@ -245,7 +251,7 @@ $globals['draft_time'] = 1200; // Time unsent drafts will be kept (20 minutes)
 $globals['draft_limit'] = 5; // Max unset drafts at the same time
 
 // Polls
-$globals['polls_min_time_for_votes'] = 30; // Wait X seconds between poll votes
+$globals['polls_min_time_for_votes'] = 10; // Wait X seconds between poll votes
 $globals['polls_question_len_limit'] = 200;
 $globals['polls_option_len_limit'] = 150;
 

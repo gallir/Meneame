@@ -940,23 +940,30 @@ class Link extends LCPBase {
 	function is_editable() {
 		global $current_user, $db, $globals;
 
-		if (! $current_user->user_id) return false;
-
-		if(($this->author == $current_user->user_id
-				&& ($this->sub_status === 'queued' || ($this->status === 'discard' && $this->votes == 0) )
-				&& $globals['now'] - $this->sent_date < 1800)
-			|| ($this->author != $current_user->user_id
-				&& $current_user->special
-				&& $this->sub_status === 'queued'
-				&& $globals['now'] - $this->sent_date < 10400)
-			|| ($this->author != $current_user->user_id
-				&& $current_user->user_level === 'blogger'
-				&& $globals['now'] - $this->date < 10800)
-			|| $current_user->user_id == $this->sub_owner
-			|| $current_user->admin) {
-			return true;
+		if (!$current_user->user_id) {
+			return false;
 		}
-		return false;
+
+		$mine = $this->author == $current_user->user_id;
+
+		return (
+			($current_user->admin || ($current_user->user_id == $this->sub_owner))
+
+			|| (
+				$mine
+				&& (($this->sub_status === 'queued') || (($this->status === 'discard') && ($this->votes == 0)))
+				&& (($globals['now'] - $this->sent_date) < $globals['link_edit_time'])
+			) || (
+				!$mine
+				&& $current_user->special
+				&& ($this->sub_status === 'queued')
+				&& (($globals['now'] - $this->sent_date) < $globals['link_edit_special_time'])
+			) || (
+				!$mine
+				&& ($current_user->user_level === 'blogger')
+				&& (($globals['now'] - $this->date) < $globals['link_edit_blogger_time'])
+			)
+		);
 	}
 
 	function is_map_editable() {
