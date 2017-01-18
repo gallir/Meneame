@@ -140,7 +140,7 @@
                 <div id="header-center" class="mnm-center-in-wrap">
                     <div class="checkbox checkbox-slider--b-flat checkbox-slider-warning" style="display:inline-block">
                         <label>
-                            <input id="subs_default_header" name="subs_default" value="subs_default" type="checkbox"><span>VER SÓLO MIS SUBS</span>
+                            <input id="subs_default_header" name="subs_default" value="subs_default" type="checkbox" {% if current_user && current_user.subs_default %}checked{% endif %}><span>VER SÓLO MIS SUBS</span>
                         </label>
                     </div>
 

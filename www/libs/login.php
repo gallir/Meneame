@@ -86,7 +86,19 @@ class UserAuth
         }
 
         $user_id = intval($this->u[0]);
-        $user = $db->get_row("SELECT SQL_CACHE user_id, user_login, substring(user_pass, 8, 10) as pass_frag, user_level, UNIX_TIMESTAMP(user_validated_date) as user_date, user_karma, user_email, user_avatar, user_comment_pref FROM users WHERE user_id = $user_id");
+
+        $user = $db->get_row(DbHelper::queryPlain('
+            SELECT SQL_CACHE user_id, user_login, SUBSTRING(user_pass, 8, 10) AS pass_frag,
+                user_level, UNIX_TIMESTAMP(user_validated_date) AS user_date, user_karma,
+                user_email, user_avatar, user_comment_pref, prefs.pref_value AS subs_default
+            FROM users
+            LEFT JOIN prefs ON (
+                pref_user_id = user_id
+                AND pref_key = "subs_default"
+            )
+            WHERE user_id = "'.$user_id.'"
+            LIMIT 1;
+        '));
 
         if ($this->version == self::CURRENT_VERSION) {
             $key = md5($site_key.$user->user_login.$user->user_id.$user->pass_frag.$cookietime);
@@ -147,11 +159,11 @@ class UserAuth
         global $db, $globals;
 
         // Mysql variables to use en join queries
-        $db->initial_query(
-            'set @user_id = "'.$this->user_id.'"'
-            .', @ip_int = "'.$globals['user_ip_int'].'"'
-            .', @enabled_votes = DATE_SUB(NOW(), INTERVAL '.intval($globals['time_enabled_votes'] / 3600).' HOUR)'
-        );
+        $db->initial_query(DbHelper::queryPlain('
+            set @user_id = "'.$this->user_id.'"
+            , @ip_int = "'.$globals['user_ip_int'].'"
+            , @enabled_votes = DATE_SUB(NOW(), INTERVAL '.intval($globals['time_enabled_votes'] / 3600).' HOUR)
+        '));
     }
 
     function SetIDCookie($what, $remember = false)
