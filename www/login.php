@@ -10,22 +10,25 @@ include('config.php');
 include(mnminclude.'html1.php');
 include(mnminclude.'recaptcha2.php');
 
+if ($current_user->user_id) {
+	die(header('Location: '.(empty($_REQUEST['return']) ? $globals['base_url'] : $_REQUEST['return'])));
+}
+
 $globals['ads'] = false;
 
 // Clean return variable
-if(!empty($_REQUEST['return'])) {
+if (!empty($_REQUEST['return'])) {
 	$_REQUEST['return'] = clean_input_string($_REQUEST['return']);
 }
 
-if($_GET["op"] == 'logout') {
+if ($_GET['op'] == 'logout') {
 	// check the user is really authenticated (to avoid bucles due to bad caching)
 	if ($current_user->user_id > 0) {
 		$current_user->Logout($_REQUEST['return']);
 	} else {
 		header ('HTTP/1.1 303 Load');
 		setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
-		header("Location: ".$_COOKIE['return_site'].$globals['base_url']);
-		exit();
+		die(header("Location: ".$_COOKIE['return_site'].$globals['base_url']));
 	}
 }
 
@@ -33,8 +36,9 @@ if($_GET["op"] == 'logout') {
 ob_start();
 
 if ($_POST["processlogin"] == 1) {
-	$globals['secure_page'] = True;
-	if(!isset($_COOKIE['return_site'])) {
+	$globals['secure_page'] = true;
+
+	if (!isset($_COOKIE['return_site'])) {
 		$_COOKIE['return_site'] = $globals['scheme'].'//'.get_server_name();
 	}
 } else {
@@ -42,10 +46,11 @@ if ($_POST["processlogin"] == 1) {
 }
 
 do_header("login");
+
 echo '<div id="singlewrap">'."\n";
 echo '<section class="section section-large text-center">';
 
-if($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
+if ($_GET["op"] === 'recover' || !empty($_POST['recover'])) {
 	do_recover();
 } else {
 	do_login();
@@ -148,9 +153,7 @@ function do_login_post() {
 
 	$url = empty($_REQUEST['return']) ? $globals['base_url'] : $_REQUEST['return'];
 
-	header('Location: '.$_COOKIE['return_site'].$url);
-
-	die();
+	die(header('Location: '.$_COOKIE['return_site'].$url));
 }
 
 function do_recover() {

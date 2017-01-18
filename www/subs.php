@@ -9,7 +9,9 @@
 include('config.php');
 include(mnminclude.'html1.php');
 
-if (empty($routes)) die; // Don't allow to be called bypassing dispatcher
+if (empty($routes)) {
+	die; // Don't allow to be called bypassing dispatcher
+}
 
 if (isset($_GET['all']) || array_key_exists('q', (array)$_GET)) {
 	$option = 2; // Show all subs

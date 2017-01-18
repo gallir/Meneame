@@ -257,37 +257,17 @@ function report_problem_yes(frm, user, id) {
 }
 
 function pref_input_check (id) {
-	var $e = $('#'+id);
-	var value;
-	var key = $e.val();
-	var backend = base_url + 'backend/pref';
-
-	$.post(backend, {
-		"id": {{ current_user.user_id }},
-		"key": key,
-		"control_key": base_key
-	}, function (data) {
-		$e.prop('checked', data ? true : false);
-		$e.on('change', onChange);
-	}, 'json');
-
-	function onChange() {
-		value = this.checked ? 1 : 0;
-
-		$.post(backend, {
-			"id": {{ current_user.user_id }},
-			"value": value,
-			"key": this.value,
-			"set": 1,
-			"control_key": base_key
+	$('#subs_default_header').on('click', function() {
+		$.post(base_url + 'backend/pref', {
+			'id': {{ current_user.user_id }},
+			'value': (this.checked ? 1 : 0),
+			'key': this.value,
+			'set': 1,
+			'control_key': base_key
 		}, function (data) {
-			this.checked = data ? true : false;
+			window.location.href = base_url;
 		}, 'json');
-
-		if ((id === 'subs_default_header') && !is_mobile) {
-			location.href = base_url;
-		}
-	}
+	});
 }
 
 function add_remove_sub(id, change) {
@@ -2713,7 +2693,7 @@ $(document).ready(function () {
         });
 	} else {
 		$("#subs_default_header").on('click', function(){
-			location.href = base_url + 'login';
+			window.location = base_url + 'login';
 		});
 	}
 });
