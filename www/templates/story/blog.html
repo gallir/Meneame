@@ -97,13 +97,13 @@
 
                 <p class="format-tag">
                     {% trans _('enviado') %}<br />
-                    <span data-ts="{{ self.sent_date }}" class="ts visible" title="{% trans _('enviado') %}: ">____</span>
+                    <span data-ts="{{ self.sent_date }}" class="ts visible dark" title="{% trans _('enviado') %}: ">____</span>
                 </p>
 
                 {% if self.status == 'published' %}
                 <p class="format-tag">
                     {% trans _('publicado') %}<br />
-                    <span data-ts="{{ self.sub_date }}" class="ts visible" title="{% trans _('publicado') %}: ">____</span>
+                    <span data-ts="{{ self.sub_date }}" class="ts visible dark" title="{% trans _('publicado') %}: ">____</span>
                 </p>
                 {% endif %}
 
@@ -111,12 +111,18 @@
                     <div class="col-xs-12">
                         <div class="comments">
                             <a href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»" class="format-tag">
-                                <i class="fa fa-comments"></i>
-
                                 {% if self.comments > 0 %}
-                                {{ self.comments }} {% trans _("comentarios") %}
+
+                                <span class="badge badge-mnm">
+                                    <i class="fa fa-comments"></i> {{ self.comments }}
+                                </span>
+
+                                {% trans _("comentarios") %}
+
                                 {% else %}
-                                {% trans _("sin comentarios") %}
+
+                                <i class="fa fa-comments"></i> {% trans _("sin comentarios") %}
+
                                 {% endif %}
                             </a>
                         </div>

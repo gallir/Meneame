@@ -1121,6 +1121,10 @@ ul.slick-dots li button {
     margin-top: 15px;
 }
 
+.story-blog .dark {
+    color: #666;
+}
+
 .story-blog aside .comments {
     margin-top: 20px;
 }
@@ -1175,6 +1179,10 @@ ul.slick-dots li button {
 .block {
     display: block !important;
     width: 100% !important;
+}
+
+.badge-mnm {
+    background-color: #FE6117;
 }
 
 /** FIXES **/
