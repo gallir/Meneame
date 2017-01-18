@@ -76,11 +76,9 @@
 
                 <div class="clics">
                     {% if self.id >= globals.click_counter AND self.clicks > 0 %}
-
-                    {{ self.clicks }} {% trans _('clics') %}
-
+                        {{ self.clicks }} {% trans _('clics') %}
                     {% else %}
-                    &nbsp;
+                        &nbsp;
                     {% endif %}
                 </div>
             </div>
@@ -141,6 +139,6 @@
     {% endif %}
 
     {% if globals.link %}
-    {% exec do_banner_story as dummy %}
+        {% exec do_banner_story as dummy %}
     {% endif %}
 </div>
