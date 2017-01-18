@@ -622,7 +622,10 @@ class User {
 	static function get_pref($user, $key, $value = false) {
 		global $db, $current_user;
 
-		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		if (!$user && $current_user->user_id > 0) {
+			$user = $current_user->user_id;
+		}
+
 		$key = $db->escape($key);
 
 		if ($value != false) {
@@ -636,7 +639,10 @@ class User {
 	static function set_pref($user, $key, $value) {
 		global $db, $current_user;
 
-		if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+		if (!$user && $current_user->user_id > 0) {
+			$user = $current_user->user_id;
+		}
+
 		$value = intval($value);
 		$key = $db->escape($key);
 
