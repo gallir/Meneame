@@ -107,26 +107,22 @@
                 </p>
                 {% endif %}
 
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="comments">
-                            <a href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»" class="format-tag">
-                                {% if self.comments > 0 %}
+                <div class="comments">
+                    <a href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»" class="format-tag">
+                        {% if self.comments > 0 %}
 
-                                <span class="badge badge-mnm">
-                                    <i class="fa fa-comments"></i> {{ self.comments }}
-                                </span>
+                        <span class="badge badge-mnm">
+                            <i class="fa fa-comments"></i> {{ self.comments }}
+                        </span>
 
-                                {% trans _("comentarios") %}
+                        {% trans _("comentarios") %}
 
-                                {% else %}
+                        {% else %}
 
-                                <i class="fa fa-comments"></i> {% trans _("sin comentarios") %}
+                        <i class="fa fa-comments"></i> {% trans _("sin comentarios") %}
 
-                                {% endif %}
-                            </a>
-                        </div>
-                    </div>
+                        {% endif %}
+                    </a>
                 </div>
             </div>
 
