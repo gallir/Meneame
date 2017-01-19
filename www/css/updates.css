@@ -1104,6 +1104,31 @@ ul.slick-dots li button {
     top: 0;
     left: 0;
     margin: 0 auto;
+    width: 126px;
+    font-size: 18px;
+}
+
+.story-blog aside .news-shakeit .votes {
+    padding: 15px 0;
+}
+
+.story-blog aside .news-shakeit .votes a {
+    font-size: 30px;
+}
+
+.story-blog aside .news-shakeit .menealo {
+    width: 139px;
+    height: auto;
+}
+
+.story-blog aside .news-shakeit .menealo span {
+    padding: 3px;
+    height: auto;
+}
+
+.story-blog aside .news-shakeit .clics {
+    font-size: 16px;
+    padding: 10px 0;
 }
 
 .story-blog aside .details {
