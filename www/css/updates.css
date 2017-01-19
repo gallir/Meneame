@@ -1225,6 +1225,10 @@ ul.slick-dots li button {
     color: #7b6663;
 }
 
+.story-blog-comments {
+    margin-top: 40px;
+}
+
 .pagination-center {
     text-align: center;
     clear: both;
