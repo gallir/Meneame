@@ -362,7 +362,7 @@ class Poll
             ';
         }
 
-        return $db->object_iterator(DbHelper::queryPlain($query), 'Poll');
+        return $db->get_results(DbHelper::queryPlain($query), 'Poll');
     }
 
     /** WRITE **/

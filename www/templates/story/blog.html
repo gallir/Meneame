@@ -140,60 +140,69 @@
 <div class="story-blog">
     <div class="row">
         <div class="col-md-8 col-md-offset-1">
+            {% if self.poll.id %}
+                {% set poll = self.poll %}
+                {% include 'poll_vote.html' %}
+            {% endif %}
+
             {% if globals.link %}
                 {% exec do_banner_story as dummy %}
             {% endif %}
 
-            {% set comment = self.best_comment %}
+            {% if self.get_best_comments %}
 
-            {% if comment %}
-            <div class="best-comment">
+            <div class="best-comments">
                 <div class="separator"><b></b><span>{% trans _('COMENTARIOS DESTACADOS') %}</span><b></b></div>
 
-                <div class="text">
-                    &laquo; {{ comment.content_full }} &raquo;
-                </div>
+                {% for comment in self.get_best_comments %}
 
-                <div class="row metas">
-                    <div class="col-xs-6 author">
-                        <a href="{{ comment.user_login | useruri }}" class="tooltip u:{{ comment.user_id }}">
-                            <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url comment.user_id, comment.user_avatar, 40, false %}" data-2x="s:-40.:-40." class="avatar lazy" />
-                        </a>
-
-                        {{ comment.user_login }}
+                <div class="item">
+                    <div class="text">
+                        &laquo; {{ comment.html }} &raquo;
                     </div>
 
-                    <div class="col-xs-6 date">
-                        <span class="dark">{{ comment.comment_date }}</span>
+                    <div class="row metas">
+                        <div class="col-xs-6 author">
+                            <a href="{{ comment.user_login | useruri }}" class="tooltip u:{{ comment.user_id }}">
+                                <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url comment.user_id, comment.user_avatar, 40, false %}" data-2x="s:-40.:-40." class="avatar lazy" />
+                                {{ comment.user_login }}
+                            </a>
+                        </div>
+
+                        <div class="col-xs-6 date">
+                            {{ comment.comment_date }}
+                        </div>
                     </div>
                 </div>
+
+                {% endfor %}
             </div>
+
             {% endif %}
 
             {% if related %}
 
-            <div class="separator"><b></b><span>{% trans _('EL COMENTARIO DESTACADO') %}</span><b></b></div>
-
             <div class="related">
+                <div class="separator"><b></b><span>{% trans _('OTROS RELATOS QUE TE PUEDEN INTERESAR') %}</span><b></b></div>
+
                 {% for link in self.related %}
-                <div class="related-item">
-                    <h2 class="title">{{ link.title }}</h2>
+                <div class="item">
+                    <h2 class="title"><a href="{{ link.permalink }}">{{ link.title }}</a></h2>
 
                     <div class="metas">
                         <span class="author">
                             <a href="{{ link.username | useruri }}" class="tooltip u:{{ link.author }}">
-                                <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url link.author, link.avatar, 80, false %}" data-2x="s:-40.:-80." class="avatar lazy img-responsive center-block" />
+                                <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url link.author, link.avatar, 40, false %}" data-2x="s:-40.:-80." class="avatar lazy" />
+                                {{ link.username }}
                             </a>
-
-                            {{ link.username }}
                         </span>
 
-                        <span class="date">
-                            <span class="dark">{{ link.sent_date }}</span>
-                        </span>
+                        <div class="date">
+                            | <span data-ts="{{ link.sent_date }}" class="ts visible date" title="{% trans _('enviado') %}: ">____</span>
+                        </div>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
 
             {% endif %}

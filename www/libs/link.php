@@ -46,6 +46,7 @@ class Link extends LCPBase {
 	var $thumb_status = 'unknown';
 	var $clicks = 0;
 
+	var $best_comments = array();
 	var $poll;
 
 	// sql fields to build an object from mysql
@@ -729,8 +730,7 @@ class Link extends LCPBase {
 			}
 		}
 
-		//if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
-		if (true) { // to tests always add the best comment
+		if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
 			$this->best_comment = $db->get_row(DbHelper::queryPlain('
 				SELECT SQL_CACHE comment_id, comment_order, comment_content AS content_full,
 					comment_date, comment_modified, SUBSTR(comment_content, 1, 225) AS content,
@@ -775,6 +775,36 @@ class Link extends LCPBase {
 		$vars['self'] = $this;
 
 		return Haanga::Load($template, $vars);
+	}
+
+	function get_best_comments($limit = 5)
+	{
+		global $db;
+
+		if (empty($this->id) || $this->best_comments) {
+			return $this->best_comments;
+		}
+
+		$this->best_comments = $db->get_results(DbHelper::queryPlain('
+			SELECT SQL_CACHE comment_id, comment_order, comment_content AS content_full,
+				comment_date, comment_modified, SUBSTR(comment_content, 1, 225) AS content,
+				user_id, user_login, user_avatar
+			FROM comments
+			JOIN users ON (user_id = comment_user_id)
+			WHERE (
+				comment_link_id = "'.$this->id.'"
+				AND comment_karma > 0
+				AND comment_votes > 0
+			)
+			ORDER BY comment_karma DESC
+			LIMIT '.(int)$limit.';
+		'));
+
+		foreach ($this->best_comments as $comment) {
+			$comment->html = str_replace('<br />', ' ', $this->html($this->truncate_text($comment->content_full, 500)));
+		}
+
+		return $this->best_comments;
 	}
 
 	function get_box_class() {
@@ -1497,7 +1527,6 @@ class Link extends LCPBase {
 
 	function get_related($max = 10) {
 		global $globals, $db;
-
 
 		$related = array();
 		$phrases = 0;

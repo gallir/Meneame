@@ -1164,32 +1164,6 @@ ul.slick-dots li button {
     margin-top: 20px;
 }
 
-.story-blog .best-comment .separator {
-    margin: 40px 0;
-}
-
-.story-blog .best-comment .separator span {
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.story-blog .best-comment .text {
-    font-size: 24px;
-    color: #000000;
-    letter-spacing: -0.73px;
-    line-height: 33px;
-    font-style: italic;
-    margin-bottom: 15px;
-}
-
-.story-blog .best-comment .author {
-    text-align: left;
-}
-
-.story-blog .best-comment .date {
-    text-align: right;
-}
-
 .story-blog .share-icons {
     margin-top: 40px;
     list-style-type: none;
@@ -1223,6 +1197,58 @@ ul.slick-dots li button {
 
 .story-blog .share-icons li a.share-mail {
     color: #7b6663;
+}
+
+.story-blog .separator {
+    margin: 40px 0;
+}
+
+.story-blog .separator span {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.story-blog .best-comments .item {
+    margin-bottom: 30px;
+}
+
+.story-blog .best-comments .item .text {
+    font-size: 24px;
+    color: #000000;
+    letter-spacing: -0.73px;
+    line-height: 33px;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.story-blog .best-comments .item .author a,
+.story-blog .related .item .author a {
+    font-weight: bold;
+    color: #000;
+}
+
+.story-blog .best-comments .date {
+    text-align: right;
+    color: #BBB;
+}
+
+.story-blog .related .item {
+    margin-bottom: 30px;
+}
+
+.story-blog .related .item h2 a {
+    font-size: 24px;
+    color: #000000;
+    letter-spacing: -0.73px;
+    line-height: 26px;
+    font-weight: normal;
+}
+
+.story-blog .related .item .metas .date {
+    display: inline-block;
+    margin-left: 10px;
+    color: #BBB;
+    font-weight: bold;
 }
 
 .story-blog-comments {

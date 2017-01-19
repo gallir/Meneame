@@ -118,15 +118,21 @@ class LCPBase {
 	}
 
 	function truncate($length) {
-		$this->is_truncated  = FALSE;
-		if ($length > 0 && mb_strlen($this->content) > $length + $length/2) {
-			$this->is_truncated = TRUE;
-			$this->content = rtrim(preg_replace('/(?:[&<\{]\w{1,10}|[^}>\s]{1,15}|http\S+)$/u', '', mb_substr($this->content, 0 , $length)));
-			$this->content .= '&hellip;';
-			if (preg_match('/<\w+>/', $this->content)) {
-				$this->content = close_tags($this->content);
-			}
+		$previous = mb_strlen($this->content);
+
+		$this->content = $this->truncate_text($this->content, $length);
+		$this->is_truncated = mb_strlen($this->content) !== $previous;
+	}
+
+	function truncate_text($text, $length)
+	{
+		if (empty($length) || (mb_strlen($text) <= ($length + $length / 2))) {
+			return $text;
 		}
+
+		$text = rtrim(preg_replace('/(?:[&<\{]\w{1,10}|[^}>\s]{1,15}|http\S+)$/u', '', mb_substr($text, 0 , $length)));
+
+		return (preg_match('/<\w+>/', $text) ? close_tags($text) : $text).'&hellip;';
 	}
 
 	function sanitize($string) {
