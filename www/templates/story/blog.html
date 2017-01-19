@@ -169,6 +169,10 @@
                     <a href="#comments-top" title="{% trans _('comentarios de') %}: «{{ self.title }}»" class="format-tag">
                         {% if self.comments > 0 %}
 
+                        <span class="label label-mnm">
+                            <i class="fa fa-comments"></i> {{ self.comments }} {% trans _("comentarios") %}
+                        </span>
+
                         <span class="badge badge-mnm">
                             <i class="fa fa-comments"></i> {{ self.comments }} {% trans _("comentarios") %}
                         </span>
