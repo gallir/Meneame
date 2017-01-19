@@ -212,7 +212,7 @@
                         <a href="#">Ver solamente mis subs
                             <div class="checkbox checkbox-slider--b-flat checkbox-slider-md checkbox-slider-warning" style="display:inline-block">
                                 <label>
-                                    <input id="subs_default_header" name="subs_default" value="subs_default" type="checkbox"><span>&nbsp;</span>
+                                    <input id="subs_default_header" name="subs_default" value="subs_default" type="checkbox" {% if current_user && current_user.subs_default %}checked{% endif %}><span>&nbsp;</span>
                                 </label>
                             </div>
                         </a>
