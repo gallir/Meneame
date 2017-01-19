@@ -392,7 +392,7 @@ class Poll
     {
         $this->readFromArray($data);
 
-        if (empty($this->id) && empty($this->question)) {
+        if ($this->votes || (empty($this->id) && empty($this->question))) {
             return true;
         }
 

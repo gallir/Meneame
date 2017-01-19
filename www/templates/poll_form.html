@@ -1,4 +1,10 @@
 <div class="poll-edit {% if !poll.id %}hidden{% endif %}">
+    {% if poll.id && poll.votes %}
+
+    <div class="alert alert-info text-center">{% trans _('No es posible editar una encuesta ya votada') %}</div>
+
+    {% else %}
+
     {% if !poll.id %}
     <h3>{% trans _('Si deseas crear una encuesta...') %}</h3>
     {% endif %}
@@ -23,4 +29,8 @@
             {% endfor %}
         </select>
     </div>
+
+    <p class="text-center">{% trans _('Revisa bien la información de la encuesta ya que una vez votada no podrá ser editada ni borrada') %}</p>
+
+    {% endif %}
 </div>
