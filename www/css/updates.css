@@ -1077,7 +1077,7 @@ ul.slick-dots li button {
 .story-blog .main-content h1 {
     font-weight: 300;
     font-size: 50px;
-    line-height: 55px;
+    line-height: 1em;
     letter-spacing: -1.5px;
     margin-bottom: 50px;
     color: #000000;
