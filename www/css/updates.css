@@ -1433,6 +1433,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     .story-blog aside .shake-container {
         margin-top: 20px;
     }
+
+    .story-blog aside .comments, .story-blog aside .share-icons {
+        margin-top: 15px;
+    }
 }
 
 @media (max-width: 800px) {
