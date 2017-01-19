@@ -42,6 +42,11 @@
                     {% exec self.to_html_paragraphs self.content %}
                 </div>
             </div>
+
+            {% if self.poll.id %}
+                {% set poll = self.poll %}
+                {% include 'poll_vote.html' %}
+            {% endif %}
         </div>
 
         <aside class="col-md-2 col-md-offset-1">
@@ -132,6 +137,12 @@
                     <li><a class="share-twitter" href="#" onclick="share_tw(this)"><i class="fa fa-twitter-square"></i></a></li>
                     <li><a class="share-mail" href="mailto:?subject={{ self.title }}&amp;body={{ link }}" title="Compartir por Correo"><i class="fa fa-envelope"></i></a></li>
                 </ul>
+
+                {% if self.is_editable %}
+                <a href="{% get_url 'editlink?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="btn btn-mnm btn-sm btn-block mt-20">
+                    <i class="fa fa-edit"></i> {% trans _('editar noticia') %}
+                </a>
+                {% endif %}
             </div>
         </aside>
     </div>
@@ -140,11 +151,6 @@
 <div class="story-blog">
     <div class="row">
         <div class="col-md-8 col-md-offset-1">
-            {% if self.poll.id %}
-                {% set poll = self.poll %}
-                {% include 'poll_vote.html' %}
-            {% endif %}
-
             {% if globals.link %}
                 {% exec do_banner_story as dummy %}
             {% endif %}
