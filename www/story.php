@@ -320,6 +320,8 @@ do_tabs("main",_('noticia'), true);
 
 if (empty($link->url) && (mb_strlen($link->content) > $globals['link_blog_len_min'])) {
     require __DIR__.'/story-blog.php';
+
+    echo '<div id="newswrap">';
 } else {
     /*** SIDEBAR ****/
     echo '<div id="sidebar">';
