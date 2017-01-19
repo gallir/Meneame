@@ -31,5 +31,13 @@ $link->best_comment = false;
 
 $show_relevants = $no_page = false;
 
+echo '<div class="story-blog-comments">';
+    echo '<div class="row">';
+        echo '<div class="col-md-8 col-md-offset-1">';
+            require __DIR__.'/story-comments.php';
+        echo '</div>';
+    echo '</div>';
+echo '</div>';
+
 $globals['tag_status'] = $globals['link']->status;
 

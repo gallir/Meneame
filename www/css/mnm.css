@@ -484,11 +484,49 @@ ul.menu01-itemsr li a {
     color: #fff;
 }
 
-#header-top ul#userinfo li a:hover {}
-
 #userinfo #avatar {
     width: 30px;
     height: 30px;
+}
+
+ul#userinfo a.notifications {
+    border-left: 1px solid rgba(16,16,16, .2);
+    font-size: 20px;
+    height: 35px;
+    margin-left: 10px;
+    padding-left:10px;
+    padding-top: 5px;
+    display: inline-block;
+}
+
+ul#userinfo a.notifications span {
+    display: inline-block;
+    min-width: 10px;
+    padding: 1px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #e35614;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: bottom;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-left: -12px;
+    margin-top: 1px;
+    border: 3px solid #e35614;
+}
+
+ul#userinfo a:hover {
+    color: #fff;
+}
+
+ul#userinfo li.search {
+    border-right: 1px solid rgba(16,16,16, .2);
+    font-size: 20px;
+    height: 35px;
+    margin-right: 10px;
+    padding-right: 10px;
 }
 
 #header-top .usertext {
