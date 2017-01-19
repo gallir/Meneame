@@ -87,6 +87,7 @@
                             <a href="{{ link.username | useruri }}" class="tooltip u:{{ link.author }}">
                                 <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url link.author, link.avatar, 80, false %}" data-2x="s:-40.:-80." class="avatar lazy img-responsive center-block" />
                             </a>
+
                             {{ link.username }}
                         </span>
 
@@ -150,12 +151,14 @@
 
                 <a href="{% exec get_user_uri self.username, 'history' %}" class="author">{{ self.username }}</a>
 
+                {% if self.status != 'published' %}
                 <p class="format-tag">
                     {% trans _('enviado') %}<br />
                     <span data-ts="{{ self.sent_date }}" class="ts visible dark" title="{% trans _('enviado') %}: ">____</span>
                 </p>
 
-                {% if self.status == 'published' %}
+                {% else %}
+
                 <p class="format-tag">
                     {% trans _('publicado') %}<br />
                     <span data-ts="{{ self.sub_date }}" class="ts visible dark" title="{% trans _('publicado') %}: ">____</span>
@@ -167,10 +170,8 @@
                         {% if self.comments > 0 %}
 
                         <span class="badge badge-mnm">
-                            <i class="fa fa-comments"></i> {{ self.comments }}
+                            <i class="fa fa-comments"></i> {{ self.comments }} {% trans _("comentarios") %}
                         </span>
-
-                        {% trans _("comentarios") %}
 
                         {% else %}
 
