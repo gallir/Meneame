@@ -1077,7 +1077,7 @@ ul.slick-dots li button {
 .story-blog .main-content h1 {
     font-weight: 300;
     font-size: 50px;
-    line-height: 0.75em;
+    line-height: 55px;
     letter-spacing: -1.5px;
     margin-bottom: 50px;
     color: #000000;
@@ -1104,20 +1104,20 @@ ul.slick-dots li button {
     top: 0;
     left: 0;
     margin: 0 auto;
-    width: 126px;
-    font-size: 18px;
+    width: 100px;
+    font-size: 16px;
 }
 
 .story-blog aside .news-shakeit .votes {
-    padding: 15px 0;
+    padding: 15px 0 10px 0;
 }
 
 .story-blog aside .news-shakeit .votes a {
-    font-size: 30px;
+    font-size: 26px;
 }
 
 .story-blog aside .news-shakeit .menealo {
-    width: 139px;
+    width: 112px;
     height: auto;
 }
 
@@ -1128,7 +1128,7 @@ ul.slick-dots li button {
 
 .story-blog aside .news-shakeit .clics {
     font-size: 16px;
-    padding: 10px 0;
+    padding: 8px 0;
 }
 
 .story-blog aside .details {
@@ -1180,6 +1180,41 @@ ul.slick-dots li button {
 
 .story-blog .best-comment .date {
     text-align: right;
+}
+
+.story-blog .share-icons {
+    margin-top: 40px;
+    list-style-type: none;
+}
+
+.story-blog .share-icons li {
+    display: inline;
+}
+
+.story-blog .share-icons li a {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 30px;
+}
+
+.story-blog .share-icons li:first-child a {
+    margin-left: 0;
+}
+
+.story-blog .share-icons li a.share-twitter {
+    color: #1c9bf6;
+}
+
+.story-blog .share-icons li a.share-facebook {
+    color: #3d539c;
+}
+
+.story-blog .share-icons li a.share-gplus {
+    color: #f73200;
+}
+
+.story-blog .share-icons li a.share-mail {
+    color: #7b6663;
 }
 
 .pagination-center {

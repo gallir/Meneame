@@ -142,14 +142,16 @@
             </div>
             {% endif %}
 
-            {% if ! globals.bot %}
-
             <div class="details">
+                {% if ! globals.bot %}
+
                 <a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}">
                     <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 80, false %}" data-2x="s:-40.:-80." class="avatar lazy img-responsive center-block" />
                 </a>
 
                 <a href="{% exec get_user_uri self.username, 'history' %}" class="author">{{ self.username }}</a>
+
+                {% endif %}
 
                 {% if self.status != 'published' %}
                 <p class="format-tag">
@@ -180,9 +182,13 @@
                         {% endif %}
                     </a>
                 </div>
-            </div>
 
-            {% endif %}
+                <ul class="share-icons" data-url="{{ self.permalink }}" data-title="{{ self.title }}">
+                    <li><a class="share-facebook" href="#" onclick="share_fb(this)"><i class="fa fa-facebook-square"></i></a></li>
+                    <li><a class="share-twitter" href="#" onclick="share_tw(this)"><i class="fa fa-twitter-square"></i></a></li>
+                    <li><a class="share-mail" href="mailto:?subject={{ self.title }}&amp;body={{ link }}" title="Compartir por Correo"><i class="fa fa-envelope"></i></a></li>
+                </ul>
+            </div>
         </aside>
     </div>
 </div>
