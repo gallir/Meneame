@@ -1129,9 +1129,14 @@ ul.slick-dots li button {
     height: auto;
 }
 
-.story-blog aside .news-shakeit .menealo span {
+.story-blog aside .news-shakeit .menealo span,
+.story-blog aside .news-shakeit .menealo a {
     padding: 3px;
     height: auto;
+}
+
+.story-blog aside .news-shakeit .menealo span.negative {
+    font-size: 16px;
 }
 
 .story-blog aside .news-shakeit .clics {
