@@ -150,12 +150,20 @@ echo '<div id="newswrap">';
         $sponsored_link = Link::from_db($globals['sponsored_link_uri'], 'uri');
     }
 
-    $links = $db->object_iterator($sql, "Link");
+    $links = $db->get_results($sql, "Link");
 
     if ($links) {
+        $all_ids = array_map(function($value) {
+            return $value->id;
+        }, $links);
+
+        $pollCollection = new PollCollection;
+        $pollCollection->loadSimpleFromRelatedIds('link_id', $all_ids);
+
         $counter = 0;
 
-        foreach($links as $link) {
+        foreach ($links as $link) {
+            $link->poll = $pollCollection->get($link->id);
             $link->max_len = 600;
 
             Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size', 'sponsored_link'));

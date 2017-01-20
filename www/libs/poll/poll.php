@@ -307,7 +307,7 @@ class Poll
                 SELECT SQL_NO_CACHE *, NULL AS `voted`,
                     IF (`end_at` < NOW(), TRUE, FALSE) AS `finished`
                 FROM `polls`
-                WHERE `p`.`'.$related.'` = "'.(int)$related_id.'"
+                WHERE `'.$related.'` = "'.(int)$related_id.'"
                 LIMIT 1;
             ';
         }
@@ -335,6 +335,21 @@ class Poll
         }
     }
 
+    public static function selectSimpleFromRelatedIds($related, array $related_ids)
+    {
+        global $db;
+
+        $query = '
+            SELECT SQL_NO_CACHE *, NULL AS `voted`, TRUE AS `simple`,
+                IF (`end_at` < NOW(), TRUE, FALSE) AS `finished`
+            FROM `polls`
+            WHERE `'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
+            LIMIT '.count($related_ids).';
+        ';
+
+        return $db->get_results(DbHelper::queryPlain($query), 'Poll');
+    }
+
     public static function selectFromRelatedIds($related, array $related_ids)
     {
         global $db, $current_user;
@@ -355,7 +370,7 @@ class Poll
         } else {
             $query = '
                 SELECT SQL_NO_CACHE *, NULL AS `voted`,
-                    IF (`p`.`end_at` < NOW(), TRUE, FALSE) AS `finished`
+                    IF (`end_at` < NOW(), TRUE, FALSE) AS `finished`
                 FROM `polls`
                 WHERE `'.$related.'` IN ('.DbHelper::implodedIds($related_ids).')
                 LIMIT '.count($related_ids).';

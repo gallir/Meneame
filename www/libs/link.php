@@ -66,7 +66,6 @@ class Link extends LCPBase {
 	LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
 	LEFT JOIN media ON (media.type='link' and media.id = link_id and media.version = 0) ";
 
-
 	static function from_db($id, $key = 'id', $complete = true) {
 		global $db, $current_user;
 

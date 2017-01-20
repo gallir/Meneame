@@ -104,14 +104,19 @@
                 {% else %} {% if self.content_type == 'video' %}
                 <span class="wideonly">&nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i></span>
                 {% endif %}
-
                 {% endif %}
 
                 {% if globals.link %}</h1>{% else %}</h2>{% endif %}
 
                 {% else %}
 
-                <h1><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h1>
+                <h1>
+                    <a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a>
+
+                    {% if self.poll && self.poll.id %}
+                    <span class="wideonly">&nbsp;<i class="fa fa-bar-chart" alt="{% trans _('encuesta') %}" title="{% trans _('encuesta') %}"></i></span>
+                    {% endif %}
+                </h1>
 
                 {% endif %} {# END if self.url #}
 
@@ -216,7 +221,7 @@
 
                 {% endif %}
 
-                {% if self.poll.id %}
+                {% if self.poll && self.poll.id && !self.poll.simple %}
                     {% set poll = self.poll %}
                     {% include 'poll_vote.html' %}
                 {% endif %}

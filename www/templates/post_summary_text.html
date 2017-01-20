@@ -25,7 +25,7 @@
 	&nbsp;&nbsp;<a href="javascript:post_edit({{ self.id }})" title="{% trans _('editar') %}" class="mini-icon-text"><i class="fa fa-edit edit-link"></i></a>
 {% endif %}
 
-{% if self.poll.id %}
+{% if self.poll && self.poll.id %}
 	{% set poll = self.poll %}
 	{% include 'poll_vote.html' %}
 {% endif %}

@@ -10,6 +10,19 @@ class PollCollection
 {
     public $rows = array();
 
+    public function loadSimpleFromRelatedIds($related, array $related_ids)
+    {
+        $this->rows = $rows = array();
+
+        foreach (Poll::selectSimpleFromRelatedIds($related, $related_ids) as $row) {
+            $rows[$row->id] = $row;
+        }
+
+        foreach ($rows as $row) {
+            $this->rows[$row->$related] = $row;
+        }
+    }
+
     public function loadFromRelatedIds($related, array $related_ids)
     {
         $this->rows = $rows = array();

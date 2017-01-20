@@ -14,6 +14,7 @@ class PollOption
     public $karma = 0;
     public $poll_id;
 
+    public $simple;
     public $index;
     public $voted;
     public $winner;

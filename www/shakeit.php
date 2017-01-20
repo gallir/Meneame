@@ -127,23 +127,31 @@ echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
 echo '<div id="newswrap">'."\n";
+	$sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE $where $order_by LIMIT $offset,$page_size) as ids on (ids.link = link_id)";
 
-$sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE $where $order_by LIMIT $offset,$page_size) as ids on (ids.link = link_id)";
+	$links = $db->get_results($sql, "Link");
 
-$links = $db->object_iterator($sql, "Link");
+	if ($links) {
+	    $all_ids = array_map(function($value) {
+	        return $value->id;
+	    }, $links);
 
-if ($links) {
-	foreach ($links as $link) {
-		if ($link->votes == 0 && $link->author != $current_user->user_id) {
-			continue;
+	    $pollCollection = new PollCollection;
+	    $pollCollection->loadSimpleFromRelatedIds('link_id', $all_ids);
+
+		foreach ($links as $link) {
+			if ($link->votes == 0 && $link->author != $current_user->user_id) {
+				continue;
+			}
+
+			$link->poll = $pollCollection->get($link->id);
+			$link->max_len = 600;
+
+			$link->print_summary('full', ($offset < 1000) ? 16 : null);
 		}
-
-		$link->max_len = 600;
-		$link->print_summary('full', ($offset < 1000) ? 16 : null);
 	}
-}
 
-do_pages($rows, $page_size);
+	do_pages($rows, $page_size);
 echo '</div>'."\n";
 
 do_footer_menu();
