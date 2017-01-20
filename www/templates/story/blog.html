@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            {% if self.poll.id %}
+            {% if self.poll && self.poll.id %}
                 {% set poll = self.poll %}
                 {% include 'poll_vote.html' %}
             {% endif %}

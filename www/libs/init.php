@@ -9,6 +9,7 @@
 include mnminclude.'utils.php';
 
 global $globals;
+
 $globals['start_time'] = microtime(true);
 $globals['now'] = intval($globals['start_time']);
 
@@ -41,13 +42,13 @@ if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || $_SERVER['SERVER_PORT'] == 
 	$globals['scheme'] = 'https:';
 } else {
 	$globals['https'] = false;
+
 	if (!empty($globals['force_ssl'])) {
 		$globals['scheme'] = 'https:';
 	} else {
 		$globals['scheme'] = 'http:';
 	}
 }
-
 
 // Use proxy and load balancer detection
 if ($globals['check_behind_proxy']) {
@@ -61,13 +62,11 @@ if ($globals['check_behind_proxy']) {
 	$globals['proxy_ip'] = false;
 }
 
-
 $globals['user_ip_int'] = inet_ptod($globals['user_ip']);
 
 $globals['cache-control'] = Array();
 $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode($_SERVER['REQUEST_URI'])); // clean  it for future use
 //echo "<!-- " . $globals['uri'] . "-->\n";
-
 
 // For PHP < 5
 if ( !function_exists('htmlspecialchars_decode') ) {
@@ -76,19 +75,23 @@ if ( !function_exists('htmlspecialchars_decode') ) {
 	}
 }
 
-if($_SERVER['HTTP_HOST']) {
+if ($_SERVER['HTTP_HOST']) {
 	// Check bots
-	if (empty($_SERVER['HTTP_USER_AGENT'])
-		|| preg_match('/(spider|httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog|facebookexternalhit|squider)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])) {
+	if (
+		empty($_SERVER['HTTP_USER_AGENT'])
+		|| preg_match('/(spider|httpclient|bot|slurp|wget|libwww|\Wphp|wordpress|joedog|facebookexternalhit|squider)[\W\s0-9]/i', $_SERVER['HTTP_USER_AGENT'])
+	) {
 		$globals['bot'] = true;
 	} else {
 		$globals['bot'] = false;
 	}
 
 	// Check mobile/TV versions
-	if ( ! $globals['bot']
-		&& (isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', $_SERVER['HTTP_USER_AGENT']))
-			&& ! preg_match('/ipad|tablet/i', $_SERVER['HTTP_USER_AGENT']) ) { // Don't treat iPad as mobiles
+	if (
+		!$globals['bot']
+		&& isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', $_SERVER['HTTP_USER_AGENT'])
+		&& !preg_match('/ipad|tablet/i', $_SERVER['HTTP_USER_AGENT'])
+	) { // Don't treat iPad as mobiles
 		$globals['mobile'] = 1;
 		/* Removed, with threads it doesn't make sense
 		// TODO: remove these lines if not used again.
@@ -102,31 +105,32 @@ if($_SERVER['HTTP_HOST']) {
 
 	// Fill server names
 	// Alert, if does not work with port 443, in order to avoid standard HTTP connections to SSL port
-	if(empty($globals['server_name'])) {
+	if (empty($globals['server_name'])) {
+		$globals['server_name'] = strtolower($_SERVER['SERVER_NAME']);
+
 		if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
-			$globals['server_name'] = strtolower($_SERVER['SERVER_NAME']) . ':' . $_SERVER['SERVER_PORT'];
-		} else {
-			$globals['server_name'] = strtolower($_SERVER['SERVER_NAME']);
+			$globals['server_name'] .= ':'.$_SERVER['SERVER_PORT'];
 		}
 	}
-} else {
-	if (!$globals['server_name']) $globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
+} elseif (empty($globals['server_name'])) {
+	$globals['server_name'] = 'meneame.net'; // Warn: did you put the right server name?
 }
 
 $globals['base_url_general'] = $globals['base_url']; // Keep the original if it's modified in submnms
 
 // Add always the scheme, it's necessary for headers and rss's
-if (!empty($globals['static_server'])) {
-	$globals['base_static_noversion'] = $globals['scheme'].'//'.$globals['static_server'].$globals['base_url'];
+$globals['base_static_noversion'] = $globals['scheme'].'//';
+
+if (empty($globals['static_server'])) {
+	$globals['base_static_noversion'] .= $globals['server_name'].$globals['base_url'];
 } else {
-	$globals['base_static_noversion'] = $globals['scheme'].'//'.$globals['server_name'].$globals['base_url'];
+	$globals['base_static_noversion'] .= $globals['static_server'].$globals['base_url'];
 }
 
 $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';
 
 // Votes' tags
 $globals['negative_votes_values'] = Array ( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
-
 
 // autoloaded clasess
 // Should be defined after mnminclude
@@ -195,7 +199,6 @@ if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_serv
 	$db->persistent = $globals['mysql_persistent'];
 }
 
-
 function haanga_bootstrap()
 {
 	/* bootstrap function, load our custom tags/filter */
@@ -223,7 +226,7 @@ $config = array(
 );
 
 // Allow full or relative pathname for the cache (i.e. /var/tmp or cache)
-if ($globals['haanga_cache'][0] == '/') {
+if ($globals['haanga_cache'][0] === '/') {
 	$config['cache_dir'] =  $globals['haanga_cache'] .'/Haanga/'.$_SERVER['SERVER_NAME'];
 } else {
 	$config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.$_SERVER['SERVER_NAME'];
@@ -251,23 +254,33 @@ function shutdown() {
 		$db->close();
 	}
 
-	if ($globals['access_log'] && !empty($globals['user_ip'])) {
-		if (! empty($globals['script'])) $script = $globals['script'];
-		elseif (empty($_SERVER['SCRIPT_NAME'])) $script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
-		else $script = $_SERVER['SCRIPT_NAME'];
-
-		if (!empty($globals['ip_blocked'])) $user = 'B'; // IP is banned
-		elseif ($current_user->user_id > 0) $user = $current_user->user_login;
-		else $user = '-';
-
-		if ($globals['start_time'] > 0) {
-			$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
-		} else {
-			$time = 0;
-		}
-
-		@syslog(LOG_DEBUG, $globals['user_ip'].' '.$user.' '.$time.' '.get_server_name().' '.$script);
-		exit(0);
+	if (empty($globals['access_log']) || empty($globals['user_ip'])) {
+		return;
 	}
-}
 
+	if (!empty($globals['script'])) {
+		$script = $globals['script'];
+	} elseif (empty($_SERVER['SCRIPT_NAME'])) {
+		$script = 'null('.urlencode($_SERVER["DOCUMENT_URI"]).')';
+	} else {
+		$script = $_SERVER['SCRIPT_NAME'];
+	}
+
+	if (!empty($globals['ip_blocked'])) {
+		$user = 'B'; // IP is banned
+	} elseif ($current_user->user_id > 0) {
+		$user = $current_user->user_login;
+	} else {
+		$user = '-';
+	}
+
+	if ($globals['start_time'] > 0) {
+		$time = sprintf("%5.3f", microtime(true) - $globals['start_time']);
+	} else {
+		$time = 0;
+	}
+
+	@syslog(LOG_DEBUG, $globals['user_ip'].' '.$user.' '.$time.' '.get_server_name().' '.$script);
+
+	exit(0);
+}

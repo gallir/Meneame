@@ -46,6 +46,7 @@ class Link extends LCPBase {
 	var $thumb_status = 'unknown';
 	var $clicks = 0;
 
+	var $image;
 	var $best_comments = array();
 	var $poll;
 
@@ -1506,23 +1507,26 @@ class Link extends LCPBase {
 		}
 	}
 
-	function has_thumb() {
+	function has_thumb()
+	{
 		global $globals;
 
-		if (! empty($this->thumb_url)) return $this->thumb_url;
-
-
-		if ($this->media_size > 0) { // New format
-			$base = $globals['base_static_noversion'];
-			$this->thumb_uri = Upload::get_cache_relative_dir($this->id)."/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
-			$this->thumb_url = $base.$this->thumb_uri;
-			$this->media_url = Upload::get_url('link', $this->id, 0, $this->media_date, $this->media_mime);
-			$this->thumb_x = $this->thumb_y = $globals['thumb_size'];
+		if (!empty($this->thumb_url)) {
 			return $this->thumb_url;
+		}
+
+		if (!$this->media_size > 0) { // New format
+	 		return $this->thumb_url = false;
 	 	}
 
-	 	$this->thumb_url = false;
-		return false;
+		$base = $globals['base_static_noversion'];
+
+		$this->thumb_uri = Upload::get_cache_relative_dir($this->id)."/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
+		$this->thumb_url = $base.$this->thumb_uri;
+		$this->media_url = Upload::get_url('link', $this->id, 0, $this->media_date, $this->media_mime);
+		$this->thumb_x = $this->thumb_y = $globals['thumb_size'];
+
+		return $this->thumb_url;
 	}
 
 	function get_related($max = 10) {

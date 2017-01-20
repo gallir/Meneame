@@ -407,8 +407,8 @@ if (!empty($globals['basic_config'])) {
     return;
 }
 
-define('mnmpath', dirname(__FILE__));
-define('mnminclude', dirname(__FILE__).'/libs/');
+define('mnmpath', __DIR__);
+define('mnminclude', __DIR__.'/libs/');
 
 ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
 

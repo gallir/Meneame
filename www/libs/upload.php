@@ -302,6 +302,10 @@ class Upload {
 		return Upload::get_cache_dir($this->id).'/'.$this->filename();
 	}
 
+	function pathname_relative() {
+		return Upload::get_cache_relative_dir($this->id).'/'.$this->filename();
+	}
+
 	function path() {
 		return Upload::get_cache_dir($this->id);
 	}
