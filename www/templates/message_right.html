@@ -1,19 +1,18 @@
 <div class="sidebox-sub">
     <div class="box">
         <div class="logo text-center">
-            {% if ! site.logo_url %}
             <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
+                {% if ! site.logo_url %}
                 <img src="{{ globals.base_static }}img/mnm/h9_eli.png">
-            </a>
-            {% else %}
-            <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
+                {% else %}
                 <img src="{{ globals.base_static }}img/g.gif"
-                     class="thumb ok lazy img-circle"
-                     data-src="{{ site.logo_url }}"
-                     width="{{ site.logo_width }}" height="{{ site.logo_height }}"
-                     alt="{{ site.name }}" style="margin-right:5px;"/></a>
-            {% endif %}
-
+                    class="thumb ok lazy img-circle"
+                    data-src="{{ site.logo_url }}"
+                    width="{{ site.logo_width }}" height="{{ site.logo_height }}"
+                    alt="{{ site.name }}" style="margin-right:5px;"
+                />
+                {% endif %}
+            </a>
         </div>
 
         <div class="name text-center">
@@ -24,7 +23,6 @@
                 <span>{% trans _('Editar') %}</span>
             </a>
             {% endif %}
-
         </div>
 
         {% if properties.message %}
@@ -34,7 +32,6 @@
         {% endif %}
 
         <div class="follow text-center">
-
             <div class="followers">{{ site.followers }} seguidores</div>
 
             {% if user.user_id %}
@@ -59,7 +56,6 @@
 
             <div class="clearfix"></div>
         </div>
-
     </div>
 
     {% if site.show_admin %}
@@ -67,5 +63,4 @@
         Admin | <a href="{{ owner.id | useruri }}" class="tooltip u:{{ owner.id }}">{{ owner.username }}</a>
     </div>
     {% endif %}
-
 </div>

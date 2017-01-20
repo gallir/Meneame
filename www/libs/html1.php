@@ -978,7 +978,7 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date') {
 function do_sub_message_right() {
 	global $globals, $current_user;
 
-	if ($globals['mobile'] || ! $globals['submnm']) {
+	if ($globals['mobile'] || !$globals['submnm']) {
 		return;
 	}
 
