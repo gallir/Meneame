@@ -6,90 +6,98 @@
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function unaccent($string) {
-	$chars = array(
-	// Decompositions for Latin-1 Supplement
-	chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
-	chr(195).chr(130) => 'A', chr(195).chr(131) => 'A',
-	chr(195).chr(132) => 'A', chr(195).chr(133) => 'A',
-	chr(195).chr(135) => 'C', chr(195).chr(136) => 'E',
-	chr(195).chr(137) => 'E', chr(195).chr(138) => 'E',
-	chr(195).chr(139) => 'E', chr(195).chr(140) => 'I',
-	chr(195).chr(141) => 'I', chr(195).chr(142) => 'I',
-	chr(195).chr(143) => 'I',
-	chr(195).chr(146) => 'O', chr(195).chr(147) => 'O',
-	chr(195).chr(148) => 'O', chr(195).chr(149) => 'O',
-	chr(195).chr(150) => 'O', chr(195).chr(153) => 'U',
-	chr(195).chr(154) => 'U', chr(195).chr(155) => 'U',
-	chr(195).chr(156) => 'U',
-	chr(195).chr(159) => 's', chr(195).chr(160) => 'a',
-	chr(195).chr(161) => 'a', chr(195).chr(162) => 'a',
-	chr(195).chr(163) => 'a', chr(195).chr(164) => 'a',
-	chr(195).chr(165) => 'a', chr(195).chr(167) => 'c',
-	chr(195).chr(168) => 'e', chr(195).chr(169) => 'e',
-	chr(195).chr(170) => 'e', chr(195).chr(171) => 'e',
-	chr(195).chr(172) => 'i', chr(195).chr(173) => 'i',
-	chr(195).chr(174) => 'i', chr(195).chr(175) => 'i',
-	chr(195).chr(178) => 'o',
-	chr(195).chr(179) => 'o', chr(195).chr(180) => 'o',
-	chr(195).chr(181) => 'o', chr(195).chr(182) => 'o',
-	chr(195).chr(182) => 'o', chr(195).chr(185) => 'u',
-	chr(195).chr(186) => 'u', chr(195).chr(187) => 'u',
-	chr(195).chr(188) => 'u',
-	// Decompositions for Latin Extended-A
-	chr(196).chr(128) => 'A', chr(196).chr(129) => 'a',
-	chr(196).chr(130) => 'A', chr(196).chr(131) => 'a',
-	chr(196).chr(132) => 'A', chr(196).chr(133) => 'a',
-	chr(196).chr(134) => 'C', chr(196).chr(135) => 'c',
-	chr(196).chr(136) => 'C', chr(196).chr(137) => 'c',
-	chr(196).chr(138) => 'C', chr(196).chr(139) => 'c',
-	chr(196).chr(140) => 'C', chr(196).chr(141) => 'c',
-	chr(196).chr(142) => 'D', chr(196).chr(143) => 'd',
-	chr(196).chr(144) => 'D', chr(196).chr(145) => 'd',
-	chr(196).chr(146) => 'E', chr(196).chr(147) => 'e',
-	chr(196).chr(148) => 'E', chr(196).chr(149) => 'e',
-	chr(196).chr(150) => 'E', chr(196).chr(151) => 'e',
-	chr(196).chr(152) => 'E', chr(196).chr(153) => 'e',
-	chr(196).chr(154) => 'E', chr(196).chr(155) => 'e',
-	chr(196).chr(168) => 'I', chr(196).chr(169) => 'i',
-	chr(196).chr(170) => 'I', chr(196).chr(171) => 'i',
-	chr(196).chr(172) => 'I', chr(196).chr(173) => 'i',
-	chr(196).chr(174) => 'I', chr(196).chr(175) => 'i',
-	chr(196).chr(176) => 'I', chr(196).chr(177) => 'i',
-	chr(197).chr(140) => 'O', chr(197).chr(141) => 'o',
-	chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
-	chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',
-	chr(197).chr(168) => 'U', chr(197).chr(169) => 'u',
-	chr(197).chr(170) => 'U', chr(197).chr(171) => 'u',
-	chr(197).chr(172) => 'U', chr(197).chr(173) => 'u',
-	chr(197).chr(174) => 'U', chr(197).chr(175) => 'u',
-	chr(197).chr(176) => 'U', chr(197).chr(177) => 'u',
-	chr(197).chr(178) => 'U', chr(197).chr(179) => 'u',
-	);
-	$string = strtr($string, $chars);
-	return $string;
+function unaccent($string)
+{
+	return strtr($string, array(
+		// Decompositions for Latin-1 Supplement
+		chr(195).chr(128) => 'A', chr(195).chr(129) => 'A',
+		chr(195).chr(130) => 'A', chr(195).chr(131) => 'A',
+		chr(195).chr(132) => 'A', chr(195).chr(133) => 'A',
+		chr(195).chr(135) => 'C', chr(195).chr(136) => 'E',
+		chr(195).chr(137) => 'E', chr(195).chr(138) => 'E',
+		chr(195).chr(139) => 'E', chr(195).chr(140) => 'I',
+		chr(195).chr(141) => 'I', chr(195).chr(142) => 'I',
+		chr(195).chr(143) => 'I',
+		chr(195).chr(146) => 'O', chr(195).chr(147) => 'O',
+		chr(195).chr(148) => 'O', chr(195).chr(149) => 'O',
+		chr(195).chr(150) => 'O', chr(195).chr(153) => 'U',
+		chr(195).chr(154) => 'U', chr(195).chr(155) => 'U',
+		chr(195).chr(156) => 'U',
+		chr(195).chr(159) => 's', chr(195).chr(160) => 'a',
+		chr(195).chr(161) => 'a', chr(195).chr(162) => 'a',
+		chr(195).chr(163) => 'a', chr(195).chr(164) => 'a',
+		chr(195).chr(165) => 'a', chr(195).chr(167) => 'c',
+		chr(195).chr(168) => 'e', chr(195).chr(169) => 'e',
+		chr(195).chr(170) => 'e', chr(195).chr(171) => 'e',
+		chr(195).chr(172) => 'i', chr(195).chr(173) => 'i',
+		chr(195).chr(174) => 'i', chr(195).chr(175) => 'i',
+		chr(195).chr(178) => 'o',
+		chr(195).chr(179) => 'o', chr(195).chr(180) => 'o',
+		chr(195).chr(181) => 'o', chr(195).chr(182) => 'o',
+		chr(195).chr(182) => 'o', chr(195).chr(185) => 'u',
+		chr(195).chr(186) => 'u', chr(195).chr(187) => 'u',
+		chr(195).chr(188) => 'u',
+		// Decompositions for Latin Extended-A
+		chr(196).chr(128) => 'A', chr(196).chr(129) => 'a',
+		chr(196).chr(130) => 'A', chr(196).chr(131) => 'a',
+		chr(196).chr(132) => 'A', chr(196).chr(133) => 'a',
+		chr(196).chr(134) => 'C', chr(196).chr(135) => 'c',
+		chr(196).chr(136) => 'C', chr(196).chr(137) => 'c',
+		chr(196).chr(138) => 'C', chr(196).chr(139) => 'c',
+		chr(196).chr(140) => 'C', chr(196).chr(141) => 'c',
+		chr(196).chr(142) => 'D', chr(196).chr(143) => 'd',
+		chr(196).chr(144) => 'D', chr(196).chr(145) => 'd',
+		chr(196).chr(146) => 'E', chr(196).chr(147) => 'e',
+		chr(196).chr(148) => 'E', chr(196).chr(149) => 'e',
+		chr(196).chr(150) => 'E', chr(196).chr(151) => 'e',
+		chr(196).chr(152) => 'E', chr(196).chr(153) => 'e',
+		chr(196).chr(154) => 'E', chr(196).chr(155) => 'e',
+		chr(196).chr(168) => 'I', chr(196).chr(169) => 'i',
+		chr(196).chr(170) => 'I', chr(196).chr(171) => 'i',
+		chr(196).chr(172) => 'I', chr(196).chr(173) => 'i',
+		chr(196).chr(174) => 'I', chr(196).chr(175) => 'i',
+		chr(196).chr(176) => 'I', chr(196).chr(177) => 'i',
+		chr(197).chr(140) => 'O', chr(197).chr(141) => 'o',
+		chr(197).chr(142) => 'O', chr(197).chr(143) => 'o',
+		chr(197).chr(144) => 'O', chr(197).chr(145) => 'o',
+		chr(197).chr(168) => 'U', chr(197).chr(169) => 'u',
+		chr(197).chr(170) => 'U', chr(197).chr(171) => 'u',
+		chr(197).chr(172) => 'U', chr(197).chr(173) => 'u',
+		chr(197).chr(174) => 'U', chr(197).chr(175) => 'u',
+		chr(197).chr(176) => 'U', chr(197).chr(177) => 'u',
+		chr(197).chr(178) => 'U', chr(197).chr(179) => 'u',
+	));
 }
 
-function htmlentities2unicodeentities ($input) {
+function htmlentities2unicodeentities($input)
+{
 	$input = utf8_for_xml($input);
-	$htmlEntities = array_values (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
-	$entitiesDecoded = array_keys  (get_html_translation_table (HTML_ENTITIES, ENT_QUOTES));
-	$num = count ($entitiesDecoded);
+	$table = get_html_translation_table(HTML_ENTITIES, ENT_QUOTES);
+
+	$htmlEntities = array_values($table);
+	$entitiesDecoded = array_keys($table);
+
+	$num = count($entitiesDecoded);
+
 	for ($u = 0; $u < $num; $u++) {
 		$utf8Entities[$u] = '&#'.ord($entitiesDecoded[$u]).';';
 	}
-	return str_replace ($htmlEntities, $utf8Entities, $input);
+
+	return str_replace($htmlEntities, $utf8Entities, $input);
 }
 
-function utf8_for_xml($string) {
+function utf8_for_xml($string)
+{
 	return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
-function url_no_scheme($url) {
+function url_no_scheme($url)
+{
 	return preg_replace('/^https{0,1}:/', '', $url);
 }
 
-function clean_input_url($string) {
+function clean_input_url($string)
+{
 	$string = preg_replace('/ /', '+', trim(stripslashes(mb_substr($string, 0, 512))));
 	$string = preg_replace('/[<>\r\n\t]/', '', $string);
 	$string = preg_replace('/(utm_\w+?|&feature)=[^&]*/', '', $string); // Delete common variables for Analitycs and Youtube
@@ -97,275 +105,368 @@ function clean_input_url($string) {
 	$string = preg_replace('/&+$/', '', $string); // Delete useless & at the end
 	$string = preg_replace('/\?&+/', '?', $string); // Delete useless & after ?
 	$string = preg_replace('/\?&*$/', '', $string); // Delete empty queries
+
 	return $string;
 }
 
-function clean_input_string($string) {
+function clean_input_string($string)
+{
 	return preg_replace('/[ <>\'\"\r\n\t\(\)]/', '', stripslashes($string));
 }
 
-function get_hex_color($color, $prefix = '') {
-	return $prefix . substr(preg_replace('/[^a-f\d]/i', '', $color), 0, 6);
+function get_hex_color($color, $prefix = '')
+{
+	return $prefix.substr(preg_replace('/[^a-f\d]/i', '', $color), 0, 6);
 }
 
-function get_negative_vote($value) {
+function get_negative_vote($value)
+{
 	global $globals;
+
 	return $globals['negative_votes_values'][$value];
 }
 
-function user_exists($username, $ignore = 0) {
+function user_exists($username, $ignore = 0)
+{
 	global $db;
-	$username = $db->escape($username);
-	$res=$db->get_var("SELECT user_id FROM users WHERE user_login='$username' AND user_id != $ignore");
-	if ($res>0) return true;
-	return false;
+
+	$res = $db->get_var('SELECT user_id FROM users WHERE user_login = "'.$db->escape($username).'" AND user_id != "'.$ignore.'"');
+
+	return $res ? true : false;
 }
 
-function email_exists($email, $check_previous_registered = true) {
+function email_exists($email, $check_previous_registered = true)
+{
 	global $db;
 
 	$parts = explode('@', $email);
 	$domain = $parts[1];
 	$subparts = explode('+', $parts[0]); // Because we allow user+extension@gmail.com
-	$user = $subparts[0];
-	$user = $db->escape($user);
+
+	$user = $db->escape($subparts[0]);
 	$domain = $db->escape($domain);
-	$res=$db->get_var("SELECT count(*) FROM users WHERE user_email = '$user@$domain' or user_email LIKE '$user+%@$domain'");
-	if ($res>0) return $res;
-	if ($check_previous_registered) {
-		// Check the same email wasn't used recently for another account
-		$res=$db->get_var("SELECT count(*) FROM users WHERE (user_email_register = '$user@$domain' or user_email_register LIKE '$user+%@$domain') and user_date > date_sub(now(), interval 1 year)");
-		if ($res>0) return $res;
+	$res = $db->get_var("SELECT COUNT(*) FROM users WHERE user_email = '$user@$domain' or user_email LIKE '$user+%@$domain'");
+
+	if ($res) {
+		return $res;
 	}
-	return false;
+
+	if (!$check_previous_registered) {
+		return false;
+	}
+
+	// Check the same email wasn't used recently for another account
+	$res = $db->get_var("SELECT count(*) FROM users WHERE (user_email_register = '$user@$domain' or user_email_register LIKE '$user+%@$domain') and user_date > date_sub(now(), interval 1 year)");
+
+	return $res ?: false;
 }
 
-function check_email($email) {
+function check_email($email)
+{
 	global $globals;
+
 	require_once(mnminclude.'ban.php');
-	if (! preg_match('/^[a-z0-9_\-\.]+(\+[a-z0-9_\-\.]+)*@[a-z0-9_\-\.]+\.[a-z]{2,6}$/i', $email)) return false;
+
+	if (!preg_match('/^[a-z0-9_\-\.]+(\+[a-z0-9_\-\.]+)*@[a-z0-9_\-\.]+\.[a-z]{2,6}$/i', $email)) {
+		return false;
+	}
 
 	$username = preg_replace('/@.+$/', '', $email);
-	if ( substr_count($username, '.') > 3 || preg_match('/\.{2,}/', $username) ) return false; // Doesn't allow "..+" or more than 2 dots
+
+	if ((substr_count($username, '.') > 3) || preg_match('/\.{2,}/', $username)) {
+		return false; // Doesn't allow "..+" or more than 2 dots
+	}
 
 	// check both, the full address and the domain
-	if(check_ban($email, 'email') || check_ban(preg_replace('/^.*@/', '', $email), 'email')) return false;
+	if (check_ban($email, 'email') || check_ban(preg_replace('/^.*@/', '', $email), 'email')) {
+		return false;
+	}
+
 	return true;
 }
 
-function check_username($name) {
+function check_username($name)
+{
 	global $current_user;
 
-	return (preg_match('/^\p{L}[\._\p{L}\d]+$/ui', $name) && mb_strlen($name) > 2 && mb_strlen($name) <= 24
-				&& ($current_user->admin || ! preg_match('/^admin/i', $name)) ); // Does not allow nicks begining with "admin"
+	$len = mb_strlen($name);
+
+	return (
+		preg_match('/^\p{L}[\._\p{L}\d]+$/ui', $name)
+		&& ($len > 2)
+		&& ($len <= 24)
+		&& ($current_user->admin || !preg_match('/^admin/i', $name))
+	); // Does not allow nicks begining with "admin"
 }
 
-function check_password($password) {
-	 return preg_match("/^(?=.{6,})(?=(.*[a-z].*))(?=(.*[A-Z0-9].*)).*$/", $password);
+function check_password($password)
+{
+	return preg_match("/^(?=.{6,})(?=(.*[a-z].*))(?=(.*[A-Z0-9].*)).*$/", $password);
 }
 
-
-function txt_time_diff($from, $now=0){
+function txt_time_diff($from, $now=0)
+{
 	global $globals;
+
+	$now = $now ?: $globals['now'];
+
+	$diff = $now - $from;
+	$days = intval($diff / 86400);
+
+	$diff = $diff % 86400;
+	$hours = intval($diff / 3600);
+
+	$diff = $diff % 3600;
+	$minutes = intval($diff / 60);
+
+	$secs = $diff % 60;
+
 	$txt = '';
-	if($now==0) $now = $globals['now'];
-	$diff=$now-$from;
-	$days=intval($diff/86400);
-	$diff=$diff%86400;
-	$hours=intval($diff/3600);
-	$diff=$diff%3600;
-	$minutes=intval($diff/60);
-	$secs=$diff%60;
 
-	if($days>1) $txt  .= " $days "._('días');
-	else if ($days==1) $txt  .= " $days "._('día');
-
-	if($hours>1) $txt .= " $hours "._('horas');
-	else if ($hours==1) $txt  .= " $hours "._('hora');
-
-	if($minutes>1) $txt .= " $minutes "._('minutos');
-	else if ($minutes==1) $txt	.= " $minutes "._('minuto');
-
-	if($txt=='') {
-		if ($secs < 5) $txt = ' ' . _('nada');
-		else $txt = " $secs ". _('segundos');
+	if ($days > 1) {
+		$txt .= " $days "._('días');
+	} elseif ($days === 1) {
+		$txt .= " $days "._('día');
 	}
-	return $txt;
+
+	if ($hours > 1) {
+		$txt .= " $hours "._('horas');
+	} elseif ($hours === 1) {
+		$txt .= " $hours "._('hora');
+	}
+
+	if ($minutes > 1) {
+		$txt .= " $minutes "._('minutos');
+	} elseif ($minutes === 1) {
+		$txt .= " $minutes "._('minuto');
+	}
+
+	if ($txt) {
+		return $txt;
+	}
+
+	if ($secs < 5) {
+		return ' '._('nada');
+	}
+
+	return " $secs ". _('segundos');
 }
 
-function txt_shorter($string, $len=70) {
-	if (mb_strlen($string) > $len)
-		$string = mb_substr($string, 0, $len-3) . "...";
+function txt_shorter($string, $len = 70)
+{
+	if (mb_strlen($string) > $len) {
+		return mb_substr($string, 0, $len-3).'...';
+	}
+
 	return $string;
 }
 
 // Used to get the text content for stories and comments
-function clean_text($string, $wrap=0, $replace_nl=true, $maxlength=0) {
+function clean_text($string, $wrap = 0, $replace_nl = true, $maxlength = 0)
+{
 	$string = stripslashes(trim($string));
 	$string = preg_replace('/\r\n/u', "\n", $string); // Change \r\n to \n to show right chars' counter
 	$string = preg_replace('/\t/s', '&#8195;', $string); // &emsp; &#x2003;
 	$string = clear_whitespace($string);
 	$string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
+
 	// Replace two "-" by a single longer one, to avoid problems with xhtml comments
 	//$string = preg_replace('/--/', '–', $string);
-	if ($wrap>0) $string = wordwrap($string, $wrap, " ", 1);
-	if ($replace_nl) $string = preg_replace('/[\n\r]+/su', ' ', $string);
-	if ($maxlength > 0) $string = mb_substr($string, 0, $maxlength);
+	if ($wrap > 0) {
+		$string = wordwrap($string, $wrap, " ", 1);
+	}
+
+	if ($replace_nl) {
+		$string = preg_replace('/[\n\r]+/su', ' ', $string);
+	}
+
+	if ($maxlength > 0) {
+		$string = mb_substr($string, 0, $maxlength);
+	}
+
 	$string = @htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
+
 	return preg_replace('/(\d+) +(\d{3,})/u', "$1&nbsp;$2", $string); // Avoid to wrap in the middle of numbers with thousands' space separator
 }
 
-function clean_text_with_tags($string, $wrap=0, $replace_nl=true, $maxlength=0) {
+function clean_text_with_tags($string, $wrap = 0, $replace_nl = true, $maxlength = 0)
+{
 	$string = add_tags(clean_text($string, $wrap, $replace_nl, $maxlength));
+
 	$string = preg_replace_callback('/(?:&lt;|<)(\/{0,1})(\w{1,6})(?:&gt;|>)/', function ($matches) {
-			global $globals;
-			static $open_tags = array();
+		global $globals;
+		static $open_tags = array();
 
-			if (preg_match('/^('.$globals['enabled_tags'].')$/', $matches[2])) {
-				if ($matches[1] == '/') {
-					if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] != $matches[2]) {
-						return $matches[0];
-					}
-					array_pop($open_tags);
-					return "</$matches[2]>";
-				}
-				$open_tags[] =	$matches[2];
-				return "<$matches[2]>";
-			}
+		if (!preg_match('/^('.$globals['enabled_tags'].')$/', $matches[2])) {
 			return $matches[0];
-		}, $string);
-	$string = close_tags($string);
-	$string = preg_replace('/<\/(\w{1,6})>( *)<(\1)>/', "$2", $string); // Deletes useless close+open tags
-	//$string = preg_replace('/<(\/{0,1}\w{1,6})>( *)<(\1)>/', "<$1>$2", $string); // Deletes repeated tags
-	return $string;
+		}
+
+		if ($matches[1] === '/') {
+			if (count($open_tags) && $open_tags[count($open_tags) - 1] != $matches[2]) {
+				return $matches[0];
+			}
+
+			array_pop($open_tags);
+
+			return "</$matches[2]>";
+		}
+
+		$open_tags[] =	$matches[2];
+
+		return "<$matches[2]>";
+	}, $string);
+
+	return preg_replace('/<\/(\w{1,6})>( *)<(\1)>/', "$2", close_tags($string)); // Deletes useless close+open tags
 }
 
-function close_tags(&$string) {
+function close_tags(&$string)
+{
 	return preg_replace_callback('/(?:<\s*(\/{0,1})\s*([^>]+)>|$)/', function($matches) {
-			static $open_tags = array();
+		static $open_tags = array();
 
-			if (empty($matches[0])) {
-				// End of text, close open tags
-				$end = '';
-				while (($t = array_pop($open_tags))) {
-					$end .= "</$t>";
-				}
-				if ($end) $end = "\n$end\n";
-				return $end;
+		if (empty($matches[0])) {
+			// End of text, close open tags
+			$end = '';
+
+			while (($t = array_pop($open_tags))) {
+				$end .= "</$t>";
 			}
-			if ($matches[1] && $matches[1][0] == '/') {
-				if (count($open_tags) > 0 && $open_tags[count($open_tags)-1] == $matches[2]) {
-					array_pop($open_tags);
-				} else {
-					return ' '; // Don't allow misplaced or wrong tags
-				}
+
+			return $end ? ("\n$end\n") : '';
+		}
+
+		if ($matches[1] && ($matches[1][0] === '/')) {
+			if (count($open_tags) && $open_tags[count($open_tags)-1] == $matches[2]) {
+				array_pop($open_tags);
 			} else {
-				$open_tags[] = $matches[2];
+				return ' '; // Don't allow misplaced or wrong tags
 			}
-			return $matches[0];
-		}, $string);
+		} else {
+			$open_tags[] = $matches[2];
+		}
+
+		return $matches[0];
+	}, $string);
 }
 
-function clean_lines($string) {
+function clean_lines($string)
+{
 	return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
 
-function text_to_summary($string, $length=50) {
+function text_to_summary($string, $length = 50)
+{
 	$string = strip_tags($string);
 	// Remove references to comments and number in notes referemces
 	$string = preg_replace('/(?:#\d+|[\r\n\t]+|,\d+|http\S+|{.+?})\s/u', ' ', $string);
 	$len = mb_strlen($string);
-	$string = mb_substr($string,  0, $length);
+	$string = mb_substr($string, 0, $length);
+
 	if (mb_strlen($string) < $len) {
 		$string = preg_replace('/ *[\w&;]*$/', '', $string);
-		$string = preg_replace('/\s\S{1,20}$/', '', $string);
-		$string .= '...';
+		$string = preg_replace('/\s\S{1,20}$/', '', $string).'...';
 	}
+
 	return $string;
 }
 
-function add_tags($string) {
+function add_tags($string)
+{
 	// Convert to em, strong and strike tags
 	$regexp = '_[^\s<>_]+_\b|\*[^\s<>]+\*|\-([^\s\-<>]+)\-';
-	return preg_replace_callback('/([ \t\r\n\(\[{¿]|^)('.$regexp.')/u', function ($matches) {
-			global $globals;
 
-			switch ($matches[2][0]) {
-				case '_':
-					return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
-				case '*':
-					return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
-				case '-':
-					return $matches[1].'<del>'.substr($matches[2], 1, -1).'</del>';
-			}
-			return $matches[1].$matches[2];
-		}, $string);
+	return preg_replace_callback('/([ \t\r\n\(\[{¿]|^)('.$regexp.')/u', function ($matches) {
+		global $globals;
+
+		switch ($matches[2][0]) {
+			case '_':
+				return $matches[1].'<em>'.substr($matches[2], 1, -1).'</em>';
+
+			case '*':
+				return $matches[1].'<strong>'.substr($matches[2], 1, -1).'</strong>';
+
+			case '-':
+				return $matches[1].'<del>'.substr($matches[2], 1, -1).'</del>';
+		}
+
+		return $matches[1].$matches[2];
+	}, $string);
 }
 
-function text_to_html(&$string) {
+function text_to_html(&$string)
+{
 	global $globals;
 
 	$regexp = '/([\s\(\[{¡;,:¿]|^)((https{0,1}:\/\/)([^\s<>]{5,500}))/Smu';
 	return preg_replace_callback($regexp, 'text_to_html_callback', $string);
 }
 
-function text_to_html_callback(&$matches) {
+function text_to_html_callback(&$matches)
+{
 	global $globals;
 
-	switch ($matches[2][0]) {
-		case 'h':
-			$suffix = '';
-			if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {
-				$matches[4] = substr($matches[4], 0, -1);
-				$suffix = ')';
-			}
-			$url = rawurldecode($matches[4]);
-			return $matches[1].'<a href="'.$matches[3].$url.'" title="'.$url.'" rel="nofollow">'.substr($url, 0, 70).'</a>'.$suffix;
+	if ($matches[2][0] !== 'h') {
+		return $matches[1].$matches[2];
 	}
-	return $matches[1].$matches[2];
+
+	if (substr($matches[4], -1) === ')' && strrchr($matches[4], '(') === false) {
+		$matches[4] = substr($matches[4], 0, -1);
+		$suffix = ')';
+	} else {
+		$suffix = '';
+	}
+
+	$url = rawurldecode($matches[4]);
+
+	return $matches[1].'<a href="'.$matches[3].$url.'" title="'.$url.'" rel="nofollow">'.substr($url, 0, 70).'</a>'.$suffix;
 }
 
-function check_integer($which) {
+function check_integer($which)
+{
 	if (isset($_REQUEST[$which]) && is_numeric($_REQUEST[$which])) {
 		return intval($_REQUEST[$which]);
-	} else {
-		return false;
 	}
 }
 
-function get_comment_page_suffix($page_size, $order, $total=0) {
-	if ($page_size > 0) {
-		if ($total && $total < $page_size) return '';
-		return '/'.ceil($order/$page_size);
+function get_comment_page_suffix($page_size, $order, $total = 0)
+{
+	if (empty($page_size) || ($total && $total < $page_size)) {
+		return '';
 	}
-	return '';
+
+	return '/'.ceil($order/$page_size);
 }
 
-function get_current_page() {
-	if(($var=check_integer('page')) && $var > 0) {
+function get_current_page()
+{
+	if (($var = check_integer('page')) && $var > 0) {
 		return $var;
-	} else {
-		return 1;
 	}
-	// return $_GET['page']>0 ? $_GET['page'] : 1;
+
+	return 1;
 }
 
-function get_date($epoch) {
-	return date("d-m-Y", $epoch);
+function get_date($time)
+{
+	return date('d-m-Y', $time);
 }
 
-function get_date_time($epoch) {
-		global $globals;
-		//return date("Y-m-d H:i", $epoch);
-		if (abs($globals['now'] - $epoch) < 72000) // Difference is less than 20 hours
-			return date(" H:i T", $epoch);
-		else
-			return date(" d-m-Y H:i T", $epoch);
-}
-
-function get_server_name() {
+function get_date_time($time) {
 	global $globals;
-	return ! empty($globals['server_name']) ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
+
+	if (abs($globals['now'] - $time) < 72000) {
+		// Difference is less than 20 hours
+		return date(' H:i T', $time);
+	}
+
+	return date(' d-m-Y H:i T', $time);
+}
+
+function get_server_name()
+{
+	global $globals;
+
+	return !empty($globals['server_name']) ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
 }
 
 function get_static_server_name() {
@@ -1439,7 +1540,9 @@ function check_ip_noaccess($steps = 0) {
 function reject_connection($redirect = false) {
 	global $globals, $db;
 
-	if (is_object($db)) $db->close();
+	if (is_object($db)) {
+		$db->close();
+	}
 
 	// $globals['access_log'] = false; // Don't log it to avoid repeated bans
 	$globals['ip_blocked'] = true;
@@ -1448,26 +1551,23 @@ function reject_connection($redirect = false) {
 		redirect($redirect);
 	} else {
 		usleep(100000);
-		header('HTTP/1.0 403 ' . 'Too many connections');
+		header('HTTP/1.0 403 Too many connections');
 	}
-	die;
+
+	exit;
 }
 
 function redirect($url, $code = 301) {
 	global $globals;
 
 	if ($globals['partial']) {
-		if (preg_match('/\?/', $url)) {
-			$url .= '&partial';
-		} else {
-			$url .= '?partial';
-		}
+		$url .= ((strpos($url, '?') === false) ? '?' : '&').'partial';
 	}
-	header("HTTP/1.1 $code Moved");
-	header('Location: ' . $url);
-	header("Content-Length: 0");
-}
 
+	header('HTTP/1.1 '.$code.' Moved');
+	header('Location: '.$url);
+	header('Content-Length: 0');
+}
 
 function close_connection(){
 	if (function_exists('fastcgi_finish_request')) {
