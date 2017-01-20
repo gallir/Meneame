@@ -61,6 +61,7 @@ class SitesMgr {
 		global $globals, $db;
 
 		self::$info = false;
+
 		if ($id > 0) {
 			self::$id = $id;
 		} elseif (!isset($globals['site_id'])) {
@@ -85,8 +86,9 @@ class SitesMgr {
 		}
 
 		self::$parent = self::$info->created_from;
+
 		if (self::$id > 0) {
-			$db->query('set @site_id = '.self::$id);
+			$db->query('set @site_id = "'.self::$id.'"');
 		}
 	}
 
