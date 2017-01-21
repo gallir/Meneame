@@ -78,9 +78,9 @@
         </a>
 
         {% if self.content_type == 'image' %}
-        <span class="wideonly">&nbsp;<i class="fa fa-camera" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}"></i></span>
+        &nbsp;<i class="fa fa-camera" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}"></i>
         {% else %} {% if self.content_type == 'video' %}
-        <span class="wideonly">&nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i></span>
+        &nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i>
         {% endif %}
 
         {% endif %}
@@ -88,7 +88,15 @@
         {% if globals.link %}</h1>{% else %}</h2>{% endif %}
 
         {% else %}
-        <h1><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h1>
+
+        <h2>
+            <a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a>
+
+            {% if self.poll && self.poll.id %}
+            &nbsp;<i class="fa fa-bar-chart" alt="{% trans _('encuesta') %}" title="{% trans _('encuesta') %}"></i>
+            {% endif %}
+        </h2>
+
         {% endif %} {# END if self.url #}
 
         {% if ! globals.bot %}
@@ -190,7 +198,7 @@
 
         {% endif %}
 
-        {% if self.poll && self.poll.id %}
+        {% if self.poll && self.poll.id && !self.poll.simple %}
             {% set poll = self.poll %}
             {% include 'poll_vote.html' %}
         {% endif %}

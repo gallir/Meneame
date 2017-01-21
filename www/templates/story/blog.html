@@ -36,7 +36,7 @@
 
                 {% endif %} {# END if self.status == 'abuse' OR self.has_warning #}
 
-                <h1>{{ self.title }}</h1>
+                <h1><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h1>
 
                 <div class="text">
                     {% exec self.to_html_paragraphs self.content %}
