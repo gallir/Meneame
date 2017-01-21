@@ -84,9 +84,9 @@ $show_relevants = true; // Show highlighted comments
 
 if (($argc = count($url_args)) > 1) {
     // Dirty trick to redirect to a comment' page
-    if (preg_match('/^c0\d+$/', $url_args[1])) {
+    if (preg_match('/^c(\d{3,})$/', $url_args[1], $comment)) {
         // Link to comment in its page
-        $c = intval(substr($url_args[1], 2));
+        $c = intval($comment[1]);
 
         if (! $c > 0 || $c > $link->comments) {
             header('HTTP/1.1 303 Load');
@@ -97,7 +97,7 @@ if (($argc = count($url_args)) > 1) {
         $no_page = false;
 
         unset($url_args[1]);
-    } elseif ((int) $url_args[$argc-1] > 0) {
+    } elseif ((int)$url_args[$argc - 1] > 0) {
         $current_page = intval($url_args[$argc-1]);
 
         if ($current_page > $total_pages) {
