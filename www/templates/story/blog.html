@@ -164,7 +164,8 @@
 
                 <div class="item">
                     <div class="text">
-                        &laquo; {{ comment.html }} &raquo;
+                        <a class="tooltip c:{{ comment.comment_id }}" href="{{ self.relative_permalink }}#c-{{ comment.comment_order }}">#{{ comment.comment_order }}</a>:
+                        &laquo;{{ comment.html }}&raquo;
                     </div>
 
                     <div class="row metas">

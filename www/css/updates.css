@@ -1089,6 +1089,7 @@ ul.slick-dots li button {
 
 .story-blog .main-content h1 a, .story-blog .main-content h1 a:visited {
     color: #000000;
+    text-decoration: none;
 }
 
 .story-blog .main-content .text {
@@ -1227,6 +1228,11 @@ ul.slick-dots li button {
     line-height: 33px;
     font-style: italic;
     margin-bottom: 15px;
+}
+
+.story-blog .best-comments .item .text .tooltip {
+    font-weight: bold;
+    color: #000;
 }
 
 .story-blog .best-comments .item .author a,

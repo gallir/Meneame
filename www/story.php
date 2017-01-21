@@ -84,7 +84,7 @@ $show_relevants = true; // Show highlighted comments
 
 if (($argc = count($url_args)) > 1) {
     // Dirty trick to redirect to a comment' page
-    if (preg_match('/^c(\d{3,})$/', $url_args[1], $comment)) {
+    if (preg_match('/^c(\d+)$/', $url_args[1], $comment)) {
         // Link to comment in its page
         $c = intval($comment[1]);
 
