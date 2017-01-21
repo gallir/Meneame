@@ -88,9 +88,9 @@ if (($argc = count($url_args)) > 1) {
         // Link to comment in its page
         $c = intval($comment[1]);
 
-        if (! $c > 0 || $c > $link->comments) {
+        if (($c < 1) || ($c > $link->comments)) {
             header('HTTP/1.1 303 Load');
-            die(header('Location: ' . $link->get_permalink()));
+            die(header('Location: '.$link->get_permalink()));
         }
 
         $globals['referenced_comment'] = $c; // This comment has to be displayed
@@ -167,7 +167,7 @@ switch ($url_args[1]) {
         $order_field = 'comment_order';
 
         if (!empty($globals['referenced_comment'])) {
-            $canonical_page = $current_page = intval(($globals['referenced_comment']-1)/$globals['comments_page_size']) + 1;
+            $canonical_page = $current_page = intval(($globals['referenced_comment'] - 1) / $globals['comments_page_size']) + 1;
         }
 
         if ($current_user->user_id > 0 && User::get_pref($current_user->user_id, 'last_com_first')) {
@@ -179,7 +179,7 @@ switch ($url_args[1]) {
         if ($globals['comments_page_size'] && $link->comments > $globals['comments_page_size']) {
             if ($no_page) {
                 if ($last_com_first) {
-                    $canonical_page = $current_page = ceil($link->comments/$globals['comments_page_size']);
+                    $canonical_page = $current_page = ceil($link->comments / $globals['comments_page_size']);
                 } else {
                     $canonical_page = $current_page = 1;
                 }
@@ -211,13 +211,18 @@ switch ($url_args[1]) {
                 geo_init(null, null);
             }
         }
+
         break;
 
     case 'best-comments':
         $tab_option = 2;
         $order_field = 'comment_karma desc, comment_id asc';
-        if (!$current_page) $current_page = 1;
-        $offset=($current_page-1)*$globals['comments_page_size'];
+
+        if (!$current_page) {
+            $current_page = 1;
+        }
+
+        $offset = ($current_page - 1) * $globals['comments_page_size'];
         $limit = "LIMIT $offset,".$globals['comments_page_size'];
         break;
 
@@ -271,11 +276,11 @@ $globals['link_id'] = $link->id;
 $globals['permalink'] = $globals['link']->get_permalink();
 
 // to avoid search engines penalisation
-if ($link->status != 'published' && $globals['now'] - $link->date > 864000) {
+if ($link->status !== 'published' && $globals['now'] - $link->date > 864000) {
     $globals['noindex'] = true;
 }
 
-if ($globals['ads'] && preg_match('/nsfw/i', $link->title)) {
+if ($globals['ads'] && stristr($link->title, 'nsfw')) {
     $globals['ads'] = false;
 }
 
