@@ -368,12 +368,14 @@ class Post extends LCPBase {
 		}
 
 		$to_delete = array_diff($previous_ids, $seen_ids);
+
 		if ($to_delete) {
 			$to_delete = implode(',', $to_delete);
 			$db->query("delete from conversations where conversation_type='post' and conversation_from=$this->id and conversation_to in ($to_delete)");
 		}
 
 		$to_unnotify = array_diff($previous_users, $seen_users);
+
 		foreach ($to_unnotify as $to) {
 			User::add_notification($to, 'post', -1);
 		}
@@ -381,25 +383,25 @@ class Post extends LCPBase {
 	}
 
 	function normalize_content() {
-		$this->content = clean_lines(clear_whitespace(normalize_smileys($this->content)));
-		return $this->content;
+		return $this->content = clean_lines(clear_whitespace(normalize_smileys($this->content)));
 	}
 
-	function store_image_from_form($field = 'image') {
+	function store_image_from_form($field = 'image', $type = null) {
 		return parent::store_image_from_form('post', $field);
 	}
 
-	function store_image($file) {
+	function store_image($file, $type = null) {
 		return parent::store_image('post', $file);
 	}
 
-	function move_tmp_image($file, $mime) {
+	function move_tmp_image($file, $mime, $type = null) {
 		return parent::move_tmp_image('post', $file, $mime);
 	}
 
-	function delete_image() {
+	function delete_image($type = null) {
 		$media = new Upload('post', $this->id, 0);
 		$media->delete();
+
 		$this->media_size = 0;
 		$this->media_mime = '';
 	}

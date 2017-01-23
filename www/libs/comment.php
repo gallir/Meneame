@@ -707,32 +707,30 @@ class Comment extends LCPBase {
 	function get_relative_individual_permalink() {
 		// Permalink of the "comment page"
 		global $globals;
-		return $globals['base_url'] . 'c/'. $this->id;
+		return $globals['base_url'].'c/'.$this->id;
 	}
 
 	function normalize_content() {
-		$this->content = clean_lines(normalize_smileys($this->content));
-		return $this->content;
+		return $this->content = clean_lines(normalize_smileys($this->content));
 	}
 
-	function store_image_from_form($field = 'image') {
+	function store_image_from_form($field = 'image', $type = null) {
 		return parent::store_image_from_form('comment', $field);
 	}
 
-	function store_image($file) {
+	function store_image($file, $type = null) {
 		return parent::store_image('comment', $file);
 	}
 
-	function move_tmp_image($file, $mime) {
+	function move_tmp_image($file, $mime, $type = null) {
 		return parent::move_tmp_image('comment', $file, $mime);
 	}
 
-	function delete_image() {
+	function delete_image($type = null) {
 		$media = new Upload('comment', $this->id, 0);
 		$media->delete();
+
 		$this->media_size = 0;
 		$this->media_mime = '';
 	}
-
 }
-

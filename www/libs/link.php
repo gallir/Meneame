@@ -1781,7 +1781,7 @@ class Link extends LCPBase {
 
 		$errors = array();
 
-		if(! $this->sub_id > 0) {
+		if (!$this->sub_id > 0) {
 			$errors[] = _("sub no seleccionado");
 			$site_id = SitesMgr::my_id();
 		} else {
@@ -1794,23 +1794,17 @@ class Link extends LCPBase {
 			$errors[] = _("falta url enlace");
 		}
 
-		// Filter content and title
-
 		// It also deletes punctuaction marks at the end
+		$replace_nl = $properties['allow_paragraphs'] ? false : true;
+
 		$this->title = clean_text(preg_replace('/(\w) *[.,] *$/', "$1", $this->title), 50, true, 120);
-
-		if ($properties['allow_paragraphs']) $replace_nl = false;
-		else $replace_nl = true;
-
 		$this->content = clean_text_with_tags($this->content, 0, $replace_nl, $properties['intro_max_len']);
 
-
-
-		if(mb_strlen($this->title) < 8) {
+		if (mb_strlen($this->title) < 8) {
 			$errors[] = _("título incompleto");
 		}
 
-		if(get_uppercase_ratio($this->title) > 0.5) {
+		if (get_uppercase_ratio($this->title) > 0.5) {
 			$errors[] = ("demasiadas mayúsculas en el título");
 		}
 
@@ -1820,11 +1814,11 @@ class Link extends LCPBase {
 		}
 */
 
-		if($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen($this->content) < $properties['intro_min_len'] ) {
+		if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen($this->content) < $properties['intro_min_len'] ) {
 			$errors[] = _("texto incompleto");
 		}
 
-		if(get_uppercase_ratio($this->content) > 0.3 ) {
+		if (get_uppercase_ratio($this->content) > 0.3 ) {
 			$errors[] = ("demasiadas mayúsculas en el texto");
 		}
 
@@ -1834,35 +1828,34 @@ class Link extends LCPBase {
 		}
 */
 
-		if(strlen($this->tags) < 3 ) {
+		if (strlen($this->tags) < 3) {
 			$errors[] = ("no has puesto etiquetas");
 		}
 
-		if(preg_match('/.*http:\//', $this->title)) {
+		if (preg_match('/.*http:\//', $this->title)) {
 			$errors[] = ("no pongas URLs en el título, no ofrece información");
 		}
 
 		return $errors;
-
 	}
 
-	function get_media() {
+	function get_media($type = null) {
 		return parent::get_media('link');
 	}
 
-	function store_image_from_form($field = 'image') {
+	function store_image_from_form($field = 'image', $type = null) {
 		return parent::store_image_from_form('link', $field);
 	}
 
-	function store_image($file) {
+	function store_image($file, $type = null) {
 		return parent::store_image('link', $file);
 	}
 
-	function move_tmp_image($file, $mime) {
+	function move_tmp_image($file, $mime, $type = null) {
 		return parent::move_tmp_image('link', $file, $mime);
 	}
 
-	function delete_image() {
+	function delete_image($type = null) {
 		return parent::delete_image('link');
 	}
 }
