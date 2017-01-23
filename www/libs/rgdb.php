@@ -204,9 +204,12 @@ class RGDB extends mysqli
     function print_error($str = '')
     {
         if ($this->show_errors) {
-            header('HTTP/1.1 503 Database error');
-            header('Content-Type: text/plain');
-            echo "$str ($this->error)\n";
+            if (headers_sent() === false) {
+                header('HTTP/1.1 503 Database error');
+                header('Content-Type: text/plain');
+            }
+
+            dd($str, $this->error, true);
         }
 
         syslog(LOG_NOTICE, "rgdb.php ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
@@ -221,7 +224,7 @@ class RGDB extends mysqli
 
     function query($query, $class_name = null, $index_name = null)
     {
-        $is_select = preg_match('/^ *(select|show)\s/i', $query);
+        $is_select = preg_match('/^\s*(select|show)\s/i', trim($query));
 
         $this->connect();
 
