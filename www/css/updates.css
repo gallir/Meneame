@@ -1087,6 +1087,10 @@ ul.slick-dots li button {
     margin: 40px 0 50px 0;
 }
 
+.story-blog .main-content .news-shakeit {
+    margin-right: 30px;
+}
+
 .story-blog .main-content h1 a, .story-blog .main-content h1 a:visited {
     color: #000000;
     text-decoration: none;
@@ -1151,6 +1155,11 @@ ul.slick-dots li button {
 .story-blog aside .details {
     text-align: center;
     margin-top: 40px;
+}
+
+.story-blog aside .details.details-center {
+    width: 100%;
+    float: none;
 }
 
 .story-blog aside .author {
@@ -1438,12 +1447,6 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
         padding: 10px;
     }
 
-    .story-blog aside .shake-container, .story-blog aside .details {
-        margin-top: 0;
-        float: left;
-        width: 50%;
-    }
-
     .story-blog aside .shake-container {
         margin-top: 20px;
     }
@@ -1501,6 +1504,17 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 
     .poll-vote footer span.separator {
         margin: 0 3px;
+    }
+
+    .story-blog .main-content h1 {
+        font-size: 30px;
+        line-height: 34px;
+        margin-bottom: 25px;
+    }
+
+    .story-blog .main-content .text {
+        font-size: 18px;
+        line-height: 1.4em;
     }
 }
 
