@@ -6,11 +6,15 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-define("mnmpath", dirname(__FILE__));
-define("mnminclude", dirname(__FILE__).'/libs/');
-ini_set("include_path", '.:'.mnminclude.':'.mnmpath);
+define('mnmpath', __DIR__);
+define('mnminclude', __DIR__.'/libs/');
 
-$globals['basic_config'] = true; include('../config.php');
+ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
+
+$globals['basic_config'] = true;
+
+include('../config.php');
+
 $globals['site_name'] = 'Menéame reduced';
 
 // Specify you base url, "/" if is the root document
@@ -31,15 +35,16 @@ $globals['css_color'] = '';
 $globals['html_main'] = 'html1-mobile.php';
 $globals['comments_page_size'] = 50;
 
-@include('local.php');
-@include($_SERVER['SERVER_NAME'].'-local.php');
-//@include($_SERVER['SERVER_ADDR'].'-local.php');
+if (is_file('local.php')) {
+    include('local.php');
+}
 
+if (is_file($_SERVER['SERVER_NAME'].'-local.php')) {
+    include($_SERVER['SERVER_NAME'].'-local.php');
+}
 
 include mnminclude.'init.php';
 include mnminclude.'login.php';
 
 // For production servers
 $db->hide_errors();
-
-?>
