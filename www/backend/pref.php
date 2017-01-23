@@ -20,11 +20,11 @@ if (empty($key) || empty($user) || ($user != $current_user->user_id)) {
     die;
 }
 
-if (!empty($_POST['set'])) {
-	$value = intval($_POST['value']);
-    $res = User::set_pref($user, $key, $value) ? $value : false;
-} else {
+if (empty($_POST['set'])) {
 	$res = User::get_pref($user, $key, $value);
+} else {
+    $res = intval($_POST['value']);
+    $res = User::set_pref($user, $key, $res) ? $res : false;
 }
 
 header('Content-Type: application/json; charset=UTF-8');

@@ -11,48 +11,58 @@
 
 include('../config.php');
 require_once(mnminclude.'favorites.php');
-$db->connect_timeout = 3;
 
-if (! $current_user->user_id) die;
+if (!$current_user->user_id) {
+	die;
+}
 
-if (! empty($_GET['redirect'])) {
-	do_redirect($_GET['redirect']);
-	exit(0);
+if (!empty($_GET['redirect'])) {
+	die(do_redirect($_GET['redirect']));
 }
 
 header('Content-Type: application/json; charset=utf-8');
 http_cache(5);
 
+$db->connect_timeout = 3;
+
 $notifications = new stdClass();
 
-$notifications->posts = (int) Post::get_unread_conversations($current_user->user_id);
-$notifications->comments = (int) Comment::get_unread_conversations($current_user->user_id);
-$notifications->privates = (int) PrivateMessage::get_unread($current_user->user_id);
+$notifications->posts = (int)Post::get_unread_conversations($current_user->user_id);
+$notifications->comments = (int)Comment::get_unread_conversations($current_user->user_id);
+$notifications->privates = (int)PrivateMessage::get_unread($current_user->user_id);
 $notifications->friends = count(User::get_new_friends($current_user->user_id));
 $notifications->favorites = get_unread_favorites($current_user->user_id);
 $notifications->total = $notifications->posts + $notifications->privates + $notifications->friends + $notifications->comments;
-echo json_encode($notifications);
 
-function do_redirect($type) {
+die(json_encode($notifications));
+
+function do_redirect($type)
+{
 	global $globals, $current_user;
-	$url = '/'; // If everything fails, it will be redirected to the home
 
 	switch ($type) {
 		case 'privates':
 			$url = post_get_base_url('_priv');
 			break;
+
 		case 'posts':
-			$url = post_get_base_url($current_user->user_login) . '/_conversation';
+			$url = post_get_base_url($current_user->user_login).'/_conversation';
 			break;
+
 		case 'comments':
 			$url = get_user_uri($current_user->user_login, 'conversation');
 			break;
+
 		case 'friends':
 			$url = get_user_uri($current_user->user_login, 'friends_new');
 			break;
-	}
-	header("HTTP/1.1 302 Moved");
-	header('Location: ' . $url);
-	header("Content-Length: 0");
-}
 
+		default:
+			$url = '/'; // If everything fails, it will be redirected to the home
+			break;
+	}
+
+	header('HTTP/1.1 302 Moved');
+	header('Location: '.$url);
+	header('Content-Length: 0');
+}
