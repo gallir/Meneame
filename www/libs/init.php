@@ -199,6 +199,8 @@ if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_serv
 	$db->persistent = $globals['mysql_persistent'];
 }
 
+show_errors($globals['debug'] ? true : false);
+
 function haanga_bootstrap()
 {
 	/* bootstrap function, load our custom tags/filter */
@@ -208,21 +210,21 @@ function haanga_bootstrap()
 /* Load template engine here */
 $config = array(
 	'template_dir' => mnmpath.'/'.$globals['haanga_templates'],
-	'autoload'	 => FALSE, /* Don't use Haanga's autoloader */
+	'autoload'	 => false, /* Don't use Haanga's autoloader */
 	'bootstrap'	=> 'haanga_bootstrap',
 	'compiler' => array( /* opts for the tpl compiler */
 		/* Avoid use if empty($var) */
-		'if_empty' => FALSE,
+		'if_empty' => false,
 		/* we're smart enought to know when escape :-) */
-		'autoescape' => FALSE,
+		'autoescape' => false,
 		/* let's save bandwidth */
-		'strip_whitespace' => TRUE,
+		'strip_whitespace' => true,
 		/* call php functions from the template */
-		'allow_exec'  => TRUE,
+		'allow_exec'  => true,
 		/* global $global, $current_user for all templates */
 		'global' => array('globals', 'current_user'),
 	),
-	'use_hash_filename' => FALSE, /* don't use hash filename for generated php */
+	'use_hash_filename' => false, /* don't use hash filename for generated php */
 );
 
 // Allow full or relative pathname for the cache (i.e. /var/tmp or cache)
@@ -236,15 +238,18 @@ require mnminclude.'Haanga.php';
 
 Haanga::configure($config);
 
-function __($text) {
+function __($text)
+{
     return htmlentities($text, ENT_QUOTES, 'UTF-8', false);
 }
 
-function _e($text) {
+function _e($text)
+{
     echo htmlentities($text, ENT_QUOTES, 'UTF-8', false);
 }
 
-function shutdown() {
+function shutdown()
+{
 	global $globals, $current_user, $db;
 
 	close_connection();
@@ -282,5 +287,5 @@ function shutdown() {
 
 	@syslog(LOG_DEBUG, $globals['user_ip'].' '.$user.' '.$time.' '.get_server_name().' '.$script);
 
-	exit(0);
+	exit;
 }

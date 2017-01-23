@@ -418,24 +418,16 @@ if (is_file(__DIR__.'/local.php')) {
     require __DIR__.'/local.php';
 }
 
-if (php_sapi_name() === 'cli') {
-    $globals['cli'] = true;
+$globals['cli'] = (php_sapi_name() === 'cli');
 
+if ($globals['cli']) {
     /* Definition only for scripts executed 'off-line' */
-
     if (is_file(__DIR__.'/cli-local.php')) {
         require __DIR__.'/cli-local.php';
     }
-} else {
-    $globals['cli'] = False;
-
-    if (is_file(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
-        require __DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php';
-    }
+} elseif (is_file(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
+    require __DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php';
 }
 
 include mnminclude.'init.php';
 include mnminclude.'login.php';
-
-// For production servers
-$db->hide_errors();
