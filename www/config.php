@@ -237,7 +237,7 @@ $globals['link_edit_time'] = 1800; // seconds to allow a regular user to edit a 
 $globals['link_edit_special_time'] = 10400; // seconds to allow a special user to edit a link
 $globals['link_edit_blogger_time'] = 10800; // seconds to allow a blogger user to edit a link
 
-$globals['link_blog_len_min'] = 1500; // Show blog template when a link without url has a length more than X
+$globals['link_blog_len_min'] = 2000; // Show blog template when a link without url has a length more than X
 
 //sneakme
 $globals['posts_len'] = 500;
@@ -390,6 +390,8 @@ $globals['anon_karma']  = 4;
 
 $globals['user_agent'] = 'Meneamebot (http://meneame.net/)';
 //$globals['admin_account_id'] = 0; // Id of admin account (used in sneakme admin posts)
+
+$globals['debug'] = false;
 
 // Send logs to "log_user", it's windows compatible
 openlog('meneame', LOG_ODELAY, LOG_USER);
