@@ -116,6 +116,7 @@ class PrivateMessage extends LCPBase {
 		if ($this->id == 0) {
 			$this->randkey = rand(1000000,100000000);
 		}
+
 		if ($this->to > 0) {
 			$this->to_username = User::get_username($this->to);
 		}
@@ -124,29 +125,30 @@ class PrivateMessage extends LCPBase {
 
 		$vars = array();
 		$vars['self'] = $this;
+
 		return Haanga::Load('priv_edit.html', $vars);
 	}
 
 	function normalize_content() {
-		$this->content = clean_lines(clear_whitespace(normalize_smileys($this->content)));
-		return $this->content;
+		return $this->content = clean_lines(clear_whitespace(normalize_smileys($this->content)));
 	}
 
-	function store_image_from_form($field = 'image') {
+	function store_image_from_form($field = 'image', $type = null) {
 		return parent::store_image_from_form('private', $field);
 	}
 
-	function store_image($file) {
+	function store_image($file, $type = null) {
 		return parent::store_image('private', $file);
 	}
 
-	function move_tmp_image($file, $mime) {
+	function move_tmp_image($file, $mime, $type = null) {
 		return parent::move_tmp_image('private', $file, $mime);
 	}
 
-	function delete_image() {
+	function delete_image($type = null) {
 		$media = new Upload('private', $this->id, 0);
 		$media->delete();
+
 		$this->media_size = 0;
 		$this->media_mime = '';
 	}
