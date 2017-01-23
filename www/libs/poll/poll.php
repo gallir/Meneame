@@ -100,7 +100,12 @@ class Poll
         $option->karma = (float)$option->karma;
         $option->index = ++$this->index;
         $option->voted = $this->voted == $option->id;
-        $option->percent = (int)round(($option->votes / (int)$this->votes) * 100);
+
+        if ($option->votes && $this->votes) {
+            $option->percent = (int)round(($option->votes / (int)$this->votes) * 100);
+        } else {
+            $option->percent = 0;
+        }
 
         $this->options[$option->id] = $option;
 
