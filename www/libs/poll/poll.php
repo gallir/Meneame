@@ -127,7 +127,7 @@ class Poll
         }, $this->options));
 
         $maxKarma = max(array_map(function ($value) use ($maxVotes) {
-            return ($value->votes === $maxVotes) ? $value->karma : 0;
+            return (($value->votes === $maxVotes) && is_numeric($value->karma)) ? $value->karma : 0;
         }, $this->options));
 
         foreach ($this->options as $option) {
