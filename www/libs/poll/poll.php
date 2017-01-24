@@ -101,7 +101,7 @@ class Poll
         if ($option->votes > 2) {
             $option->karma = (float)$option->karma;
         } else {
-            $option->karma = _('&#x2205;');
+            $option->karma = '&#x2205;';
         }
 
         $option->index = ++$this->index;
