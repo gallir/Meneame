@@ -34,7 +34,7 @@ class apiFileCache extends apiCache {
 
   private function isLocked($storageFile) {
     // our lock file convention is simple: /the/file/path.lock
-    return file_exists($storageFile . '.lock');
+    return is_file($storageFile . '.lock');
   }
 
   private function createLock($storageFile) {
@@ -91,7 +91,7 @@ class apiFileCache extends apiCache {
     if ($this->isLocked($storageFile)) {
       $this->waitForLock($storageFile);
     }
-    if (file_exists($storageFile) && is_readable($storageFile)) {
+    if (is_file($storageFile) && is_readable($storageFile)) {
       $now = time();
       if (! $expiration || (($mtime = @filemtime($storageFile)) !== false && ($now - $mtime) < $expiration)) {
         if (($data = @file_get_contents($storageFile)) !== false) {
