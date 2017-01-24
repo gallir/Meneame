@@ -116,11 +116,11 @@ class Poll
 
     private function setOptionWinner()
     {
-        $maxVotes = max(array_map(function($value) {
+        $maxVotes = max(array_map(function ($value) {
             return $value->votes;
         }, $this->options));
 
-        $maxKarma = max(array_map(function($value) use ($maxVotes) {
+        $maxKarma = max(array_map(function ($value) use ($maxVotes) {
             return ($value->votes === $maxVotes) ? $value->karma : 0;
         }, $this->options));
 
@@ -152,7 +152,7 @@ class Poll
 
     public function getOptions()
     {
-        return array_filter($this->options, function($value) {
+        return array_filter($this->options, function ($value) {
             return $value->option ? true : false;
         });
     }
@@ -427,7 +427,7 @@ class Poll
     {
         global $db;
 
-        $ids = array_unique(array_map(function($value) {
+        $ids = array_unique(array_map(function ($value) {
             return (int)$value->id;
         }, $this->options));
 

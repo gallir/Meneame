@@ -20,8 +20,8 @@ if (PHP_SAPI !== 'cli' && !empty($globals['force_ssl']) && !$globals['https'] &&
     die(header('Location: https://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']));
 }
 
-$globals['extra_js'] = Array();
-$globals['extra_css'] = Array();
+$globals['extra_js'] = array();
+$globals['extra_css'] = array();
 
 if (!$globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT']))) {
     if (!$globals['mobile']) {
@@ -39,7 +39,7 @@ if (!$globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $
 class MenuOption
 {
     // Small helper class to store links' information
-    function __construct($text, $url, $active = false, $title = '', $class = '')
+    public function __construct($text, $url, $active = false, $title = '', $class = '')
     {
         $this->text = $text;
         $this->url = $url;
@@ -96,7 +96,7 @@ function do_header($title, $id='home', $options = false, $tab_options = false, $
     if ($this_site->media_id > 0 && $this_site->media_dim1 > 0 && $this_site->media_dim2 > 0) {
         $r = $this_site->media_dim1 / $this_site->media_dim2;
 
-        if ( $globals['mobile']) {
+        if ($globals['mobile']) {
             $this_site->logo_height = $globals['media_sublogo_height_mobile'];
         } else {
             $this_site->logo_height = $globals['media_sublogo_height'];
@@ -167,7 +167,7 @@ function do_header($title, $id='home', $options = false, $tab_options = false, $
             if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
                 $r = $sub->site_info->media_dim1 / $sub->site_info->media_dim2;
 
-                if ( $globals['mobile']) {
+                if ($globals['mobile']) {
                     $sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
                 } else {
                     $sub->site_info->logo_height = $globals['media_sublogo_height'];
@@ -194,7 +194,7 @@ function do_js_from_array($array)
     foreach ($array as $js) {
         if (preg_match('/^http|^\//', $js)) {
             echo '<script src="'.$js.'" type="text/javascript"></script>'."\n";
-        } elseif (preg_match('/\.js$/', $js))  {
+        } elseif (preg_match('/\.js$/', $js)) {
             echo '<script src="'.$globals['base_static'].'js/'.$js.'" type="text/javascript"></script>'."\n";
         } else {
             echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>'."\n";
@@ -935,7 +935,8 @@ function do_best_queued()
     memcache_madd($key, $output, 120);
 }
 
-function do_most_clicked_stories() {
+function do_most_clicked_stories()
+{
     global $db, $globals, $dblang;
 
     if ($globals['mobile']) {
@@ -1163,7 +1164,7 @@ function do_sub_message_right()
     if ($site->media_id > 0 && $site->media_dim1 > 0 && $site->media_dim2 > 0) {
         $r = $site->media_dim1 / $site->media_dim2;
 
-        if ( $globals['mobile']) {
+        if ($globals['mobile']) {
             $site->logo_height = $globals['media_sublogo_height_mobile'] * 2;
         } else {
             $site->logo_height = $globals['media_sublogo_height'] * 2;

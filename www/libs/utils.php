@@ -88,7 +88,7 @@ function htmlentities2unicodeentities($input)
 
 function utf8_for_xml($string)
 {
-    return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+    return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
 function url_no_scheme($url)
@@ -321,7 +321,7 @@ function clean_text_with_tags($string, $wrap = 0, $replace_nl = true, $maxlength
 
 function close_tags(&$string)
 {
-    return preg_replace_callback('/(?:<\s*(\/{0,1})\s*([^>]+)>|$)/', function($matches) {
+    return preg_replace_callback('/(?:<\s*(\/{0,1})\s*([^>]+)>|$)/', function ($matches) {
         static $open_tags = array();
 
         if (empty($matches[0])) {
@@ -451,7 +451,8 @@ function get_date($time)
     return date('d-m-Y', $time);
 }
 
-function get_date_time($time) {
+function get_date_time($time)
+{
     global $globals;
 
     if (abs($globals['now'] - $time) < 72000) {
@@ -490,7 +491,7 @@ function get_auth_link()
 
     // If this is the mobile version and it's an external server, e.g www.meneame.net,
     // we'd call /mobile/login.php instead of /login.php
-    if ($globals['mobile_version'] && $globals['ssl_server'] !== get_server_name() ) {
+    if ($globals['mobile_version'] && $globals['ssl_server'] !== get_server_name()) {
         $path = 'mobile/';
     } else {
         $path = '';
@@ -1025,7 +1026,7 @@ function memcache_minit()
         $globals['memcache_port'] = 11211;
     }
 
-    if (@$memcache->connect($globals['memcache_host'], $globals['memcache_port']) ) {
+    if (@$memcache->connect($globals['memcache_host'], $globals['memcache_port'])) {
         return true;
     }
 
@@ -1122,7 +1123,7 @@ function get_url($url, $referer = false, $max = 500000, $log =true)
 
     curl_setopt($session, CURLOPT_CONNECTTIMEOUT, 20);
     curl_setopt($session, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($session, CURLOPT_HEADER , true );
+    curl_setopt($session, CURLOPT_HEADER, true);
     curl_setopt($session, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($session, CURLOPT_MAXREDIRS, 20);
     curl_setopt($session, CURLOPT_TIMEOUT, 25);
@@ -1137,19 +1138,19 @@ function get_url($url, $referer = false, $max = 500000, $log =true)
     $response = @curl_exec($session);
 
     if (!$response && $log) {
-            syslog(LOG_INFO, "Meneame: CURL error " . curl_getinfo($session,CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session));
-            return false;
+        syslog(LOG_INFO, "Meneame: CURL error " . curl_getinfo($session, CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session));
+        return false;
     }
 
-    $header_size = curl_getinfo($session,CURLINFO_HEADER_SIZE);
+    $header_size = curl_getinfo($session, CURLINFO_HEADER_SIZE);
     $result['header'] = substr($response, 0, $header_size);
     $result['content'] = substr($response, $header_size, $max);
 
     if (preg_match('/Content-Encoding: *gzip/i', $result['header'])) {
-            $result['content'] = gzBody($result['content']);
+        $result['content'] = gzBody($result['content']);
     }
 
-    $result['http_code'] = curl_getinfo($session,CURLINFO_HTTP_CODE);
+    $result['http_code'] = curl_getinfo($session, CURLINFO_HTTP_CODE);
     $result['content_type'] = curl_getinfo($session, CURLINFO_CONTENT_TYPE);
     $result['redirect_count'] = curl_getinfo($session, CURLINFO_REDIRECT_COUNT);
     $result['location'] = curl_getinfo($session, CURLINFO_EFFECTIVE_URL);
@@ -1160,7 +1161,7 @@ function get_url($url, $referer = false, $max = 500000, $log =true)
 // From http://es2.php.net/manual/en/function.gzinflate.php#77336
 function gzBody($gzData)
 {
-    if (substr($gzData,0,3) != "\x1f\x8b\x08") {
+    if (substr($gzData, 0, 3) != "\x1f\x8b\x08") {
         return false;
     }
 
@@ -1270,7 +1271,7 @@ function isIPIn($ip, $net, $mask)
     $lip = ip2long($ip);
     $binnet = str_pad(decbin($lnet), 32, "0", STR_PAD_LEFT);
     $firstpart = substr($binnet, 0, $mask);
-    $binip = str_pad( decbin($lip), 32, "0", STR_PAD_LEFT);
+    $binip = str_pad(decbin($lip), 32, "0", STR_PAD_LEFT);
     $firstip = substr($binip, 0, $mask);
 
     return (strcmp($firstpart, $firstip) == 0);
@@ -1278,7 +1279,7 @@ function isIPIn($ip, $net, $mask)
 
 function isPrivateIP($ip)
 {
-    $privates = array ('127.0.0.0/24', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16');
+    $privates = array('127.0.0.0/24', '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16');
 
     foreach ($privates as $k) {
         list($net, $mask) = explode('/', $k);
@@ -1310,13 +1311,13 @@ function check_ip_behind_proxy()
 {
     static $last_seen = '';
 
-    if (!empty($last_seen) ) {
+    if (!empty($last_seen)) {
         return $last_seen;
     }
 
     if ($_SERVER['HTTP_X_FORWARDED_FOR']) {
         $user_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else if ($_SERVER['HTTP_CLIENT_IP']) {
+    } elseif ($_SERVER['HTTP_CLIENT_IP']) {
         $user_ip = $_SERVER['HTTP_CLIENT_IP'];
     } else {
         return $last_seen = $_SERVER['REMOTE_ADDR'];
@@ -1763,7 +1764,7 @@ function d($title, $message = null, $trace = false)
 
     if ($trace) {
         foreach (array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1) as $row) {
-            echo ($cli ? "\n" : '<br>').dTraceLine($row);
+            echo($cli ? "\n" : '<br>').dTraceLine($row);
         }
     }
 

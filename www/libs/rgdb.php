@@ -11,20 +11,20 @@ class RGDB extends mysqli
     const POINT_KEY = 'rgdb_savepoint_';
     const MAX_ROWS = 10000;
 
-    var $dbuser;
-    var $dbpassword;
-    var $dbname;
-    var $dbhost;
-    var $port;
-    var $connected;
-    var $in_transaction;
-    var $show_errors;
-    var $initial_query;
-    var $connect_timeout;
-    var $ban_checked;
-    var $max_rows;
+    public $dbuser;
+    public $dbpassword;
+    public $dbname;
+    public $dbhost;
+    public $port;
+    public $connected;
+    public $in_transaction;
+    public $show_errors;
+    public $initial_query;
+    public $connect_timeout;
+    public $ban_checked;
+    public $max_rows;
 
-    function __construct($dbuser = '', $dbpassword = '', $dbname = '', $dbhost = 'localhost', $check_ban = false)
+    public function __construct($dbuser = '', $dbpassword = '', $dbname = '', $dbhost = 'localhost', $check_ban = false)
     {
         $this->dbuser = $dbuser;
         $this->dbpassword = $dbpassword;
@@ -52,12 +52,12 @@ class RGDB extends mysqli
         }
     }
 
-    function __destruct()
+    public function __destruct()
     {
         $this->close();
     }
 
-    function close()
+    public function close()
     {
         if (!$this->connected) {
             return;
@@ -74,17 +74,17 @@ class RGDB extends mysqli
         $this->connected = false;
     }
 
-    function hide_errors()
+    public function hide_errors()
     {
         $this->show_errors = false;
     }
 
-    function show_errors()
+    public function show_errors()
     {
         $this->show_errors = true;
     }
 
-    function initial_query($query)
+    public function initial_query($query)
     {
         $this->initial_query = $query;
 
@@ -93,14 +93,14 @@ class RGDB extends mysqli
         }
     }
 
-    function savepoint_name()
+    public function savepoint_name()
     {
         if ($this->in_transaction > 1) {
             return self::POINT_KEY.$this->in_transaction;
         }
     }
 
-    function transaction()
+    public function transaction()
     {
         $this->in_transaction++;
 
@@ -113,7 +113,7 @@ class RGDB extends mysqli
         return $this->in_transaction;
     }
 
-    function commit($flags = null, $name = null)
+    public function commit($flags = null, $name = null)
     {
         if ($this->in_transaction <= 0) {
             syslog(LOG_INFO, 'Error COMMIT, transaction = 0 '.$_SERVER['SCRIPT_NAME']);
@@ -135,7 +135,7 @@ class RGDB extends mysqli
         return $r;
     }
 
-    function rollback($flags = null, $name = null)
+    public function rollback($flags = null, $name = null)
     {
         if ($this->in_transaction <= 0) {
             syslog(LOG_INFO, 'Error ROLLBACK, transaction = 0 '.$_SERVER['SCRIPT_NAME']);
@@ -158,11 +158,11 @@ class RGDB extends mysqli
     }
 
     // Reset the connection to the slave if it was using the master
-    function barrier()
+    public function barrier()
     {
     }
 
-    function connect($host = null, $username = null, $passwd = null, $dbname = null, $port = null, $socket = null)
+    public function connect($host = null, $username = null, $passwd = null, $dbname = null, $port = null, $socket = null)
     {
         if ($this->connected) {
             return;
@@ -194,14 +194,14 @@ class RGDB extends mysqli
         }
     }
 
-    function escape($str)
+    public function escape($str)
     {
         $this->connect();
 
         return $this->real_escape_string($str);
     }
 
-    function print_error($str = '')
+    public function print_error($str = '')
     {
         if ($this->show_errors) {
             if (headers_sent() === false) {
@@ -217,12 +217,12 @@ class RGDB extends mysqli
         return false;
     }
 
-    function flush()
+    public function flush()
     {
         $this->last_result = array();
     }
 
-    function query($query, $class_name = null, $index_name = null)
+    public function query($query, $class_name = null, $index_name = null)
     {
         $is_select = preg_match('/^\s*(select|show)\s/i', trim($query));
 
@@ -268,7 +268,7 @@ class RGDB extends mysqli
         return true;
     }
 
-    function object_iterator($query, $class = null)
+    public function object_iterator($query, $class = null)
     {
         $is_select = preg_match('/^ *(select|show)\s/i', $query);
 
@@ -288,7 +288,7 @@ class RGDB extends mysqli
         return $this->affected_rows;
     }
 
-    function get_var($query = null, $x = 0, $y = 0)
+    public function get_var($query = null, $x = 0, $y = 0)
     {
         // If there is a query then perform it if not then use cached results..
         if ($query) {
@@ -306,12 +306,12 @@ class RGDB extends mysqli
         }
     }
 
-    function get_object($query, $class)
+    public function get_object($query, $class)
     {
         return $this->get_row($query, 0, $class);
     }
 
-    function get_row($query = null, $y = 0, $class_name = null)
+    public function get_row($query = null, $y = 0, $class_name = null)
     {
         if ($query) {
             $this->query($query, $class_name);
@@ -323,7 +323,7 @@ class RGDB extends mysqli
     }
 
     //  Function to get 1 column from the cached result set based in X index
-    function get_col($query = null, $x = 0)
+    public function get_col($query = null, $x = 0)
     {
         // If there is a query then perform it if not then use cached results..
         if ($query) {
@@ -342,7 +342,7 @@ class RGDB extends mysqli
     }
 
     // Return the the query as a result set - see docs for more details
-    function get_results($query = null, $class_name = null, $index_name = null)
+    public function get_results($query = null, $class_name = null, $index_name = null)
     {
         // If there is a query then perform it if not then use cached results..
         if ($query) {
@@ -353,7 +353,7 @@ class RGDB extends mysqli
         return $this->last_result ?: array();
     }
 
-    function get_enum_values($table, $column)
+    public function get_enum_values($table, $column)
     {
         // Retrieve available status values
         $row = $this->get_row('SHOW COLUMNS FROM `'.$table.'` LIKE "'.$column.'"');
