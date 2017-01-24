@@ -97,7 +97,13 @@ class Poll
     public function setOption(PollOption $option)
     {
         $option->votes = (int)$option->votes;
-        $option->karma = (float)$option->karma;
+
+        if ($option->votes > 2) {
+            $option->karma = (float)$option->karma;
+        } else {
+            $option->karma = _('sin');
+        }
+
         $option->index = ++$this->index;
         $option->voted = $this->voted == $option->id;
 
