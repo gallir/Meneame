@@ -1,17 +1,20 @@
 <?php
 $routes = array(
-	''			=> 'index.php',
-	'story'		=> 'story.php',
-	'queue'		=> 'shakeit.php',
-	'user'		=> 'user.php',
-	'search'	=> 'search.php',
-	'popular'	=> 'topstories.php',
-	'login'		=> 'login.php',
+    ''          => 'index.php',
+    'story'     => 'story.php',
+    'queue'     => 'shakeit.php',
+    'user'      => 'user.php',
+    'search'    => 'search.php',
+    'popular'   => 'topstories.php',
+    'login'     => 'login.php',
 );
 
-chdir(dirname(__FILE__));
+chdir(__DIR__);
+
 array_shift($globals['path']);
 
-@include($routes[$globals['path'][0]]);
+$script = $routes[$globals['path'][0]];
 
-
+if ($script && is_file(__DIR__.'/'.$script)) {
+    include($script);
+}
