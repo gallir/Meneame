@@ -311,7 +311,7 @@ $globals['captcha_first_login'] = false;
 //$globals['twitter_token_secret'] = 'xxxxxx';
 // Show the link in the horizontal bar
 // $globals['twitter_page'] = 'http://twitter.com/meneame_net';
-
+$globals['twitter_autopublish'] = false;
 
 // For Facebook authentication
 //$globals['facebook_key'] = 'xxxxxxxx';
@@ -320,7 +320,7 @@ $globals['captcha_first_login'] = false;
 //$globals['facebook_token'] = '';
 // Show the link in the horizontal bar
 // $globals['facebook_page'] = 'http://facebook.com/meneameoficial';
-
+$globals['facebook_autopublish'] = false;
 // Jaiku settings
 //$globals['jaiku_user'] = '';
 //$globals['jaiku_key'] = '';

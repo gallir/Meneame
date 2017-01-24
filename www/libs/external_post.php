@@ -9,7 +9,7 @@
 function twitter_post($auth, $text, $short_url, $image = false) {
 	global $globals;
 
-	if (empty($auth['twitter_token']) || empty($auth['twitter_token_secret']) || empty($auth['twitter_consumer_key']) ||  empty($auth['twitter_consumer_secret'])) {
+	if (empty($auth['twitter_token']) || empty($auth['twitter_token_secret']) || empty($auth['twitter_consumer_key']) ||  empty($auth['twitter_consumer_secret']) && $globals['twitter_autopublish'] === true) {
 		return false;
 	}	
 
@@ -95,7 +95,7 @@ function pubsub_post() {
 function facebook_post($auth, $link, $text = '') {
 	global $globals;
 
-	if (empty($auth['facebook_token']) || empty($auth['facebook_key']) || empty($auth['facebook_secret'])) {
+	if (empty($auth['facebook_token']) || empty($auth['facebook_key']) || empty($auth['facebook_secret']) && $globals['twitter_autopublish'] === true) {
 		return false;
 	}
 
