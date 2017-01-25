@@ -37,6 +37,8 @@ echo '<div class="col-md-8 col-md-offset-1">';
 
 require __DIR__.'/story-comments.php';
 
+do_banner_private('ad-bottom');
+
 echo '</div>';
 echo '</div>';
 echo '</div>';
