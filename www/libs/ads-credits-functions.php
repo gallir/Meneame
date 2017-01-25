@@ -10,11 +10,16 @@
 // banners and credits funcions: FUNCTIONS TO ADAPT TO YOUR CONTRACTED ADS AND CREDITS
 *****/
 
-function do_banner($template, $mobile = false)
+function banner_enabled($mobile = false)
 {
     global $globals;
 
-    if ($globals['ads'] && (!$globals['mobile'] || $mobile)) {
+    return ($globals['ads'] && (!$globals['mobile'] || $mobile));
+}
+
+function do_banner($template, $mobile = false)
+{
+    if (banner_enabled($mobile)) {
         Haanga::Safe_Load($template.'.html');
     }
 }
@@ -24,83 +29,47 @@ function do_banner_private($template, $mobile = false)
     do_banner('private/'.$template);
 }
 
-// top banner
+function do_banner_inc($template, $mobile = false)
+{
+    $file = __DIR__.'/ads/'.$template.'.inc';
+
+    if (banner_enabled($mobile) && is_file($file)) {
+        include $file;
+    }
+}
+
 function do_banner_top()
 {
-    global $globals, $dblang, $current_user;
-
-    //
-    // IMPORTANT! adapt this section to your contracted banners!!
-    //
+    global $globals;
 
     if ($globals['external_ads'] && $globals['ads']) {
         Haanga::Safe_Load('private/top.html');
     }
-
-    /*
-    if($globals['external_ads'] && $globals['ads']) {
-        Haanga::Safe_Load('private/ad-top.html');
-        //@include('ads/top.inc');
-    } else {
-        echo '<div class="banner-top">' . "\n";
-        Haanga::Safe_Load('private/ad-meneame.html');
-        //@include('ads/meneame-01.inc');
-        echo '</div>' . "\n";
-    }
-    */
 }
 
 function do_banner_top_mobile()
 {
-    global $globals, $dblang;
-
-    //
-    // IMPORTANT! adapt this section to your contracted banners!!
-    //
-
-    $file = __DIR__.'/ads/mobile-01.inc';
-
-    if ($globals['ads'] && is_file($file)) {
-        include ($file);
-    }
+    do_banner_inc('mobile-01', true);
 }
 
-// side banner A
 function do_banner_right()
 {
-    global $globals, $current_user;
-
-    //
-    // IMPORTANT! adapt this section to your contracted banners!!
-    //
-    if (!$globals['mobile'] && $globals['ads']) {
-        Haanga::Safe_Load('private/ad-right.html');
-    }
+    do_banner_private('ad-right');
 }
 
 function do_banner_promotions()
 {
-    global $globals;
-
-    if (!$globals['mobile'] && $globals['ads']) {
-        Haanga::Safe_Load('private/promotions.html');
-    }
+    do_banner_private('promotions');
 }
 
 function do_banner_top_news()
 {
-    global $globals;
-
-    Haanga::Safe_Load('private/top-news.html');
+    do_banner_private('top-news', true);
 }
 
 function do_banner_story()
 {
-    global $globals, $current_user;
-
-    if ($globals['ads']) {
-        Haanga::Safe_Load('private/ad-middle.html');
-    }
+    do_banner_private('ad-middle', true);
 }
 
 function do_legal($legal_name, $target = '', $show_abuse = true)
