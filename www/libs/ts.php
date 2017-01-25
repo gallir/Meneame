@@ -7,16 +7,16 @@
 * Copyright: 2006 Simon Jarvis
 * Date: 03/08/06
 * Link: http://www.white-hat-web-design.co.uk/articles/php-captcha.php
-* 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
 * of the License, or (at your option) any later version.
-* 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details: 
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details:
 * http://www.gnu.org/licenses/gpl.html
 *
 */
@@ -35,10 +35,10 @@ class CaptchaSecurityImages {
 
 	function generateCode($characters) {
 		/* list all possible characters, similar looking characters and vowels have been removed */
-		$possible = '23456789bcdfghjkmnpqrstvwxyz'; 
+		$possible = '23456789bcdfghjkmnpqrstvwxyz';
 		$code = '';
 		$i = 0;
-		while ($i < $characters) { 
+		while ($i < $characters) {
 			$code .= substr($possible, mt_rand(0, strlen($possible)-1), 1);
 			$i++;
 		}
@@ -59,7 +59,7 @@ class CaptchaSecurityImages {
 		$noise_color = imagecolorallocate($image, mt_rand(250,255), mt_rand(95,105), mt_rand(0,5));
 		/* generate random dots in background */
 		for( $i=0; $i<($width*$height)/3; $i++ ) {
-			$x1 = mt_rand(0,$width); 
+			$x1 = mt_rand(0,$width);
 			$y1 =  mt_rand(0,$height);
 			imagefilledrectangle($image, $x1, $y1, $x1, $y1, $noise_color);
 		}
@@ -73,7 +73,7 @@ class CaptchaSecurityImages {
 		// Changed to 2.3 for adler
 		$y = ($height - $textbox[5])/2.3;
 		imagettftext($image, $font_size, 0, $x, $y, $text_color, $this->font , $code);
-		
+
 		/* output captcha image to browser */
 		imagejpeg($image);
 		imagedestroy($image);
@@ -85,7 +85,7 @@ class CaptchaSecurityImages {
 function ts_gfx() {
 	// Hack to avoid problems with monofont.ttf
 	putenv('GDFONTPATH=' . mnminclude);
-	
+
 	header('Content-Type: image/jpeg');
 	$captcha = new CaptchaSecurityImages(155,45,5);
 }
@@ -107,7 +107,7 @@ function ts_is_human() {
 									$_SERVER["REMOTE_ADDR"],
 									$_POST["recaptcha_challenge_field"],
 									$_POST["recaptcha_response_field"]);
-		
+
 			if ($resp->is_valid) {
 				return true;
 			} else {
@@ -122,14 +122,24 @@ function ts_is_human() {
 function ts_print_form() {
 	global $globals, $dblang;
 
+	$output = '';
+
 	if (empty($globals['recaptcha_public_key']) || empty($globals['recaptcha_private_key'])) {
-		echo _("introduce el texto de la imagen").":<br/>\n";
-		echo '<div class="tc"><img src="ts_image.php" alt="code number"/></div>';
-		echo '<input type="text" size="20" name="security_code" /><br/>'."\n";
+		$output .= _("introduce el texto de la imagen").":<br/>\n";
+		$output .= '<div class="tc"><img src="ts_image.php" alt="code number"/></div>';
+		$output .= '<input type="text" size="20" name="security_code" /><br/>'."\n";
 	} else {
-	// reCaptcha
+		ob_start();
+
 		Haanga::Load('recaptcha.html');
-		echo recaptcha_get_html($globals['recaptcha_public_key'],null,$globals['https']);
+
+		$output .= ob_get_contents();
+
+		ob_end_clean();
+
+		$output .= recaptcha_get_html($globals['recaptcha_public_key'],null,$globals['https']);
 	}
+
+	return $output;
 }
 

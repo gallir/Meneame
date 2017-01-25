@@ -35,7 +35,7 @@
             <input type="hidden" name="process" value="1" />
             <input type="hidden" name="return" value="{% exec htmlspecialchars _REQUEST.return %}" />
 
-            <div class="bottomline">{% trans _('Cuando te registras aceptas las <a href="/legal" target="_blank">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>') %}.</div>
+            <div class="bottomline">{% trans _('Cuando te registras aceptas las <a href="{{ globals.base_url_general }}legal" target="_blank">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>') %}.</div>
         </form>
     </div>
 </section>

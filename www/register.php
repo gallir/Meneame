@@ -65,7 +65,9 @@ function do_register1()
         return do_register_error($error);
     }
 
-    Haanga::Load('register/step-1.html');
+    Haanga::Load('register/step-1.html', array(
+        'captcha_form' => ts_print_form()
+    ));
 }
 
 function do_register2()
@@ -126,35 +128,35 @@ function do_register2()
 function check_register_error()
 {
     if (check_ban_proxy()) {
-        return _("IP no permitida");
+        return _('IP no permitida');
     }
 
-    if (!isset($_POST["username"]) || strlen($_POST["username"]) < 3) {
-        return _("nombre de usuario erróneo, debe ser de 3 o más caracteres alfanuméricos");
+    if (!isset($_POST['username']) || strlen($_POST['username']) < 3) {
+        return _('nombre de usuario erróneo, debe ser de 3 o más caracteres alfanuméricos');
     }
 
-    if (!check_username($_POST["username"])) {
-        return _("nombre de usuario erróneo, caracteres no admitidos o no comienzan con una letra");
+    if (!check_username($_POST['username'])) {
+        return _('nombre de usuario erróneo, caracteres no admitidos o no comienzan con una letra');
     }
 
-    if (user_exists(trim($_POST["username"])) ) {
-        return _("el usuario ya existe");
+    if (user_exists(trim($_POST['username'])) ) {
+        return _('el usuario ya existe');
     }
 
-    if (!check_email(trim($_POST["email"]))) {
-        return _("el correo electrónico no es correcto");
+    if (!check_email(trim($_POST['email']))) {
+        return _('el correo electrónico no es correcto');
     }
 
-    if (email_exists(trim($_POST["email"])) ) {
-        return _("dirección de correo duplicada, o fue usada recientemente");
+    if (email_exists(trim($_POST['email'])) ) {
+        return _('dirección de correo duplicada, o fue usada recientemente');
     }
 
-    if (preg_match('/[ \']/', $_POST["password"])) {
-        return _("caracteres inválidos en la clave");
+    if (preg_match('/[ \'\"]/', $_POST['password'])) {
+        return _('caracteres inválidos en la clave');
     }
 
-    if (!check_password($_POST["password"])) {
-        return _("clave demasiado corta, debe ser de 8 o más caracteres e incluir mayúsculas, minúsculas y números");
+    if (!check_password($_POST['password'])) {
+        return _('clave demasiado corta, debe ser de 8 o más caracteres e incluir mayúsculas, minúsculas y números');
     }
 
     global $globals, $db;
@@ -171,35 +173,35 @@ function check_register_error()
     $registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 24 hour) and log_type in ('user_new', 'user_delete') and log_ip = '$user_ip'");
 
     if ($registered) {
-        syslog(LOG_NOTICE, "Meneame, register not accepted by IP address ($_POST[username]) $user_ip");
+        syslog(LOG_NOTICE, "Meneame, register not accepted by IP address (".$_POST['username'].") $user_ip");
 
         return _("para registrar otro usuario desde la misma dirección debes esperar 24 horas");
     }
 
     // Check class
     // nnn.nnn.nnn
-    $ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.' . $ip_classes[2] . '.%';
+    $ip_class = $ip_classes[0].'.'.$ip_classes[1].'.'.$ip_classes[2].'.%';
     $registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 6 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 
     if ($registered) {
-        syslog(LOG_NOTICE, "Meneame, register not accepted by IP class ($_POST[username]) $ip_class");
+        syslog(LOG_NOTICE, "Meneame, register not accepted by IP class (".$_POST['username'].") $ip_class");
 
         return _("para registrar otro usuario desde la misma red debes esperar 6 horas"). " ($ip_class)";
     }
 
     // Check class
     // nnn.nnn
-    $ip_class = $ip_classes[0] . '.' . $ip_classes[1] . '.%';
+    $ip_class = $ip_classes[0].'.'.$ip_classes[1].'.%';
     $registered = (int) $db->get_var("select count(*) from logs where log_date > date_sub(now(), interval 1 hour) and log_type in ('user_new', 'user_delete') and log_ip like '$ip_class'");
 
     if ($registered > 2) {
-        syslog(LOG_NOTICE, "Meneame, register not accepted by IP class ($_POST[username]) $ip_class");
+        syslog(LOG_NOTICE, "Meneame, register not accepted by IP class (".$_POST['username'].") $ip_class");
 
         return _("para registrar otro usuario desde la misma red debes esperar unos minutos") . " ($ip_class)";
     }
 }
 
-function do_register_error($message, $back)
+function do_register_error($message, $back = null)
 {
     Haanga::Load('register/error.html', compact('message', 'back'));
 }

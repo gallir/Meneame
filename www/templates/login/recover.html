@@ -1,0 +1,30 @@
+<div id="singlewrap">
+    <section class="section section-large text-center">
+        <h1>{% trans _('Recuperación de contraseña') %}</h1>
+
+        <p class="intro">{% trans _('Recibirás un e-mail que te permitirá editar tus datos') %}</p>
+
+        <div class="container container-small">
+            <form method="post" class="form">
+                {% if error %}
+                <div class="response response-error">{{ error }}</div>
+                {% endif %}
+
+                <div class="form-group">
+                    <input type="email" name="email" tabindex="1" id="name" value="{% exec htmlspecialchars _POST.email %}" class="form-control" placeholder="{% trans _('Indica tu correo electrónico') %}" required />
+                </div>
+
+                {{ captcha_form }}
+
+                <div class="form-group">
+                    <button type="submit" name="login" class="btn btn-block btn-mnm" tabindex="4">{% trans _('Enviar correo') %}</button>
+                </div>
+
+                <input type="hidden" name="recover" value="1" />
+                <input type="hidden" name="return" value="{% exec htmlspecialchars _REQUEST.return %}" />
+            </form>
+
+            <div class="bottomline"><a href="login">{% trans _('Volver al login') %}</a></div>
+        </div>
+    </section>
+</div>

@@ -3,7 +3,7 @@
 
     <div class="container container-small">
         <form id="form-register" method="post" class="form">
-            {% exec ts_print_form %}
+            {{ captcha_form }}
 
             <div class="form-group">
                 <button type="submit" name="submit" class="btn btn-block btn-mnm" tabindex="2">{% trans _('Continuar') %}</button>
@@ -14,7 +14,7 @@
             <input type="hidden" name="username" value="{% exec htmlspecialchars _POST.username %}" />
             <input type="hidden" name="password" value="{% exec htmlspecialchars _POST.password %}" />
 
-            <div class="bottomline">{% trans _('Cuando te registras aceptas las <a href="/legal" target="_blank">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>') %}.</div>
+            <div class="bottomline">{% trans _('Cuando te registras aceptas las <a href="{{ globals.base_url_general }}legal" target="_blank">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>') %}.</div>
         </form>
     </div>
 </section>

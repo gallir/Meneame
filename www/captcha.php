@@ -17,28 +17,25 @@
 
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 include('config.php');
 include mnminclude.'html1.php';
 include_once(mnminclude.'recaptcha2.php');
 
+do_header('test de captcha');
 
-do_header("test de captcha");
+echo '<br/><form method="post">';
 
-echo '<br/><form action="" method="post">';
-
-if ($_POST["g-recaptcha-response"]) {
-	if (ts_is_human()) {
-		echo "Captcha OK<br/>";
-	} else {
-		echo "Failed!<br/>";
-	}
+if ($_POST['g-recaptcha-response']) {
+    echo ts_is_human() ? 'Captcha OK' : 'Failed!';
+    echo '<br/>';
 }
 
-ts_print_form();
-echo '<br/> <input type="submit" value="submit" /> </form> </body>';
+echo ts_print_form();
+
+echo '<br/> <input type="submit" value="submit" />';
+echo '</form> </body>';
 
 do_footer();
-
