@@ -404,11 +404,6 @@ if (stripos(setlocale(LC_CTYPE, 0), 'utf-8') === false) {
     setlocale(LC_CTYPE, 'en_US.UTF-8');
 }
 
-// There is another config file, this is called for defaults (used by mobile)
-if (!empty($globals['basic_config'])) {
-    return;
-}
-
 define('mnmpath', __DIR__);
 define('mnminclude', __DIR__.'/libs/');
 
@@ -427,6 +422,11 @@ if ($globals['cli']) {
     }
 } elseif (is_file(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
     require __DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php';
+}
+
+// There is another config file, this is called for defaults (used by mobile)
+if (!empty($globals['basic_config'])) {
+    return;
 }
 
 include mnminclude.'init.php';

@@ -1,0 +1,22 @@
+<section class="section section-large text-center">
+    <h1>{% trans _('¡Ya estás dentro!') %}</h1>
+
+    <div class="container container-small">
+        <hr />
+
+        <div class="legend">{% trans _('Tienes un correo electrónico') %}</div>
+
+        <div class="row">
+            <div class="col-xs-3">
+                <i class="result-final-icon result-final-icon-success fa fa-check-circle-o"></i>
+            </div>
+
+            <div class="col-xs-9 text-left">
+                <p class="text-large">{% trans _('Revisa tu correo, allí estarán las instrucciones para comenzar a participar de forma activa en la comunidad.') %}</p>
+                <p class="text-large">{% trans _('¡Ah! Si no lo ves, échale un vistazo a la carpeta de SPAM, a veces pasa.') %}</p>
+            </div>
+        </div>
+
+        <a href="{{ globals.base_url_general }}" class="btn btn-block btn-mnm">{% trans _('Ir a la portada') %}</a>
+    </div>
+</section>

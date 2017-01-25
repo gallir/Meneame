@@ -35,12 +35,12 @@ $globals['css_color'] = '';
 $globals['html_main'] = 'html1-mobile.php';
 $globals['comments_page_size'] = 50;
 
-if (is_file('local.php')) {
-    include('local.php');
+if (is_file(__DIR__.'/local.php')) {
+    include(__DIR__.'/local.php');
 }
 
-if (is_file($_SERVER['SERVER_NAME'].'-local.php')) {
-    include($_SERVER['SERVER_NAME'].'-local.php');
+if (is_file(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php')) {
+    include(__DIR__.'/'.$_SERVER['SERVER_NAME'].'-local.php');
 }
 
 include mnminclude.'init.php';

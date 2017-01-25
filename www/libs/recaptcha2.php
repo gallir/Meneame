@@ -8,51 +8,57 @@
 
 
 // Functions for recaptcha 2
-function ts_is_human() {
-	global $globals;
+function ts_is_human()
+{
+    global $globals;
 
-	if ($_POST["g-recaptcha-response"]) {
-		$resp = recaptcha2_check_answer ($globals['recaptcha_private_key'],
-								$_POST["g-recaptcha-response"]);
-		
-		if (is_object($resp) && $resp->success) {
-			return true;
-		} else {
-			# set the error code so that we can display it
-			$globals['error'] = _('error en el captcha');;
-		}
-	}
-	return false;
+    if (empty($_POST['g-recaptcha-response'])) {
+        return false;
+    }
+
+    $resp = recaptcha2_check_answer($globals['recaptcha_private_key'], $_POST['g-recaptcha-response']);
+
+    if (is_object($resp) && $resp->success) {
+        return true;
+    }
+
+    # set the error code so that we can display it
+    $globals['error'] = _('error en el captcha');;
+
+    return false;
 }
 
-function ts_print_form() {
-	global $globals;
+function ts_print_form()
+{
+    global $globals;
 
-	$globals['extra_js'][] = '//www.google.com/recaptcha/api.js?hl='.$globals['lang'];
-	echo '<div class="g-recaptcha" data-sitekey="'.$globals['recaptcha_public_key'].'"></div>';
+    $globals['extra_js'][] = '//www.google.com/recaptcha/api.js?hl='.$globals['lang'];
+
+    return '<div class="g-recaptcha" data-sitekey="'.$globals['recaptcha_public_key'].'"></div>';
 }
 
+function recaptcha2_check_answer($secret, $response)
+{
+    global $globals;
 
-function recaptcha2_check_answer($secret, $response) {
-	global $globals;
+    $curl = curl_init();
 
-	$data = array('secret' => $secret, 'response' => $response);
+    curl_setopt($curl, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // Sorry, but curl and its certificates are not reliable in Ubuntu
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array(
+        'secret' => $secret,
+        'response' => $response
+    )));
 
-	$con = curl_init();
-	curl_setopt($con, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-	curl_setopt($con, CURLOPT_SSL_VERIFYPEER, false); // Sorry, but curl and its certificates are not reliable in Ubuntu
-	curl_setopt($con, CURLOPT_POST, 1);
-	curl_setopt($con, CURLOPT_POSTFIELDS, http_build_query($data));
-	curl_setopt($con, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($curl);
 
-	$output = curl_exec($con);
-	// syslog(LOG_INFO, "recaptcha2 output: $output error: " . curl_error($con) . " data: " .  http_build_query($data));
-	curl_close($con);
+    curl_close($curl);
 
-	if ($output) {
-		$o = json_decode($output);
-		return $o;
-	}
+    if ($output) {
+        return json_decode($output);
+    }
 
-	return null;
+    return null;
 }

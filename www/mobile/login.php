@@ -57,7 +57,7 @@ function do_login() {
 	$previous_login_failed =  Log::get_date('login_failed', $globals['user_ip_int'], 0, 300);
 
 	echo '<form action="'.get_auth_link().'login.php" id="xxxthisform" method="post">'."\n";
-	
+
 	if ($_POST["processlogin"] == 1) {
 		$username = clean_input_string(trim($_POST['username']));
 		$password = trim($_POST['password']);
@@ -89,7 +89,7 @@ function do_login() {
 
 	// Print captcha
 	if ($previous_login_failed > 2 || ($globals['captcha_first_login'] == true && ! UserAuth::user_cookie_data())) {
-		ts_print_form();
+		echo ts_print_form();
 	}
 
 	echo '<p><input type="submit" value="login" tabindex="4" />'."\n";
@@ -141,7 +141,7 @@ function do_recover() {
 		echo '<p>'._('(recibirás un e-mail que te permitirá editar tus datos)').'</p>&nbsp;<br/>';
 		echo '<input type="hidden" name="recover" value="1"/>'."\n";
 		echo '<input type="hidden" name="return" value="'.htmlspecialchars($_REQUEST['return']).'"/>'."\n";
-		ts_print_form();
+		echo ts_print_form();
 		echo '<br /><input type="submit" value="'._('recibir e-mail').'"/>'."\n";
 		echo '</form>'."\n";
 	}

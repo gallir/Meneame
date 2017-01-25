@@ -15,6 +15,10 @@
     margin-top: 40px;
 }
 
+.section .row:before, .section .row:after {
+    clear: both;
+}
+
 .section h1 {
     font-family: 'Open Sans', sans-serif;
     font-style: normal;

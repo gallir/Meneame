@@ -1,0 +1,20 @@
+<section class="section section-large text-center">
+    <h1>{% trans _('Error en el registro') %}</h1>
+
+    <div class="container container-small">
+        <hr />
+
+        <div class="row">
+            <div class="col-xs-3">
+                <i class="result-final-icon result-final-icon-error fa fa-times"></i>
+            </div>
+
+            <div class="col-xs-9 text-left">
+                <div class="legend">{% trans _('¡Vaya! Algo malo ha ocurrido') %}</div>
+                <p class="text-large">{{ message }}</p>
+            </div>
+        </div>
+
+        <a href="{{ back }}" class="btn btn-block btn-mnm">{% trans _('Volver al registro') %}</a>
+    </div>
+</section>

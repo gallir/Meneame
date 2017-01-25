@@ -1528,7 +1528,7 @@ function print_oauth_icons_large($return = false)
 
     $return = htmlentities($return ?: $globals['uri']);
 
-    echo '<div class="social-buttons">';
+    $html = '<div class="social-buttons">';
 
     if ($globals['oauth']['twitter']['consumer_key']) {
         $title = false;
@@ -1545,14 +1545,14 @@ function print_oauth_icons_large($return = false)
         }
 
         if ($title) {
-            echo '<a class="twitter" href="'.$globals['base_url_general'].'oauth/signin.php?service=twitter&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
-            echo _('Acceder con Twitter');
-            echo '<i class="icon fa fa-twitter"></i>';
-            echo '</a>';
+            $html .= '<a class="twitter" href="'.$globals['base_url_general'].'oauth/signin.php?service=twitter&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
+            $html .= _('Acceder con Twitter');
+            $html .= '<i class="icon fa fa-twitter"></i>';
+            $html .= '</a>';
         }
     }
 
-    echo '<div class="row">';
+    $html .= '<div class="row">';
 
     if ($globals['facebook_key']) {
         $title = false;
@@ -1569,12 +1569,12 @@ function print_oauth_icons_large($return = false)
         }
 
         if ($title) {
-            echo '<div class="col-xs-6">';
-            echo '<a class="facebook" href="'.$globals['base_url_general'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
-            echo _('con Facebook');
-            echo '<i class="icon fa fa-facebook-official"></i>';
-            echo '</a>';
-            echo '</div>';
+            $html .= '<div class="col-xs-6">';
+            $html .= '<a class="facebook" href="'.$globals['base_url_general'].'oauth/fbconnect.php?return='.$return.'" title="'.$title.'">';
+            $html .= _('con Facebook');
+            $html .= '<i class="icon fa fa-facebook-official"></i>';
+            $html .= '</a>';
+            $html .= '</div>';
         }
     }
 
@@ -1593,17 +1593,19 @@ function print_oauth_icons_large($return = false)
         }
 
         if ($title) {
-            echo '<div class="col-xs-6">';
-            echo '<a class="gplus" href="'.$globals['base_url_general'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
-            echo _('o Google');
-            echo '<i class="icon fa fa-google"></i>';
-            echo '</a>';
-            echo '</div>';
+            $html .= '<div class="col-xs-6">';
+            $html .= '<a class="gplus" href="'.$globals['base_url_general'].'oauth/signin.php?service=gplus&amp;op=init&amp;return='.$return.'" title="'.$title.'">';
+            $html .= _('o Google');
+            $html .= '<i class="icon fa fa-google"></i>';
+            $html .= '</a>';
+            $html .= '</div>';
         }
     }
 
-    echo '</div>';
-    echo '</div>';
+    $html .= '</div>';
+    $html .= '</div>';
+
+    return $html;
 }
 
 function backend_call_string($program, $type, $page, $id)
