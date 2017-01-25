@@ -1,0 +1,20 @@
+<section class="section section-large text-center">
+    <h1>{% trans _('Prevención de bots') %}</h1>
+
+    <div class="container container-small">
+        <form id="form-register" method="post" class="form">
+            {% exec ts_print_form %}
+
+            <div class="form-group">
+                <button type="submit" name="submit" class="btn btn-block btn-mnm" tabindex="2">{% trans _('Continuar') %}</button>
+            </div>
+
+            <input type="hidden" name="process" value="2" />
+            <input type="hidden" name="email" value="{% exec htmlspecialchars _POST.email %}" />
+            <input type="hidden" name="username" value="{% exec htmlspecialchars _POST.username %}" />
+            <input type="hidden" name="password" value="{% exec htmlspecialchars _POST.password %}" />
+
+            <div class="bottomline">{% trans _('Cuando te registras aceptas las <a href="/legal" target="_blank">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>') %}.</div>
+        </form>
+    </div>
+</section>

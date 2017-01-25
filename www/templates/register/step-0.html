@@ -1,0 +1,41 @@
+<section class="section section-large text-center">
+    <h1>{% trans _('Únete a Menéame') %}</h1>
+
+    <p class="intro">{% trans _('Forma parte de la mayor comunidad de contenidos en español. Tú haces la portada.') %}</p>
+
+    <div class="container container-small">
+        {% exec print_oauth_icons_large _REQUEST.return %}
+
+        <div class="separator"><b></b><span>O</span><b></b></div>
+
+        <form id="form-register" method="post" class="form">
+            <div class="legend">{% trans _('Registrarme con mi correo') %}</div>
+
+            <div class="form-group input-validate">
+                <span class="input-status fa"></span>
+                <input type="text" name="username" tabindex="1" id="name" value="{% exec htmlspecialchars _POST.username %}" class="form-control" placeholder="{% trans _('Nombre de usuario') %}" required />
+            </div>
+
+            <div class="form-group input-validate">
+                <span class="input-status fa"></span>
+                <input type="email" name="email" tabindex="2" id="email" value="{% exec htmlspecialchars _POST.email %}" class="form-control" placeholder="{% trans _('Correo electrónico') %}" required />
+            </div>
+
+            <div class="form-group input-validate">
+                <span class="input-status fa"></span>
+                <a href="#" class="input-password-show"><i class="fa fa-eye"></i></a>
+                <input type="password" name="password" id="password" tabindex="3" class="form-control" placeholder="{% trans _('Contraseña') %}" required />
+                <div class="input-info">{% trans _('Al menos ocho caracteres, incluyendo mayúsculas, minúsculas y números') %}</div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" name="login" class="btn btn-block btn-mnm" tabindex="4">{% trans _('Crear usuario') %}</button>
+            </div>
+
+            <input type="hidden" name="process" value="1" />
+            <input type="hidden" name="return" value="{% exec htmlspecialchars _REQUEST.return %}" />
+
+            <div class="bottomline">{% trans _('Cuando te registras aceptas las <a href="/legal" target="_blank">Condiciones de Uso, Política de Privacidad y el Uso de Cookies</a>') %}.</div>
+        </form>
+    </div>
+</section>

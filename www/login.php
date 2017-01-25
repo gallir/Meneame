@@ -80,7 +80,7 @@ function do_login() {
 	echo '<p class="intro">'._('Forma parte de la mayor comunidad de contenidos en español. Tú haces la portada.').'</p>';
 
 	echo '<div class="container container-small">';
-		print_oauth_icons_large($_REQUEST['return']);
+		echo print_oauth_icons_large($_REQUEST['return']);
 
 		echo '<div class="separator"><b></b><span>O</span><b></b></div>';
 
