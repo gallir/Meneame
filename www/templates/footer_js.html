@@ -1,13 +1,15 @@
 {% if globals.extra_js %}
-	<script type="text/javascript">
-	{% for js in globals.extra_js %}
-    	{% if js|substr:"0, 4" == 'http' || js|substr:"0, 2" == '//' %}
-        	postJavascript.push("{{js}}");
-    	{% else %}
-        	postJavascript.push("{{globals.base_static}}js/{{js}}");
-    	{% endif %}
-	{% endfor %}
-	</script>
+<script type="text/javascript">
+{% for js in globals.extra_js %}
+
+{% if js|substr:"0, 4" == 'http' || js|substr:"0, 2" == '//' %}
+postJavascript.push("{{js}}");
+{% else %}
+postJavascript.push("{{globals.base_static}}js/{{js}}");
+{% endif %}
+
+{% endfor %}
+</script>
 {% endif %}
 
 {% if ! globals.partial %}
@@ -21,7 +23,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js" integrity="sha256-LOnFraxKlOhESwdU/dX+K0GArwymUDups0czPWLEg4E=" crossorigin="anonymous"></script>
 <script src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
-<script src="{{ globals.base_url_general }}v_{{ globals.v }}/js/{{globals.js_main}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{ globals.base_url_general }}v_{{ globals.v }}/js/{{globals.js_main}}?{{ current_user.user_id }}" type="text/javascript" charset="utf-8"></script>
 {% endif %}
 
 {# Include Google Adsense Async javascript #}
