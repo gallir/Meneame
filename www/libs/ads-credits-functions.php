@@ -10,13 +10,18 @@
 // banners and credits funcions: FUNCTIONS TO ADAPT TO YOUR CONTRACTED ADS AND CREDITS
 *****/
 
-function do_banner_private($template, $mobile = false)
+function do_banner($template, $mobile = false)
 {
     global $globals;
 
     if ($globals['ads'] && (!$globals['mobile'] || $mobile)) {
-        Haanga::Safe_Load('private/'.$template.'.html');
+        Haanga::Safe_Load($template.'.html');
     }
+}
+
+function do_banner_private($template, $mobile = false)
+{
+    do_banner('private/'.$template);
 }
 
 // top banner
