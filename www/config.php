@@ -242,7 +242,7 @@ $globals['link_blog_len_min'] = 2000; // Show blog template when a link without 
 //sneakme
 $globals['posts_len'] = 500;
 $globals['posts_period'] = 60;
-$globals['posts_edit_time'] = 300;
+$globals['posts_edit_time'] = 1800;
 $globals['posts_edit_time_admin'] = 864000;
 $globals['post_highlight_karma'] = 100;
 $globals['post_hide_karma'] = -50;
