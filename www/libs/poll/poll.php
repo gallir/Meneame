@@ -99,7 +99,7 @@ class Poll
         $option->votes = (int)$option->votes;
 
         if ($option->votes > 2) {
-            $option->karma = (float)$option->karma;
+            $option->karma = round($option->karma);
         } else {
             $option->karma = '&#x2205;';
         }
