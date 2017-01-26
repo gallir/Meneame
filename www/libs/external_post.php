@@ -95,7 +95,7 @@ function pubsub_post() {
 function facebook_post($auth, $link, $text = '') {
 	global $globals;
 
-	if (empty($auth['facebook_token']) || empty($auth['facebook_key']) || empty($auth['facebook_secret']) && $globals['twitter_autopublish'] === true) {
+	if (empty($auth['facebook_token']) || empty($auth['facebook_key']) || empty($auth['facebook_secret']) && $globals['facebook_autopublish'] === true) {
 		return false;
 	}
 
