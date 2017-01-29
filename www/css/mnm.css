@@ -1655,7 +1655,7 @@ td.count {
     padding-right: 0px;
 }
 
-.news-summary .warn {
+.news-summary .warn, .story-blog .warn {
     position: relative;
     padding: 5px 10px 3px 28px;
     margin: 0px 0 5px 0;
@@ -1665,11 +1665,11 @@ td.count {
     font-family: 'Open Sans', sans-serif;
 }
 
-.news-summary .warn a {
+.news-summary .warn a, .story-blog .warn a {
     color: #e35614;
 }
 
-.news-summary .warn:before {
+.news-summary .warn:before, .story-blog .warn:before {
     content: "\f071";
     font-family: FontAwesome;
     color: #e35614;

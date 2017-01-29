@@ -41,9 +41,9 @@
 
                 {% if self.status == 'abuse' %}
 
-                <div class="warn"><strong>{% trans _('Aviso') %}</strong>
-                    {% trans _('noticia descartada por violar las') %}
-                    <a href="{{ globals.legal }}#tos">{% trans _('normas de uso') %}</a>
+                <div class="warn">
+                    <strong>{% trans _('Aviso') %}</strong>
+                    {% trans _('noticia descartada por violar las') %} <a href="{{ globals.legal }}#tos">{% trans _('normas de uso') %}</a>
                 </div>
 
                 {% else %} {% if self.has_warning %}
