@@ -132,10 +132,12 @@ select.select-menu-more-options {
 }
 
 #header-top .logo-mnm {
-    background: url('{{ globals.base_static }}img/mnm/logo-mobile.png') no-repeat 0 0;
+    margin-top: 10px;
+}
+
+#header-top .logo-mnm img {
     height: 25px;
     width: 114px;
-    margin-top: 9px;
 }
 
 #header-top #notifier {

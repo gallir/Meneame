@@ -207,14 +207,17 @@ input[disabled], input[readonly], select[disabled], select[readonly], checkbox[d
 }
 
 #header-top .logo-mnm {
-    height: 30px;
-    width: 163px;
-    margin: 8px 0 0 9px;
     float: left;
+    margin: 8px 0 0 9px;
     font: 0/0 serif;
     text-shadow: none;
     color: transparent;
     cursor: pointer;
+}
+
+#header-top .logo-mnm img {
+    height: 30px;
+    width: 163px;
 }
 
 #header-top .logo-ed {
