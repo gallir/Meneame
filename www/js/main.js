@@ -7,7 +7,7 @@ var base_url = "{{ globals.base_url_general }}",
     current_user_admin = {% if current_user.admin %}true{% else %}false{% endif %},
     touchable = false,
     loadedJavascript = [],
-    do_partial = {% if globals.allow_partial %} true {% else %} false {% endif %},
+    do_partial = {% if globals.allow_partial %}true{% else %}false{% endif %},
     lastScrollTop = 0;
 
 if ((typeof window.history === 'object') && (do_partial || navigator.userAgent.match(/meneame/i))) {
@@ -267,8 +267,8 @@ function pref_input_check(id) {
             'key': this.value,
             'set': 1,
             'control_key': base_key
-        }, function(data) {
-            window.location.href = base_url;
+        }, function() {
+            window.location.reload();
         }, 'json');
     });
 }
