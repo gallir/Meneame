@@ -107,7 +107,9 @@
     <body>
         <div class="header-top-wrapper pinned" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }};{% endif %}">
             <div id="header-top" class="mnm-center-in-wrap">
-                <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">{% trans _('portada') %} {{ globals.site_name }}</a>
+                <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">
+                    <img src="{{ globals.base_url_general }}img/mnm/logo-white.svg" height="30" onerror="this.onerror = null; this.src = '{{ globals.base_url_general }}img/mnm/logo.png'" />
+                </a>
 
                 {% if not globals.mobile %}
                 <a href="{{ this_site.base_url }}m/{{ this_site.name }}" class="sub-name wideonly">{%if this_site.name_long %}{{this_site.name_long|upper }}{% else %}{% trans _('PORTADA') %}{% endif %}</a>

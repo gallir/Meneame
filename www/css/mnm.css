@@ -207,10 +207,9 @@ input[disabled], input[readonly], select[disabled], select[readonly], checkbox[d
 }
 
 #header-top .logo-mnm {
-    background: url('{{ globals.base_static }}img/mnm/logo.png') no-repeat 0 0;
-    height: 37px;
-    width: 167px;
-    margin: 3px 0 0 8px;
+    height: 30px;
+    width: 163px;
+    margin: 8px 0 0 9px;
     float: left;
     font: 0/0 serif;
     text-shadow: none;
@@ -556,10 +555,6 @@ ul#userinfo li.search {
     -moz-osx-font-smoothing: grayscale !important;
 }
 
-#header-center {}
-
-#header-center img {}
-
 #header-center .logo-eli {
     background: url('{{ globals.base_static }}img/mnm/h9_eli.png') no-repeat left top;
     background-size: 39px 35px;
@@ -632,13 +627,6 @@ ul#userinfo li.search {
     padding-top: 0px;
     padding-left: 10px;
     background-size: 20px 300px;
-}
-
-.searchform .searchbox:focus {
-    /*
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-    */
 }
 
 .header-menu01 {
@@ -1427,9 +1415,7 @@ ul.menu01-itemsl li a {
     margin: 0px;
 }
 
-
 /*** LEGACY STYLES ***/
-
 
 /* references in comments and posts */
 
@@ -1956,7 +1942,6 @@ td.count {
 }
 
 .news-shakeit .votes, .news-shakeit .clics {
-    /* background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABbCAIAAAA9YnhPAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wKHBIbEFJ0KpIAAAA7SURBVBjTtY87CgAhFAOH3P+u1jZvbBbWSkGxCiQhH9QAobeAwQoa+ND6+WP9Imv27fRlTz38t9tMgAGM9ZDiUJW8zgAAAABJRU5ErkJggg=='); */
     background-color: #FFE8D8;
 }
 
@@ -2094,7 +2079,6 @@ td.count {
     color: #1F1F1F;
 }
 
-
 /* Thumbnails for links */
 
 .news-body .thumbnail-wrapper {
@@ -2175,7 +2159,6 @@ td.count {
     padding: 2px 0 0 20px;
     background: url({{ globals.base_static }}img/common/mnu-list-image02.png) no-repeat 0px 4px
 }
-
 
 /* submit form */
 
@@ -3566,7 +3549,6 @@ input.uploadFile {
         background-image:url('{{ globals.base_static }}img/mnm/logos-common-2x.png');
     }
 }
-
 
 /* Bootstrap override tooltip class */
 
