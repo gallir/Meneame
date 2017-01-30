@@ -1018,7 +1018,6 @@ ul.slick-dots li button {
 }
 
 .poll-vote .poll-option.winner .progress-bar, .poll-vote .poll-option.winner .percent {
-    color: white;
     background-color: #fe6117;
     font-weight: bold;
 }
