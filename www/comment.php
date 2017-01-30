@@ -156,13 +156,13 @@ function fill_tree($tree, $limit = 30)
     }
 
     usort($res, function($a, $b) {
-        return ($a->child > $b->parent) ? -1 : 1;
+        return ($a->child < $b->child) ? -1 : 1;
     });
 
     $inserted = 0;
 
     foreach ($res as $n) {
-        if ($tree->in($n->parent) && $tree->in($n->parent)) {
+        if ($tree->in($n->parent) && $tree->in($n->child)) {
             continue;
         }
 
