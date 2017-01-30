@@ -1600,7 +1600,7 @@ function share_tw(e) {
         },
 
         upload: function(file, area) {
-            var form = area.parents('form');
+            var form = area.closest('form');
             var thumb = form.find('.droparea_info img').attr('src', s.loaderImage).show();
             var submit = form.find(':submit');
 
@@ -1614,9 +1614,11 @@ function share_tw(e) {
 
                 if (typeof r.error === 'undefined') {
                     thumb.attr('src', r.thumb).show();
+
                     form.find('input[name="tmp_filename"], input[name="tmp_filetype"]').remove();
                     form.append('<input type="hidden" name="tmp_filename" value="' + r.name + '"/>');
                     form.append('<input type="hidden" name="tmp_filetype" value="' + r.type + '"/>');
+
                     s.complete(r);
                 } else {
                     thumb.hide();
@@ -1681,44 +1683,44 @@ function share_tw(e) {
             }
 
             form.find('.droparea').bind({
-                    dragleave: function(e) {
-                        var area = $(this);
-
-                        e.preventDefault();
-                        area.css(area.data('bg'));
-                    },
-
-                    dragenter: function(e) {
-                        e.preventDefault();
-
-                        $(this).css({
-                            'background-color': s.backgroundColor,
-                            'background-image': 'url("' + s.backgroundImage + '")',
-                            'background-position': 'center',
-                            'background-repeat': 'no-repeat'
-                        });
-                    },
-
-                    dragover: function(e) {
-                        e.preventDefault();
-                    }
-                })
-                .each(function() {
+                dragleave: function(e) {
                     var area = $(this);
 
-                    area.data("bg", {
-                        'background-color': area.css('background-color'),
-                        'background-image': area.css('background-image'),
-                        'background-position': area.css('background-position')
-                    });
+                    e.preventDefault();
+                    area.css(area.data('bg'));
+                },
 
-                    this.addEventListener("drop", function(e) {
-                        e.preventDefault();
-                        s.start(area);
-                        m.traverse(e.dataTransfer.files, area);
-                        area.css(area.data('bg'));
-                    }, false);
+                dragenter: function(e) {
+                    e.preventDefault();
+
+                    $(this).css({
+                        'background-color': s.backgroundColor,
+                        'background-image': 'url("' + s.backgroundImage + '")',
+                        'background-position': 'center',
+                        'background-repeat': 'no-repeat'
+                    });
+                },
+
+                dragover: function(e) {
+                    e.preventDefault();
+                }
+            })
+            .each(function() {
+                var area = $(this);
+
+                area.data("bg", {
+                    'background-color': area.css('background-color'),
+                    'background-image': area.css('background-image'),
+                    'background-position': area.css('background-position')
                 });
+
+                this.addEventListener("drop", function(e) {
+                    e.preventDefault();
+                    s.start(area);
+                    m.traverse(e.dataTransfer.files, area);
+                    area.css(area.data('bg'));
+                }, false);
+            });
         });
     };
 })(jQuery);
@@ -1769,18 +1771,18 @@ function share_tw(e) {
             $("#uploadFile-wrapper-" + guid).addClass($(self).attr("class"));
 
             $(self).css({
-                    'visibility': 'visible',
-                    'opacity': 0,
-                    'position': 'absolute',
-                    'border': 'none',
-                    'margin': 0,
-                    'padding': 0,
-                    'top': 0,
-                    'right': 0,
-                    'cursor': 'pointer',
-                    'height': '30px'
-                })
-                .addClass('uploadFile-current').attr("title", settings.title);
+                'visibility': 'visible',
+                'opacity': 0,
+                'position': 'absolute',
+                'border': 'none',
+                'margin': 0,
+                'padding': 0,
+                'top': 0,
+                'right': 0,
+                'cursor': 'pointer',
+                'height': '30px'
+            })
+            .addClass('uploadFile-current').attr("title", settings.title);
 
             $(self).attr('data-styled', true);
         });
@@ -2412,6 +2414,7 @@ function analyze_hash(force) {
 
     if (do_partial) {
         console.log("Enabled partial");
+
         var sequence = 0;
         var last = 0;
 
@@ -2607,6 +2610,7 @@ function execOnDocumentLoad() {
                 console.log(err);
             }
         });
+
         onDocumentLoad = [];
     });
 }
@@ -2648,6 +2652,7 @@ var emojiKey = new function() {
         }
 
         $textarea.setFocusToEnd();
+
         return false;
     };
 
@@ -2703,13 +2708,13 @@ $(document).ready(function() {
             $menuItemSLLi = $('.menu01-itemsl > li'),
             $menuItemSRLi = $('.menu01-itemsr > li');
 
-            $(window).scroll(function() {
-                if ($(this).scrollTop() > 116) {
-                    $('.header-sub-wrapper').addClass('fixed').show();
-                } else {
-                    $('.header-sub-wrapper').removeClass('fixed').hide();
-                }
-            });
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 116) {
+                $('.header-sub-wrapper').addClass('fixed').show();
+            } else {
+                $('.header-sub-wrapper').removeClass('fixed').hide();
+            }
+        });
 
         if ($subHeaderA.length) {
             var select = $('<select class="select-menu-more-options" onchange="location=this.value"/>');

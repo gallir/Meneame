@@ -245,7 +245,7 @@ echo '<div class="notes">';
 
 if ($current_user->user_id > 0) {
     $post = new Post;
-    $post->author=$current_user->user_id;
+    $post->author = $current_user->user_id;
     $post->print_edit_form();
 }
 
