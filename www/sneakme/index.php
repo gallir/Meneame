@@ -136,7 +136,7 @@ switch ($argv[0]) {
                     $page_title = sprintf(_('favoritas de %s'), $user->username);
                     $ids = $db->get_col("SELECT favorite_link_id FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post' ORDER BY favorite_link_id DESC LIMIT $offset,$page_size");
                     $from = "";
-                    $where = "post_id in (".implode(',', $ids).")";
+                    $where = $ids ? ("post_id IN (".implode(',', $ids).")") : 'FALSE';
                     $order_by = "ORDER BY post_id desc";
                     $limit = "";
                     $rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post'");
@@ -147,7 +147,7 @@ switch ($argv[0]) {
                     $view = 3;
                     $page_title = sprintf(_('conversación de %s'), $user->username);
                     $ids = $db->get_col("SELECT distinct conversation_from FROM conversations WHERE conversation_user_to=$user->id and conversation_type='post' ORDER BY conversation_time desc LIMIT $offset,$page_size");
-                    $where = "post_id in (".implode(',', $ids).")";
+                    $where = $ids ? ("post_id IN (".implode(',', $ids).")") : 'FALSE';
                     $from = "";
                     $order_by = "ORDER BY post_id desc ";
                     $limit = "";
