@@ -97,6 +97,14 @@
     max-width: 360px;
 }
 
+.section .container.container-medium {
+    max-width: 720px;
+}
+
+.section .container .container-block {
+    padding: 20px 0;
+}
+
 .section .bottomline {
     margin-top: 20px;
 }
@@ -1336,6 +1344,24 @@ ul.slick-dots li button {
 
 .label-mnm, .badge-mnm {
     background-color: #FE6117;
+}
+
+dl.list dt {
+    float: left;
+    clear: left;
+    width: 100px;
+    text-align: right;
+    font-weight: bold;
+    color: #666;
+}
+
+dl.list dt:after {
+    content: ":";
+}
+
+dl.list dd {
+    margin: 0 0 0 110px;
+    padding: 0 0 0.5em 0;
 }
 
 /** FIXES **/
