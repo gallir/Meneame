@@ -75,7 +75,7 @@ echo "</div>"."\n";
 do_footer();
 
 function save_sub($id) {
-    global $current_user, $db;
+    global $globals, $current_user, $db;
 
     // Double check
     $owner = intval($_POST['owner']);
@@ -137,8 +137,12 @@ function save_sub($id) {
         }
     }
 
-    if ($_POST['intro_max_len'] > 5000) {
-        $_POST['intro_max_len'] = 5000;
+    if ($_POST['intro_min_len'] < $globals['sub_intro_min_len']) {
+        $_POST['intro_min_len'] = $globals['sub_intro_min_len'];
+    }
+
+    if ($_POST['intro_max_len'] > $globals['sub_intro_max_len']) {
+        $_POST['intro_max_len'] = $globals['sub_intro_max_len'];
     }
 
     if ($id > 0) {

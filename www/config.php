@@ -154,6 +154,9 @@ $globals['media_thumb_size'] = 80;
 $globals['media_sublogo_height'] = 30;
 $globals['media_sublogo_height_mobile'] = 20;
 
+$globals['sub_intro_min_len'] = 50;
+$globals['sub_intro_max_len'] = 20000;
+
 // Give 4 minutes to edit a comment
 $globals['comment_edit_time'] = 240;
 
@@ -167,12 +170,12 @@ $globals['limit_same_site_24_hours'] = 4;
 
 $globals['karma_propaganda'] = 12; // min user karma to avoid extra spam/propaganda checks in the submits
 
-$globals['karma_base']=6;
-$globals['karma_base_max']=9; // If not penalised, older users can get up to this value as base for the calculus
-$globals['min_karma']=1; //min user karma
-$globals['max_karma']=20; //max user karma
-$globals['special_karma_gain']=17; //karma to gain 'special' status (max * 0.85)
-$globals['special_karma_loss']=12; //karma to loss 'special' status (max * 0.6)
+$globals['karma_base'] = 6;
+$globals['karma_base_max'] = 9; // If not penalised, older users can get up to this value as base for the calculus
+$globals['min_karma'] = 1; //min user karma
+$globals['max_karma'] = 20; //max user karma
+$globals['special_karma_gain'] = 17; //karma to gain 'special' status (max * 0.85)
+$globals['special_karma_loss'] = 12; //karma to loss 'special' status (max * 0.6)
 
 $globals['comment_votes_multiplier'] = 7; //'importance' in karma calculations of comment votes
 $globals['post_votes_multiplier'] = 1; //'importance' in karma calculations of post votes
