@@ -17,15 +17,18 @@ if ($globals['bot'] && get_current_page() > 2) {
 	do_error('Pages exceeded', 404);
 }
 
-$offset=(get_current_page()-1)*$page_size;
+$offset = (get_current_page() - 1) * $page_size;
 
 if (!empty($_SERVER['PATH_INFO'])) {
 	$url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
+
 	array_shift($url_args);
+
 	$_REQUEST['login'] = clean_input_string($url_args[0]);
 	$_REQUEST['view'] = $url_args[1];
 	$_REQUEST['uid'] = intval($url_args[2]);
-	if (! $_REQUEST['uid'] && is_numeric($_REQUEST['view'])) {
+
+	if (!$_REQUEST['uid'] && is_numeric($_REQUEST['view'])) {
 		// This is a empty view but an user_id, change it
 		$_REQUEST['uid'] = intval($_REQUEST['view']);
 		$_REQUEST['view'] = '';
@@ -33,54 +36,51 @@ if (!empty($_SERVER['PATH_INFO'])) {
 } else {
 	$_REQUEST['login'] = clean_input_string($_REQUEST['login']);
 	$_REQUEST['uid'] = intval($_REQUEST['uid']);
+
 	if (!empty($_REQUEST['login'])) {
-		header('Location: ' . html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view']))));
-		die;
+		die(header('Location: '.html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])))));
 	}
 }
 
 $login = clean_input_string($_REQUEST['login']);
-if(empty($login)){
+
+if (empty($login)) {
 	if ($current_user->user_id > 0) {
-		header('Location: ' . html_entity_decode(get_user_uri($current_user->user_login)));
-		die;
+		die(header('Location: ' . html_entity_decode(get_user_uri($current_user->user_login))));
 	} else {
-		header('Location: '.$globals['base_url']);
-		die;
+		die(header('Location: '.$globals['base_url']));
 	}
 }
 
 $uid = $_REQUEST['uid']; // Should be clean before
 
-$user=new User();
+$user = new User();
 
 if ($current_user->admin) {
-		// Check if it's used UID
-		if($uid) {
-			$user->id = $uid;
-		} else {
-			redirect(html_entity_decode(get_user_uri_by_uid($login, $_REQUEST['view'])));
-			die;
-		}
+	// Check if it's used UID
+	if ($uid) {
+		$user->id = $uid;
+	} else {
+		die(redirect(html_entity_decode(get_user_uri_by_uid($login, $_REQUEST['view']))));
+	}
 } else {
-		if($uid > 0) {
-			// Avoid anonymous and non admins users to use the id, it's a "duplicated" page
-			redirect(html_entity_decode(get_user_uri($login, $_REQUEST['view'])));
-			die;
-		}
-		$user->username = $login;
+	if ($uid > 0) {
+		// Avoid anonymous and non admins users to use the id, it's a "duplicated" page
+		die(redirect(html_entity_decode(get_user_uri($login, $_REQUEST['view']))));
+	}
+
+	$user->username = $login;
 }
 
-if(!$user->read()) {
+if (!$user->read()) {
 	do_error(_('usuario inexistente'), 404);
 }
+
 $login = $user->username; // Just in case, we user the database username
 
 $globals['search_options'] = array('u' => $user->username);
 
-$view = clean_input_string($_REQUEST['view']);
-if(empty($view)) $view = 'profile';
-
+$view = clean_input_string($_REQUEST['view']) ?: 'profile';
 
 // The profile's use marked the current one as friend
 if ($current_user->user_id) {
@@ -97,23 +97,30 @@ if ($current_user->user_id == $user->id || $current_user->admin || $user->friend
 // Enable user AdSense
 // do_user_ad: 0 = noad, > 0: probability n/100
 // 100 if the user is the current one
-if($globals['external_user_ads'] && !empty($user->adcode)) {
+if ($globals['external_user_ads'] && !empty($user->adcode)) {
 	$globals['user_adcode'] = $user->adcode;
 	$globals['user_adchannel'] = $user->adchannel;
-	if ($current_user->user_id == $user->id || $current_user->admin) $globals['do_user_ad']  = 100;
-	else $globals['do_user_ad'] = $user->karma * 2;
+
+	if ($current_user->user_id == $user->id || $current_user->admin) {
+		$globals['do_user_ad'] = 100;
+	} else {
+		$globals['do_user_ad'] = $user->karma * 2;
+	}
 }
 
 // Load Google GEO
-if (! $user->disabled()
-		&& $view == 'profile'
-		&& $globals['google_maps_api']
-		&& (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)) {
+if (
+	!$user->disabled()
+	&& $view === 'profile'
+	&& $globals['google_maps_api']
+	&& (($globals['latlng']=$user->get_latlng()) || $current_user->user_id == $user->id)
+) {
 	if ($current_user->user_id == $user->id) {
 		geo_init('geo_coder_editor_load', $globals['latlng'], 7, 'user');
 	} else {
 		geo_init('geo_coder_load', $globals['latlng'], 7, 'user');
 	}
+
 	$globals['do_geo'] = true;
 }
 
@@ -128,18 +135,21 @@ switch ($view) {
 	case 'ignored':
 	case 'favorites':
 		$globals['noindex'] = true;
-		breaK;
+		break;
+
 	case 'commented':
 	case 'conversation':
 	case 'shaken_comments':
 	case 'favorite_comments':
 		$globals['search_options']['w'] = 'comments';
 		$globals['noindex'] = true;
-		breaK;
+		break;
+
 	case 'profile':
 	case 'subs':
 		$globals['noindex'] = false;
-		breaK;
+		break;
+
 	default:
 		do_error(_('opción inexistente'), 404);
 		break;
@@ -242,9 +252,11 @@ function do_profile() {
 	}
 
 	$post = new Post;
+
 	if (!$post->read_last($user->id)) {
 		$post = NULL;
 	}
+
 	if(!empty($user->url)) {
 		if ($user->karma < 10) $nofollow = 'rel="nofollow"';
 		else $nofollow = '';
@@ -325,16 +337,20 @@ function do_profile() {
 function do_history () {
 	global $db, $rows, $user, $offset, $page_size, $globals;
 
-
 	$rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id");
 	$links = $db->get_col("SELECT link_id FROM links WHERE link_author=$user->id ORDER BY link_date DESC LIMIT $offset,$page_size");
-	if ($links) {
-		Link::$original_status = true; // Show status in original sub
-		foreach($links as $link_id) {
-			$link = Link::from_db($link_id);
-			if ($link && $link->votes > 0) {
-				$link->print_summary('short');
-			}
+
+	if (empty($links)) {
+		return;
+	}
+
+	Link::$original_status = true; // Show status in original sub
+
+	foreach($links as $link_id) {
+		$link = Link::from_db($link_id);
+
+		if ($link && $link->votes > 0) {
+			$link->print_summary('short');
 		}
 	}
 }
@@ -396,9 +412,7 @@ function do_friends_shaken () {
 			$link->print_summary();
 		}
 	}
-
 }
-
 
 function do_commented () {
 	global $db, $rows, $user, $offset, $page_size;
@@ -415,7 +429,7 @@ function do_conversation () {
 
 	$rows = -1; //$db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
 	$conversation = "SELECT distinct(conversation_from) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment' ORDER BY conversation_time desc LIMIT $offset,$page_size";
-	
+
 	$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments INNER JOIN links ON (link_id = comment_link_id) INNER JOIN ($conversation) AS convs ON convs.conversation_from = comments.comment_id");
 	if ($comments) {
 		$last_read = print_comment_list($comments, $user);
@@ -546,31 +560,31 @@ function do_subs() {
 
 	$subscribed_subs = array();
 
-		foreach ($subs as $sub) {
-			$sub->site_info = SitesMgr::get_info($sub->id);
+	foreach ($subs as $sub) {
+		$sub->site_info = SitesMgr::get_info($sub->id);
 
-			// Check if the sub has a logo and calculate the width
-			if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
-				$r = $sub->site_info->media_dim1/$sub->site_info->media_dim2;
-				if ( $globals['mobile']) {
-					$sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
-				} else {
-					$sub->site_info->logo_height = $globals['media_sublogo_height'];
-				}
-				$sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
-				$sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
+		// Check if the sub has a logo and calculate the width
+		if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
+			$r = $sub->site_info->media_dim1/$sub->site_info->media_dim2;
+			if ( $globals['mobile']) {
+				$sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
+			} else {
+				$sub->site_info->logo_height = $globals['media_sublogo_height'];
 			}
-
-			$sub->followers = 0;
-
-			foreach ($followers as $row) {
-				if ($sub->id == $row->id) {
-					$sub->followers = $row->c;
-				}
-			}
-
-			$subscribed_subs[] = $sub;
+			$sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
+			$sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
 		}
+
+		$sub->followers = 0;
+
+		foreach ($followers as $row) {
+			if ($sub->id == $row->id) {
+				$sub->followers = $row->c;
+			}
+		}
+
+		$subscribed_subs[] = $sub;
+	}
 
 	$title_subscriptions = _('Suscripciones');
 
@@ -579,18 +593,21 @@ function do_subs() {
 	} else {
 		$sql = "select subs.* from subs where subs.sub = 1 and subs.owner = $user->id";
 	}
-	$ownwed_subs = $db->get_results($sql);
 
+	$ownwed_subs = $db->get_results($sql);
 	$owned_subs = array();
 
 	$ids_subs = array_map(function($row) {
 		return (int)$row->id;
 	}, $ownwed_subs);
 
-	$followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+	if ($ids_subs) {
+		$followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+	} else {
+		$followers = array();
+	}
 
 	foreach ($ownwed_subs as $sub) {
-
 		$sub->site_info = SitesMgr::get_info($sub->id);
 
 		// Check if the sub has a logo and calculate the width
@@ -621,5 +638,4 @@ function do_subs() {
 	else $can_edit = false;
 
 	Haanga::Load('subs_user.html', compact('title_subscriptions', 'subscribed_subs', 'title_owned_subs', 'owned_subs', 'can_edit'));
-
 }
