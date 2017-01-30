@@ -37,7 +37,7 @@
 
 if (!defined('HAANGA_VERSION')) {
     /* anyone can override this value to force recompilation */
-    define('HAANGA_VERSION', '1.0.4');
+    define('HAANGA_VERSION', '1.0.7');
 }
 
 
@@ -53,7 +53,7 @@ if (!defined('HAANGA_VERSION')) {
 class Haanga
 {
     protected static $cache_dir;
-    protected static $templates_dir='.';
+    protected static $templates_dir=array('.');
     protected static $debug;
     protected static $bootstrap = NULL;
     protected static $check_ttl;
@@ -70,29 +70,9 @@ class Haanga
         /* The class can't be instanced */
     }
 
-    final public static function AutoLoad($class)
-    {
-        static $loaded = array();
-        static $path;
-
-        if (!isset($loaded[$class]) && substr($class, 0, 6) === 'Haanga' && !class_exists($class, false)) {
-            if ($path === NULL) {
-                $path = dirname(__FILE__);
-            }
-            $file = $path.DIRECTORY_SEPARATOR.str_replace('_', DIRECTORY_SEPARATOR, $class).'.php';
-            if (is_file($file)) {
-                require $file;
-            }
-            $loaded[$class] = TRUE;
-            return;
-        }
-
-        return FALSE;
-    }
-
     public static function getTemplateDir()
     {
-        return self::$templates_dir;
+        return self::$templates_dir; 
     }
 
     // configure(Array $opts) {{{
@@ -101,7 +81,7 @@ class Haanga
      *
      *  Options:
      *
-     *      - (string)   cache_dir
+     *      - (string)   cache_dir 
      *      - (string)   tempalte_dir
      *      - (callback) on_compile
      *      - (boolean)  debug
@@ -121,7 +101,7 @@ class Haanga
         		self::$cache_dir = $value;
                 break;
             case 'template_dir':
-        		self::$templates_dir = $value;
+        		self::$templates_dir = (Array)$value;
                 break;
             case 'bootstrap':
                 if (is_callable($value)) {
@@ -167,14 +147,14 @@ class Haanga
      *  Check the directory where the compiled templates
      *  are stored.
      *
-     *  @param string $dir
+     *  @param string $dir 
      *
      *  @return void
      */
     public static function checkCacheDir()
     {
         $dir = self::$cache_dir;
-        if (!is_dir($dir)) {
+        if (!is_dir($dir)) { 
             $old = umask(0);
             if (!mkdir($dir, 0777, TRUE)) {
                 throw new Haanga_Exception("{$dir} is not a valid directory");
@@ -225,7 +205,7 @@ class Haanga
 
             /* load compiler (done just once) */
             if (self::$use_autoload) {
-                spl_autoload_register(array(__CLASS__, 'AutoLoad'));
+                require_once "{$dir}/Haanga/Loader.php";
             }
 
             $compiler = new Haanga_Compiler_Runtime;
@@ -245,7 +225,7 @@ class Haanga
 
         if ($checkdir && !$has_checkdir) {
             self::checkCacheDir();
-            $has_checkdir = TRUE;
+            $has_checkdir = TRUE; 
         }
 
         $compiler->reset();
@@ -272,17 +252,28 @@ class Haanga
 
         $code = $compiler->compile($tpl);
 
-        return create_function('$vars=array(), $return=TRUE, $blocks=array()', $code);
+        return create_function('$' . $compiler->getScopeVariable(NULL, TRUE) . '=array(), $return=TRUE, $blocks=array()', $code);
     }
     // }}}
+
+    public static function getTemplatePath($file)
+    {
+        foreach (self::$templates_dir as $dir) {
+            $tpl = $dir .'/'.$file;
+            if (is_file($tpl)) {
+                return realpath($tpl);
+            }
+        }
+        throw new \RuntimeException("Cannot find {$file} file  (looked in " . implode(",", self::$templates_dir) . ")");
+    }
 
     // safe_load(string $file, array $vars, bool $return, array $blocks) {{{
     public static function Safe_Load($file, $vars = array(), $return=FALSE, $blocks=array())
     {
         try {
-            $tpl = self::$templates_dir.'/'.$file;
 
-            if (is_file($tpl)) {
+            $tpl = self::getTemplatePath($file);
+            if (file_exists($tpl)) {
                 /* call load if the tpl file exists */
                 return self::Load($file, $vars, $return, $blocks);
             }
@@ -298,15 +289,15 @@ class Haanga
      *  Load
      *
      *  Load template. If the template is already compiled, just the compiled
-     *  PHP file will be included an used. If the template is new, or it
+     *  PHP file will be included an used. If the template is new, or it 
      *  had changed, the Haanga compiler is loaded in memory, and the template
      *  is compiled.
      *
      *
      *  @param string $file
-     *  @param array  $vars
+     *  @param array  $vars 
      *  @param bool   $return
-     *  @param array  $blocks
+     *  @param array  $blocks   
      *
      *  @return string|NULL
      */
@@ -318,7 +309,7 @@ class Haanga
 
         self::$has_compiled = FALSE;
 
-        $tpl      = self::$templates_dir.'/'.$file;
+        $tpl      = self::getTemplatePath($file);
         $fnc      = sha1($tpl);
         $callback = "haanga_".$fnc;
 
@@ -339,11 +330,9 @@ class Haanga
             } else {
                 $result = call_user_func(self::$check_set, $callback, TRUE, self::$check_ttl);
             }
-        }
-
-        $mtpl = filemtime($tpl);
-
-        if (!is_file($php) || ($check && $mtpl > filemtime($php))) {
+        } 
+        
+        if (!is_file($php) || ($check && filemtime($tpl) > filemtime($php))) {
             if (!is_file($tpl)) {
                 /* There is no template nor compiled file */
                 throw new Exception("View {$file} doesn't exists");
@@ -354,7 +343,7 @@ class Haanga
                 mkdir(dirname($php), 0777, TRUE);
                 umask($old);
             }
-
+            
             $fp = fopen($php, "a+");
             /* try to block PHP file */
             if (!flock($fp, LOCK_EX | LOCK_NB)) {
@@ -362,8 +351,8 @@ class Haanga
                 fclose($fp);
                 if (is_file($php)) {
                     /*
-                    ** if there is an old version of the cache
-                    ** load it
+                    ** if there is an old version of the cache 
+                    ** load it 
                     */
                     require $php;
                     if (is_callable($callback)) {
@@ -405,7 +394,6 @@ class Haanga
                 fwrite($fp, "<?php".$code);
                 flock($fp, LOCK_UN); // release the lock
                 fclose($fp);
-                touch($php, $mtpl, $mtpl);
             } else {
                 /* local eval */
                 eval($code);
@@ -418,18 +406,18 @@ class Haanga
             /* Load the cached PHP file */
             require $php;
             if (!is_callable($callback)) {
-                /*
+                /* 
                    really weird case ($php is empty, another process is compiling
                    the $tpl for the first time), so create a lambda function
                    for the template.
 
-                   To be safe we're invalidating its time, because its content
+                   To be safe we're invalidating its time, because its content 
                    is no longer valid to us
                  */
                 touch($php, 300, 300);
                 chmod($php, 0777);
-
-
+            
+                
                 // compile temporarily
                 $compiler = self::getCompiler();
                 $code = $compiler->compile_file($tpl, FALSE, $vars);

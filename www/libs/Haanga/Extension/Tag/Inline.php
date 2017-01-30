@@ -18,7 +18,7 @@ class Haanga_Extension_Tag_Inline
         $file = $args[0]['string'];
 
         if (class_exists('Haanga')) {
-            $file = Haanga::GetTemplateDir().'/'.$file;
+            $file = Haanga::getTemplatePath($file);
         }
 
         if (!is_file($file)) {

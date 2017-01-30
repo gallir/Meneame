@@ -126,7 +126,7 @@
             </div>
             {% endif %}
 
-            <div class="details {% if globals.mobile || !self.show_shakebox %}details-center{% endif %}">
+            <div class="details {% if globals.mobile OR !self.show_shakebox %}details-center{% endif %}">
                 {% if ! globals.bot %}
 
                 <a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}">

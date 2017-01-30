@@ -59,6 +59,7 @@ class Haanga_Generator_PHP
 {
     protected $ident;
     protected $tab = "    ";
+    protected $scopeVariableName;
 
     // getCode (AST $op_code) {{{
     /**
@@ -69,8 +70,9 @@ class Haanga_Generator_PHP
      *  
      *  @return string
      */
-    final function getCode($op_code)
+    final function getCode($op_code, $scope)
     {
+        $this->scopeVariableName = $scope;
         $this->ident = 0;
         $code = "";
         $size = count($op_code);
@@ -195,7 +197,7 @@ class Haanga_Generator_PHP
      */
     function php_function($op)
     {
-        $code = "function {$op['name']}(\$vars, \$return=FALSE, \$blocks=array())".$this->ident()."{";
+        $code = "function {$op['name']}(\${$this->scopeVariableName}, \$return=FALSE, \$blocks=array())".$this->ident()."{";
         $this->ident++;
         return $code;
     }
@@ -331,7 +333,7 @@ class Haanga_Generator_PHP
     {
         $op['array'] = $this->php_get_varname($op['array']);
         $op['value'] = $this->php_get_varname($op['value']);
-        $code = "foreach ((array) {$op['array']} as ";
+        $code = "foreach ({$op['array']} as ";
         if (!isset($op['key'])) {
             $code .= " {$op['value']}";
         } else {

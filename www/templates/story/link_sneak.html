@@ -61,7 +61,7 @@ function received_data(data) {
 		return false;
 	}
 	eval (data);
-	if (link_votes_0 != link_votes || link_negatives_0 != link_negatives || link_karma_0 != link_karma) {
+	if (link_votes_0 != link_votes OR link_negatives_0 != link_negatives OR link_karma_0 != link_karma) {
 		if ($('#a-votes-' + link_id).html() != link_votes) {
 			$('#a-votes-' + link_id).hide();
 			$('#a-votes-' + link_id).html(link_votes+"");

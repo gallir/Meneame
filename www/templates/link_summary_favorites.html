@@ -108,7 +108,7 @@
 		</div>
 		{% endif %}
 
-		{% if type == 'full' || type == 'preview' %}
+		{% if type == 'full' OR type == 'preview' %}
 
 
 		{% if self.thumb_uri %}
@@ -138,7 +138,7 @@
 		</div>
 		{% endif %}
 
-		{% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
+		{% if globals.link OR ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) OR type == 'short' %}
 		{% if self.show_tags AND self.tags %}
 		<br/><span class="news-tags"><strong>{% trans _('etiquetas') %}</strong>:
 		{% exec explode "," self.tags as tags_array %}

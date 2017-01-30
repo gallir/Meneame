@@ -39,10 +39,11 @@ class Haanga_Extension_Tag_Exec
             $code->decl($assign, $exec);
 
             // make it global
-            $code->decl(hvar('vars', $assign), hvar($assign));
+            $code->decl($cmp->getScopeVariable($assign), hvar($assign));
         } else {
             $cmp->do_print($code, $exec);
         }
         return $code;
     }
 }
+

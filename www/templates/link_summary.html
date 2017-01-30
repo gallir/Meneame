@@ -149,7 +149,7 @@
 
                 {% endif %}
 
-                {% if type == 'full' || type == 'preview' %}
+                {% if type == 'full' OR type == 'preview' %}
 
                 <div class="news-content">{{ self.content }}</div>
 
@@ -168,7 +168,7 @@
 
                 {% endif %}
 
-                {% endif %} {# END if type == 'full' || type == 'preview' #}
+                {% endif %} {# END if type == 'full' OR type == 'preview' #}
 
                 {% if self.do_inline_friend_votes AND self.friend_votes %}
                 <div style="padding: 3px 0 2px 0;">
@@ -180,7 +180,7 @@
                 </div>
                 {% endif %}
 
-                {% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
+                {% if globals.link OR ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) OR type == 'short' %}
 
                 {% if type == 'short' && globals.submnm|subid != self.sub_id %}
                 <span class="tool sub-name">

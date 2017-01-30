@@ -7,8 +7,8 @@
 	    <input type="search" placeholder="palabra, varias palabras" autofocus name="words" id="search" value="{{ _REQUEST.words|escape}}" class="form-full"/>
 	    <br />
 		{% for o,t in options %}
-			<input type = "radio" name="w" id="{{ o }}" value="{{ o }}" 
-			{% if _GET.w == o OR ! _GET.w AND o == "links" %} 
+			<input type = "radio" name="w" id="{{ o }}" value="{{ o }}"
+			{% if _GET.w == o OR ! _GET.w AND o == "links" %}
 				checked = "checked"
 			{% endif %}
 			/>
@@ -26,7 +26,7 @@
 		var lastQuery = -1;
 		var what;
 		var words;
-		var options = { 
+		var options = {
 				xaxis: { mode: "time", timeformat: "%m/%y", minTickSize: [1, "month"] },
 				series: { lines: { show: true }, points: { show: true }},
 				grid: { hoverable: true, clickable: true },
@@ -75,7 +75,7 @@
 			$flot.on("plothover", function (event, pos, item) {
 				if (item) {
 					var now = new Date().getTime();
-					if (now - lastRequest < 200 || lastQuery == item.dataIndex) {
+					if (now - lastRequest < 200 OR lastQuery == item.dataIndex) {
 						return;
 					}
 					lastRequest = now;

@@ -121,7 +121,7 @@ class PollOption
     {
         global $db;
 
-        return $db->object_iterator(DbHelper::queryPlain('
+        return $db->get_results(DbHelper::queryPlain('
             SELECT *
             FROM `polls_options`
             WHERE `poll_id` = "'.(int)$poll_id.'"
@@ -133,7 +133,11 @@ class PollOption
     {
         global $db;
 
-        return $db->object_iterator(DbHelper::queryPlain('
+        if (empty($poll_ids)) {
+            return array();
+        }
+
+        return $db->get_results(DbHelper::queryPlain('
             SELECT *
             FROM `polls_options`
             WHERE `poll_id` IN ('.DbHelper::implodedIds($poll_ids).')

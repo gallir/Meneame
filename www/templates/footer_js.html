@@ -2,7 +2,7 @@
 <script type="text/javascript">
 {% for js in globals.extra_js %}
 
-{% if js|substr:"0, 4" == 'http' || js|substr:"0, 2" == '//' %}
+{% if js|substr:"0, 4" == 'http' OR js|substr:"0, 2" == '//' %}
 postJavascript.push("{{js}}");
 {% else %}
 postJavascript.push("{{globals.base_static}}js/{{js}}");

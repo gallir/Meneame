@@ -96,9 +96,10 @@ class Haanga_Compiler_Tokenizer
         '<'     => HG_Parser::T_LT,
         '='     => HG_Parser::T_ASSIGN,
         '>'     => HG_Parser::T_GT,
+        '?'     => HG_Parser::T_QUESTION, 
         '['     => HG_Parser::T_BRACKETS_OPEN,
         ']'     => HG_Parser::T_BRACKETS_CLOSE,
-        '|'     => HG_Parser::T_PIPE,
+        '|'     => HG_Parser::T_FILTER_PIPE,
     );
     static $operators = array(
         '!=='   => HG_Parser::T_NE,
@@ -113,7 +114,7 @@ class Haanga_Compiler_Tokenizer
         '=='    => HG_Parser::T_EQ,
         '>='    => HG_Parser::T_GE,
         '>>'    => HG_Parser::T_BITWISE,
-        '||'    => HG_Parser::T_OR,
+        '||'    => HG_Parser::T_PIPE,
     );
 
     static $close_tags = array();
@@ -134,6 +135,8 @@ class Haanga_Compiler_Tokenizer
     const IN_HTML    = 1;
     const IN_TAG     = 2;
     const IN_ECHO    = 3;
+
+    protected $echoFirstToken = false;
 
     function __construct($data, $compiler, $file)
     {
@@ -205,6 +208,7 @@ class Haanga_Compiler_Tokenizer
                         break;
                     case HG_Parser::T_PRINT_OPEN:
                         $this->status = self::IN_ECHO;
+                        $this->echoFirstToken = false;
                         break;
                     }
                     return TRUE;
@@ -376,13 +380,22 @@ class Haanga_Compiler_Tokenizer
                     if (!$tag) {
                         $tag = Haanga_Extension::getInstance('Tag');
                     }
-                    $value = $tag->isValid($alpha);
-                    $this->token = $value ? $value : HG_Parser::T_ALPHA;
+
+                    if ($this->status == self::IN_ECHO && !$this->echoFirstToken) {
+                        $this->token =  HG_Parser::T_ALPHA;
+                    } else {
+                        $value = $tag->isValid($alpha);
+                        $this->token = $value ? $value : HG_Parser::T_ALPHA;
+                    }
                     $this->value = $alpha;
 
                 }
                 break 2;
             }
+        }
+    
+        if ($this->status == self::IN_ECHO) {
+            $this->echoFirstToken = true;
         }
 
         if ($this->token == HG_Parser::T_TAG_CLOSE ||
@@ -545,6 +558,7 @@ class Haanga_Compiler_Tokenizer
     static function init($template, $compiler, $file='')
     {
         $lexer  = new Haanga_Compiler_Tokenizer($template, $compiler, $file);
+        file_put_contents('/tmp/foo.php', $file . "\n", FILE_APPEND);
         $parser = new Haanga_Compiler_Parser($lexer, $file);
 
         $parser->compiler = $compiler;

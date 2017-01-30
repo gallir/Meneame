@@ -64,7 +64,7 @@ final class Haanga_Compiler_Runtime extends Haanga_Compiler
     protected function generate_op_include($details, &$body)
     {
         $this->do_print($body,
-            hexec('Haanga::Load', $details[0], hvar('vars'),
+            hexec('Haanga::Load', $details[0], $this->getScopeVariable(),
             TRUE,
             hvar('blocks'))
         );
@@ -75,7 +75,7 @@ final class Haanga_Compiler_Runtime extends Haanga_Compiler
     function expr_call_base_template()
     {
         return hexec('Haanga::Load', $this->subtemplate, 
-            hvar('vars'), TRUE, hvar('blocks'));
+            $this->getScopeVariable(), TRUE, hvar('blocks'));
     }
     // }}}
 

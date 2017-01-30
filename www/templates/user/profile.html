@@ -122,7 +122,7 @@
 		<tr><th>{% trans _('sitio web') %}:</th><td><a href="{{url}}" {{nofollow}}>{{url}}</a></td></tr>
     {% endif %}
 	    <tr><th>{% trans _('desde') %}:</th><td>{% exec get_date_time user.date %}</td></tr>
-    {% if current_user.user_id == user.id || current_user.user_level == 'god' %}
+    {% if current_user.user_id == user.id OR current_user.user_level == 'god' %}
 		<tr><th>{% trans _('email') %}:</th>
 		<td>{{user.email}}
 		{% if current_user.user_level == 'god' %}(<em>{{user->email_register}}</em>){% endif %}
@@ -137,7 +137,7 @@
         {% endif %}
     {% endif %}
 	<tr><th>{% trans _('karma') %}:</th><td>{{user.karma}}
-    {% if (user.id == current_user.user_id || current_user.user_level == 'god' || current_user.user_level == 'admin') && user.karma_log %}
+    {% if (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin') && user.karma_log %}
 		(<a class="fancybox" href="{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
     {% endif %}
     </td></tr>

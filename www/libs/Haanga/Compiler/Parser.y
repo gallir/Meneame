@@ -62,12 +62,13 @@
 %right T_NOT.
 %left T_AND.
 %left T_OR.
+%left T_QUESTION T_COLON.
 %nonassoc T_EQ T_NE.
 %nonassoc T_GT T_GE T_LT T_LE.
 %nonassoc T_IN.
 %left T_PLUS T_MINUS T_CONCAT.
 %left T_TIMES T_DIV T_MOD.
-%left T_PIPE T_BITWISE.
+%left T_PIPE T_BITWISE T_FILTER_PIPE.
 
 %syntax_error {
     $expect = array();
@@ -94,8 +95,8 @@ code(A) ::= T_COMMENT(B). {
     B=rtrim(B); A = array('operation' => 'comment', 'comment' => B); 
 } 
 
-code(A) ::= T_PRINT_OPEN filtered_var(B) T_PRINT_CLOSE.  {
-    A = array('operation' => 'print_var', 'variable' => B, 'line' => $this->lex->getLine() ); 
+code(A) ::= T_PRINT_OPEN expr(B) T_PRINT_CLOSE.  {
+    A = array('operation' => 'print_var', 'expr' => B, 'line' => $this->lex->getLine() ); 
 }
 
 stmts(A) ::= T_EXTENDS var_or_string(B) T_TAG_CLOSE. { A = array('operation' => 'base', B); }
@@ -170,6 +171,11 @@ alias(A) ::= T_WITH varname(B) T_AS varname(C) T_TAG_CLOSE body(X) T_TAG_OPEN T_
 stmt(A) ::= T_SET varname(C) T_ASSIGN expr(X). { A = array('operation' => 'set', 'var' => C,'expr' => X); }
 stmt(A) ::= regroup(B). { A = B; }
 stmt ::= T_LOAD string(B). {
+    if (is_file(dirname($this->file) . '/' . B)) {
+        B = dirname($this->file) . '/' . B;
+    } else if (is_file(getcwd() . '/' . B)) {
+        B = getcwd() . '/' . B;
+    }
     if (!is_file(B) || !Haanga_Compiler::getOption('enable_load')) {
         $this->error(B." is not a valid file"); 
     } 
@@ -337,7 +343,8 @@ filter_stmt(A) ::= T_FILTER filtered_var(B) T_TAG_CLOSE body(X) T_TAG_OPEN T_CUS
 regroup(A) ::= T_REGROUP filtered_var(B) T_BY varname(C) T_AS varname(X). { A=array('operation' => 'regroup', 'array' => B, 'row' => C, 'as' => X); }
 
 /* variables with filters */
-filtered_var(A) ::= filtered_var(B) T_PIPE varname_args(C). { A = B; A[] = C; }
+filtered_var(A) ::= filtered_var(B) T_FILTER_PIPE varname_args(C). { A = B; A[] = C; }
+filtered_var(A) ::= string(B) T_FILTER_PIPE varname_args(C). { A = array(array('string' => B)); A[] = C; }
 filtered_var(A) ::= varname_args(B). { A = array(B); }
 
 varname_args(A) ::= varname(B) T_COLON var_or_string(X) . { A = array(B, 'args'=>array(X)); }
@@ -356,7 +363,9 @@ var_or_string(A) ::= T_TRUE|T_FALSE(B).   { A = trim(@B); }
 var_or_string(A) ::= string(B).     { A = array('string' => B); }
 
 /* filtered variables */
-fvar_or_string(A) ::= filtered_var(B).  { A = array('var_filter' => B); }  
+fvar_or_string(A) ::= filtered_var(B).  {
+    A = array('var_filter' => B); 
+}  
 fvar_or_string(A) ::= number(B).     { A = array('number' => B); }  
 fvar_or_string(A) ::= T_TRUE|T_FALSE(B).   { A = trim(@B); }  
 fvar_or_string(A) ::= string(B).        { A = array('string' => B); }
@@ -366,34 +375,52 @@ string(A)    ::= T_STRING(B).   { A = B; }
 string(A)    ::= T_INTL T_STRING(B) T_RPARENT. { A = B; }
 
 /* expr */
+expr(A) ::= expr(Z) T_QUESTION expr(B) T_COLON expr(C). {
+    A = array('expr_cond' => Z, 'true' => B, 'false' => C);
+}
 expr(A) ::= T_NOT expr(B). { A = array('op_expr' => 'not', B); }
 expr(A) ::= expr(B) T_AND(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
 expr(A) ::= expr(B) T_OR(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
 expr(A) ::= expr(B) T_PLUS|T_MINUS|T_CONCAT(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
 expr(A) ::= expr(B) T_EQ|T_NE|T_GT|T_GE|T_LT|T_LE|T_IN(X)  expr(C).  { A = array('op_expr' => trim(@X), B, C); }
 expr(A) ::= expr(B) T_TIMES|T_DIV|T_MOD(X)  expr(C).  { A = array('op_expr' => @X, B, C); }
-expr(A) ::= expr(B) T_BITWISE|T_PIPE(X)  expr(C).  { A = array('op_expr' => 'expr', array('op_expr' => @X, B, C)); }
+expr(A) ::= expr(B) T_BITWISE(X)  expr(C).  { A = array('op_expr' => 'expr', array('op_expr' => @X, B, C)); }
+expr(A) ::= expr(B) T_PIPE  expr(C).  { A = array('op_expr' => 'expr', array('op_expr' => '|', B, C)); }
 expr(A) ::= T_LPARENT expr(B) T_RPARENT. { A = array('op_expr' => 'expr', B); }
 expr(A) ::= fvar_or_string(B). { A = B; }
 
 /* Variable name */
 
+varname(A) ::= varpart(B) T_LPARENT T_RPARENT. {
+    A = hexec(B)->getArray();
+}
+
+varname(A) ::= varpart(B) T_LPARENT params(X) T_RPARENT. {
+    $tmp  = hcode();
+    $args = array_merge(array(B),  X);
+    A =  call_user_func_array(array($tmp, 'exec'), $args);
+}
+
 varname(A) ::= varpart(B). { A = current($this->compiler->generate_variable_name(B, false)); }
-varpart(A) ::= varname(B) T_OBJ|T_DOT T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). { 
+
+varpart(A) ::= varpart(B) T_OBJ|T_DOT varpart_single(C). { 
     if (!is_array(B)) { A = array(B); } 
     else { A = B; }  A[]=array('object' => C);
 }
-varpart(A) ::= varname(B) T_CLASS T_ALPHA|T_CUSTOM_TAG|T_CUSTOM_BLOCK(C). { 
+
+varpart(A) ::= varpart(B) T_CLASS varpart_single(C). { 
     if (!is_array(B)) { A = array(B); } 
     else { A = B; }  A[]=array('class' => '$'.C);
 }
-varpart(A) ::= varname(B) T_BRACKETS_OPEN var_or_string(C) T_BRACKETS_CLOSE. {
+
+varpart(A) ::= varpart(B) T_BRACKETS_OPEN var_or_string(C) T_BRACKETS_CLOSE. {
     if (!is_array(B)) { A = array(B); } 
     else { A = B; }  A[]=C;
 }
-varpart(A) ::= T_ALPHA(B). { A = B; } 
+varpart(A) ::= varpart_single(B). { A = B; }
+
 /* T_BLOCK|T_CUSTOM|T_CUSTOM_BLOCK are also T_ALPHA */
-varpart(A) ::= T_BLOCK|T_CUSTOM_TAG|T_CUSTOM_BLOCK(B). { A = B; } 
+varpart_single(A) ::= T_ALPHA|T_BLOCK|T_CUSTOM_TAG|T_CUSTOM_END|T_CUSTOM_BLOCK(B). { A = B; } 
 
 range(A)  ::= numvar(B) T_DOTDOT numvar(C). { A = array(B, C); }
 

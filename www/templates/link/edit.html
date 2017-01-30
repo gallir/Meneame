@@ -34,7 +34,7 @@
         <fieldset>
             <legend><span class="sign">{% trans _('detalles de la noticia') %}</span></legend>
 
-            {% if not link.is_new && link.url && (current_user.admin || current_user.user_level == "blogger") %}
+            {% if not link.is_new && link.url && (current_user.admin OR current_user.user_level == "blogger") %}
             <label for="url" accesskey="1">{% trans _('url de la noticia') %}:</label>
 
             <p>
@@ -54,8 +54,8 @@
                 {% endif %}
 
                 {% if not link.is_new
-                    && (link.votes > 0 && (link.status != 'published' || current_user.user_level == 'god' || link.is_sub_owner)
-                    && (( not link.discarded && current_user.user_id == link.author) || current_user.admin || link.is_sub_owner))
+                    && (link.votes > 0 && (link.status != 'published' OR current_user.user_level == 'god' OR link.is_sub_owner)
+                    && (( not link.discarded && current_user.user_id == link.author) OR current_user.admin OR link.is_sub_owner))
                 %}
 
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -75,19 +75,19 @@
 
                     {% else %} {% if link.discarded %}
 
-                    {% if current_user.admin || link.is_sub_owner %}
+                    {% if current_user.admin OR link.is_sub_owner %}
                     <option value="queued">{% exec link.get_status_text 'queued' %}</option>
                     <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
                     <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
                     {% endif %}
 
-                    {% else %} {% if current_user.user_level == 'god' || link.is_sub_owner %}
+                    {% else %} {% if current_user.user_level == 'god' OR link.is_sub_owner %}
                     <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
                     <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
                     <option value="queued">{% exec link.get_status_text 'queued' %}</option>
                     {% endif %}
 
-                    {% endif %} {# END if current_user.admin || link.is_sub_owner #}
+                    {% endif %} {# END if current_user.admin OR link.is_sub_owner #}
                     {% endif %} {# END if link.status == 'queued' #}
 
                 </select>
@@ -153,9 +153,9 @@
             </p>
             {% endif %}
 
-            {% if not link.is_new && (current_user.admin > 0 || current_user.user_level == "blogger") %}
+            {% if not link.is_new && (current_user.admin > 0 OR current_user.user_level == "blogger") %}
 
-            {% if link.thumb_url || link.media_size > 0 %}
+            {% if link.thumb_url OR link.media_size > 0 %}
 
             <label>{% trans _('eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
 

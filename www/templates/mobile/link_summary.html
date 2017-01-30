@@ -132,7 +132,7 @@
 
         {% endif %}
 
-        {% if type == 'full' || type == 'preview' %}
+        {% if type == 'full' OR type == 'preview' %}
 
         {% if self.thumb_uri %}
         <a href="{{ self.media_url }}" class="fancybox thumbnail-wrapper" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt='' class='thumbnail lazy'/></a>
@@ -153,7 +153,7 @@
 
         {% endif %} {# if type != 'preview' #}
 
-        {% endif %} {# END if type == 'full' || type == 'preview' #}
+        {% endif %} {# END if type == 'full' OR type == 'preview' #}
 
         {% if self.do_inline_friend_votes AND self.friend_votes %}
         <div style="padding: 3px 0 2px 0;">
@@ -163,7 +163,7 @@
         </div>
         {% endif %}
 
-        {% if globals.link || ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) || type == 'short' %}
+        {% if globals.link OR ((self.is_editable OR self.status == 'queued') AND globals.now - self.date < 7200) OR type == 'short' %}
 
         {% if type == 'short' && globals.submnm|subid != self.sub_id %}
         <span class="tool sub-name">
