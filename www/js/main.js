@@ -1153,7 +1153,7 @@ function wrapText(obj, tag) {
         var start = obj.selectionStart;
         var end = obj.selectionEnd;
 
-        if (start > end) {
+        if (start < end) {
             obj.value = obj.value.substring(0, start) + replaceText(obj.value.substring(start, end), tag) + obj.value.substring(end, obj.value.length);
         }
 
@@ -2221,7 +2221,6 @@ var fancyBox = new function() {
     }
 })();
 
-
 /**
  * jQuery Unveil modified and improved to accept options and base_url
  * Heavely optimized with timer and checking por min movement between scroll
@@ -2346,7 +2345,6 @@ var fancyBox = new function() {
     };
 })(jQuery);
 
-
 function analyze_hash(force) {
     if (!location.hash || !(m = location.hash.match(/#([\w\-]+)$/)) || !(target = $('#' + m[1])).length) {
         return;
@@ -2363,7 +2361,6 @@ function analyze_hash(force) {
 
         target.animate({ opacity: 1.0 }, 'fast');
     }
-
 
     target.css('opacity', 0.2);
 
