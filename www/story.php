@@ -66,7 +66,6 @@ if ($link->is_sub && ($site_id != $link->sub_id) && (empty($link->sub_status) ||
     die(header('Location: ' . $link->get_canonical_permalink()));
 }
 
-
 if ($link->is_discarded()) {
     // Dont allow indexing of discarded links, nor anonymous users after 90 days
     if ($globals['bot'] || (!$current_user->authenticated && $globals['now'] - $link->sent_date > 86400 * 90)) {
