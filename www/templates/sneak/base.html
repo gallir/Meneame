@@ -107,15 +107,17 @@ function to_html(data) {
 			html += '<img src="'+base_static+'img/common/sneak-chat01.png" width="21" height="17" alt="{% trans _('mensaje') %}" title="{% trans _('mensaje') %}"/><\/div>';
 			html += '<div class="sneaker-votes">&nbsp;<\/div>';
 			// Change the style
-			if (global_options.show_admin OR data.status == 'admin') {
+			if (global_options.show_admin || data.status === 'admin') {
 				chat_class = 'sneaker-chat-admin'
-			} else if (global_options.show_friends OR data.status == '{% trans _('amigo') %}') {
+			} else if (global_options.show_friends || data.status === '{% trans _('amigo') %}') {
 				// The sender is a friend and sent the message only to friends
 				chat_class = 'sneaker-chat-friends'
 			}
-			if (check_user_ping(data.title)  OR (is_admin && data.status != 'admin' && check_admin_ping(data.title))) {
+
+			if (check_user_ping(data.title) || (is_admin && data.status !== 'admin' && check_admin_ping(data.title))) {
 				text_style += 'font-weight: bold;';
 			}
+
 			if (text_style.length > 0) {
 				// Put the anchor in the same color as the rest of the text
 				data.title = data.title.replace(/ href="/gi, ' style="'+text_style+'" href="');
@@ -125,12 +127,15 @@ function to_html(data) {
 			data.title = data.title.replace(/(href=")/gi, 'target="_blank" $1');
 			html += '<div id="chat'+chat_counter+'" class="'+chat_class+'" '+text_style+'>'+data.title+'<\/div>';
 			html += '<div class="sneaker-who">';
-			if (data.icon != undefined &&  data.icon.length > 0) {
+
+			if (data.icon != undefined && data.icon.length > 0) {
 				html += '<a target="_blank" href="'+base_url+'user/'+data.who+'"><img src="'+base_static+'img/g.gif" data-2x="s:-20.:-40." data-src="'+data.icon+'" width=20 height=20 class="tooltip u:'+data.uid+' lazy"/><\/a>';
 			}
+
 			html += '&nbsp;<a target="_blank" href="'+base_url+'user/'+data.who+'">'+data.who.substring(0,15)+'<\/a><\/div>';
 			html += '<div class="sneaker-status">'+data.status+'<\/div>';
 			chat_counter += 1;
+
 			return html;
 			break;
 		case 'vote':
