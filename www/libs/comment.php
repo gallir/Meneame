@@ -274,7 +274,8 @@ class Comment extends LCPBase {
 		} else {
 			$this->comment_meta_class = 'comment-meta';
 			$this->comment_class = 'comment-body';
-			if ($this->type == 'admin') {
+
+			if ($this->type === 'admin') {
 				$this->comment_class .= ' admin';
 			} else {
 				if ($globals['comment_highlight_karma'] > 0 && $this->karma > $globals['comment_highlight_karma']) {
@@ -301,8 +302,7 @@ class Comment extends LCPBase {
 		$this->can_reply = $current_user->user_id > 0 && $this->date > $globals['now'] - $globals['time_enabled_comments'];
 		$this->can_report = $this->can_reply && Report::check_min_karma() && ($this->author != $current_user->user_id) && $this->type != 'admin' && !$this->ignored && !$link->is_sponsored();
 
-		$vars = array('self' => $this);
-		return Haanga::Load('comment_summary.html', $vars, $return_string);
+		return Haanga::Load('comment_summary.html', array('self' => $this), $return_string);
 	}
 
 	function vote_exists() {

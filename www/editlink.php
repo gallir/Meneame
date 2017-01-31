@@ -200,12 +200,12 @@ function link_edit_errors($link) {
 
     $errors = array();
 
-    if ($link->sub_id > 0 && ! SitesMgr::is_owner() && ! SitesMgr::can_send($link->sub_id)) {
+    if ($link->sub_id > 0 &&  SitesMgr::is_owner() && !SitesMgr::can_send($link->sub_id)) {
         $errors[] = _('no se puede enviar a ese sub');
     }
 
     // only checks if the user is not special or god
-    if (! empty($link->url) && ! $link->check_url($link->url, false) && ! $current_user->admin) {
+    if (!empty($link->url) && !$link->check_url($link->url, false) && !$current_user->admin) {
         $errors[] = _('url incorrecto');
     }
 
@@ -213,7 +213,7 @@ function link_edit_errors($link) {
         $errors[] = _('clave incorrecta');
     }
 
-    if (time() - $_POST['timestamp'] > 900) {
+    if ((time() - $_POST['timestamp']) > 900) {
         $errors[] =  _('tiempo excedido');
     }
 
