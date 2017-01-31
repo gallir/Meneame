@@ -7,27 +7,31 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
-class LCPBase {
-
+class LCPBase
+{
 	// Static function tht allows to convert to html for anonymous strings
-	public static function html($string, $fancy = true) {
+	public static function html($string, $fancy = true)
+	{
 		$o = new LCPBase();
+
 		return $o->to_html($string, $fancy);
 	}
 
-	function to_html($string, $fancy = true) {
+	function to_html($string, $fancy = true)
+	{
 		global $globals;
 
 		$string = nl2br($string, true);
 
 		$regexp = '#[^\s\.\,\:\;\¡\!\)\-<>&\?]{1,42}';
 
+		// Add smileys
 		if ($fancy) {
-			// Add smileys
 			$regexp .= '|\{\S{3,14}\}';
 		}
 
-		if (is_a($this, 'Post')) { // references to @users
+		// references to @users
+		if (is_a($this, 'Post')) {
 			$regexp .= '|@[\p{L}\.\_][\.\d\-_\p{L}]+(?:,\d+){0,1}';
 		} elseif (is_a($this, 'Comment')) {
 			$regexp .= '|@[\p{L}\.][\.\d\-_\p{L}]+\w';
@@ -36,6 +40,7 @@ class LCPBase {
 		$regexp .= '|(https{0,1}:\/\/)([^\s<>]{5,500}[^\s<>,;:\.])';
 		$regexp .= '|\|([\p{L}\d_]+)';
 		$regexp = '/([\s\(\[{}¡;,:¿>\*]|^)('.$regexp.')/Smu';
+
 		$callback = function ($matches) {
 			global $globals;
 
@@ -43,13 +48,16 @@ class LCPBase {
 				case '#':
 					if (preg_match('/^#\d+$/', $matches[2])) {
 						$id = substr($matches[2], 1);
+
 						if (is_a($this, 'Comment')) {
 							if ($id > 0) {
 								return $matches[1].'<a class="tooltip c:'.$this->link.'-'.$id.'" href="'.$this->link_permalink.'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
-							} else {
-								return $matches[1].'<a class="tooltip l:'.$this->link.'" href="'.$this->link_permalink.'" rel="nofollow">#'.$id.'</a>';
 							}
-						} elseif (is_a($this, 'Link')) {
+
+							return $matches[1].'<a class="tooltip l:'.$this->link.'" href="'.$this->link_permalink.'" rel="nofollow">#'.$id.'</a>';
+						}
+
+						if (is_a($this, 'Link')) {
 							return $matches[1].'<a class="tooltip c:'.$this->id.'-'.$id.'" href="'.$this->get_permalink().'/c0'.$id.'#c-'.$id.'" rel="nofollow">#'.$id.'</a>';
 						}
 					} else {
@@ -57,21 +65,27 @@ class LCPBase {
 							case 'Link':
 								$w = 'links';
 								break;
+
 							case 'Comment':
 								$w = 'comments';
 								break;
+
 							case 'Post':
 								$w = 'posts';
 								break;
 						}
+
 						return $matches[1].'<a href="'.$globals['base_url'].'search?w='.$w.'&amp;q=%23'.substr($matches[2], 1).'&amp;o=date">#'.substr($matches[2], 1).'</a>';
 					}
+
 					break;
 
 				case '@':
 					$ref = substr($matches[2], 1);
+
 					if (is_a($this, 'Post')) {
 						$a = explode(',', $ref);
+
 						if (count($a) > 1) {
 							$user = $a[0];
 							$id = ','.$a[1];
@@ -79,34 +93,45 @@ class LCPBase {
 							$user = $ref;
 							$id = '';
 						}
+
 						$user_url = urlencode($user);
+
 						return $matches[1]."<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url?id=$user_url$id;".$this->date."'>@$user</a>";
-					} else {
-						return $matches[1]."<a class='tooltip u:$ref' href='".get_user_uri($ref)."'>@$ref</a>";
 					}
-					break;
+
+					return $matches[1]."<a class='tooltip u:$ref' href='".get_user_uri($ref)."'>@$ref</a>";
 
 				case '{':
-					$m = array($matches[2], substr($matches[2], 1, -1));
-					return $matches[1].put_emojis_callback($m);
+					return $matches[1].put_emojis_callback(array($matches[2], substr($matches[2], 1, -1)));
 
 				case 'h':
 					$suffix = '';
-					if (substr($matches[4], -1) == ')' && strrchr($matches[4], '(') === false) {
+
+					if (substr($matches[4], -1) === ')' && strrchr($matches[4], '(') === false) {
 						$matches[4] = substr($matches[4], 0, -1);
 						$suffix = ')';
 					}
+
 					$url = rawurldecode($matches[4]);
+
 					return $matches[1].'<a href="'.$matches[3].$url.'" title="'.$url.'" rel="nofollow">'.substr($url, 0, 70).'</a>'.$suffix;
 
 				case '|':
 					$url = rawurldecode($matches[5]);
+
 					return $matches[1].'<a href="'.$globals['base_url_general'].'m/'.$url.'" title="|'.$url.'">|'.$url.'</a>';
 			}
+
 			return $matches[1].$matches[2];
 		};
 
-		return preg_replace_callback($regexp, $callback, $string);
+		$string = preg_replace_callback($regexp, $callback, $string);
+
+		if (strpos($string, '</a> [[') === false) {
+			return $string;
+		}
+
+		return preg_replace('#>[^<]+</a> \[\[([^\]]+)\]\]#', '>$1</a>', $string);
 	}
 
 	function to_html_paragraphs($string, $fancy = true)
