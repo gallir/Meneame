@@ -28,7 +28,7 @@ switch ($tab_option) {
 
             echo '<ol class="comments-list">';
 
-            foreach($comments as $comment) {
+            foreach ($comments as $comment) {
                 // Check the comment order is correct, otherwise, force an update
                 if ($tab_option == 1) {
                     if ($comment->order != $order) {

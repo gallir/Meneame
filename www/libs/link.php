@@ -1861,7 +1861,7 @@ class Link extends LCPBase
             return $related;
         }
 
-        require(mnminclude.'search.php');
+        require_once(mnminclude.'search.php');
 
         $maxid = $db->get_var("select max(link_id) from links");
 
