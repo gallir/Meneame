@@ -260,15 +260,22 @@ function report_problem_yes(frm, user, id) {
 }
 
 function pref_input_check(id) {
-    $('#subs_default_header').on('click', function() {
+    var $e = $('#' + id);
+
+    $e.on('change', function() {
         $.post(base_url + 'backend/pref', {
             'id': {{ current_user.user_id }},
             'value': (this.checked ? 1 : 0),
             'key': this.value,
             'set': 1,
             'control_key': base_key
-        }, function() {
-            window.location.reload();
+        }, function(data) {
+            if (id === 'subs_default_header') {
+                window.location.reload();
+                return;
+            }
+
+            $e.prop('checked', data ? true : false);
         }, 'json');
     });
 }
@@ -2991,10 +2998,10 @@ $(document).ready(function() {
 
     if (current_user > 0) {
         addPostCode(function() {
-            pref_input_check("subs_default_header");
+            pref_input_check('subs_default_header');
         });
     } else {
-        $("#subs_default_header").on('click', function() {
+        $('#subs_default_header').on('click', function() {
             window.location = base_url + 'login';
         });
     }
