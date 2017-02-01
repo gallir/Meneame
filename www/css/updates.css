@@ -9,6 +9,7 @@
 
 .section-with-sidebar {
     margin-right: 320px;
+    overflow: hidden;
 }
 
 #sidebar.sidebar-with-section {
@@ -820,6 +821,7 @@ a.action-link span {
 
 .slider-wrapper {
     margin-bottom: 30px;
+    overflow: hidden;
 }
 
 .slider-wrapper .sub a {
