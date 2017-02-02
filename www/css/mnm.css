@@ -508,11 +508,11 @@ ul#userinfo a.notifications span {
     font-size: 12px;
     font-weight: 700;
     line-height: 1;
-    color: #e35614;
+    color: white;
     text-align: center;
     white-space: nowrap;
     vertical-align: bottom;
-    background-color: #fff;
+    background-color: #0D9867;
     border-radius: 10px;
     margin-left: -12px;
     margin-top: 1px;
