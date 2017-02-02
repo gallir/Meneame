@@ -2,6 +2,14 @@
     <div class="{{ self.comment_header_class }}">
         <a href="javascript:void(0);" class="comment-expand" data-id="{{ self.id }}">[–]</a>
 
+        {% if self.url %}
+        <a href="{{ self.url }}" class="comment-order">#{{ self.order }}</a>&nbsp;&nbsp;
+        {% else %} {% if self.link_permalink %}
+        <a href="{{ self.link_permalink }}/c0{{ self.order }}#c-{{ self.order }}" class="comment-order" rel="nofollow">#{{ self.order }}</a>&nbsp;&nbsp;
+        {% else %}
+        <span class="comment-order">#{{ self.order }}</span>
+        {% endif %} {% endif %}
+
         {% if self.type != 'admin' %}
         <strong><a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a></strong>
         {% else %}

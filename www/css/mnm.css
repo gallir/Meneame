@@ -2374,6 +2374,12 @@ select.options-comments {
     color: inherit;
 }
 
+.comment-header .comment-order {
+    color: #e35614;
+    font-weight: bold;
+    font-size: 14px;
+}
+
 li .comment-header .comment-expand {
     display: none;
 }
