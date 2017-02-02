@@ -7,14 +7,6 @@
         {% else %}
         <strong>{% trans _('admin') %}</strong> {% if current_user.admin %}({{ self.username }}){% endif %}
         {% endif %}
-
-        <span class="ts showmytitle nomobile" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
-
-        {% set modified = self.modified - self.date %}
-
-        {% if modified > 10 %}
-        <span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>&nbsp;*&nbsp;</strong></span>&nbsp;
-        {% endif %}
     </div>
 
     <div class="{{ self.comment_class }}" id="cid-{{ self.prefix_id }}{{self.id}}">
@@ -22,6 +14,16 @@
     </div>
 
     <div class="{{ self.comment_footer_class }}">
+        <div class="comment-date">
+            <span class="ts showmytitle nomobile" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
+
+            {% set modified = self.modified - self.date %}
+
+            {% if modified > 10 %}
+            <span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>&nbsp;*&nbsp;</strong></span>&nbsp;
+            {% endif %}
+        </div>
+
         <div class="comment-votes-info">
             {% if self.type != 'admin' AND self.user_level != 'disabled' %}
                 {% if self.can_vote %}

@@ -2271,10 +2271,6 @@ select.options-comments {
     padding: 0;
 }
 
-.comments-list li {
-    margin-bottom: 10px;
-}
-
 .comment-body {
     padding: 4px 5px 5px 10px;
     line-height: 130%;
@@ -2382,7 +2378,7 @@ select.options-comments {
     font-size: 90%;
     color: #666;
     height: 22px;
-    margin: 1px 0 15px 0;
+    margin: 1px 0 0 0;
     text-align: right;
 }
 
@@ -2729,7 +2725,7 @@ button.link.favorite {
 
 .threader {
     border-left: 1px dotted #ddc;
-    margin: 5px 0 6px 1.5%;
+    margin: 0 0 0 1.5%;
     padding: 0 0 0 1.5%;
 }
 
@@ -2746,6 +2742,20 @@ button.link.favorite {
 
 .threader .comment-footer {
     margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+    .threader {
+        margin-bottom: 10px;
+    }
+}
+
+.comment-footer .comment-date {
+    margin-left: 10px;
+    float: right;
+    overflow: hidden;
+    max-width: 30%;
+    white-space: nowrap;
 }
 
 #tolerance, #tolerance select {
@@ -3413,10 +3423,6 @@ button.link.favorite {
 
 .ts.visible {
     min-width: 2.5em;
-}
-
-.comment-footer .ts {
-    font-size: 90%;
 }
 
 a.permalink {
