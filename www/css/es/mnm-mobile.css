@@ -81,12 +81,12 @@ margin-left: 10px;
 #headtools li.noborder {
 border-left: none;
 }
-	
+
 #headtools a {
 text-decoration: none;
 color: #fff;
 font-weight: bold;
-text-transform: capitalize; 
+text-transform: capitalize;
 }
 
 #headtools a:hover {
@@ -433,7 +433,7 @@ vertical-align: top;
 }
 
 
-.comment-meta, .comment-meta-hidden {
+.comment-footer, .comment-footer-hidden {
 font-size: 85%;
 line-height: 140%;
 padding: 0 0px 5px 0;
@@ -441,12 +441,12 @@ white-space: nowrap;
 color: #666;
 }
 
-.comment-meta a {
+.comment-footer a {
 font-weight: bold;
 color: #3D72C3;
 }
 
-.comment-meta-hidden, .comment-meta-hidden a {
+.comment-footer-hidden, .comment-footer-hidden a {
 color: #aaa;
 }
 

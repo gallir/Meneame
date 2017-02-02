@@ -262,6 +262,35 @@ function showPoll() {
         });
     };
 
+    INIT.commentExpand = function() {
+        function hide($button, $parent, $childs, id) {
+            $childs.hide();
+            $parent.addClass('comment-collapsed');
+            $button.text('[+]');
+        }
+
+        function show($button, $parent, $childs, id) {
+            $childs.show();
+            $parent.removeClass('comment-collapsed');
+            $button.text('[–]');
+        }
+
+        $('.comment-header .comment-expand').on('click', function(e) {
+            e.preventDefault();
+
+            var $this = $(this),
+                $parent = $this.closest('.threader'),
+                $childs = $parent.find('> .threader'),
+                id = $this.data('id');
+
+            if ($parent.hasClass('comment-collapsed')) {
+                show($this, $parent, $childs, id);
+            } else {
+                hide($this, $parent, $childs, id);
+            }
+        });
+    };
+
     INIT.formPollVote = function() {
         $('.poll-vote form').each(function() {
             var $form = $(this);
@@ -282,4 +311,5 @@ function showPoll() {
     INIT.formPostEdit();
     INIT.showPoll();
     INIT.formPollVote();
+    INIT.commentExpand();
 })(jQuery);

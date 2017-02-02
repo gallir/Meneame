@@ -2361,29 +2361,54 @@ select.options-comments {
     height: 80px;
 }
 
-.comment-meta {
+.comment-header {
     font-size: 90%;
     color: #666;
-    height: 22px;
-    margin: 1px 0 15px 0;
     white-space: nowrap;
     overflow: hidden;
 }
 
-.comment-meta img {
+.comment-header a {
+    color: inherit;
+}
+
+.comment-header .comment-expand {
+    display: inline-block;
+    margin-right: 10px;
+    color: inherit;
+}
+
+.comment-footer {
+    font-size: 90%;
+    color: #666;
+    height: 22px;
+    margin: 1px 0 15px 0;
+    text-align: right;
+}
+
+.comment-footer img {
     vertical-align: bottom;
 }
 
-.comment-meta.phantom, .comment-meta.phantom a {
+.comment-footer.phantom, .comment-footer.phantom a {
     color: #aaa;
 }
 
-.comment-meta a {
+.comment-footer a {
     font-weight: bold;
 }
 
-.comment-votes-info span, .comment-votes-info div, .comment-meta span {
+.comment-votes-info span, .comment-votes-info div, .comment-footer span {
     vertical-align: top;
+}
+
+.threader.comment-collapsed .comment-header {
+    background: #EEE;
+    padding: 5px 0;
+}
+
+.threader.comment-collapsed .comment-body, .threader.comment-collapsed .comment-footer {
+    display: none;
 }
 
 .news-details, .news-details.main {
@@ -2419,7 +2444,7 @@ select.options-comments {
     font-size: 11px;
 }
 
-.comment-meta .username {
+.comment-footer .username {
     display: inline-block;
     margin-left: 5px;
     max-width: 14em;
@@ -2427,17 +2452,17 @@ select.options-comments {
     vertical-align: top;
 }
 
-.comment-meta a:hover {
+.comment-footer a:hover {
     text-decoration: none;
 }
 
-.comment-meta img {
+.comment-footer img {
     border: none;
     margin: 0 4px 0 4px;
     border-radius: 2px;
 }
 
-.comment-meta .vote {
+.comment-footer .vote {
     display: inline-block;
     width: 16px;
     height: 18px;
@@ -2447,25 +2472,25 @@ select.options-comments {
     background-size: 20px 300px;
 }
 
-.comment-meta .vote.right {
+.comment-footer .vote.right {
     margin-left: 10px;
 }
 
-.comment-meta .vote.up {
+.comment-footer .vote.up {
     background-position: 0px 0px;
 }
 
-.comment-meta .vote.down {
+.comment-footer .vote.down {
     background-position: 0px -18px;
     margin-right: 20px;
 }
 
-.comment-meta .vote.voted {
+.comment-footer .vote.voted {
     cursor: default;
     opacity: 0.5;
 }
 
-.comment-meta .reply {
+.comment-footer .reply {
     display: inline-block;
     margin: 0 2px 0 6px;
     cursor: pointer;
@@ -2476,7 +2501,7 @@ select.options-comments {
     background-size: 20px 300px;
 }
 
-.comment-meta .report {
+.comment-footer .report {
     display: inline-block;
     margin: 0 2px 0 6px;
     cursor: pointer;
@@ -2648,7 +2673,7 @@ button.link.favorite {
     color: #FF9400;
 }
 
-.comment-meta .answers {
+.comment-footer .answers {
     display: inline-block;
     height: 18px;
     background: url({{ globals.base_static }}img/common/icons-common.png) no-repeat 0px -109px;
@@ -2658,7 +2683,7 @@ button.link.favorite {
     padding-top: 4px;
 }
 
-.comment-meta .answers .counter {
+.comment-footer .answers .counter {
     display: inline-block;
     font-size: 9px;
     color: #fff;
@@ -2670,14 +2695,14 @@ button.link.favorite {
     border-radius: 50%;
 }
 
-.comment-meta .votes-counter {
+.comment-footer .votes-counter {
     font-weight: bold;
     padding: 0 3px 0 3px;
 }
 
 .comment-votes-info {
     display: block;
-    float: left;
+    float: right;
     height: 18px;
     max-width: 70%;
     overflow: hidden;
@@ -2719,7 +2744,7 @@ button.link.favorite {
     margin-top: 5px;
 }
 
-.threader .comment-meta {
+.threader .comment-footer {
     margin-bottom: 0;
 }
 
@@ -3390,7 +3415,7 @@ button.link.favorite {
     min-width: 2.5em;
 }
 
-.comment-meta .ts {
+.comment-footer .ts {
     font-size: 90%;
 }
 
@@ -3545,7 +3570,7 @@ input.uploadFile {
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .comment-meta .vote, .comment-meta .reply, .favorite, .comment-meta .answers, a.permalink {
+    .comment-footer .vote, .comment-footer .reply, .favorite, .comment-footer .answers, a.permalink {
         background-image:url({{ globals.base_static }}img/common/icons-common-2x.png);
     }
     #footthingy {
@@ -3717,14 +3742,6 @@ button.share-link span:hover {
     opacity: 1;
     z-index: 0;
     font-size: inherit;
-}
-
-.btn-group-vertical>.btn-group:after, .btn-group-vertical>.btn-group:before, .btn-toolbar:after, .btn-toolbar:before, .clearfix:after, .clearfix:before, .container-fluid:after, .container-fluid:before, .container:after, .container:before, .dl-horizontal dd:after, .dl-horizontal dd:before, .form-horizontal .form-group:after, .form-horizontal .form-group:before, .modal-footer:after, .modal-footer:before, .modal-header:after, .modal-header:before, .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before, .pager:after, .pager:before, .panel-body:after, .panel-body:before, .row:after, .row:before {
-    clear: none;
-}
-
-.btn-group-vertical>.btn-group:after, .btn-group-vertical>.btn-group:before, .btn-toolbar:after, .btn-toolbar:before, .clearfix:after, .clearfix:before, .container-fluid:after, .container-fluid:before, .container:after, .container:before, .dl-horizontal dd:after, .dl-horizontal dd:before, .form-horizontal .form-group:after, .form-horizontal .form-group:before, .modal-footer:after, .modal-footer:before, .modal-header:after, .modal-header:before, .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before, .pager:after, .pager:before, .panel-body:after, .panel-body:before, .row:after, .row:before {
-    clear: none;
 }
 
 .user-profile-info {

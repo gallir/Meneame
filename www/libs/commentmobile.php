@@ -23,10 +23,10 @@ class CommentMobile extends Comment{
 		$this->check_visibility();
 
 		if ($this->hidden)	{
-			$comment_meta_class = 'comment-meta-hidden';
+			$comment_footer_class = 'comment-footer-hidden';
 			$comment_class = 'comment-body-hidden';
 		} else {
-			$comment_meta_class = 'comment-meta';
+			$comment_footer_class = 'comment-footer';
 			$comment_class = 'comment-body';
 			if ($this->karma > $globals['comment_highlight_karma']) {
 				$comment_class .= ' high';
@@ -47,7 +47,7 @@ class CommentMobile extends Comment{
 			$this->media_thumb_dir = Upload::get_cache_relative_dir($this->id);
 		}
 
-		$vars = compact('comment_meta_class', 'comment_class', 'author');
+		$vars = compact('comment_footer_class', 'comment_class', 'author');
 		$vars['self'] = $this;
 		return Haanga::Load('mobile/comment_summary.html', $vars);
 	}

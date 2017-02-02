@@ -308,7 +308,7 @@ color: transparent;
 cursor: pointer;
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), 
+@media (-webkit-min-device-pixel-ratio: 2),
 	(min-resolution: 192dpi) {
 	#header-center .logo-eli { background-image:url('../../img/mnm/h9_eli.svg'); }
 }
@@ -1679,7 +1679,7 @@ height: 80px;
 }
 
 
-.comment-meta {
+.comment-footer {
 font-size: 90%;
 color: #666;
 height: 22px;
@@ -1688,15 +1688,15 @@ white-space: nowrap;
 overflow: hidden;
 }
 
-.comment-meta img {
+.comment-footer img {
 vertical-align: bottom;
 }
 
-.comment-meta.hidden, .comment-meta.hidden a {
+.comment-footer.hidden, .comment-footer.hidden a {
 color: #aaa;
 }
 
-.comment-meta a {
+.comment-footer a {
 font-weight: bold;
 }
 
@@ -1704,25 +1704,25 @@ font-weight: bold;
 vertical-align: top;
 }
 
-.comment-meta .username {
+.comment-footer .username {
 display: inline-block;
 margin-left: 5px;
 max-width: 14em;
 text-overflow: clip;
 }
 
-.comment-meta a:hover {
+.comment-footer a:hover {
 text-decoration: none;
 }
 
-.comment-meta img {
+.comment-footer img {
 border: none;
 margin: 0 4px 0 4px;
 }
 
-.comment-meta .vote {
+.comment-footer .vote {
 display: inline-block;
-width: 16px; 
+width: 16px;
 height: 18px;
 cursor: pointer;
 margin-right: 10px;
@@ -1730,24 +1730,24 @@ background: url(../../img/common/icons-common.png) no-repeat;
 background-size: 20px 300px;
 }
 
-.comment-meta .vote.right {
+.comment-footer .vote.right {
 margin-left: 10px;
-} 
+}
 
-.comment-meta .vote.up {
+.comment-footer .vote.up {
 background-position: 0px 0px;
 }
 
-.comment-meta .vote.down {
+.comment-footer .vote.down {
 background-position: 0px -20px;
 }
 
-.comment-meta .vote.voted {
+.comment-footer .vote.voted {
 cursor: default;
 opacity:0.5;
 }
 
-.comment-meta .reply {
+.comment-footer .reply {
 display: inline-block;
 margin: 0 2px;
 cursor: pointer;
@@ -1797,7 +1797,7 @@ color: #3D72C3;
 color: #FF9400;
 }
 
-.comment-meta .answers {
+.comment-footer .answers {
 display: inline-block;
 height: 18px;
 background: url(../../img/common/icons-common.png) no-repeat 0px -122px;
@@ -1807,7 +1807,7 @@ cursor: pointer;
 padding-top: 4px;
 }
 
-.comment-meta .answers .counter {
+.comment-footer .answers .counter {
 display: inline-block;
 font-size: 9px;
 color: #fff;
@@ -1821,7 +1821,7 @@ background-color: #FFB600;
 border-radius: 50%;
 }
 
-.comment-meta .votes-counter {
+.comment-footer .votes-counter {
 font-weight: bold;
 padding: 0 3px 0 3px;
 }
@@ -2516,7 +2516,7 @@ text-overflow: clip;
 min-width: 2.5em;
 }
 
-.comment-meta .ts {
+.comment-footer .ts {
 font-size: 90%;
 }
 
@@ -2532,8 +2532,8 @@ color: transparent !important;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.comment-meta .vote, .comment-meta .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-meta .answers, a.permalink, #header-top .userlogin, #nav-menu  {
-		background-image:url(../../img/common/icons-common-2x.png); 
+	.comment-footer .vote, .comment-footer .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-footer .answers, a.permalink, #header-top .userlogin, #nav-menu  {
+		background-image:url(../../img/common/icons-common-2x.png);
 	}
 	#header-top .logo-mnm, #footthingy { background-image:url('../../img/mnm/logos-common-2x.png'); }
 }

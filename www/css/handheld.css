@@ -253,11 +253,11 @@ select.select-menu-more-options {
     background-image: none;
 }
 
-.comment-meta .comment-info {
+.comment-footer .comment-info {
     max-width: 25%;
 }
 
-.comment-meta .username {
+.comment-footer .username {
     margin-left: 2px;
     font-weight: normal;
 }

@@ -168,7 +168,7 @@ class Post extends LCPBase {
 		$this->hidden = $this->karma < $globals['post_hide_karma'] || $this->user_level == 'disabled';
 		$this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
-		$post_meta_class = 'comment-meta';
+		$post_meta_class = 'comment-footer';
 		$post_class = 'comment-body';
 
 		if ($this->hidden || $this->ignored)  {
