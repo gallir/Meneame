@@ -2404,6 +2404,7 @@ li .comment-header .comment-expand {
 .comment-collapsed .comment-header {
     background: #EEE;
     padding: 5px 0;
+    margin-bottom: 5px;
 }
 
 .comment-collapsed .comment-body, .comment-collapsed .comment-footer {
