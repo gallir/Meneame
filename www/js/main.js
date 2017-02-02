@@ -1341,8 +1341,7 @@ function show_total_answers(type, id, answers) {
         dom_id = '#pid-' + id;
     }
 
-    element = $(dom_id).siblings(".comment-footer").children(".comment-votes-info");
-    element.append('&nbsp;<span onClick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}" class="answers"><span class="counter">' + answers + '</span></span>');
+    $(dom_id).parent().find(".comment-votes-info").append('&nbsp;<span onClick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}" class="answers"><span class="counter">' + answers + '</span></span>');
 }
 
 function show_answers(type, id) {

@@ -2374,12 +2374,15 @@ select.options-comments {
     color: inherit;
 }
 
+li .comment-header .comment-expand {
+    display: none;
+}
+
 .comment-footer {
     font-size: 90%;
     color: #666;
-    height: 22px;
+    overflow: hidden;
     margin: 1px 0 0 0;
-    text-align: right;
 }
 
 .comment-footer img {
@@ -2398,12 +2401,12 @@ select.options-comments {
     vertical-align: top;
 }
 
-.threader.comment-collapsed .comment-header {
+.comment-collapsed .comment-header {
     background: #EEE;
     padding: 5px 0;
 }
 
-.threader.comment-collapsed .comment-body, .threader.comment-collapsed .comment-footer {
+.comment-collapsed .comment-body, .comment-collapsed .comment-footer {
     display: none;
 }
 
@@ -2700,7 +2703,6 @@ button.link.favorite {
     display: block;
     float: right;
     height: 18px;
-    max-width: 70%;
     overflow: hidden;
 }
 
@@ -2736,16 +2738,16 @@ button.link.favorite {
     padding-left: 0;
 }
 
-.threader .comment-body {
+.comment-body {
     margin-top: 5px;
 }
 
-.threader .comment-footer {
+.comment-footer {
     margin-bottom: 0;
 }
 
-@media (max-width: 767px) {
-    .threader {
+@media (max-width: 1200px) {
+    .comment-footer {
         margin-bottom: 10px;
     }
 }
@@ -2754,7 +2756,6 @@ button.link.favorite {
     margin-left: 10px;
     float: right;
     overflow: hidden;
-    max-width: 30%;
     white-space: nowrap;
 }
 
