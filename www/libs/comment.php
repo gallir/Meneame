@@ -99,7 +99,7 @@ class Comment extends LCPBase {
                 echo '<div class="threader">';
             }
 
-            if ($link && $length && $link->page_mode == 'interview' && $comment->author == $link->author) {
+            if ($link && $length && $link->page_mode === 'interview' && $comment->author == $link->author) {
                 $len = $length * 4;
             } else {
                 $len = $length;
@@ -112,7 +112,9 @@ class Comment extends LCPBase {
             foreach ($node->children as $child) {
                 $traverse($child, $level + 1);
             }
+
             echo '</div>';
+
             return;
         };
 

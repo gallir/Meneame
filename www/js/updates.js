@@ -435,7 +435,7 @@ function showPoll() {
         });
     };
 
-    INIT.commentExpand = function() {
+    INIT.commentCollapse = function() {
         var cookieName = 'comments-collapsed';
 
         function getUnique(values) {
@@ -532,5 +532,5 @@ function showPoll() {
     INIT.formPostEdit();
     INIT.showPoll();
     INIT.formPollVote();
-    INIT.commentExpand();
+    INIT.commentCollapse();
 })(jQuery);
