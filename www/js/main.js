@@ -1042,7 +1042,8 @@ function post_reply(id, user) {
     var others = '';
     var regex = /get_post_url(?:\.php){0,1}\?id=([a-z0-9%_\.\-]+(\,\d+){0,1})/ig; /* TODO: delete later (?:\.php)*/
     var text = $('#pid-' + id).html();
-    var startSelection, endSelection, textarea;
+    var textarea = $('.notes .post-edit [name="post"]').last();
+    var startSelection, endSelection;
 
     var myself = new RegExp('^' + user_login + '([\s,]|$)', 'i');
 
@@ -1062,21 +1063,19 @@ function post_reply(id, user) {
         startSelection = endSelection = 0;
     }
 
-    if (!$('.post-edit [name="post"]').length) {
+    if (!textarea.val()) {
         post_new();
     }
 
-    post_add_form_text(ref, 1, startSelection, endSelection);
+    post_add_form_text(textarea, ref, 1, startSelection, endSelection);
 }
 
-function post_add_form_text(text, tries, start, end) {
-    var textarea = $('.post-edit [name="post"]');
-
+function post_add_form_text(textarea, text, tries, start, end) {
     tries = tries ? tries : 1;
 
     if (tries < 20 && !textarea.length) {
         setTimeout(function() {
-            post_add_form_text(text, tries + 1, start, end)
+            post_add_form_text($form, text, tries + 1, start, end)
         }, 100);
 
         return false;
