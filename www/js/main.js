@@ -446,6 +446,10 @@ function reportAjaxStats(category, action, url) {
     if (typeof url === 'string') {
         ga('send', 'pageview', url);
     }
+
+    if (typeof registerExtraEvent === 'function') {
+        registerExtraEvent(category, action, url);
+    }
 }
 
 function bindTogglePlusMinus(img_id, link_id, container_id) {
