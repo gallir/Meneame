@@ -173,6 +173,17 @@
                     <li><a class="share-mail" href="mailto:?subject={{ self.title }}&amp;body={{ link }}" title="Compartir por Correo"><i class="fa fa-envelope"></i></a></li>
                 </ul>
 
+                {% if self.can_vote_negative %}
+                <form method="post" class="m-20">
+                    <select name="ratings" onchange="report_problem(this.form, {{current_user.user_id}}, {{self.id}})">
+                        <option value="0" selected="selected">{% trans _('problema') %}</option>
+                        {% for pkey, pvalue in globals.negative_votes_values %}
+                        <option value="{{pkey}}">{{ pvalue }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% endif %}
+
                 {% if self.is_editable %}
                 <a href="{% get_url 'editlink?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="btn btn-mnm btn-sm btn-block mt-20">
                     <i class="fa fa-edit"></i> {% trans _('editar noticia') %}
