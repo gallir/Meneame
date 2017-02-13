@@ -745,7 +745,7 @@ class Link extends LCPBase
         }
 
         if (!$really_basic) {
-            if ($this->votes == 1 && $this->negatives == 0 && $this->status === 'queued') {
+            if ($this->votes == 1 && $this->negatives == 0 && ($this->status === 'queued')) {
                 // This is a new link, add it to the events, it an additional control
                 // just in case the user dind't do the last submit phase and voted later
                 Log::conditional_insert('link_new', $this->id, $this->author);
@@ -875,8 +875,8 @@ class Link extends LCPBase
             !$this->voted
             && $this->votes_enabled
             && $this->negatives_allowed($globals['link_id'] > 0)
-            && $type !== 'short'
-            && $type !== 'preview'
+            && ($type !== 'short')
+            && ($type !== 'preview')
             && !$this->is_sponsored()
         ) {
             $this->can_vote_negative = true;
@@ -884,7 +884,7 @@ class Link extends LCPBase
             $this->can_vote_negative = false;
         }
 
-        if ($this->status === 'abuse' || $this->has_warning) {
+        if (($this->status === 'abuse') || $this->has_warning) {
             $this->negative_text = false;
             $negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
 
