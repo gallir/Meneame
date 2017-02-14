@@ -271,29 +271,29 @@ class Comment extends LCPBase {
 
         $this->check_visibility();
 
-        $this->comment_class = 'comment';
-        $this->comment_body_class = 'comment-body';
-        $this->comment_header_class = 'comment-header';
-        $this->comment_text_class = 'comment-text';
-        $this->comment_footer_class = 'comment-footer';
+        $this->css_class = 'comment';
+        $this->css_class_body = 'comment-body';
+        $this->css_class_header = 'comment-header';
+        $this->css_class_text = 'comment-text';
+        $this->css_class_footer = 'comment-footer';
 
         if ($this->hidden || $this->ignored && !$link->is_sponsored())  {
-            $this->comment_footer_class .= ' phantom';
-            $this->comment_class .= ' phantom';
+            $this->css_class_footer .= ' phantom';
+            $this->css_class .= ' phantom';
         } elseif ($this->type === 'admin') {
-            $this->comment_class .= ' admin';
+            $this->css_class .= ' admin';
         } else {
             if ($globals['comment_highlight_karma'] > 0 && $this->karma > $globals['comment_highlight_karma']) {
-                $this->comment_class .= ' high';
+                $this->css_class .= ' high';
             }
 
             if ($link && $link->author == $this->author) {
-                $this->comment_class .= ' author';
+                $this->css_class .= ' author';
             }
         }
 
         if ($this->author == $current_user->user_id) {
-            $this->comment_class .= ' user';
+            $this->css_class .= ' user';
         }
 
         $this->prepare_summary_text($length);

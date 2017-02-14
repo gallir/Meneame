@@ -1,48 +1,80 @@
-<div id="pcontainer-{{ self.prefix_id }}{{ self.id }}">
-	<div class="{{ post_class }}" id="pid-{{ self.prefix_id }}{{ self.id }}">
-		{% if self.is_disabled %}
-			&#187;&nbsp;<a href="javascript:get_votes('get_post.php','post','pid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans _('ver texto') %}">{% trans _('ver texto') %}</a>
-		{% else %}
-			{% include 'post_summary_text.html' %}
-		{% endif %}
-	</div>
+<div id="pcontainer-{{ self.prefix_id }}{{ self.id }}" class="{{ self.css_class }} comment-avatar-large">
+    <div class="{{ self.css_class_body }}">
+        <div class="{{ self.css_class_header }}">
+            {% if self.avatar AND self.type != 'admin' AND self.user_level != 'disabled' %}
+            <img src="{{ globals.base_static }}img/g.gif"
+                data-2x="s:-40.:-80."
+                data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}"
+                class="avatar tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
+                width="40" height="40" />
+            {% else %}
+            <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-40.jpg" class="avatar" width="40" height="40" />
+            {% endif %}
 
-	<div class="{{ post_meta_class }}">
-		<div class="comment-votes-info">
-			{% if self.can_vote %}
-				{% if self.user_can_vote %}
-					<span id="vc-p-{{ self.id }}" class="vote up" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"></span>
-					{% include 'post_summary_votes.html' %}
-					<span id="vc-n-{{ self.id }}" class="vote right down" onClick="menealo_post({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"></span>
-				{% else %}
-					{% if self.voted > 0 %}
-						<span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}"></span>
-					{% else %}{% if self.voted < 0 %}
-						<span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}"></span>
-					{% endif %}{% endif %}
-					{% include 'post_summary_votes.html' %}
-				{% endif %}
-				{% else %}
-					{% include 'post_summary_votes.html' %}
-			{% endif %}
+            {% if self.type != 'admin' %}
+            <strong><a class="username" href="{%exec get_user_uri self.username %}" id="cauthor-{{ self.order }}">{{ self.username }}</a></strong>
+            {% else %}
+            <strong>{% trans _('admin') %}</strong> {% if current_user.admin %}({{ self.username }}){% endif %}
+            {% endif %}
 
-			<a href="{% exec post_get_base_url self.id %}" title="permalink" class="permalink"></a>
+            <span class="comment-date">
+                <span class="ts showmytitle nomobile" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
 
-			{% if current_user.user_id > 0 %}
-				<span id="favp-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favp-{{ self.prefix_id }}{{ self.id }}', 'post', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
-				<span onclick="post_reply({{self.id}},'{{ self.username}}')" title="{% trans _('responder') %}" class="reply"></span>
-			{% endif %}
-		</div>
+                {% set modified = self.modified - self.date %}
 
-		<div class="comment-info">
-			<span class="ts nomobile showmytitle" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
+                {% if modified > 10 %}
+                <span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>*</strong></span>
+                {% endif %}
+            </span>
+        </div>
 
-			<a class="username" href="{%exec post_get_base_url self.username %}">{{ self.username }}</a>
-			{% if current_user.admin %}
-				{% if self.admin %}
-					({{ self.admin_user_login }})
-				{% endif %}
-			{% endif %}
-		</div>
-	</div>
+        <div class="{{ self.css_class_text }}" id="pid-{{ self.prefix_id }}{{self.id}}">
+        {% if self.is_disabled %}
+            &#187;&nbsp;<a href="javascript:get_votes('get_post.php','post','pid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans _('ver texto') %}">{% trans _('ver texto') %}</a>
+        {% else %}
+            {% include 'post_summary_text.html' %}
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="{{ self.css_class_footer }}">
+        {% if self.can_vote %}
+            {% if self.user_can_vote %}
+
+            <a id="vc-p-{{ self.id }}" class="vote up" onclick="menealo_comment({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}">
+                <i class="fa fa-arrow-circle-up"></i>
+            </a>
+            <a id="vc-n-{{ self.id }}" class="vote down" onclick="menealo_comment({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
+                <i class="fa fa-arrow-circle-down"></i>
+            </a>
+
+            {% include 'post_summary_votes.html' %}
+
+            {% else %}
+                {% if self.voted > 0 %}
+                <span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}"><i class="fa fa-arrow-circle-up"></i></span>
+                {% else %}{% if self.voted < 0 %}
+                <span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}"><i class="fa fa-arrow-circle-down"></i></span>
+                {% endif %}{% endif %}
+
+                {% include 'post_summary_votes.html' %}
+            {% endif %}
+        {% else %}
+            {% include 'post_summary_votes.html' %}
+        {% endif %}
+
+        <a href="{% exec post_get_base_url self.id %}" title="{% trans _('Permalink') %}">
+            <i class="fa fa-link"></i>
+        </a>
+
+        {% if current_user.user_id > 0 %}
+        <a href="javascript:void(0)" id="favc-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favc-{{ self.prefix_id }}{{ self.id }}', 'post', {{ self.id }})" title="{% trans _('Favorito') %}" {% if self.favorite %} class="favorite on" {% endif %}>
+            <i class="fa fa-star"></i>
+        </a>
+
+        <a href="javascript:void(0)" onclick="post_reply({{self.id}}, '{{ self.username}}')" title="{% trans _('Responder') %}">
+            <i class="fa fa-reply"></i>
+        </a>
+        {% endif %}
+    </div>
 </div>

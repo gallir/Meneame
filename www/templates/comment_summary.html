@@ -1,19 +1,17 @@
-<div id="c-{{ self.prefix_id }}{{self.html_id}}" class="{{ self.comment_class }}">
-    <div class="{{ self.comment_body_class }}">
-        <div class="{{ self.comment_header_class }}">
+<div id="c-{{ self.prefix_id }}{{self.html_id}}" class="{{ self.css_class }}">
+    <div class="{{ self.css_class_body }}">
+        <div class="{{ self.css_class_header }}">
             <a href="javascript:void(0);" class="comment-expand" data-id="{{ self.id }}"><i class="fa fa-minus-circle"></i></a>
 
-            {#
             {% if self.avatar AND self.type != 'admin' AND self.user_level != 'disabled' %}
-            #}
             <img src="{{ globals.base_static }}img/g.gif"
                 data-2x="s:-20.:-40."
                 data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}"
                 class="tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
                 width="20" height="20" />
-            {#
+            {% else %}
+            <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-20.jpg" width="20" height="20" />
             {% endif %}
-            #}
 
             {% if self.url %}
             <a href="{{ self.url }}" class="comment-order">#{{ self.order }}</a>&nbsp;&nbsp;
@@ -40,12 +38,12 @@
             </span>
         </div>
 
-        <div class="{{ self.comment_text_class }}" id="cid-{{ self.prefix_id }}{{self.id}}">
+        <div class="{{ self.css_class_text }}" id="cid-{{ self.prefix_id }}{{self.id}}">
             {% include 'comment_summary_text.html' %}
         </div>
     </div>
 
-    <div class="{{ self.comment_footer_class }}">
+    <div class="{{ self.css_class_footer }}">
         {% if self.type != 'admin' AND self.user_level != 'disabled' %}
             {% if self.can_vote %}
                 {% if self.user_can_vote %}
@@ -80,19 +78,19 @@
         {% if self.thread_level < 1 AND current_user.user_id > 0 %}
         <a href="javascript:void(0)" id="favc-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favc-{{ self.prefix_id }}{{ self.id }}', 'comment', {{ self.id }})" title="{% trans _('Favorito') %}" {% if self.favorite %} class="favorite on" {% endif %}>
             <i class="fa fa-star"></i>
-        </a href="javascript:void(0)">
+        </a>
         {% endif %}
 
         {% if self.can_reply %}
         <a href="javascript:void(0)" onclick="comment_reply({{self.id}}, '{{ self.prefix_id }}')" title="{% trans _('Responder') %}">
             <i class="fa fa-reply"></i>
-        </a href="javascript:void(0)">
+        </a>
         {% endif %}
 
         {% if self.can_report %}
         <a href="javascript:void(0)" onclick="report_comment({{self.id}})" title="{% trans _('Reportar comentario') %}">
             <i class="fa fa-exclamation-triangle"></i>
-        </a href="javascript:void(0)">
+        </a>
         {% endif %}
     </div>
 </div>
