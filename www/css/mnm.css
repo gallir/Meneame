@@ -2281,9 +2281,13 @@ select.options-comments {
 
 .comment-body {
     position: relative;
-    padding: 5px 5px 5px 30px;
+    padding: 5px 10px 5px 30px;
     background: #FFF5ED;
     border-radius: 2px;
+}
+
+.comments-list .comment-body {
+    padding-left: 10px;
 }
 
 .comment.admin, .comment-body .comment-body.new {
