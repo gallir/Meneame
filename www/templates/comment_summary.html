@@ -4,12 +4,12 @@
             <a href="javascript:void(0);" class="comment-expand" data-id="{{ self.id }}"><i class="fa fa-minus-circle"></i></a>
 
             {#
-            {% if !globals.mobile AND !self.hide_comment AND self.avatar AND self.type != 'admin' AND self.user_level != 'disabled' %}
+            {% if self.avatar AND self.type != 'admin' AND self.user_level != 'disabled' %}
             #}
             <img src="{{ globals.base_static }}img/g.gif"
                 data-2x="s:-20.:-40."
                 data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}"
-                class="tooltip u:{{ self.author }} lazy wide" alt="{{ self.username }}"
+                class="tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
                 width="20" height="20" />
             {#
             {% endif %}
@@ -18,7 +18,7 @@
             {% if self.url %}
             <a href="{{ self.url }}" class="comment-order">#{{ self.order }}</a>&nbsp;&nbsp;
             {% else %} {% if self.link_permalink %}
-            <a href="{{ self.link_permalink }}/c0{{ self.order }}#c-{{ self.order }}" class="comment-order" rel="nofollow">#{{ self.order }}</a>&nbsp;&nbsp;
+            <a href="{{ self.link_permalink }}/c0{{ self.order }}#c-{{ self.order }}" class="comment-order" rel="nofollow">#{{ self.order }}</a>
             {% else %}
             <span class="comment-order">#{{ self.order }}</span>
             {% endif %} {% endif %}
@@ -35,7 +35,7 @@
                 {% set modified = self.modified - self.date %}
 
                 {% if modified > 10 %}
-                <span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>&nbsp;*&nbsp;</strong></span>&nbsp;
+                <span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>*</strong></span>
                 {% endif %}
             </span>
         </div>

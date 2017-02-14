@@ -36,6 +36,7 @@
 
 		<div class="comment-info">
 			<span class="ts nomobile showmytitle" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
+
 			<a class="username" href="{%exec post_get_base_url self.username %}">{{ self.username }}</a>
 			{% if current_user.admin %}
 				{% if self.admin %}

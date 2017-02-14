@@ -2343,7 +2343,6 @@ select.options-comments {
 
 .comment-header a {
     color: #e35614;
-    vertical-align: middle;
     text-decoration: none;
 }
 
@@ -3317,7 +3316,6 @@ button.link.favorite {
     height: 90px;
     max-width: 823px;
     padding: 0 0 0 95px;
-    ;
     margin: 10px 0;
     white-space: nowrap;
     overflow: hidden;
@@ -3731,5 +3729,27 @@ button.share-link span:hover {
 
     button.link.favorite {
         width: 10%;
+    }
+}
+
+@media (max-width: 540px) {
+    .comment-footer {
+        margin-left: 0;
+    }
+
+
+
+    .comment-footer a {
+        font-size: 16px;
+    }
+
+    .threader.expandable .expandable-mark {
+        display: none;
+    }
+}
+
+@media (max-width: 320px) {
+    .comment-footer a, .comment-footer span {
+        margin: 0 5px;
     }
 }
