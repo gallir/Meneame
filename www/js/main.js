@@ -955,9 +955,9 @@ function comment_edit(id, DOMid) {
 }
 
 function comment_reply(id, prefix) {
-    prefix != null ? prefix : '';
+    prefix = prefix || '';
 
-    var $parent = $("#cid-" + prefix + id).parent();
+    var $parent = $('#cid-' + prefix + id).closest('.comment');
 
     if ($parent.find('#comment_ajax_form').length > 0) {
         return;
