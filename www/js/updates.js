@@ -472,14 +472,14 @@ function showPoll() {
 
         function hide($button, $parent, $childs, id) {
             $childs.hide();
-            $parent.addClass('comment-collapsed');
-            $button.text('[+]');
+            $parent.addClass('collapsed');
+            $button.html('<i class="fa fa-plus-circle"></i>');
         }
 
         function show($button, $parent, $childs, id) {
             $childs.show();
-            $parent.removeClass('comment-collapsed');
-            $button.text('[–]');
+            $parent.removeClass('collapsed');
+            $button.html('<i class="fa fa-minus-circle"></i>');
         }
 
         $.each(cookieGet(), function(key, id) {
@@ -502,7 +502,7 @@ function showPoll() {
                 $childs = $parent.find('> .threader'),
                 id = $this.data('id');
 
-            if ($parent.hasClass('comment-collapsed')) {
+            if ($parent.hasClass('collapsed')) {
                 show($this, $parent, $childs, id);
                 removeCookie(id);
             } else {

@@ -269,9 +269,11 @@ class Comment extends LCPBase {
 
         $this->check_visibility();
 
+        $this->comment_class = 'comment';
+        $this->comment_body_class = 'comment-body';
         $this->comment_header_class = 'comment-header';
+        $this->comment_text_class = 'comment-text';
         $this->comment_footer_class = 'comment-footer';
-        $this->comment_class = 'comment-body';
 
         if ($this->hidden || $this->ignored && !$link->is_sponsored())  {
             $this->comment_footer_class .= ' phantom';
