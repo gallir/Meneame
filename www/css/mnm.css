@@ -2300,6 +2300,10 @@ select.options-comments {
     padding-right: 35px;
 }
 
+.collapsed .comment.high .comment-body {
+    padding-right: 10px;
+}
+
 .comment.high .comment-date {
     color: #444;
     font-weight: bold;
@@ -2355,6 +2359,11 @@ select.options-comments {
     top: 6px;
     color: #e35614;
     font-size: 14px;
+    z-index: 2;
+}
+
+.comment-header a.comment-expand:hover {
+    color: white;
 }
 
 .comment-header .comment-order {
@@ -2372,6 +2381,15 @@ li .comment-header .comment-expand {
     white-space: nowrap;
     margin-left: 5px;
     font-size: 11px;
+}
+
+.comment-header .comments-closed-counter {
+    display: none;
+    float: right;
+}
+
+.collapsed .comment-header .comments-closed-counter {
+    display: block;
 }
 
 .comment-text {
@@ -2394,7 +2412,7 @@ li .comment-header .comment-expand {
 
 .comment-footer {
     overflow: hidden;
-    margin: 1px 0 0 0;
+    margin: 1px 0 0 20px;
     padding: 1px;
     line-height: 18px;
     vertical-align: middle;
@@ -2408,6 +2426,10 @@ li .comment-header .comment-expand {
 .comment-footer a, .comment-footer span {
     font-weight: bold;
     margin: 0 7px;
+}
+
+.comment-footer span {
+    font-size: 13px;
 }
 
 .comment-footer a:hover {
@@ -2642,6 +2664,7 @@ button.link.favorite {
 }
 
 .threader {
+    position: relative;
     border-left: 1px dotted #ddc;
     margin: 0 0 0 1.5%;
     padding: 0 0 0 1.5%;
@@ -2660,6 +2683,22 @@ button.link.favorite {
 
 .threader.collapsed .comment-text, .threader.collapsed .comment-footer {
     display: none;
+}
+
+.threader .expandable-mark {
+    display: none;
+    position: absolute;
+    width: 16px;
+    top: 7px;
+    bottom: 0;
+    margin-left: 5px;
+    background-color: #e35614;
+    border-radius: 1em;
+    z-index: 1;
+}
+
+.threader.expandable > .expandable-mark {
+    display: block;
 }
 
 #tolerance, #tolerance select {

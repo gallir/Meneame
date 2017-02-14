@@ -99,7 +99,9 @@ class Comment extends LCPBase {
                 echo '<div class="threader">';
             }
 
-            if ($link && $length && $link->page_mode === 'interview' && $comment->author == $link->author) {
+            echo '<div class="expandable-mark"></div>';
+
+            if ($link && $length && ($link->page_mode === 'interview') && $comment->author == $link->author) {
                 $len = $length * 4;
             } else {
                 $len = $length;

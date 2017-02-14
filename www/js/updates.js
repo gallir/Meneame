@@ -436,7 +436,12 @@ function showPoll() {
     };
 
     INIT.commentCollapse = function() {
+        var $expandables = $('.comment-header .comment-expand');
         var cookieName = 'comments-collapsed';
+
+        if (!$expandables.length) {
+            return;
+        }
 
         function getUnique(values) {
             return values.filter(function (value, index, values) {
@@ -471,9 +476,27 @@ function showPoll() {
         }
 
         function hide($button, $parent, $childs, id) {
+            var $header = $button.closest('.comment-header');
+
             $childs.hide();
             $parent.addClass('collapsed');
             $button.html('<i class="fa fa-plus-circle"></i>');
+
+            if ($header.find('.comments-closed-counter').length) {
+                return;
+            }
+
+            var count = $parent.find('.comment').length - 1;
+
+            if (count === 0) {
+                return;
+            }
+
+            $header.append(
+                '<div class="comments-closed-counter">'
+                + count + ' <i class="fa fa-comments"></i>'
+                + '</div>'
+            );
         }
 
         function show($button, $parent, $childs, id) {
@@ -494,7 +517,15 @@ function showPoll() {
             hide($this, $parent, $parent.find('> .threader'), $this.data('id'));
         });
 
-        $('.comment-header .comment-expand').on('click', function(e) {
+        $expandables.on('mouseover', function(e) {
+            $(this).closest('.threader').addClass('expandable');
+        });
+
+        $expandables.on('mouseout', function(e) {
+            $(this).closest('.threader').removeClass('expandable');
+        });
+
+        $expandables.on('click', function(e) {
             e.preventDefault();
 
             var $this = $(this),

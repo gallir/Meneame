@@ -1,10 +1,11 @@
 |
+
 {% if self.has_votes_info %}
-<a class="fancybox" href="{{ globals.base_url_general }}backend/get_c_v.php?id={{ self.id }}" title="{% trans _('Información de votos') %}">
+<a class="fancybox" href="{{ globals.base_url_general }}backend/get_c_v.php?id={{ self.id }}" title="{% trans _('Votos') %}">
     <span id="vc-{{ self.id }}" class="votes-counter">{{ self.votes }}</span>
 </a>
 {% else %}
-<span id="vc-{{ self.id }}" class="votes-counter" title="{% trans _('Información de votos') %}">{{ self.votes }}</span>
+<span id="vc-{{ self.id }}" class="votes-counter" title="{% trans _('Votos') %}">{{ self.votes }}</span>
 {% endif %}
 
 |
