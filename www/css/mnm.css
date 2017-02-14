@@ -2412,6 +2412,7 @@ li .comment-header .comment-expand {
 
 .comment-footer a:hover {
     text-decoration: none;
+    color: #ffa980;
 }
 
 .comment-footer .vote {
@@ -2420,8 +2421,16 @@ li .comment-header .comment-expand {
     font-size: 18px;
 }
 
+.comment-footer .vote.up:hover {
+    color: green;
+}
+
 .comment-footer .vote.down {
     margin: 0 10px;
+}
+
+.comment-footer .vote.down:hover {
+    color: red;
 }
 
 .comment-footer .vote.voted {
@@ -2444,11 +2453,6 @@ li .comment-header .comment-expand {
 .comment-footer .votes-counter {
     font-weight: bold;
     color: #666;
-}
-
-.comment-votes-info {
-    display: block;
-    overflow: hidden;
 }
 
 .news-details, .news-details.main {
