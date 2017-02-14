@@ -1344,7 +1344,11 @@ function show_total_answers(type, id, answers) {
         dom_id = '#pid-' + id;
     }
 
-    $(dom_id).parent().find(".comment-votes-info").append('&nbsp;<span onClick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}" class="answers"><span class="counter">' + answers + '</span></span>');
+    $(dom_id).closest('.comment').find('.comment-footer').append(
+        '<a href="javascript:void(0);" onclick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}">'
+        + '<i class="fa fa-comments"></i>&nbsp;' + answers
+        + '</a>'
+    );
 }
 
 function show_answers(type, id) {
@@ -1373,7 +1377,7 @@ function show_answers(type, id) {
             return;
         }
 
-        element = $(dom_id).parent().parent();
+        element = $(dom_id).closest('.comment').parent();
         element.append('<div class="comment-answers" id="answers-' + id + '">' + html + '</div>');
         element.trigger('DOMChanged', element);
     });
