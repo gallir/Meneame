@@ -478,31 +478,43 @@ function showPoll() {
         function hide($button, $parent, $childs, id) {
             var $header = $button.closest('.comment-header');
 
-            $childs.slideUp();
-            $parent.addClass('collapsed');
-            $button.html('<i class="fa fa-plus-circle"></i>');
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp(function() {
+                if ($childs.length === 0) {
+                    $parent.addClass('collapsed');
+                }
 
-            if ($header.find('.comments-closed-counter').length) {
-                return;
-            }
+                $button.html('<i class="fa fa-plus-circle"></i>');
 
-            var count = $parent.find('.comment').length - 1;
+                $childs.slideUp(function() {
+                    $parent.addClass('collapsed');
 
-            if (count === 0) {
-                return;
-            }
+                    if ($header.find('.comments-closed-counter').length) {
+                        return;
+                    }
 
-            $header.append(
-                '<div class="comments-closed-counter">'
-                + count + ' <i class="fa fa-comments"></i>'
-                + '</div>'
-            );
+                    var count = $parent.find('.comment').length - 1;
+
+                    if (count === 0) {
+                        return;
+                    }
+
+                    $header.append(
+                        '<div class="comments-closed-counter">'
+                        + count + ' <i class="fa fa-comments"></i>'
+                        + '</div>'
+                    );
+                });
+            });
         }
 
         function show($button, $parent, $childs, id) {
-            $childs.slideDown();
             $parent.removeClass('collapsed');
+
             $button.html('<i class="fa fa-minus-circle"></i>');
+
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideDown(function() {
+                $childs.slideDown();
+            });
         }
 
         $.each(cookieGet(), function(key, id) {

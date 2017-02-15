@@ -2300,7 +2300,7 @@ select.options-comments {
     padding-right: 35px;
 }
 
-.collapsed .comment.high .comment-body {
+.collapsed > .comment.high .comment-body {
     padding-right: 10px;
 }
 
@@ -2361,11 +2361,11 @@ select.options-comments {
     color: white;
 }
 
-.collapsed .comment-header a.comment-expand:hover {
+.collapsed > .comment .comment-header a.comment-expand:hover {
     color: #e35614;
 }
 
-.collapsed .phantom .comment-header a.comment-expand:hover {
+.collapsed > .phantom .comment-header a.comment-expand:hover {
     color: #aaa;
 }
 
@@ -2391,7 +2391,7 @@ li .comment-header .comment-expand {
     float: right;
 }
 
-.collapsed .comment-header .comments-closed-counter {
+.collapsed > .comment .comment-header .comments-closed-counter {
     display: block;
 }
 
@@ -2689,11 +2689,11 @@ button.link.favorite {
     padding-left: 0;
 }
 
-.threader.collapsed .comment-body {
+.threader.collapsed > .comment .comment-body {
     background: #EEE;
 }
 
-.threader.collapsed .comment-text, .threader.collapsed .comment-footer {
+.threader.collapsed > .comment .comment-text, .threader.collapsed > .comment .comment-footer {
     display: none;
 }
 
