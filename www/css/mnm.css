@@ -2365,6 +2365,14 @@ select.options-comments {
     color: white;
 }
 
+.collapsed .comment-header a.comment-expand:hover {
+    color: #e35614;
+}
+
+.collapsed .phantom .comment-header a.comment-expand:hover {
+    color: #aaa;
+}
+
 .comment-header .comment-order {
     color: #e35614;
     font-weight: bold;
@@ -2702,6 +2710,10 @@ button.link.favorite {
 
 .threader.expandable > .expandable-mark {
     display: block;
+}
+
+.threader.collapsed.expandable > .expandable-mark {
+    display: none;
 }
 
 #tolerance, #tolerance select {
