@@ -2325,20 +2325,16 @@ select.options-comments {
     background: #EEE;
 }
 
-.comment-text img.thumb.ok {
-    width: 80px;
-    height: 80px;
-}
-
 .comment.phantom .comment-body a {
     color: #aaa;
 }
 
 .comment-header {
-    color: #666;
+    color: #000;
     white-space: nowrap;
     overflow: hidden;
     line-height: 20px;
+    font-size: 11px;
 }
 
 .comment-header a {
@@ -2401,6 +2397,11 @@ li .comment-header .comment-expand {
 
 .comment-text {
     padding: 5px 0;
+}
+
+.comment-text img.thumb.ok {
+    width: 80px;
+    height: 80px;
 }
 
 .comment-avatar-large .comment-text {

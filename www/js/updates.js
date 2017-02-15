@@ -478,7 +478,7 @@ function showPoll() {
         function hide($button, $parent, $childs, id) {
             var $header = $button.closest('.comment-header');
 
-            $childs.hide();
+            $childs.slideUp();
             $parent.addClass('collapsed');
             $button.html('<i class="fa fa-plus-circle"></i>');
 
@@ -500,7 +500,7 @@ function showPoll() {
         }
 
         function show($button, $parent, $childs, id) {
-            $childs.show();
+            $childs.slideDown();
             $parent.removeClass('collapsed');
             $button.html('<i class="fa fa-minus-circle"></i>');
         }
@@ -514,7 +514,7 @@ function showPoll() {
 
             var $parent = $this.closest('.threader');
 
-            hide($this, $parent, $parent.find('> .threader'), $this.data('id'));
+            hide($this, $parent, $parent.find('> .threader-childs'), $this.data('id'));
         });
 
         $expandables.on('mouseover', function(e) {
@@ -530,7 +530,7 @@ function showPoll() {
 
             var $this = $(this),
                 $parent = $this.closest('.threader'),
-                $childs = $parent.find('> .threader'),
+                $childs = $parent.find('> .threader-childs'),
                 id = $this.data('id');
 
             if ($parent.hasClass('collapsed')) {

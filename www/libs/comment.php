@@ -111,8 +111,14 @@ class Comment extends LCPBase {
             $comment->link_object = $link;
             $comment->print_summary($len, !empty($link));
 
-            foreach ($node->children as $child) {
-                $traverse($child, $level + 1);
+            if ($node->children) {
+                echo '<div class="threader-childs">';
+
+                foreach ($node->children as $child) {
+                    $traverse($child, $level + 1);
+                }
+
+                echo '</div>';
             }
 
             echo '</div>';
