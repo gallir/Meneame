@@ -2331,7 +2331,6 @@ select.options-comments {
 
 .comment-header {
     color: #000;
-    white-space: nowrap;
     overflow: hidden;
     line-height: 20px;
     font-size: 11px;
@@ -2381,7 +2380,6 @@ li .comment-header .comment-expand {
 
 .comment-header .comment-date {
     display: inline-block;
-    white-space: nowrap;
     margin-left: 5px;
     font-size: 11px;
 }

@@ -499,9 +499,9 @@ function showPoll() {
                     }
 
                     $header.append(
-                        '<div class="comments-closed-counter">'
+                        '<span class="comments-closed-counter">'
                         + count + ' <i class="fa fa-comments"></i>'
-                        + '</div>'
+                        + '</span>'
                     );
                 });
             });
