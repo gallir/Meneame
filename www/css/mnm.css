@@ -2393,6 +2393,10 @@ li .comment-header .comment-expand {
     display: block;
 }
 
+.comment-avatar-large .comment-header {
+    font-size: 15px;
+}
+
 .comment-text {
     padding: 5px 0;
 }
