@@ -2436,6 +2436,7 @@ li .comment-header .comment-expand {
 
 .comment-footer a, .comment-footer span {
     margin: 0 7px;
+    text-decoration: none;
 }
 
 .comment-footer > *:first-child {
@@ -2461,20 +2462,22 @@ li .comment-header .comment-expand {
 
 .comment-footer .vote {
     display: inline-block;
-    cursor: pointer;
     font-size: 20px;
 }
 
-.comment-footer .vote.up:hover {
+.comment-footer .vote:hover {
+    color: #adcedf;
+}
+
+.comment-footer .voted.up, .comment-footer .vote.up:hover {
     color: green;
 }
 
-.comment-footer .vote.down:hover {
+.comment-footer .voted.down, .comment-footer .vote.down:hover {
     color: red;
 }
 
 .comment-footer .vote.voted {
-    cursor: default;
     opacity: 0.5;
 }
 
