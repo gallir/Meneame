@@ -2422,7 +2422,7 @@ li .comment-header .comment-expand {
 
 .comment-footer {
     overflow: hidden;
-    margin: 2px 0 0 18px;
+    margin: 2px 0 0 15px;
     padding: 0;
     line-height: 18px;
     font-size: 15px;
@@ -2722,6 +2722,10 @@ button.link.favorite {
 
 .threader.collapsed.expandable > .expandable-mark {
     display: none;
+}
+
+.threader .comment .comment-footer {
+    margin-left: 25px;
 }
 
 #tolerance, #tolerance select {
@@ -3761,6 +3765,10 @@ button.share-link span:hover {
         display: none;
     }
 
+    .threader .comment .comment-footer {
+        margin-left: 15px;
+    }
+
     .comment-answers {
         margin-left: 30px;
     }
@@ -3768,7 +3776,7 @@ button.share-link span:hover {
 
 @media (max-width: 320px) {
     .comment-footer a, .comment-footer span {
-        font-size: 14px;
-        margin: 0 6px;
+        font-size: 13px;
+        margin: 0 4px;
     }
 }
