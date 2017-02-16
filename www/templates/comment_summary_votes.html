@@ -1,5 +1,3 @@
-<span class="separator-vertical"></span>
-
 {% if self.has_votes_info %}
 <a href="{{ globals.base_url_general }}backend/get_c_v.php?id={{ self.id }}" class="votes-counter fancybox" id="vc-{{ self.id }}" title="{% trans _('Votos') %}">
     {{ self.votes }}
