@@ -5,3 +5,5 @@ function get_reporters(process, id, reason, page) {
         $e.trigger("DOMChanged", $e);
     });
 }
+
+$('.ac-user').user_autocomplete({ minChars: 2, params: {friends: 0} });

@@ -144,6 +144,7 @@ function __autoload($class)
         'Log' => 'log.php',
         'LogAdmin' => 'log_admin.php',
         'Report' => 'report.php',
+		'Strike' => 'strike.php',
         'db' => 'mysqli.php',
         'RGDB' => 'rgdb.php',
         'LCPBase' => 'LCPBase.php',

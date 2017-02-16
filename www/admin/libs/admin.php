@@ -1,5 +1,11 @@
 <?php
 
+
+$globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
+$globals['extra_js'][] = 'jquery.user_autocomplete.js';
+$globals['extra_css'][] = 'jquery.autocomplete.css';
+$globals['extra_css'][] = 'bootstrap.min.css';
+$globals['extra_css'][] = 'bootstrap-theme.min.css';
 $globals['extra_css'][] = 'admin.css';
 $globals['extra_js'][] = '../admin/js/admin.js';
 $globals['ads'] = false;
@@ -21,7 +27,8 @@ function do_admin_tabs($tab_selected = false)
 		"proxy" => 'bans.php?tab=proxy',
 		"noaccess" => 'bans.php?tab=noaccess',
 		"admin_logs" => 'logs.php',
-		"comment_reports" => 'reports.php'
+		"comment_reports" => 'reports.php',
+		"strikes" => 'strikes.php'
 	];
 
 	Haanga::Load("admin/tabs.html", compact('tabs', 'tab_selected'));

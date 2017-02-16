@@ -14,7 +14,7 @@
             &nbsp; [ <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}&op=news">{% trans _('Múltiples bans') %}</a> ]
         {% endif %}
 
-        <table class="decorated" style="font-size: 10pt">
+        <table class="table table-condensed table-striped table-hover">
             <tr>
                 <th width="25%">
                     <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=ban_text">

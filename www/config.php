@@ -352,8 +352,10 @@ $globals['Amazon_S3_upload'] = true;
 $globals['Amazon_S3_delete_allowed'] = false;
 
 // Main javascript file
-$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
-$globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
+//$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+//$globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
+$globals['jquery'] = '/js/jquery/jquery.min.js';
+$globals['jquery2'] = '/js/jquery2/jquery.min.js';
 $globals['js_main'] = 'main.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'mnm.php';
