@@ -1,4 +1,4 @@
-|
+<span class="separator-vertical"></span>
 
 {% if self.has_votes_info %}
 <a class="fancybox" href="{{ globals.base_url_general }}backend/get_c_v.php?id={{ self.id }}" title="{% trans _('Votos') %}">
@@ -8,11 +8,11 @@
 <span id="vc-{{ self.id }}" class="votes-counter" title="{% trans _('Votos') %}">{{ self.votes }}</span>
 {% endif %}
 
-|
+<span class="separator-vertical"></span>
 
 <span class="votes-counter" id="vk-{{ self.id }}" title="{% trans _('Karma') %}">
     <i class="icon-karma">K</i>
     {{ self.karma }}
 </span>
 
-|
+<span class="separator-vertical"></span>

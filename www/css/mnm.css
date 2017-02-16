@@ -2422,24 +2422,32 @@ li .comment-header .comment-expand {
 
 .comment-footer {
     overflow: hidden;
-    margin: 1px 0 0 20px;
-    padding: 1px;
+    margin: 2px 0 0 18px;
+    padding: 0;
     line-height: 18px;
-    vertical-align: middle;
-    font-size: 14px;
-}
-
-.comment-footer, .comment-footer a {
-    color: #adcedf;
-}
-
-.comment-footer a, .comment-footer span {
+    font-size: 15px;
     font-weight: bold;
-    margin: 0 7px;
+}
+
+.comment-footer, .comment-footer a, .comment-footer span {
+    color: #adcedf;
+    vertical-align: middle;
 }
 
 .comment-footer span {
     font-size: 13px;
+}
+
+.comment-footer a, .comment-footer span {
+    margin: 0 7px;
+}
+
+.comment-footer > *:first-child {
+    margin-left: 0;
+}
+
+.comment-footer > *:last-child {
+    margin-right: 0;
 }
 
 .comment-footer a:hover {
@@ -2447,18 +2455,22 @@ li .comment-header .comment-expand {
     color: #ffa980;
 }
 
+.comment-footer .separator-vertical {
+    display: inline-block;
+    width: 1px;
+    height: 14px;
+    margin: 0;
+    background-color: #adcedf;
+}
+
 .comment-footer .vote {
     display: inline-block;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .comment-footer .vote.up:hover {
     color: green;
-}
-
-.comment-footer .vote.down {
-    margin: 0 10px;
 }
 
 .comment-footer .vote.down:hover {
@@ -3752,10 +3764,6 @@ button.share-link span:hover {
         margin-left: 0;
     }
 
-    .comment-footer a {
-        font-size: 16px;
-    }
-
     .threader.expandable .expandable-mark {
         display: none;
     }
@@ -3767,6 +3775,7 @@ button.share-link span:hover {
 
 @media (max-width: 320px) {
     .comment-footer a, .comment-footer span {
+        font-size: 14px;
         margin: 0 5px;
     }
 }
