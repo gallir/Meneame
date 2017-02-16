@@ -2434,10 +2434,6 @@ li .comment-header .comment-expand {
     vertical-align: middle;
 }
 
-.comment-footer span {
-    font-size: 13px;
-}
-
 .comment-footer a, .comment-footer span {
     margin: 0 7px;
 }
@@ -2497,6 +2493,7 @@ li .comment-header .comment-expand {
 .comment-footer .votes-counter {
     font-weight: bold;
     color: #666;
+    font-size: 13px;
 }
 
 .news-details, .news-details.main {
@@ -3776,6 +3773,6 @@ button.share-link span:hover {
 @media (max-width: 320px) {
     .comment-footer a, .comment-footer span {
         font-size: 14px;
-        margin: 0 5px;
+        margin: 0 6px;
     }
 }
