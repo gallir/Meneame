@@ -2402,10 +2402,6 @@ li .comment-header .comment-expand {
     height: 80px;
 }
 
-.comment-avatar-large .comment-text {
-    padding-left: 50px;
-}
-
 .comment-text a {
     color: #03a;
 }
@@ -3757,10 +3753,6 @@ button.share-link span:hover {
 }
 
 @media (max-width: 540px) {
-    .comment-footer {
-        margin-left: 0;
-    }
-
     .threader.expandable .expandable-mark {
         display: none;
     }
