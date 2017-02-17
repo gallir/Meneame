@@ -22,20 +22,18 @@
             {% endif %} {% endif %}
 
             {% if self.type != 'admin' %}
-            <strong><a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a></strong>
+            <a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a>
             {% else %}
             <strong>{% trans _('admin') %}</strong> {% if current_user.admin %}({{ self.username }}){% endif %}
             {% endif %}
 
-            <span class="comment-date">
-                <span class="ts showmytitle nomobile" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
+            <span class="ts showmytitle comment-date" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
 
-                {% set modified = self.modified - self.date %}
+            {% set modified = self.modified - self.date %}
 
-                {% if modified > 10 %}
-                <span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>*</strong></span>
-                {% endif %}
-            </span>
+            {% if modified > 10 %}
+            <span data-ts="{{ self.modified }}" class="ts novisible showmytitle" title="{% trans _('editado') %}: "><strong>*</strong></span>
+            {% endif %}
         </div>
 
         <div class="{{ self.css_class_text }}" id="cid-{{ self.prefix_id }}{{self.id}}">

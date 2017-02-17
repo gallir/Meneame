@@ -2332,13 +2332,26 @@ select.options-comments {
 .comment-header {
     color: #000;
     overflow: hidden;
-    line-height: 20px;
     font-size: 11px;
+}
+
+.comment-header, .comment-header a, .comment-header span, .comment-header strong {
+    line-height: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.comment-header a, .comment-header span, .comment-header strong {
+    display: inline-block;
 }
 
 .comment-header a {
     color: #e35614;
     text-decoration: none;
+}
+
+.comment-header .username {
+    font-weight: bold;
 }
 
 .comment-header .tooltip, .comment-header .avatar {
@@ -2379,7 +2392,6 @@ li .comment-header .comment-expand {
 }
 
 .comment-header .comment-date {
-    display: inline-block;
     margin-left: 5px;
     font-size: 11px;
 }
@@ -2391,10 +2403,20 @@ li .comment-header .comment-expand {
 }
 
 .collapsed > .comment .comment-header .comments-closed-counter {
-    display: block;
+    display: inline-block;
 }
 
 .comment-avatar-large .comment-header {
+    height: 40px;
+}
+
+.comment-avatar-large .comment-header * {
+    height: 40px;
+    line-height: 40px;
+    font-size: 11px;
+}
+
+.comment-avatar-large .comment-header .username {
     font-size: 15px;
 }
 
@@ -2425,14 +2447,19 @@ li .comment-header .comment-expand {
     overflow: hidden;
     margin: 2px 0 0 15px;
     padding: 0;
-    line-height: 18px;
     font-size: 15px;
     font-weight: bold;
+    height: 20px;
 }
 
 .comment-footer, .comment-footer a, .comment-footer span {
     color: #adcedf;
     vertical-align: middle;
+    line-height: 18px;
+}
+
+.comment-footer a, .comment-footer span {
+    display: inline-block;
 }
 
 .comment-footer a, .comment-footer span {
@@ -2454,7 +2481,6 @@ li .comment-header .comment-expand {
 }
 
 .comment-footer .separator-vertical {
-    display: inline-block;
     width: 1px;
     height: 14px;
     margin: 0;
@@ -2462,7 +2488,6 @@ li .comment-header .comment-expand {
 }
 
 .comment-footer .vote {
-    display: inline-block;
     font-size: 20px;
 }
 
@@ -2483,7 +2508,6 @@ li .comment-header .comment-expand {
 }
 
 .comment-footer .answers .counter {
-    display: inline-block;
     font-size: 9px;
     color: #fff;
     font-weight: bold;
@@ -3779,6 +3803,10 @@ button.share-link span:hover {
 }
 
 @media (max-width: 320px) {
+    .comment-header .comment-order {
+        font-size: 12px;
+    }
+
     .comment-footer a, .comment-footer span {
         font-size: 13px;
         margin: 0 4px;
