@@ -475,20 +475,10 @@ function showPoll() {
             cookieSet(current);
         }
 
-        function speed(count) {
-            var speed = count * 300;
-
-            if (speed > 1300) {
-                return 1300;
-            }
-
-            return (speed < 500) ? 500 : speed;
-        }
-
         function hide($button, $parent, $childs, id) {
             var $header = $button.closest('.comment-header');
 
-            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp(function() {
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp('fast', function() {
                 if ($childs.length === 0) {
                     $parent.addClass('collapsed');
                 }
@@ -497,7 +487,7 @@ function showPoll() {
 
                 var count = $parent.find('.comment').length - 1;
 
-                $childs.slideUp(speed(count), function() {
+                $childs.slideUp('fast', function() {
                     $parent.addClass('collapsed');
 
                     if (!count || $header.find('.comments-closed-counter').length) {
@@ -518,8 +508,8 @@ function showPoll() {
 
             $button.html('<i class="fa fa-minus-circle"></i>');
 
-            $button.closest('.comment').find('.comment-text, .comment-footer').slideDown(function() {
-                $childs.slideDown(speed($parent.find('.comment').length - 1));
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideDown('fast', function() {
+                $childs.slideDown('fast');
             });
         }
 
