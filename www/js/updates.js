@@ -475,6 +475,16 @@ function showPoll() {
             cookieSet(current);
         }
 
+        function speed(count) {
+            var speed = count * 300;
+
+            if (speed > 1300) {
+                return 1300;
+            }
+
+            return (speed < 500) ? 500 : speed;
+        }
+
         function hide($button, $parent, $childs, id) {
             var $header = $button.closest('.comment-header');
 
@@ -485,23 +495,19 @@ function showPoll() {
 
                 $button.html('<i class="fa fa-plus-circle"></i>');
 
-                $childs.slideUp(function() {
+                var count = $parent.find('.comment').length - 1;
+
+                $childs.slideUp(speed(count), function() {
                     $parent.addClass('collapsed');
 
-                    if ($header.find('.comments-closed-counter').length) {
-                        return;
-                    }
-
-                    var count = $parent.find('.comment').length - 1;
-
-                    if (count === 0) {
+                    if (!count || $header.find('.comments-closed-counter').length) {
                         return;
                     }
 
                     $header.append(
-                        '<span class="comments-closed-counter">'
+                        '<a href="javascript:void(0);" class="comments-closed-counter">'
                         + count + ' <i class="fa fa-comments"></i>'
-                        + '</span>'
+                        + '</a>'
                     );
                 });
             });
@@ -513,7 +519,7 @@ function showPoll() {
             $button.html('<i class="fa fa-minus-circle"></i>');
 
             $button.closest('.comment').find('.comment-text, .comment-footer').slideDown(function() {
-                $childs.slideDown();
+                $childs.slideDown(speed($parent.find('.comment').length - 1));
             });
         }
 
@@ -552,6 +558,10 @@ function showPoll() {
                 hide($this, $parent, $childs, id);
                 addCookie(id);
             }
+        });
+
+        $(document).on('click', '.comments-closed-counter', function(e) {
+            $(this).closest('.comment-header').find('.comment-expand').trigger('click');
         });
     };
 

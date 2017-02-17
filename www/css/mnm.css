@@ -2387,6 +2387,7 @@ li .comment-header .comment-expand {
 .comment-header .comments-closed-counter {
     display: none;
     float: right;
+    color: #666;
 }
 
 .collapsed > .comment .comment-header .comments-closed-counter {
