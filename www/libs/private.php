@@ -82,7 +82,7 @@ class PrivateMessage extends LCPBase {
 
 		if ($current_user->user_id != $this->author && $current_user->user_id != $this->to) return; // Security check
 
-		$post_meta_class = 'comment-meta';
+		$post_meta_class = 'comment-footer';
 		$post_class = 'comment-body';
 
 		if ($this->date_read < $this->date) {

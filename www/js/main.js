@@ -84,8 +84,6 @@ function menealo_comment(user, id, value) {
     var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id;
     var url = base_url + "backend/menealo_comment?" + content;
 
-    respond_comment_vote(id, value);
-
     $.getJSON(url, function(data) {
         update_comment_vote(id, value, data);
     });
@@ -97,18 +95,11 @@ function menealo_post(user, id, value) {
     var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id;
     var url = base_url + "backend/menealo_post?" + content;
 
-    respond_comment_vote(id, value);
-
     $.getJSON(url, function(data) {
         update_comment_vote(id, value, data);
     });
 
     reportAjaxStats('vote', 'post');
-}
-
-function respond_comment_vote(id, value) {
-    $('#vc-p-' + id).addClass('voted').attr('onclick', '').unbind('click');
-    $('#vc-n-' + id).addClass('voted').attr('onclick', '').unbind('click');
 }
 
 function update_comment_vote(id, value, data) {
@@ -117,13 +108,19 @@ function update_comment_vote(id, value, data) {
         return false;
     }
 
-    $('#vc-' + id).html(data.votes + "");
-    $('#vk-' + id).html(data.karma + "");
-    $('#vc-n-' + id).hide();
+    $('#vc-' + id).html('' + data.votes);
+    $('#vk-' + id).html('<i class="icon-karma">K</i> ' + data.karma);
 
     if (value < 0) {
-        $('#vc-p-' + id).removeClass('up').addClass('down');
+        var $voted = $('#vc-n-' + id);
+        var $disabled = $('#vc-p-' + id);
+    } else {
+        var $voted = $('#vc-p-' + id);
+        var $disabled = $('#vc-n-' + id);
     }
+
+    $disabled.removeClass('up down').removeAttr('href').removeAttr('onclick');
+    $voted.addClass('voted').removeAttr('href').removeAttr('onclick');
 }
 
 function disable_vote_link(id, value, mess, background) {
@@ -917,7 +914,7 @@ var mDialog = new function() {
 };
 
 function comment_edit(id, DOMid) {
-    $target = $('#' + DOMid).parent();
+    $target = $('#' + DOMid).closest('.comment').parent();
 
     $.getJSON(base_url_sub + 'comment_ajax', {
         id: id
@@ -955,9 +952,9 @@ function comment_edit(id, DOMid) {
 }
 
 function comment_reply(id, prefix) {
-    prefix != null ? prefix : '';
+    prefix = prefix || '';
 
-    var $parent = $("#cid-" + prefix + id).parent();
+    var $parent = $('#cid-' + prefix + id).closest('.comment');
 
     if ($parent.find('#comment_ajax_form').length > 0) {
         return;
@@ -967,7 +964,7 @@ function comment_reply(id, prefix) {
 
     var $target = $('<div class="threader"></div>');
 
-    $parent.append($target);
+    $parent.after($target);
 
     $.getJSON(base_url_sub + 'comment_ajax', {
         reply_to: id
@@ -990,13 +987,14 @@ function comment_reply(id, prefix) {
             async: false,
             dataType: 'json',
             success: function(data) {
-                if (!data.error) {
-                    $e.remove();
-                    $target.append(data.html);
-                } else {
+                if (data.error) {
                     mDialog.notify("error: " + data.error, 5);
+                    return;
                 }
 
+                $e.remove();
+
+                $target.append(data.html).find('.comment-expand').remove();
                 $target.trigger('DOMChanged', $target);
             },
             error: function() {
@@ -1344,8 +1342,11 @@ function show_total_answers(type, id, answers) {
         dom_id = '#pid-' + id;
     }
 
-    element = $(dom_id).siblings(".comment-meta").children(".comment-votes-info");
-    element.append('&nbsp;<span onClick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}" class="answers"><span class="counter">' + answers + '</span></span>');
+    $(dom_id).closest('.comment').find('.comment-footer').append(
+        '<a href="javascript:void(0);" onclick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}">'
+        + '<i class="fa fa-comments"></i>&nbsp;' + answers
+        + '</a>'
+    );
 }
 
 function show_answers(type, id) {
@@ -1374,7 +1375,7 @@ function show_answers(type, id) {
             return;
         }
 
-        element = $(dom_id).parent().parent();
+        element = $(dom_id).closest('.comment').parent();
         element.append('<div class="comment-answers" id="answers-' + id + '">' + html + '</div>');
         element.trigger('DOMChanged', element);
     });

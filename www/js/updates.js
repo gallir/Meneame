@@ -1,5 +1,178 @@
 ;
 
+/*!
+ * JavaScript Cookie v2.1.3
+ * https://github.com/js-cookie/js-cookie
+ *
+ * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+ * Released under the MIT license
+ */
+;(function (factory) {
+    var registeredInModuleLoader = false;
+
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+        registeredInModuleLoader = true;
+    }
+
+    if (typeof exports === 'object') {
+        module.exports = factory();
+        registeredInModuleLoader = true;
+    }
+
+    if (!registeredInModuleLoader) {
+        var OldCookies = window.Cookies;
+        var api = window.Cookies = factory();
+        api.noConflict = function () {
+            window.Cookies = OldCookies;
+            return api;
+        };
+    }
+}(function () {
+    function extend () {
+        var i = 0;
+        var result = {};
+
+        for (; i < arguments.length; i++) {
+            var attributes = arguments[i];
+
+            for (var key in attributes) {
+                result[key] = attributes[key];
+            }
+        }
+
+        return result;
+    }
+
+    function init (converter) {
+        function api (key, value, attributes) {
+            var result;
+
+            if (typeof document === 'undefined') {
+                return;
+            }
+
+            if (arguments.length > 1) {
+                attributes = extend({
+                    path: '/'
+                }, api.defaults, attributes);
+
+                if (typeof attributes.expires === 'number') {
+                    var expires = new Date();
+                    expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+                    attributes.expires = expires;
+                }
+
+                attributes.expires = attributes.expires ? attributes.expires.toUTCString() : '';
+
+                try {
+                    result = JSON.stringify(value);
+
+                    if (/^[\{\[]/.test(result)) {
+                        value = result;
+                    }
+                } catch (e) {}
+
+                if (!converter.write) {
+                    value = encodeURIComponent(String(value))
+                        .replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+                } else {
+                    value = converter.write(value, key);
+                }
+
+                key = encodeURIComponent(String(key));
+                key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+                key = key.replace(/[\(\)]/g, escape);
+
+                var stringifiedAttributes = '';
+
+                for (var attributeName in attributes) {
+                    if (!attributes[attributeName]) {
+                        continue;
+                    }
+
+                    stringifiedAttributes += '; ' + attributeName;
+
+                    if (attributes[attributeName] === true) {
+                        continue;
+                    }
+
+                    stringifiedAttributes += '=' + attributes[attributeName];
+                }
+
+                return (document.cookie = key + '=' + value + stringifiedAttributes);
+            }
+
+            if (!key) {
+                result = {};
+            }
+
+            var cookies = document.cookie ? document.cookie.split('; ') : [];
+            var rdecode = /(%[0-9A-Z]{2})+/g;
+            var i = 0;
+
+            for (; i < cookies.length; i++) {
+                var parts = cookies[i].split('=');
+                var cookie = parts.slice(1).join('=');
+
+                if (cookie.charAt(0) === '"') {
+                    cookie = cookie.slice(1, -1);
+                }
+
+                try {
+                    var name = parts[0].replace(rdecode, decodeURIComponent);
+                    cookie = converter.read ?
+                        converter.read(cookie, name) : converter(cookie, name) ||
+                        cookie.replace(rdecode, decodeURIComponent);
+
+                    if (this.json) {
+                        try {
+                            cookie = JSON.parse(cookie);
+                        } catch (e) {}
+                    }
+
+                    if (key === name) {
+                        result = cookie;
+                        break;
+                    }
+
+                    if (!key) {
+                        result[name] = cookie;
+                    }
+                } catch (e) {}
+            }
+
+            return result;
+        }
+
+        api.set = api;
+
+        api.get = function (key) {
+            return api.call(api, key);
+        };
+
+        api.getJSON = function () {
+            return api.apply({
+                json: true
+            }, [].slice.call(arguments));
+        };
+
+        api.defaults = {};
+
+        api.remove = function (key, attributes) {
+            api(key, '', extend(attributes, {
+                expires: -1
+            }));
+        };
+
+        api.withConverter = init;
+
+        return api;
+    }
+
+    return init(function () {});
+}));
+
 function initFormPostEdit($form) {
     if (!$form.length) {
         return;
@@ -262,6 +435,126 @@ function showPoll() {
         });
     };
 
+    INIT.commentCollapse = function() {
+        var $expandables = $('.comment-header .comment-expand');
+        var cookieName = 'comments-collapsed';
+
+        if (!$expandables.length) {
+            return;
+        }
+
+        function getUnique(values) {
+            return values.filter(function (value, index, values) {
+                return values.indexOf(value) === index;
+            });
+        }
+
+        function cookieGet() {
+            return Cookies.getJSON(cookieName) || [];
+        }
+
+        function cookieSet(values) {
+            Cookies.set(cookieName, getUnique(values));
+        }
+
+        function addCookie(id) {
+            var current = cookieGet();
+
+            current.push(id);
+
+            cookieSet(current);
+        }
+
+        function removeCookie(id) {
+            var current = cookieGet();
+
+            while ((index = current.indexOf(id)) !== -1) {
+                current.splice(index, 1);
+            }
+
+            cookieSet(current);
+        }
+
+        function hide($button, $parent, $childs, id) {
+            var $header = $button.closest('.comment-header');
+
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp('fast', function() {
+                if ($childs.length === 0) {
+                    $parent.addClass('collapsed');
+                }
+
+                $button.html('<i class="fa fa-plus-circle"></i>');
+
+                var count = $parent.find('.comment').length - 1;
+
+                $childs.slideUp('fast', function() {
+                    $parent.addClass('collapsed');
+
+                    if (!count || $header.find('.comments-closed-counter').length) {
+                        return;
+                    }
+
+                    $header.append(
+                        '<a href="javascript:void(0);" class="comments-closed-counter">'
+                        + count + ' <i class="fa fa-comments"></i>'
+                        + '</a>'
+                    );
+                });
+            });
+        }
+
+        function show($button, $parent, $childs, id) {
+            $parent.removeClass('collapsed');
+
+            $button.html('<i class="fa fa-minus-circle"></i>');
+
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideDown('fast', function() {
+                $childs.slideDown('fast');
+            });
+        }
+
+        $.each(cookieGet(), function(key, id) {
+            var $this = $('.comment-expand[data-id="' + id + '"]');
+
+            if (!$this.length) {
+                return;
+            }
+
+            var $parent = $this.closest('.threader');
+
+            hide($this, $parent, $parent.find('> .threader-childs'), $this.data('id'));
+        });
+
+        $expandables.on('mouseover', function(e) {
+            $(this).closest('.threader').addClass('expandable');
+        });
+
+        $expandables.on('mouseout', function(e) {
+            $(this).closest('.threader').removeClass('expandable');
+        });
+
+        $expandables.on('click', function(e) {
+            e.preventDefault();
+
+            var $this = $(this),
+                $parent = $this.closest('.threader'),
+                $childs = $parent.find('> .threader-childs'),
+                id = $this.data('id');
+
+            if ($parent.hasClass('collapsed')) {
+                show($this, $parent, $childs, id);
+                removeCookie(id);
+            } else {
+                hide($this, $parent, $childs, id);
+                addCookie(id);
+            }
+        });
+
+        $(document).on('click', '.comments-closed-counter', function(e) {
+            $(this).closest('.comment-header').find('.comment-expand').trigger('click');
+        });
+    };
+
     INIT.formPollVote = function() {
         $('.poll-vote form').each(function() {
             var $form = $(this);
@@ -282,4 +575,5 @@ function showPoll() {
     INIT.formPostEdit();
     INIT.showPoll();
     INIT.formPollVote();
+    INIT.commentCollapse();
 })(jQuery);

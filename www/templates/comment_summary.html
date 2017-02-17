@@ -1,71 +1,107 @@
-<div id="c-{{ self.prefix_id }}{{self.html_id}}">
-	<div class="{{ self.comment_class }}" id="cid-{{ self.prefix_id }}{{self.id}}">
-	{% include 'comment_summary_text.html' %}
-	</div>
-	<div class="{{ self.comment_meta_class }}">
-		<div class="comment-votes-info">
-		{% if self.type != 'admin' AND self.user_level != 'disabled' %}
-			{% if self.can_vote %}
-				{% if self.user_can_vote %}
-	 				<span id="vc-p-{{ self.id }}" class="vote up" onClick="menealo_comment({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}"> </span>
-					{% include 'comment_summary_votes.html' %}
-	 				<span id="vc-n-{{ self.id }}" class="vote right down" onClick="menealo_comment({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}"></span>
-				{% else %}
-					{% if self.voted >  0 %}
-						<span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}"></span>
-					{% else %}{% if self.voted < 0 %}
-						<span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}"></span>
-					{% endif %}{% endif %}
+<div id="c-{{ self.prefix_id }}{{self.html_id}}" class="{{ self.css_class }}">
+    <div class="{{ self.css_class_body }}">
+        <div class="{{ self.css_class_header }}">
+            <a href="javascript:void(0);" class="comment-expand" data-id="{{ self.id }}"><i class="fa fa-minus-circle"></i></a>
 
-					{% include 'comment_summary_votes.html' %}
-				{% endif %}
-			{% else %}
-				{% include 'comment_summary_votes.html' %}
-			{% endif %}
+            {% if self.avatar AND self.type != 'admin' AND self.user_level != 'disabled' %}
+            <img src="{{ globals.base_static }}img/g.gif"
+                data-2x="s:-20.:-40."
+                data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}"
+                class="tooltip u:{{ self.author }} avatar lazy" alt="{{ self.username }}"
+                width="20" height="20" />
+            {% else %}
+            <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-20.jpg" width="20" height="20" class="avatar" />
+            {% endif %}
 
+            {% if self.url %}
+            <a href="{{ self.url }}" class="comment-order">#{{ self.order }}</a>&nbsp;&nbsp;
+            {% else %} {% if self.link_permalink %}
+            <a href="{{ self.link_permalink }}/c0{{ self.order }}#c-{{ self.order }}" class="comment-order" rel="nofollow">#{{ self.order }}</a>
+            {% else %}
+            <span class="comment-order">#{{ self.order }}</span>
+            {% endif %} {% endif %}
 
-		{% endif %}
+            {% if self.type != 'admin' %}
+            <a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a>
+            {% else %}
+            <strong>{% trans _('admin') %}</strong> {% if current_user.admin %}({{ self.username }}){% endif %}
+            {% endif %}
 
-		<a href="{% exec self.get_relative_individual_permalink %}" title="permalink" class="permalink"></a>
+            <span class="ts showmytitle comment-date" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
 
-		{% if self.thread_level < 1 %}
-			{% if current_user.user_id > 0 %}
-				<span id="favc-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favc-{{ self.prefix_id }}{{ self.id }}', 'comment', {{ self.id }})" {% if self.favorite %} class="favorite on" {% else %} class="favorite" {% endif %} ></span>
-			{% endif %}
-		{% endif %}
+            {% set modified = self.modified - self.date %}
 
-		{% if self.can_reply %}
-			<span onclick="comment_reply({{self.id}}, '{{ self.prefix_id }}')" title="{% trans _('responder') %}" class="reply"></span>
-		{% endif %}
+            {% if modified > 10 %}
+            <span data-ts="{{ self.modified }}" class="ts novisible showmytitle" title="{% trans _('editado') %}: "><strong>*</strong></span>
+            {% endif %}
+        </div>
+
+        <div class="{{ self.css_class_text }}" id="cid-{{ self.prefix_id }}{{self.id}}">
+            {% include 'comment_summary_text.html' %}
+        </div>
+    </div>
+
+    <div class="{{ self.css_class_footer }}">
+        {% if self.type != 'admin' AND self.user_level != 'disabled' %}
+            {% if self.can_vote %}
+                {% if self.user_can_vote %}
+
+                <a href="javascript:void(0);" id="vc-p-{{ self.id }}" class="vote up" onclick="menealo_comment({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}">
+                    <i class="fa fa-arrow-circle-up"></i>
+                </a>
+
+                <span class="separator-vertical"></span>
+
+                <a href="javascript:void(0);" id="vc-n-{{ self.id }}" class="vote down" onclick="menealo_comment({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </a>
+
+                <span class="separator-vertical"></span>
+
+                {% include 'comment_summary_votes.html' %}
+
+                {% else %}
+                    {% if self.voted > 0 %}
+                    <span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}">
+                        <i class="fa fa-arrow-circle-up"></i>
+                    </span>
+
+                    <span class="separator-vertical"></span>
+                    {% else %}{% if self.voted < 0 %}
+                    <span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}">
+                        <i class="fa fa-arrow-circle-down"></i>
+                    </span>
+
+                    <span class="separator-vertical"></span>
+                    {% endif %}{% endif %}
+
+                    {% include 'comment_summary_votes.html' %}
+                {% endif %}
+            {% else %}
+                {% include 'comment_summary_votes.html' %}
+            {% endif %}
+        {% endif %}
+
+        <a href="{% exec self.get_relative_individual_permalink %}" title="{% trans _('Permalink') %}">
+            <i class="fa fa-link"></i>
+        </a>
+
+        {% if self.thread_level < 1 AND current_user.user_id > 0 %}
+        <a href="javascript:void(0)" id="favc-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favc-{{ self.prefix_id }}{{ self.id }}', 'comment', {{ self.id }})" title="{% trans _('Favorito') %}" class="favorite{% if self.favorite %} on{% endif %}">
+            <i class="fa fa-star"></i>
+        </a>
+        {% endif %}
+
+        {% if self.can_reply %}
+        <a href="javascript:void(0)" onclick="comment_reply({{self.id}}, '{{ self.prefix_id }}')" title="{% trans _('Responder') %}">
+            <i class="fa fa-reply"></i>
+        </a>
+        {% endif %}
 
         {% if self.can_report %}
-            <span onclick="report_comment({{self.id}})" title="{% trans _('reportar comentario') %}" class="report"></span>
+        <a href="javascript:void(0)" onclick="report_comment({{self.id}})" title="{% trans _('Reportar comentario') %}">
+            <i class="fa fa-exclamation-triangle"></i>
+        </a>
         {% endif %}
-	</div>
-
-		<div class="comment-info">
-		<span class="ts showmytitle nomobile" data-ts="{{ self.date }}" title="{% trans _('creado') %}: "></span>
-		{% set modified = self.modified - self.date %}
-		{% if modified > 10 %}
-			<span data-ts="{{ self.modified }}" class="ts novisible wideonly showmytitle" title="{% trans _('editado') %}: "><strong>&nbsp;*&nbsp;</strong></span>&nbsp;
-		{% endif %}
-		{% if self.type != 'admin' %}
-			<a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a>
-		{% else %}
-			<strong>{% trans _('admin') %}</strong> 
-			{% if current_user.admin %}({{ self.username }}){% endif %}
-		{% endif %}
-
-
-
-		{% if ! globals.mobile AND ! self.hide_comment AND self.avatar AND self.type != 'admin' AND self.user_level != 'disabled' %}
-			<img 
-				data-2x="s:-20.:-40."
-				data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}"
-				src="{{ globals.base_static }}img/g.gif" 
-				class="tooltip u:{{ self.author }} lazy wide" alt="{{ self.username }}"
-				/>
-		{% endif %}
-		</div>
-	</div>
+    </div>
 </div>

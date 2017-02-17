@@ -253,11 +253,11 @@ select.select-menu-more-options {
     background-image: none;
 }
 
-.comment-meta .comment-info {
+.comment-footer .comment-info {
     max-width: 25%;
 }
 
-.comment-meta .username {
+.comment-footer .username {
     margin-left: 2px;
     font-weight: normal;
 }
@@ -404,12 +404,13 @@ select.select-menu-more-options {
 }
 
 .ts.nomobile {
+    display: inline-block;
     text-decoration: underline;
     font-weight: bold;
     background: url('{{ globals.base_static }}img/common/icons-common.png') no-repeat 0px -126px;
     background-size: 20px 300px;
     width: 14px;
-    height: 18px;
+    height: 15px;
     cursor: pointer;
     color: transparent;
     overflow: hidden;
