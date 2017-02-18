@@ -6,7 +6,7 @@
                 <img src="{{ globals.base_static }}img/g.gif"
                     data-2x="s:-40.:-80."
                     data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}"
-                    class="avatar tooltip u:{{ self.author }}" alt="{{ self.username }}"
+                    class="avatar tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
                     width="40" height="40" />
             </a>
             {% else %}

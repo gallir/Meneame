@@ -7,7 +7,7 @@
             <img src="{{ globals.base_static }}img/g.gif"
                 data-2x="s:-20.:-40."
                 data-src="{% exec get_avatar_url self.author, self.avatar, 20, false %}"
-                class="avatar tooltip u:{{ self.author }}" alt="{{ self.username }}"
+                class="avatar tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
                 width="20" height="20" />
             {% else %}
             <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-20.jpg" width="20" height="20" class="avatar" />
