@@ -2506,6 +2506,10 @@ li .comment-header .comment-expand {
     color: red;
 }
 
+.comment-footer .vote.pending {
+    opacity: 0.5;
+}
+
 .comment-footer .answers .counter {
     font-size: 9px;
     color: #fff;
