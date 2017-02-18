@@ -2341,7 +2341,7 @@ select.options-comments {
 
 .comment-header, .comment-header a, .comment-header span, .comment-header strong {
     line-height: 20px;
-    height: 20px;
+    height: 21px;
     vertical-align: middle;
 }
 
