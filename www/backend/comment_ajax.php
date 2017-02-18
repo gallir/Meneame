@@ -65,7 +65,8 @@ if ($_POST['process'] === 'editcomment') {
     print_edit_form($comment, $link);
 }
 
-function print_edit_form($comment, $link) {
+function print_edit_form($comment, $link)
+{
     global $current_user, $site_key, $globals, $reply_to;
 
     $data = array();
@@ -73,7 +74,7 @@ function print_edit_form($comment, $link) {
     $html = '';
 
     if ($comment->id == 0) {
-        $comment->randkey = rand(1000000,100000000);
+        $comment->randkey = rand(1000000, 100000000);
     }
 
     $html .= '<div class="commentform">';
@@ -94,7 +95,8 @@ function print_edit_form($comment, $link) {
     echo json_encode($data);
 }
 
-function save_comment ($comment, $link) {
+function save_comment($comment, $link)
+{
     global $db, $current_user, $globals, $site_key;
 
     $data = array();
@@ -105,7 +107,7 @@ function save_comment ($comment, $link) {
         $res = check_and_save($comment, $link); // Edit, others requirements
     }
 
-    if (is_a($res, 'Comment', false) ) {
+    if (is_a($res, 'Comment', false)) {
         $comment = Comment::from_db($res->id);
         $comment->link_object = $link;
 
@@ -119,7 +121,8 @@ function save_comment ($comment, $link) {
     echo json_encode($data);
 }
 
-function check_and_save($comment, $link) {
+function check_and_save($comment, $link)
+{
     global $db, $current_user, $globals, $site_key;
 
     // Warning, trillion of checkings :-(

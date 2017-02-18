@@ -57,7 +57,7 @@ if (empty($script) || !is_file(__DIR__.'/'.$script)) {
 
 $globals['script'] = $script;
 
-if ((include __DIR__.'/'.$script) === FALSE) {
+if ((include __DIR__.'/'.$script) === false) {
     include_once 'config.php';
     do_error('bad request '.$script, 400, true);
 }

@@ -26,17 +26,17 @@ echo '</div>' . "\n";
 echo '<div id="newswrap">'."\n";
 
 $top = new Annotation('top-actives-'.$globals['site_shortname']);
-if ($top->read() && ($links = explode(',',$top->text))) {
-	$counter = 0;
-	foreach($links as $id) {
-		$link = Link::from_db($id);
-		$link->show_clicks = true;
-		$link->print_summary();
-		$counter++; Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
-	}
+if ($top->read() && ($links = explode(',', $top->text))) {
+    $counter = 0;
+    foreach ($links as $id) {
+        $link = Link::from_db($id);
+        $link->show_clicks = true;
+        $link->print_summary();
+        $counter++;
+        Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
+    }
 }
 echo '</div>'."\n";
 
 do_footer_menu();
 do_footer();
-

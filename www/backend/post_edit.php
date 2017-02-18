@@ -32,7 +32,7 @@ if (isset($_GET['id'])) {
     die('ERROR: '._('No se ha podido obtener el post indicado'));
 }
 
-function save_post ($post_id)
+function save_post($post_id)
 {
     global $link, $db, $post, $current_user, $globals, $site_key;
 

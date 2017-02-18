@@ -6,7 +6,7 @@
 // it under the terms of the GNU Affero General Public License as
 // published by the Free Software Foundation, either version 3 of the
 // License, or (at your option) any later version.
-// 
+//
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -22,94 +22,95 @@
 
 require_once('base.php');
 
-class TwitterOAuth extends OAuthBase {
+class TwitterOAuth extends OAuthBase
+{
+    public function __construct()
+    {
+        global $globals;
 
-	function __construct() {
-		global $globals;
+        $server = 'api.twitter.com';
+        $this->request_token_url = "https://$server/oauth/request_token";
+        $this->access_token_url = "https://$server/oauth/access_token";
+        $this->authorize_url =  "https://$server/oauth/authenticate";
+        $this->credentials_url = "https://$server/1.1/account/verify_credentials.json";
 
-		$server = 'api.twitter.com';
-		$this->request_token_url = "https://$server/oauth/request_token";
-		$this->access_token_url = "https://$server/oauth/access_token";
-		$this->authorize_url =  "https://$server/oauth/authenticate";
-		$this->credentials_url = "https://$server/1.1/account/verify_credentials.json";
+        if (! $globals['oauth']['twitter']['consumer_key'] || ! $globals['oauth']['twitter']['consumer_secret']) {
+            $oauth = null;
+        }
+        $this->service = 'twitter';
+        $this->oauth = new OAuth($globals['oauth']['twitter']['consumer_key'], $globals['oauth']['twitter']['consumer_secret'], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
+        parent::__construct();
+    }
 
-		if (! $globals['oauth']['twitter']['consumer_key'] || ! $globals['oauth']['twitter']['consumer_secret']) {
-			$oauth = null;
-		}
-		$this->service = 'twitter';
-		$this->oauth = new OAuth($globals['oauth']['twitter']['consumer_key'], $globals['oauth']['twitter']['consumer_secret'], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
-		parent::__construct();
-	}
+    public function authRequest()
+    {
+        global $globals;
+        try {
+            if (($request_token_info =
+                    $this->oauth->getRequestToken($this->request_token_url,
+                        $globals['scheme'].'//'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'))) {
+                // if [oauth_callback_confirmed] => true then is oauth 1.0a
+                setcookie('oauth_token', $request_token_info['oauth_token'], 0);
+                setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], 0);
+                $this->token_secret = $request_token_info['oauth_token_secret'];
+                $this->token = $request_token_info['oauth_token'];
+                header("Location: ".$this->authorize_url."?oauth_token=$this->token");
+                exit;
+            } else {
+                do_error(_('error obteniendo tokens'), false, false);
+            }
+        } catch (Exception $e) {
+            do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);
+        }
+    }
 
-	function authRequest() {
-		global $globals;
-		try {
-			if (($request_token_info = 
-					$this->oauth->getRequestToken($this->request_token_url,
-						$globals['scheme'].'//'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'))) {
-				// if [oauth_callback_confirmed] => true then is oauth 1.0a
-				setcookie('oauth_token', $request_token_info['oauth_token'], 0);
-				setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], 0);
-				$this->token_secret = $request_token_info['oauth_token_secret'];
-				$this->token = $request_token_info['oauth_token'];
-				header("Location: ".$this->authorize_url."?oauth_token=$this->token");
-				exit;
-			} else {
-				do_error(_('error obteniendo tokens'), false, false);	
-			}
-		} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);	
-		}
-	}
+    public function authorize()
+    {
+        global $globals, $db;
 
-	function authorize() {
-		global $globals, $db;
+        $oauth_token = clean_input_string($_GET['oauth_token']);
+        $request_token_secret = $_COOKIE['oauth_token_secret'];
 
-		$oauth_token = clean_input_string($_GET['oauth_token']);
-		$request_token_secret = $_COOKIE['oauth_token_secret'];
+        if (!empty($oauth_token) && !empty($request_token_secret)) {
+            $this->oauth->setToken($oauth_token, $request_token_secret);
+            try {
+                $access_token_info = $this->oauth->getAccessToken($this->access_token_url);
+            } catch (Exception $e) {
+                do_error(_('error de conexión a') . " $this->service  (authorize1)", false, false);
+            }
+        } else {
+            do_error(_('acceso denegado'), false, false);
+        }
 
-		if(!empty($oauth_token) && !empty($request_token_secret) ){
-			$this->oauth->setToken($oauth_token, $request_token_secret);
-			try {
-				$access_token_info = $this->oauth->getAccessToken($this->access_token_url);
-			} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service  (authorize1)", false, false);	
-			}
-		} else {
-			do_error(_('acceso denegado'), false, false);	
-		}
+        $this->token = $access_token_info['oauth_token'];
+        $this->secret = $access_token_info['oauth_token_secret'];
+        $this->uid = $access_token_info['user_id'];
+        $this->username = User::get_valid_username($access_token_info['screen_name']);
+        if (!$this->user_exists()) {
+            $this->oauth->setToken($access_token_info['oauth_token'], $access_token_info['oauth_token_secret']);
+            try {
+                $data = $this->oauth->fetch($this->credentials_url);
+            } catch (Exception $e) {
+                do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);
+            }
 
-		$this->token = $access_token_info['oauth_token'];
-		$this->secret = $access_token_info['oauth_token_secret'];
-		$this->uid = $access_token_info['user_id'];
-		$this->username = User::get_valid_username($access_token_info['screen_name']);
-		if (!$this->user_exists()) {
-			$this->oauth->setToken($access_token_info['oauth_token'], $access_token_info['oauth_token_secret']);
-			try {
-				$data = $this->oauth->fetch($this->credentials_url);
-			} catch (Exception $e) {
-				do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);	
-			}
-
-			if($data){
-				$response_info = $this->oauth->getLastResponse();
-				$response = json_decode($response_info);
-				if ($access_token_info['screen_name'] != $response->screen_name) {
-					do_error(_('datos incorrectos') . " $this->service", false, false); 
-				}
-				$this->url = $response->url;
-				$this->names = $response->name;
-				$this->avatar = $response->profile_image_url;
-			}
-			$db->transaction();
-			$this->store_user();
-		} else {
-			$db->transaction();
-		}
-		$this->store_auth();
-		$db->commit();
-		$this->user_login();
-	}
+            if ($data) {
+                $response_info = $this->oauth->getLastResponse();
+                $response = json_decode($response_info);
+                if ($access_token_info['screen_name'] != $response->screen_name) {
+                    do_error(_('datos incorrectos') . " $this->service", false, false);
+                }
+                $this->url = $response->url;
+                $this->names = $response->name;
+                $this->avatar = $response->profile_image_url;
+            }
+            $db->transaction();
+            $this->store_user();
+        } else {
+            $db->transaction();
+        }
+        $this->store_auth();
+        $db->commit();
+        $this->user_login();
+    }
 }
-
-?>

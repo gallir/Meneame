@@ -36,7 +36,7 @@ echo '<p>';
 echo '</p>';
 
 echo '<p style="margin-top: 4px">';
-    if (($image = $link->has_thumb()) ) {
+    if (($image = $link->has_thumb())) {
         echo "<img src='$image' width='$link->thumb_x' height='$link->thumb_y' alt='' class='thumbnail'/>";
     }
 

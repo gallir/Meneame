@@ -44,14 +44,14 @@ class Haanga_Extension_Tag extends Haanga_Extension
      *  Check if the current $tag (string) is registered as a custom
      *  tag, if so, it check wether it is just a custom tag or a custom block.
      *
-     *  This method is called from the lexer for each alpha (within {% %}), 
+     *  This method is called from the lexer for each alpha (within {% %}),
      *  to avoid parsing conflicts.
      *
      *  @param string $tag  Tag to check
      *
      *  @return int|bool HG_Parser::T_CUSTOM_TAG, HG_Parser::T_CUSTOM_TAG or FALSE
      */
-    final function isValid($tag)
+    final public function isValid($tag)
     {
         static $cache = array();
         $tag = strtolower($tag);
@@ -60,27 +60,25 @@ class Haanga_Extension_Tag extends Haanga_Extension
             $class_name = $this->getClassName($tag);
             if (class_exists($class_name)) {
                 $properties = get_class_vars($class_name);
-                $is_block   = FALSE;
+                $is_block   = false;
                 if (isset($properties['is_block'])) {
                     $is_block = (bool)$properties['is_block'];
                 }
                 $cache[$tag] = $is_block ? HG_Parser::T_CUSTOM_BLOCK : HG_Parser::T_CUSTOM_TAG;
             }
             if (!isset($cache[$tag])) {
-                $cache[$tag] = FALSE;
+                $cache[$tag] = false;
             }
         }
 
         return $cache[$tag];
     }
 
-    final function getClassName($tag)
+    final public function getClassName($tag)
     {
         $tag = str_replace("_", "", ucfirst($tag));
         return "Haanga_Extension_Tag_{$tag}";
     }
-
-
 }
 
 /*

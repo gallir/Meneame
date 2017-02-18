@@ -23,7 +23,8 @@ function ts_is_human()
     }
 
     # set the error code so that we can display it
-    $globals['error'] = _('error en el captcha');;
+    $globals['error'] = _('error en el captcha');
+    ;
 
     return false;
 }

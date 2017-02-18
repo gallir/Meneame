@@ -18,8 +18,8 @@ $site_id = SitesMgr::my_id();
 
 $annotation = new Annotation("promote-$site_id");
 $annotation->text = $output;
-if($annotation->read()) {
-	echo $annotation->text;
+if ($annotation->read()) {
+    echo $annotation->text;
 }
 
 echo '</div>'."\n";
@@ -28,9 +28,10 @@ do_footer_menu();
 do_footer();
 
 
-function promote_style() {
-	global $globals;
-	$globals['extra_head'] = '
+function promote_style()
+{
+    global $globals;
+    $globals['extra_head'] = '
 <style type="text/css">
 p {
 	font-family: Bitstream Vera Sans, Arial, Helvetica, sans-serif;
@@ -67,4 +68,3 @@ td {
 </style>
 ';
 }
-

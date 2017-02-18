@@ -50,7 +50,7 @@ function addslashes_ex($string)
 /**
  *  Haanga_Generator_PHP class
  *
- *  This class takes the generated AST structure (arrays), 
+ *  This class takes the generated AST structure (arrays),
  *  and generated the PHP represantion.
  *
  *
@@ -67,10 +67,10 @@ class Haanga_Generator_PHP
      *  and return the equivalent PHP code.
      *
      *  @param array $op_code
-     *  
+     *
      *  @return string
      */
-    final function getCode($op_code, $scope)
+    final public function getCode($op_code, $scope)
     {
         $this->scopeVariableName = $scope;
         $this->ident = 0;
@@ -79,7 +79,7 @@ class Haanga_Generator_PHP
         for ($i=0; $i < $size; $i++) {
             $op = $op_code[$i];
             if (!isset($op['op'])) {
-                throw new Haanga_Compiler_Exception("Invalid \$op_code ".print_r($op, TRUE));
+                throw new Haanga_Compiler_Exception("Invalid \$op_code ".print_r($op, true));
             }
 
             /* echo optimization {{{ */
@@ -96,7 +96,7 @@ class Haanga_Generator_PHP
                         $op[] = $next_op[$e];
                     }
                     $i++;
-                } while(TRUE);
+                } while (true);
             }
             /* }}} */
 
@@ -105,7 +105,7 @@ class Haanga_Generator_PHP
                 /* Code optimization
                 **
                 **  If a variable declaration, or append variable is followed
-                **  by several append_var, then merge everything into a 
+                **  by several append_var, then merge everything into a
                 **  single STMT.
                 **
                 */
@@ -121,7 +121,7 @@ class Haanga_Generator_PHP
                         $op[] = $next_op[$e];
                     }
                     $i++;
-                } while(TRUE);
+                } while (true);
             }
             /* }}} */
 
@@ -162,7 +162,7 @@ class Haanga_Generator_PHP
 
     // php_else() {{{
     /**
-     *  Return code for "else" 
+     *  Return code for "else"
      *
      *  @return string
      */
@@ -177,25 +177,25 @@ class Haanga_Generator_PHP
 
     // php_comment() {{{
     /**
-     *  Return code for "comments" 
+     *  Return code for "comments"
      *
      *  @return string
      */
-    function php_comment($op)
+    public function php_comment($op)
     {
         return "/* {$op['comment']} */";
     }
     // }}}
 
     // php_function(array $op) {{{
-    /** 
+    /**
      *  Return the function declaration of the class, for now
      *  it has fixed params, this should change soon to generate
      *  any sort of functions
      *
      *  @return string
      */
-    function php_function($op)
+    public function php_function($op)
     {
         $code = "function {$op['name']}(\${$this->scopeVariableName}, \$return=FALSE, \$blocks=array())".$this->ident()."{";
         $this->ident++;
@@ -239,7 +239,7 @@ class Haanga_Generator_PHP
     protected function php_end_block()
     {
         $this->ident--;
-        return $this->ident()."}";    
+        return $this->ident()."}";
     }
     // }}}
 
@@ -316,7 +316,7 @@ class Haanga_Generator_PHP
             $cmp = ">=";
         }
 
-        $code = "for ({$index} = {$min}; {$index} {$cmp} {$max}; {$index} += {$step}) {"; 
+        $code = "for ({$index} = {$min}; {$index} {$cmp} {$max}; {$index} += {$step}) {";
         $this->ident++;
 
         return $code;
@@ -361,7 +361,7 @@ class Haanga_Generator_PHP
 
     // php_exec($op) {{{
     /**
-     *  Return code for a function calling. 
+     *  Return code for a function calling.
      *
      *  @return string
      */
@@ -384,7 +384,7 @@ class Haanga_Generator_PHP
     // }}}
 
     // php_global($op) {{{
-    function php_global($op)
+    public function php_global($op)
     {
         return "global \$".implode(", \$", $op['vars']).";";
     }
@@ -393,7 +393,7 @@ class Haanga_Generator_PHP
     // php_generate_expr($op) {{{
     /**
      *  Return an expression
-     *  
+     *
      *  @return string
      */
     protected function php_generate_expr($expr)
@@ -407,12 +407,13 @@ class Haanga_Generator_PHP
                 $code .= "(";
                 $code .= $this->php_generate_expr($expr[0]);
                 $code .= ")";
-            } else if ($expr['op_expr'] == 'not') {
+            } elseif ($expr['op_expr'] == 'not') {
                 $code .= "!".$this->php_generate_expr($expr[0]);
             } else {
                 $code .= $this->php_generate_expr($expr[0]);
                 if (is_object($expr['op_expr'])) {
-                    var_dump($expr);die('unexpected error');
+                    var_dump($expr);
+                    die('unexpected error');
                 }
                 $code .= " {$expr['op_expr']} ";
                 $code .= $this->php_generate_expr($expr[1]);
@@ -421,9 +422,9 @@ class Haanga_Generator_PHP
             if (is_array($expr)) {
                 $code .= $this->php_generate_stmt(array($expr));
             } else {
-                if ($expr === FALSE) {
+                if ($expr === false) {
                     $expr = 'FALSE';
-                } else if ($expr === TRUE) {
+                } elseif ($expr === true) {
                     $expr = 'TRUE';
                 }
                 $code .= $expr;
@@ -435,7 +436,7 @@ class Haanga_Generator_PHP
 
     // php_generate_list(array ($array) {{{
     /**
-     *  Return a list of expressions for parameters 
+     *  Return a list of expressions for parameters
      *  of a function
      *
      *  @return string
@@ -466,10 +467,10 @@ class Haanga_Generator_PHP
                 continue;
             }
             if (!is_Array($op[$i])) {
-                throw new Haanga_Compiler_Exception("Malformed declaration ".print_r($op, TRUE));
+                throw new Haanga_Compiler_Exception("Malformed declaration ".print_r($op, true));
             }
             $key   = key($op[$i]);
-            $value = current($op[$i]); 
+            $value = current($op[$i]);
             switch ($key) {
             case 'array':
                 $code .= "Array(";
@@ -483,7 +484,7 @@ class Haanga_Generator_PHP
                 }
 
                 $value = array('name' => $value, 'args' => $op[$i]['args']);
-                $code .= $this->php_exec($value, FALSE);
+                $code .= $this->php_exec($value, false);
                 $code .= $concat;
                 break;
             case 'key':
@@ -540,7 +541,7 @@ class Haanga_Generator_PHP
                 $code = $value;
                 break;
             default:
-                throw new Exception("Don't know how to declare {$key} = {$value} (".print_r($op, TRUE));
+                throw new Exception("Don't know how to declare {$key} = {$value} (".print_r($op, true));
             }
         }
 
@@ -584,7 +585,7 @@ class Haanga_Generator_PHP
     /**
      *  Return a variable declaration
      *
-     *  @return string  
+     *  @return string
      */
     protected function php_declare($op, $assign=' =')
     {
@@ -609,31 +610,31 @@ class Haanga_Generator_PHP
                 if (count($var) == 1) {
                     return $this->php_get_varname($var[0]);
                 } else {
-                    throw new Exception("Invalid variable definition ".print_r($var, TRUE));
+                    throw new Exception("Invalid variable definition ".print_r($var, true));
                 }
             }
             $var_str = $this->php_get_varname($var[0]);
             for ($i=1; $i < count($var); $i++) {
                 if (is_string($var[$i])) {
                     $var_str .= "['".addslashes_ex($var[$i])."']";
-                } else if (is_array($var[$i])) {
+                } elseif (is_array($var[$i])) {
                     if (isset($var[$i]['var'])) {
                         /* index is a variable */
                         $var_str .= '['.$this->php_get_varname($var[$i]['var']).']';
-                    } else if (isset($var[$i]['string'])) {
+                    } elseif (isset($var[$i]['string'])) {
                         /* index is a string */
                         $var_str .= "['".addslashes_ex($var[$i]['string'])."']";
-                    } else if (isset($var[$i]['number'])) {
+                    } elseif (isset($var[$i]['number'])) {
                         /* index is a number */
                         $var_str .= '['.$var[$i]['number'].']';
-                    } else if (isset($var[$i]['object'])) {
+                    } elseif (isset($var[$i]['object'])) {
                         /* Accessing a object's property */
                         if (is_array($var[$i]['object'])) {
                             $var_str .= '->{'.$this->php_get_varname($var[$i]['object']['var']).'}';
                         } else {
                             $var_str .= '->'.$var[$i]['object'];
                         }
-                    } else if (isset($var[$i]['class'])) {
+                    } elseif (isset($var[$i]['class'])) {
                         /* Accessing a class' property */
                         $var_str = substr($var_str, 1);
                         if (is_array($var[$i]['class'])) {
@@ -641,11 +642,11 @@ class Haanga_Generator_PHP
                         } else {
                             $var_str .= '::'.$var[$i]['class'];
                         }
-                    } else if ($var[$i] === array()) {
+                    } elseif ($var[$i] === array()) {
                         /* index is a NULL (do append) */
                         $var_str .= '[]';
                     } else {
-                        throw new Haanga_Compiler_Exception('Unknown variable definition '.print_r($var, TRUE));
+                        throw new Haanga_Compiler_Exception('Unknown variable definition '.print_r($var, true));
                     }
                 }
             }
@@ -668,7 +669,6 @@ class Haanga_Generator_PHP
         return $code;
     }
     // }}}
-
 }
 
 /*

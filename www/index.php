@@ -153,7 +153,7 @@ echo '<div id="newswrap">';
     $links = $db->get_results($sql, "Link");
 
     if ($links) {
-        $all_ids = array_map(function($value) {
+        $all_ids = array_map(function ($value) {
             return $value->id;
         }, $links);
 

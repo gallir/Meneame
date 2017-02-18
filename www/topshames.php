@@ -32,11 +32,11 @@ $link = new Link;
 
 $links = $db->get_results($sql);
 if ($links) {
-	foreach($links as $dblink) {
-		$link->id=$dblink->link_id;
-		$link->read();
-		$link->print_summary('short');
-	}
+    foreach ($links as $dblink) {
+        $link->id=$dblink->link_id;
+        $link->read();
+        $link->print_summary('short');
+    }
 }
 echo '</div>';
 do_footer();

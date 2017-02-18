@@ -11,27 +11,27 @@ include(mnminclude.'favorites.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
 
-if(!($link=intval($_REQUEST['id']))) {
-	error(_('falta el ID de la nota'). " $link");
+if (!($link=intval($_REQUEST['id']))) {
+    error(_('falta el ID de la nota'). " $link");
 }
 
-if(!($user = intval($_REQUEST['type']))) {
-	error(_('falta el código de usuario'));
+if (!($user = intval($_REQUEST['type']))) {
+    error(_('falta el código de usuario'));
 }
 
 if ($user != $current_user->user_id) {
-	error(_('usuario incorrecto'));
+    error(_('usuario incorrecto'));
 }
 
 if (! check_security_key($_REQUEST['key'])) {
-	error(_('clave de control incorrecta'));
+    error(_('clave de control incorrecta'));
 }
 
 
 echo favorite_add_delete($user, $link, 'post');
 
-function error($mess) {
-	echo "ERROR: $mess\n";
-	die;
+function error($mess)
+{
+    echo "ERROR: $mess\n";
+    die;
 }
-

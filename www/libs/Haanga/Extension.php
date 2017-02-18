@@ -35,7 +35,7 @@
   +---------------------------------------------------------------------------------+
 */
 
-Abstract Class Haanga_Extension
+abstract class Haanga_Extension
 {
     private static $_instances;
 
@@ -43,7 +43,7 @@ Abstract Class Haanga_Extension
     {
     }
 
-    final static function getInstance($name)
+    final public static function getInstance($name)
     {
         $name = 'Haanga_Extension_'.$name;
         if (!class_exists($name)) {
@@ -59,10 +59,10 @@ Abstract Class Haanga_Extension
         return self::$_instances[$name];
     }
 
-    abstract function isValid($name);
-    abstract function getClassName($name);
+    abstract public function isValid($name);
+    abstract public function getClassName($name);
 
-    final function getFilePath($name, $rel=TRUE, $pref=NULL)
+    final public function getFilePath($name, $rel=true, $pref=null)
     {
         try {
             $reflection = new ReflectionClass($this->getClassName($name));
@@ -76,29 +76,29 @@ Abstract Class Haanga_Extension
     final public function getFunctionAlias($name)
     {
         if (!$this->isValid($name)) {
-            return NULL;
+            return null;
         }
         $zclass     = $this->getClassName($name);
         $properties = get_class_vars($zclass);
         if (isset($properties['php_alias'])) {
             return $properties['php_alias'];
         }
-        return NULL;
+        return null;
     }
 
     final public function isSafe($name)
     {
         if (!$this->isValid($name)) {
-            return NULL;
+            return null;
         }
         $zclass     = $this->getClassName($name);
         $properties = get_class_vars($zclass);
-        return isset($properties['is_safe']) ? $properties['is_safe'] : FALSE;
+        return isset($properties['is_safe']) ? $properties['is_safe'] : false;
     }
 
     // generator(string $name, Haanga_Compiler $compiler, Array $args) {{{
     /**
-     *  Executer the generator method of the extension. If 
+     *  Executer the generator method of the extension. If
      *  the extension doesn't has any generator method, an empty
      *  will be returned.
      *
@@ -109,7 +109,7 @@ Abstract Class Haanga_Extension
      *
      *  @return array
      */
-    function generator($name, Haanga_Compiler $compiler, $args, $extra=NULL)
+    public function generator($name, Haanga_Compiler $compiler, $args, $extra=null)
     {
         if (!$this->hasGenerator($name)) {
             return array();
@@ -120,18 +120,18 @@ Abstract Class Haanga_Extension
     // }}}
 
     // hasGenerator(string $name) {{{
-    /** 
-     *  Return TRUE if the extension has a  
+    /**
+     *  Return TRUE if the extension has a
      *  generator method
      *
      *  @param string $name Extension name
      *
      *  @return bool
      */
-    function hasGenerator($name)
+    public function hasGenerator($name)
     {
         if (!$this->isValid($name)) {
-            return NULL;
+            return null;
         }
         $zclass = $this->getClassName($name);
         return is_callable(array($zclass, 'generator'));
@@ -147,10 +147,10 @@ Abstract Class Haanga_Extension
      *
      *  @return string
      */
-    function getFunctionBody($tag_name, $name)
+    public function getFunctionBody($tag_name, $name)
     {
         if (!$this->isValid($tag_name)) {
-            return NULL;
+            return null;
         }
         $zclass  = $this->getClassName($tag_name);
         if (!is_callable(array($zclass, 'main'))) {
@@ -162,7 +162,7 @@ Abstract Class Haanga_Extension
 
         $start   = $reflection->getStartLine()-1;
         $end     = $reflection->getEndLine();
-        $content = array_slice($content, $start, $end-$start); 
+        $content = array_slice($content, $start, $end-$start);
 
         $content[0] = str_replace("main", $name, $content[0]);
         
@@ -170,7 +170,6 @@ Abstract Class Haanga_Extension
         return "if (!function_exists('{$name}')) {\n".implode("", $content)."}";
     }
     // }}}
-
 }
 
 /*

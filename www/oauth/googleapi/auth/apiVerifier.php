@@ -22,8 +22,9 @@ require_once "apiPemVerifier.php";
  *
  * @author Brian Eaton <beaton@google.com>
  */
-abstract class apiVerifier {
-  /**
+abstract class apiVerifier
+{
+    /**
    * Checks a signature, returns true if the signature is correct,
    * false otherwise.
    */

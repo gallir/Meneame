@@ -10,26 +10,26 @@ include('../config.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
 
-if(!($to=intval($_REQUEST['id']))) {
-	error(_('falta el código de usuario'));
+if (!($to=intval($_REQUEST['id']))) {
+    error(_('falta el código de usuario'));
 }
 
-if(!($src = intval($_REQUEST['type']))) {
-	error(_('falta el código de usuario'));
+if (!($src = intval($_REQUEST['type']))) {
+    error(_('falta el código de usuario'));
 }
 
 if ($src != $current_user->user_id) {
-	error(_('usuario incorrecto'). " ($src, $current_user->user_id)");
+    error(_('usuario incorrecto'). " ($src, $current_user->user_id)");
 }
 
 if (!check_security_key($_REQUEST['key'])) {
-	error(_('clave de control incorrecta'));
+    error(_('clave de control incorrecta'));
 }
 
 echo User::friend_add_delete($src, $to);
 
-function error($mess) {
-	echo "ERROR: $mess\n";
-	die;
+function error($mess)
+{
+    echo "ERROR: $mess\n";
+    die;
 }
-

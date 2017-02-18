@@ -1,6 +1,6 @@
 <?php 
 include('../config.php');
-header('Content-Type: text/html; charset=utf-8'); 
+header('Content-Type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -30,16 +30,24 @@ header('Content-Type: text/html; charset=utf-8');
 var initialized = false;
 var enabled = true;
 var items = Array();
-var ts=<?php echo (time()-3600); ?>;
+var ts=<?php echo(time()-3600); ?>;
 var busy = false;
 var animating = false;
 var base_url = 'http://<?php echo get_server_name().$globals['base_url']; ?>backend/sneaker.php';
-var mykey = <?php echo rand(100,999); ?>;
+var mykey = <?php echo rand(100, 999); ?>;
 var items = Array();
 var new_items = 0;
-var max_items =  '<?php if(empty($_COOKIE['minifisgon_items'])) echo '15'; else echo $_COOKIE['minifisgon_items']; ?>';
+var max_items =  '<?php if (empty($_COOKIE['minifisgon_items'])) {
+    echo '15';
+} else {
+    echo $_COOKIE['minifisgon_items'];
+} ?>';
 var min_update = 20000;
-var next_update =  '<?php if(empty($_COOKIE['minifisgon_secs'])) echo '20'; else echo $_COOKIE['minifisgon_secs']; ?>';
+var next_update =  '<?php if (empty($_COOKIE['minifisgon_secs'])) {
+    echo '20';
+} else {
+    echo $_COOKIE['minifisgon_secs'];
+} ?>';
 var requests = 0;
 var max_requests = 1000;
 var timer;
@@ -162,19 +170,25 @@ function to_html(data) {
   <label>Items :</label>
   <select name="minifisgon_items">
  <?php for ($i = 10; $i <= 25 ; $i+=5) {
-	if ($max_items == $i ) $sel = 'selected="selected"';
-	else $sel='';
-	echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';
-	}
+    if ($max_items == $i) {
+        $sel = 'selected="selected"';
+    } else {
+        $sel='';
+    }
+    echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';
+}
 ?>
   </select>
   <label>Segundos :</label>
   <select name="minifisgon_secs">
  <?php for ($i = 10; $i <= 60 ; $i+=5) {
-	if ($next_update == $i ) $sel = 'selected="selected"';
-	else $sel='';
-	echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';
-	}
+    if ($next_update == $i) {
+        $sel = 'selected="selected"';
+    } else {
+        $sel='';
+    }
+    echo '<option value="'.$i.'" '.$sel. '>'.$i.'</option>';
+}
 ?>
   </select>
 <input type="submit" value="ok" />

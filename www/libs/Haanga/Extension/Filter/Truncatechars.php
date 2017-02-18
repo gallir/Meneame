@@ -2,10 +2,11 @@
 
 class Haanga_Extension_Filter_Truncatechars
 {
-    static function main($text, $limit)
+    public static function main($text, $limit)
     {
-        if(strlen($text) <= $limit)
-                return $text;
+        if (strlen($text) <= $limit) {
+            return $text;
+        }
         $trunctext = substr($text, 0, $limit);
         $trunctext[$limit-3] = '.';
         $trunctext[$limit-2] = '.';
@@ -13,4 +14,3 @@ class Haanga_Extension_Filter_Truncatechars
         return $trunctext;
     }
 }
-

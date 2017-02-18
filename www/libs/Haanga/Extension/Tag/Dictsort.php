@@ -5,10 +5,10 @@ class Haanga_Extension_Tag_Dictsort
 
     /**
      *  Sorted a nested array by '$sort_by'
-     *  property on each sub-array. , if you want 
+     *  property on each sub-array. , if you want
      *  to see the original php file look filters/dictsort.php
      */
-    static function generator($cmp, $args, $redirected)
+    public static function generator($cmp, $args, $redirected)
     {
         if (!$redirected) {
             $cmp->Error("dictsort must be redirected to a variable using AS <varname>");

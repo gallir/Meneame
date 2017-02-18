@@ -20,42 +20,46 @@
  *
  * @author Brian Eaton <beaton@google.com>
  */
-class apiPemVerifier extends apiVerifier {
-  private $publicKey;
+class apiPemVerifier extends apiVerifier
+{
+    private $publicKey;
 
   /**
    * Constructs a verifier from the supplied PEM-encoded certificate.
    *
    * $pem: a PEM encoded certificate (not a file).
    */
-  function __construct($pem) {
-    if (!function_exists('openssl_x509_read')) {
-      throw new Exception(
+  public function __construct($pem)
+  {
+      if (!function_exists('openssl_x509_read')) {
+          throw new Exception(
           'The Google PHP API library needs the openssl PHP extension');
-    }
-    $this->publicKey = openssl_x509_read($pem);
-    if (!$this->publicKey) {
-      throw new apiAuthException("Unable to parse PEM: $pem");
-    }
+      }
+      $this->publicKey = openssl_x509_read($pem);
+      if (!$this->publicKey) {
+          throw new apiAuthException("Unable to parse PEM: $pem");
+      }
   }
 
-  function __destruct() {
-    if ($this->publicKey) {
-      openssl_x509_free($this->publicKey);
+    public function __destruct()
+    {
+        if ($this->publicKey) {
+            openssl_x509_free($this->publicKey);
+        }
     }
-  }
 
   /**
    * Verifies the signature on data.
    *
    * Returns true if the signature is valid, false otherwise.
    */
-  function verify($data, $signature) {
-    $status = openssl_verify($data, $signature, $this->publicKey, "sha256");
-    if ($status === -1) {
-      throw new apiAuthException("Signature verification error: " .
+  public function verify($data, $signature)
+  {
+      $status = openssl_verify($data, $signature, $this->publicKey, "sha256");
+      if ($status === -1) {
+          throw new apiAuthException("Signature verification error: " .
           openssl_error_string());
-    }
-    return $status === 1;
+      }
+      return $status === 1;
   }
 }

@@ -2,8 +2,8 @@
 
 class Haanga_Extension_Filter_Length
 {
-    public $is_safe = TRUE; /* a number if safe */
-    static function generator($compiler, $args)
+    public $is_safe = true; /* a number if safe */
+    public static function generator($compiler, $args)
     {
         $count  = hexec('count', $args[0]);
         $strlen = hexec('strlen', $args[0]);
@@ -16,7 +16,7 @@ class Haanga_Extension_Filter_Length
             $value = $compiler->get_context($args[0]['var']);
             if (is_array($value)) {
                 return $count;
-            } else if  (is_string($value)) {
+            } elseif (is_string($value)) {
                 return $strlen;
             } else {
                 return $guess;

@@ -42,7 +42,7 @@ class User
 
     const SQL = "user_id as id, user_login as username, user_login_register as username_register, user_level as level, user_comment_pref as comment_pref, UNIX_TIMESTAMP(user_date) as date, user_ip as ip, UNIX_TIMESTAMP(user_modification) as modification, user_pass as pass, user_email as email, user_email_register as email_register, user_names as names, user_lang as lang, user_karma as karma, user_avatar as avatar, user_public_info as public_info, user_url as url, user_adcode as adcode, user_adchannel as adchannel, user_phone as phone";
 
-    static function get_notification($id, $type)
+    public static function get_notification($id, $type)
     {
         global $db;
 
@@ -55,7 +55,7 @@ class User
         return $r;
     }
 
-    static function add_notification($id, $type, $value = 1)
+    public static function add_notification($id, $type, $value = 1)
     {
         global $db;
 
@@ -71,14 +71,14 @@ class User
         return $db->query("insert into notifications (user, type, counter) values ($id, '$type', $value) on duplicate key update counter=counter+$value");
     }
 
-    static function reset_notification($id, $type, $value = 0)
+    public static function reset_notification($id, $type, $value = 0)
     {
         global $db;
 
         return $db->query("replace into notifications (user, type, counter) values ($id, '$type', $value)");
     }
 
-    static function get_valid_username($name)
+    public static function get_valid_username($name)
     {
         $name = strip_tags($name);
         $name = preg_replace('/&.+?;/', '', $name); // kill entities
@@ -92,7 +92,7 @@ class User
         return substr($name, 0, 24);
     }
 
-    static function get_username($id)
+    public static function get_username($id)
     {
         global $db;
 
@@ -101,7 +101,7 @@ class User
         return $db->get_var("select user_login from users where user_id = $id");
     }
 
-    static function get_user_id($name)
+    public static function get_user_id($name)
     {
         global $db;
 
@@ -110,7 +110,7 @@ class User
         return $db->get_var("select user_id from users where user_login = '$name'");
     }
 
-    static function calculate_affinity($uid, $min_karma = 200)
+    public static function calculate_affinity($uid, $min_karma = 200)
     {
         global $globals, $db;
 
@@ -135,7 +135,7 @@ class User
 
             if ($votes) {
                 foreach ($votes as $vote) {
-                    if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10) ) {
+                    if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $nlinks/10)) {
                         $w = min(1, $nlinks/10);
                         $w = max(0.7, $w);
                         $c = $vote->count/$nlinks * $w;
@@ -160,7 +160,7 @@ class User
 
             if ($votes) {
                 foreach ($votes as $vote) {
-                    if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $ncomments / 10) ) {
+                    if ($vote->id > 0 && $vote->id != $uid && abs($vote->count) > max(1, $ncomments / 10)) {
                         $w = min(1, $ncomments / 15);
                         $w = max(0.5, $w);
                         $c = $vote->count / $ncomments * $w;
@@ -174,7 +174,7 @@ class User
                         } else {
                             $a = round((-1 - $c) * 100);
 
-                            if (!isset($affinity[$vote->id]) || ($affinity[$vote->id] < 0 && $a > $affinity[$vote->id]) ) {
+                            if (!isset($affinity[$vote->id]) || ($affinity[$vote->id] < 0 && $a > $affinity[$vote->id])) {
                                 $affinity[$vote->id] = $a;
                             }
                         }
@@ -196,7 +196,7 @@ class User
         return $affinity;
     }
 
-    static function get_new_friends($user = 0)
+    public static function get_new_friends($user = 0)
     {
         global $db, $globals, $current_user;
 
@@ -211,13 +211,13 @@ class User
         return $db->get_col("select friend_from from friends where friend_type = 'manual' and friend_to = $user and friend_value > 0 and friend_date > FROM_UNIXTIME($last_read)");
     }
 
-    static function update_new_friends_date($time = false)
+    public static function update_new_friends_date($time = false)
     {
         global $db, $globals, $current_user;
 
         $key = 'last_friend';
 
-        if (!$current_user->user_id ) {
+        if (!$current_user->user_id) {
             return false;
         }
 
@@ -240,7 +240,7 @@ class User
     }
 
     // $user_id is the key in annotations
-    static function get_affinity($id, $from = false)
+    public static function get_affinity($id, $from = false)
     {
         global $current_user, $globals;
 
@@ -270,14 +270,14 @@ class User
     // Functions to manage "meta variables" that willl be stored as annotations and read automatically
 
     // Variables that are accepted as "meta" (to avoid storing all
-    static function meta_valid($property)
+    public static function meta_valid($property)
     {
         return in_array($property, array('bio', 'karma_log', 'karma_calculated'));
     }
 
     // Return the items for the top menu
     // Used by /user.php and /profile.php
-    static function get_menu_items($view, $user)
+    public static function get_menu_items($view, $user)
     {
         global $globals, $current_user;
 
@@ -351,7 +351,7 @@ class User
             return;
         }
 
-        if (!User::meta_valid($property) ) {
+        if (!User::meta_valid($property)) {
             $this->$property = $value;
             return;
         }
@@ -528,9 +528,9 @@ class User
         if ($this->id > 0) {
             $where = "user_id = $id";
         } elseif (!empty($this->username)) {
-            $where = "user_login='".$db->escape(mb_substr($this->username,0,64))."'";
+            $where = "user_login='".$db->escape(mb_substr($this->username, 0, 64))."'";
         } elseif (!empty($this->email)) {
-            $where = "user_email='".$db->escape(mb_substr($this->email,0,64))."' and user_level != 'disabled' and user_level != 'autodisabled'";
+            $where = "user_email='".$db->escape(mb_substr($this->email, 0, 64))."' and user_level != 'disabled' and user_level != 'autodisabled'";
         }
 
         $this->stats = false;
@@ -756,7 +756,7 @@ class User
         return $this->prefs;
     }
 
-    static function friend_exists($from, $to)
+    public static function friend_exists($from, $to)
     {
         global $db;
 
@@ -767,7 +767,7 @@ class User
         return round($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
     }
 
-    static function friend_insert($from, $to, $value = 1)
+    public static function friend_insert($from, $to, $value = 1)
     {
         global $db;
 
@@ -782,14 +782,14 @@ class User
         return $db->query("REPLACE INTO friends (friend_type, friend_from, friend_to, friend_value) VALUES ('manual', $from, $to, $value)");
     }
 
-    static function friend_delete($from, $to)
+    public static function friend_delete($from, $to)
     {
         global $db;
 
         return $db->query("DELETE FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to");
     }
 
-    static function friend_add_delete($from, $to)
+    public static function friend_add_delete($from, $to)
     {
         if ($from == $to) {
             return '';
@@ -812,7 +812,7 @@ class User
         }
     }
 
-    static function friend_teaser($from, $to)
+    public static function friend_teaser($from, $to)
     {
         if ($from == $to) {
             return '';
@@ -830,7 +830,7 @@ class User
         }
     }
 
-    static function get_pref($id, $key, $value = false)
+    public static function get_pref($id, $key, $value = false)
     {
         global $db, $current_user;
 
@@ -852,7 +852,7 @@ class User
         return intval($db->get_var("select pref_value from prefs where pref_user_id = $id and pref_key = '$key' $extra limit 1"));
     }
 
-    static function set_pref($id, $key, $value)
+    public static function set_pref($id, $key, $value)
     {
         global $db, $current_user;
 
@@ -872,7 +872,7 @@ class User
         }
     }
 
-    static function delete_pref($id, $key, $value = false)
+    public static function delete_pref($id, $key, $value = false)
     {
         global $db;
 

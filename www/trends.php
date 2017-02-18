@@ -34,7 +34,7 @@ $globals['noindex'] = true;
 
 $title = _('trends/tendencias');
 if (! empty($_REQUEST['words'])) {
-	$title .= ' «'.htmlspecialchars($_REQUEST['words']).'»';
+    $title .= ' «'.htmlspecialchars($_REQUEST['words']).'»';
 }
 
 do_header($title);
@@ -45,4 +45,3 @@ Haanga::Load('trends.html', compact('options'));
 
 do_footer_menu();
 do_footer();
-

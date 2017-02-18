@@ -2,9 +2,9 @@
 
 class Haanga_Extension_Tag_Trans
 {
-    public $is_block = FALSE;
+    public $is_block = false;
 
-    static function generator($cmp, $args, $redirect)
+    public static function generator($cmp, $args, $redirect)
     {
         $code = hcode();
 
@@ -28,5 +28,4 @@ class Haanga_Extension_Tag_Trans
 
         return $code;
     }
-
 }
