@@ -2414,6 +2414,11 @@ li .comment-header .comment-expand {
     line-height: 15px;
 }
 
+.comment-avatar-large .comment-header .avatar-link {
+    line-height: 40px;
+    height: 40px;
+}
+
 .comment-avatar-large .comment-header .username {
     font-size: 15px;
 }
