@@ -2467,11 +2467,12 @@ li .comment-header .comment-expand {
 
 .comment-footer a, .comment-footer span {
     display: inline-block;
-}
-
-.comment-footer a, .comment-footer span {
     margin: 0 7px;
     text-decoration: none;
+}
+
+.comment-footer a:focus {
+    color: inherit;
 }
 
 .comment-footer > *:first-child {
