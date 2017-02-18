@@ -52,28 +52,26 @@
 
                 <span class="separator-vertical"></span>
 
-                <a href="javascript:void(0);" id="vc-n-{{ self.id }}" class="vote down" onclick="menealo_comment({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
-                    <i class="fa fa-arrow-circle-down"></i>
-                </a>
+                {% include 'post_summary_votes.html' %}
 
                 <span class="separator-vertical"></span>
 
-                {% include 'comment_summary_votes.html' %}
+                <a href="javascript:void(0);" id="vc-n-{{ self.id }}" class="vote down" onclick="menealo_comment({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </a>
 
                 {% else %}
                     {% if self.voted > 0 %}
                     <span id="vc-p-{{ self.id }}" class="vote up voted" title="{% trans _('votado positivo') %}">
                         <i class="fa fa-arrow-circle-up"></i>
                     </span>
-
-                    <span class="separator-vertical"></span>
                     {% else %}{% if self.voted < 0 %}
                     <span id="vc-n-{{ self.id }}" class="vote down voted" title="{% trans _('votado negativo') %}">
                         <i class="fa fa-arrow-circle-down"></i>
                     </span>
+                    {% endif %}{% endif %}
 
                     <span class="separator-vertical"></span>
-                    {% endif %}{% endif %}
 
                     {% include 'comment_summary_votes.html' %}
                 {% endif %}
@@ -81,6 +79,8 @@
                 {% include 'comment_summary_votes.html' %}
             {% endif %}
         {% endif %}
+
+        <span class="separator-vertical"></span>
 
         <a href="{% exec self.get_relative_individual_permalink %}" title="{% trans _('Permalink') %}">
             <i class="fa fa-link"></i>
