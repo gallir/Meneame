@@ -133,13 +133,11 @@ class Post extends LCPBase
                 if ($full) {
                     Log::insert('post_new', $this->id, $post_author);
                 }
-
             }
 
             if ($post_is_admin && $r) {
                 $db->query("INSERT INTO admin_posts (admin_post_id, admin_user_id, admin_user_login) VALUES ($this->id, {$current_user->user_id},'{$current_user->user_login}')");
             }
-
         } else {
             $r = $db->query("UPDATE posts SET post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
             if ($post_is_admin && $r) {
@@ -149,12 +147,10 @@ class Post extends LCPBase
             if ($r && $full) {
                 Log::conditional_insert('post_edit', $this->id, $post_author, 30);
             }
-
         }
         if ($r && $full) {
             $this->update_conversation();
         }
-
     }
 
     public function read()
@@ -249,7 +245,6 @@ class Post extends LCPBase
             ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin']))) {
             // Admins can edit up to 10 days
             $this->can_edit = true;
-
         } else {
             $this->can_edit = false;
         }
@@ -309,7 +304,6 @@ class Post extends LCPBase
         if ($this->voted) {
             return $this->voted;
         }
-
     }
 
     public function insert_vote($user_id = false, $value = 0)
@@ -414,7 +408,6 @@ class Post extends LCPBase
                         User::add_notification($to, 'post');
                     }
                     $db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($this->date), $this->id, $id)");
-
                 }
                 $refs++;
                 if (!in_array($id, $seen_ids)) {
@@ -424,7 +417,6 @@ class Post extends LCPBase
                 if (!in_array($to, $seen_users)) {
                     $seen_users[] = $to;
                 }
-
             }
         }
 
@@ -440,7 +432,6 @@ class Post extends LCPBase
         foreach ($to_unnotify as $to) {
             User::add_notification($to, 'post', -1);
         }
-
     }
 
     public function normalize_content()

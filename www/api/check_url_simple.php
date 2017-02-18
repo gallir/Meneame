@@ -6,7 +6,9 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-if(empty($_GET['url'])) die;
+if (empty($_GET['url'])) {
+    die;
+}
 
 include('../config.php');
 
@@ -17,4 +19,3 @@ echo '<html>'."\n";
 echo '<body>'."\n";
 echo '<a href="/submit.php?url='.urlencode($_GET['url']).'" title="'._('menéame').'" target="_parent"><img style="border: 0" src="'.$mnm_image.'" name="menéame"/></a>';
 echo '</body></html>';
-?>

@@ -12,12 +12,12 @@ $globals['extra_css'][] = 'admin.css';
 $globals['ads'] = false;
 
 if (!$current_user->admin || $current_user->user_level != 'god') {
-	do_header(_('Administración de Ligas'));
-	echo '<div id="singlewrap">' . "\n";
-	echo '<div class="topheading"><h2>'._('Esta página es sólo para administradores').'</h2>';
-	echo '</div></div>';
-	do_footer();
-	exit;
+    do_header(_('Administración de Ligas'));
+    echo '<div id="singlewrap">' . "\n";
+    echo '<div class="topheading"><h2>'._('Esta página es sólo para administradores').'</h2>';
+    echo '</div></div>';
+    do_footer();
+    exit;
 }
 
 function do_league_tabs()

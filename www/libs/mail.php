@@ -6,66 +6,72 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-function send_mail($to, $subject, $message) {
-	global $globals;
+function send_mail($to, $subject, $message)
+{
+    global $globals;
 
-	if (! check_email($to)) return false;
+    if (! check_email($to)) {
+        return false;
+    }
 
-	if (! empty($globals['email_domain'])) $domain = $globals['email_domain'];
-	else $domain = get_server_name();
+    if (! empty($globals['email_domain'])) {
+        $domain = $globals['email_domain'];
+    } else {
+        $domain = get_server_name();
+    }
 
-	$subject = mb_encode_mimeheader("$domain: $subject","UTF-8", "B", "\n");
-	$message = wordwrap($message, 70);
+    $subject = mb_encode_mimeheader("$domain: $subject", "UTF-8", "B", "\n");
+    $message = wordwrap($message, 70);
 
-	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
-			'From: '._('avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
-			'Reply-To: '._('no_contestar')."@$domain\n".
-			'X-Mailer: meneame.net' . "\n";
-	$headers .= 'MIME-Version: 1.0' . "\n";
+    $headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
+            'From: '._('avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
+            'Reply-To: '._('no_contestar')."@$domain\n".
+            'X-Mailer: meneame.net' . "\n";
+    $headers .= 'MIME-Version: 1.0' . "\n";
 
-	mail($to, $subject, $message, $headers);
-	return true;
+    mail($to, $subject, $message, $headers);
+    return true;
 }
 
-function send_recover_mail ($user, $echo = true) {
-	global $site_key, $globals;
+function send_recover_mail($user, $echo = true)
+{
+    global $site_key, $globals;
 
-	if (!check_email($user->email)) {
-		return false;
-	}
+    if (!check_email($user->email)) {
+        return false;
+    }
 
-	$now = time();
+    $now = time();
 
-	if (!empty($globals['email_domain'])) {
-		$domain = $globals['email_domain'];
-	} else {
-		$domain = get_server_name();
-	}
+    if (!empty($globals['email_domain'])) {
+        $domain = $globals['email_domain'];
+    } else {
+        $domain = get_server_name();
+    }
 
-	$key = md5($user->id.$user->pass.$now.$site_key.get_server_name());
-	$url = 'http://'.get_server_name().$globals['base_url'].'profile?login='.$user->username.'&t='.$now.'&k='.$key;
+    $key = md5($user->id.$user->pass.$now.$site_key.get_server_name());
+    $url = 'http://'.get_server_name().$globals['base_url'].'profile?login='.$user->username.'&t='.$now.'&k='.$key;
 
-	$to      = $user->email;
-	$subject = _('Recuperación o verificación de contraseña de '). get_server_name();
-	$subject = mb_encode_mimeheader($subject,"UTF-8", "B", "\n");
-	$message = $to . ': '._('para poder acceder sin la clave, conéctate a la siguiente dirección en menos de 15 minutos:') . "\n\n$url\n\n";
-	$message .= _('Pasado este tiempo puedes volver a solicitar acceso en: ') . "\nhttp://".get_server_name().$globals['base_url']."login?op=recover\n\n";
-	$message .= _('Una vez en tu perfil, puedes cambiar la clave de acceso.') . "\n" . "\n";
-	$message .= "\n\n". _('Este mensaje ha sido enviado a solicitud de la dirección: ') . $globals['user_ip'] . "\n\n";
-	$message .= "-- \n  " . _('el equipo de menéame');
-	$message = wordwrap($message, 70);
-	$headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
-				'From: '._('Avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
-				'Reply-To: '._('no_contestar')."@$domain\n".
-				'X-Mailer: meneame.net' . "\n";
-	$headers .= 'MIME-Version: 1.0' . "\n";
+    $to      = $user->email;
+    $subject = _('Recuperación o verificación de contraseña de '). get_server_name();
+    $subject = mb_encode_mimeheader($subject, "UTF-8", "B", "\n");
+    $message = $to . ': '._('para poder acceder sin la clave, conéctate a la siguiente dirección en menos de 15 minutos:') . "\n\n$url\n\n";
+    $message .= _('Pasado este tiempo puedes volver a solicitar acceso en: ') . "\nhttp://".get_server_name().$globals['base_url']."login?op=recover\n\n";
+    $message .= _('Una vez en tu perfil, puedes cambiar la clave de acceso.') . "\n" . "\n";
+    $message .= "\n\n". _('Este mensaje ha sido enviado a solicitud de la dirección: ') . $globals['user_ip'] . "\n\n";
+    $message .= "-- \n  " . _('el equipo de menéame');
+    $message = wordwrap($message, 70);
+    $headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
+                'From: '._('Avisos').' '.$domain.' <'._('no_contestar')."@$domain>\n".
+                'Reply-To: '._('no_contestar')."@$domain\n".
+                'X-Mailer: meneame.net' . "\n";
+    $headers .= 'MIME-Version: 1.0' . "\n";
 
-	mail($to, $subject, $message, $headers);
+    mail($to, $subject, $message, $headers);
 
-	if ($echo) {
-		echo '<p><strong>'._('Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en la carpeta de spam.').'</strong></p>';
-	}
+    if ($echo) {
+        echo '<p><strong>'._('Correo enviado, mira tu buzón, allí están las instrucciones. Mira también en la carpeta de spam.').'</strong></p>';
+    }
 
-	return true;
+    return true;
 }
-

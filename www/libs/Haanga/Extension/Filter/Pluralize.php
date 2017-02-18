@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Filter_Pluralize
 {
-    static function generator($compiler, $args)
+    public static function generator($compiler, $args)
     {
         if (count($args) > 1) {
             if (!Haanga_AST::is_str($args[1])) {

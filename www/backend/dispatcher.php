@@ -4,7 +4,7 @@ chdir(__DIR__);
 $script = './'.$globals['path'][1];
 
 if (!preg_match('/\.php$/', $script)) {
-	$script .= '.php';
+    $script .= '.php';
 }
 
 if (!is_file($script)) {
@@ -14,7 +14,7 @@ if (!is_file($script)) {
 
 $globals['script'] = '/backend/'.$globals['path'][1];
 
-if ((include $script) === FALSE) {
+if ((include $script) === false) {
     include_once '../config.php';
     do_error("bad request", 400);
 }

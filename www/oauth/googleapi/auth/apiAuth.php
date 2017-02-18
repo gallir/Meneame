@@ -24,16 +24,18 @@ require_once "apiOAuth2.php";
  * @author Chris Chabot <chabotc@google.com>
  *
  */
-abstract class apiAuth {
-  /** @var apiIo $io */
+abstract class apiAuth
+{
+    /** @var apiIo $io */
   public $io;
 
-  abstract public function authenticate($service);
-  abstract public function setAccessToken($accessToken);
-  abstract public function setDeveloperKey($developerKey);
-  abstract public function sign(apiHttpRequest $request);
+    abstract public function authenticate($service);
+    abstract public function setAccessToken($accessToken);
+    abstract public function setDeveloperKey($developerKey);
+    abstract public function sign(apiHttpRequest $request);
 
-  public function setIo(apiIo $io) {
-    $this->io = $io;
-  }
+    public function setIo(apiIo $io)
+    {
+        $this->io = $io;
+    }
 }

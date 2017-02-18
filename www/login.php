@@ -110,7 +110,7 @@ function do_login_post()
 
     UserAuth::check_clon_from_cookies();
 
-    header ('HTTP/1.1 303 Load');
+    header('HTTP/1.1 303 Load');
     setcookie('return_site', '', $globals['now'] - 3600, $globals['base_url'], UserAuth::domain());
 
     $url = empty($_REQUEST['return']) ? $globals['base_url'] : $_REQUEST['return'];

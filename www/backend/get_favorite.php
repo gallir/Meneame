@@ -11,33 +11,33 @@ include(mnminclude.'favorites.php');
 
 header('Content-Type: application/json; charset=UTF-8');
 
-if(!($id=intval($_REQUEST['id']))) {
-	error(_('falta el ID'). " $id");
+if (!($id=intval($_REQUEST['id']))) {
+    error(_('falta el ID'). " $id");
 }
 
-if(empty($_REQUEST['type'])) {
-	error(_('falta el tipo'));
+if (empty($_REQUEST['type'])) {
+    error(_('falta el tipo'));
 }
 $type = $_REQUEST['type'];
 
-if(!($user = intval($_REQUEST['user']))) {
-	error(_('falta el código de usuario'));
+if (!($user = intval($_REQUEST['user']))) {
+    error(_('falta el código de usuario'));
 }
 
 if ($user != $current_user->user_id) {
-	error(_('usuario incorrecto'));
+    error(_('usuario incorrecto'));
 }
 
 if (! check_security_key($_REQUEST['key'])) {
-	error(_('clave de control incorrecta'));
+    error(_('clave de control incorrecta'));
 }
 
 $dict['value'] = favorite_add_delete($user, $id, $type);
 echo json_encode($dict);
 
-function error($mess) {
-	$dict['error'] = $mess;
-	echo json_encode($dict);
+function error($mess)
+{
+    $dict['error'] = $mess;
+    echo json_encode($dict);
     die;
 }
-

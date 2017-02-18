@@ -14,20 +14,18 @@ $page_size = 20;
 $offset=(get_current_page()-1)*$page_size;
 
 do_header(_('pendientes') . ' | ' . $globals['site_name']);
-do_tabs("main","shakeit");
+do_tabs("main", "shakeit");
 
 echo '<div id="newswrap">'."\n";
 
 $rows = Link::count('queued');
 $links = $db->object_iterator("SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE sub_statuses.id = ". SitesMgr::my_id() ." AND status = 'queued' ORDER by date desc LIMIT $offset,$page_size) as ids ON (ids.link = link_id)", "LinkMobile");
 if ($links) {
-	foreach($links as $link) {
-		$link->print_summary();
-	}
+    foreach ($links as $link) {
+        $link->print_summary();
+    }
 }
 do_pages($rows, $page_size);
 echo '</div>'."\n";
 
 do_footer();
-
-?>

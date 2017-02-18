@@ -5,5 +5,3 @@ header('Cache-Control: max-age=864000');
 header("Expires: " . gmdate("r", $globals['now'] + 864000));
 
 Haanga::Load('js/mobile.js');
-
-?>
