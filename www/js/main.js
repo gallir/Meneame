@@ -82,19 +82,41 @@ function menealo(user, id) {
 
 var votePending = [];
 
-function menealo_comment(user, id, value) {
-    var key = 'c' + id;
+function setVotePending(key, id, value) {
+    var key = 'c' + id,
+        $voted, $notvoted;
 
-    if (typeof votePending[key] !== 'undefined' && votePending[key]) {
+    if ((typeof votePending[key] !== 'undefined') && votePending[key]) {
         clearTimeout(votePending[key]);
     }
 
-    if (value < 0) {
-        $('#vc-n-' + id).addClass('voted pending');
-        $('#vc-p-' + id).removeClass('voted pending');
+    if (value > 0) {
+        $voted = 'p';
+        $notvoted = 'n';
     } else {
-        $('#vc-p-' + id).addClass('voted pending');
-        $('#vc-n-' + id).removeClass('voted pending');
+        $voted = 'n';
+        $notvoted = 'p';
+    }
+
+    $voted = $('#vc-' + $voted + '-' + id);
+    $notvoted = $('#vc-' + $notvoted + '-' + id);
+
+    if ($voted.hasClass('voted')) {
+        $voted.removeClass('voted pending');
+        return false;
+    }
+
+    $voted.addClass('voted pending');
+    $notvoted.removeClass('voted pending');
+
+    return true;
+}
+
+function menealo_comment(user, id, value) {
+    var key = 'c' + id;
+
+    if (!setVotePending(key, id, value)) {
+        return;
     }
 
     votePending[key] = setTimeout(function() {
@@ -112,18 +134,10 @@ function menealo_comment(user, id, value) {
 }
 
 function menealo_post(user, id, value) {
-    var key = 'p' + id;
+    var key = 'c' + id;
 
-    if (typeof votePending[key] !== 'undefined' && votePending[key]) {
-        clearTimeout(votePending[key]);
-    }
-
-    if (value < 0) {
-        $('#vc-n-' + id).addClass('voted pending');
-        $('#vc-p-' + id).removeClass('voted pending');
-    } else {
-        $('#vc-p-' + id).addClass('voted pending');
-        $('#vc-n-' + id).removeClass('voted pending');
+    if (!setVotePending(key, id, value)) {
+        return;
     }
 
     votePending[key] = setTimeout(function() {
