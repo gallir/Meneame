@@ -86,6 +86,12 @@
             <i class="fa fa-link"></i>
         </a>
 
+        {% if self.can_report %}
+        <a href="javascript:void(0)" onclick="report_comment({{self.id}})" title="{% trans _('Reportar comentario') %}">
+            <i class="fa fa-exclamation-triangle"></i>
+        </a>
+        {% endif %}
+
         {% if self.thread_level < 1 AND current_user.user_id > 0 %}
         <a href="javascript:void(0)" id="favc-{{ self.prefix_id }}{{ self.id }}" onclick="add_remove_fav('favc-{{ self.prefix_id }}{{ self.id }}', 'comment', {{ self.id }})" title="{% trans _('Favorito') %}" class="favorite{% if self.favorite %} on{% endif %}">
             <i class="fa fa-star"></i>
@@ -95,12 +101,6 @@
         {% if self.can_reply %}
         <a href="javascript:void(0)" onclick="comment_reply({{self.id}}, '{{ self.prefix_id }}')" title="{% trans _('Responder') %}">
             <i class="fa fa-reply"></i>
-        </a>
-        {% endif %}
-
-        {% if self.can_report %}
-        <a href="javascript:void(0)" onclick="report_comment({{self.id}})" title="{% trans _('Reportar comentario') %}">
-            <i class="fa fa-exclamation-triangle"></i>
         </a>
         {% endif %}
     </div>
