@@ -2368,7 +2368,7 @@ select.options-comments {
     position: absolute;
     left: 7px;
     top: 6px;
-    color: #e35614;
+    color: #AAA;
     font-size: 14px;
     z-index: 2;
 }
@@ -2483,7 +2483,7 @@ li .comment-header .comment-expand {
     margin-right: 0;
 }
 
-.comment-footer a:hover {
+.comment-footer a.comment-answers, .comment-footer a:hover {
     text-decoration: none;
     color: #ffa980;
 }
@@ -2744,10 +2744,10 @@ button.link.favorite {
     display: none;
     position: absolute;
     width: 16px;
-    top: 7px;
+    top: 8px;
     bottom: 0;
-    margin-left: 5px;
-    background-color: #e35614;
+    margin-left: 6px;
+    background-color: #DDD;
     border-radius: 1em;
     z-index: 1;
 }

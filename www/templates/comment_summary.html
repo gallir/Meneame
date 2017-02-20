@@ -1,7 +1,9 @@
 <div id="c-{{ self.prefix_id }}{{self.html_id}}" class="{{ self.css_class }}">
     <div class="{{ self.css_class_body }}">
         <div class="{{ self.css_class_header }}">
-            <a href="javascript:void(0);" class="comment-expand" data-id="{{ self.id }}"><i class="fa fa-minus-circle"></i></a>
+            <a href="javascript:void(0);" class="comment-expand" data-id="{{ self.id }}">
+                <i class="fa fa-chevron-down"></i>
+            </a>
 
             {% if self.avatar AND self.type != 'admin' AND self.user_level != 'disabled' %}
             <img src="{{ globals.base_static }}img/g.gif"

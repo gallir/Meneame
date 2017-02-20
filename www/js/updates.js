@@ -506,7 +506,7 @@ function showPoll() {
         function show($button, $parent, $childs, id) {
             $parent.removeClass('collapsed');
 
-            $button.html('<i class="fa fa-minus-circle"></i>');
+            $button.html('<i class="fa fa-chevron-down"></i>');
 
             $button.closest('.comment').find('.comment-text, .comment-footer').slideDown('fast', function() {
                 $childs.slideDown('fast');

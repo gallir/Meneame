@@ -1395,7 +1395,7 @@ function show_total_answers(type, id, answers) {
     }
 
     $(dom_id).closest('.comment').find('.comment-footer').append(
-        '<a href="javascript:void(0);" onclick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}">'
+        '<a href="javascript:void(0);" onclick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas') %}" class="comment-answers">'
         + '<i class="fa fa-comments"></i>&nbsp;' + answers
         + '</a>'
     );
