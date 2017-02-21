@@ -176,6 +176,10 @@ select.select-menu-more-options {
     background: none !important;
 }
 
+.wideonly, .wide {
+    display: none !important;
+}
+
 .header-menu-wrapper {
     overflow: hidden;
     height: 39px;

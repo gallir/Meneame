@@ -478,39 +478,38 @@ function showPoll() {
         function hide($button, $parent, $childs, id) {
             var $header = $button.closest('.comment-header');
 
-            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp('fast', function() {
-                if ($childs.length === 0) {
-                    $parent.addClass('collapsed');
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp('fast');
+
+            if ($childs.length === 0) {
+                $parent.addClass('collapsed');
+            }
+
+            $button.html('<i class="fa fa-chevron-down"></i>');
+
+            var count = $parent.find('.comment').length - 1;
+
+            $childs.slideUp('fast', function() {
+                $parent.addClass('collapsed');
+
+                if (!count || $header.find('.comments-closed-counter').length) {
+                    return;
                 }
 
-                $button.html('<i class="fa fa-chevron-up"></i>');
-
-                var count = $parent.find('.comment').length - 1;
-
-                $childs.slideUp('fast', function() {
-                    $parent.addClass('collapsed');
-
-                    if (!count || $header.find('.comments-closed-counter').length) {
-                        return;
-                    }
-
-                    $header.append(
-                        '<a href="javascript:void(0);" class="comments-closed-counter">'
-                        + count + ' <i class="fa fa-comments"></i>'
-                        + '</a>'
-                    );
-                });
+                $header.append(
+                    '<a href="javascript:void(0);" class="comments-closed-counter">'
+                    + count + ' <i class="fa fa-comments"></i>'
+                    + '</a>'
+                );
             });
         }
 
         function show($button, $parent, $childs, id) {
             $parent.removeClass('collapsed');
 
-            $button.html('<i class="fa fa-chevron-down"></i>');
+            $button.html('<i class="fa fa-chevron-up"></i>');
 
-            $button.closest('.comment').find('.comment-text, .comment-footer').slideDown('fast', function() {
-                $childs.slideDown('fast');
-            });
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideDown('fast');
+            $childs.slideDown('fast');
         }
 
         $.each(cookieGet(), function(key, id) {
