@@ -2529,7 +2529,7 @@ li .comment-header .comment-expand {
 .comment-footer .votes-counter {
     font-weight: bold;
     color: #666;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .news-details, .news-details.main {
@@ -2741,7 +2741,7 @@ button.link.favorite {
 }
 
 .threader .expandable-mark {
-    display: none;
+    display: block;
     position: absolute;
     width: 16px;
     top: 8px;
@@ -2750,10 +2750,16 @@ button.link.favorite {
     background-color: #e35614;
     border-radius: 1em;
     z-index: 1;
+    -webkit-transition-timing-function: linear;
+    transition-timing-function: linear;
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
+    -moz-transition: opacity .15s ease-in-out;
+    -webkit-transition: opacity .15s ease-in-out;
 }
 
 .threader.expandable > .expandable-mark {
-    display: block;
+    opacity: 1;
 }
 
 .threader.collapsed.expandable > .expandable-mark {

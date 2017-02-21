@@ -483,7 +483,7 @@ function showPoll() {
                     $parent.addClass('collapsed');
                 }
 
-                $button.html('<i class="fa fa-plus-circle"></i>');
+                $button.html('<i class="fa fa-chevron-up"></i>');
 
                 var count = $parent.find('.comment').length - 1;
 
