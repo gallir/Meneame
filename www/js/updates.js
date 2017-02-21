@@ -478,13 +478,17 @@ function showPoll() {
         function hide($button, $parent, $childs, id) {
             var $header = $button.closest('.comment-header');
 
-            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp('fast');
+            $button.closest('.comment').find('.comment-text, .comment-footer').slideUp('fast', function() {
+                if ($childs.length === 0) {
+                    $parent.addClass('collapsed');
+                }
+
+                $button.html('<i class="fa fa-chevron-down"></i>');
+            });
 
             if ($childs.length === 0) {
-                $parent.addClass('collapsed');
+                return;
             }
-
-            $button.html('<i class="fa fa-chevron-down"></i>');
 
             var count = $parent.find('.comment').length - 1;
 
