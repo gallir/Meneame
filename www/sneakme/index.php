@@ -416,7 +416,7 @@ function do_voted_posts()
     foreach ($posts as $p) {
         $post = Post::from_db($p->id);
 
-        $color = ($p->value > 0) ? '#00d' : '#f00';
+        $color = ($p->value > 0) ? 'green' : 'red';
 
         echo '<li>';
 
@@ -427,7 +427,7 @@ function do_voted_posts()
             $time_read = $post->date;
         }
 
-        echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:'.$color.';opacity: 0.5"></div>';
+        echo '<div style="position: relative; background:'.$color.'; top: -27px; left: 43px; width:30px; height:16px; opacity: 0.5"></div>';
         echo '</li>';
     }
 
