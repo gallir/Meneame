@@ -130,7 +130,7 @@ function menealo_comment(user, id, value) {
         reportAjaxStats('vote', 'comment');
 
         votePending[key] = null;
-    }, 3000);
+    }, 2000);
 }
 
 function menealo_post(user, id, value) {
@@ -151,7 +151,7 @@ function menealo_post(user, id, value) {
         reportAjaxStats('vote', 'post');
 
         votePending[key] = null;
-    }, 3000);
+    }, 2000);
 }
 
 function update_comment_vote(id, value, data) {
