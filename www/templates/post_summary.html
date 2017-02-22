@@ -1,4 +1,4 @@
-<div id="pcontainer-{{ self.prefix_id }}{{ self.id }}" class="{{ self.css_class }} comment-avatar-large" data-id="{{ self.id }}">
+<div id="pcontainer-{{ self.prefix_id }}{{ self.id }}" class="{{ self.css_class }} comment-avatar-large" data-id="post-{{ self.id }}">
     <div class="{{ self.css_class_body }}">
         <div class="{{ self.css_class_header }}">
             {% if self.show_avatar %}
@@ -35,7 +35,7 @@
         {% if self.can_vote %}
             {% if self.user_can_vote %}
 
-            <a href="javascript:void(0);" id="vc-p-{{ self.id }}" class="vote up" onclick="menealo_post({{ current_user.user_id}},{{ self.id }},1)" title="{% trans _('informativo, opinión razonada...') %}">
+            <a href="javascript:void(0);" id="vc-p-{{ self.id }}" class="vote up" onclick="vote('post', {{ current_user.user_id}}, {{ self.id }}, 1)" title="{% trans _('informativo, opinión razonada...') %}">
                 <i class="fa fa-arrow-circle-up"></i>
             </a>
 
@@ -45,7 +45,7 @@
 
             <span class="separator-vertical"></span>
 
-            <a href="javascript:void(0);" id="vc-n-{{ self.id }}" class="vote down" onclick="menealo_post({{ current_user.user_id}},{{ self.id }},-1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
+            <a href="javascript:void(0);" id="vc-n-{{ self.id }}" class="vote down" onclick="vote('post', {{ current_user.user_id}}, {{ self.id }}, -1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
                 <i class="fa fa-arrow-circle-down"></i>
             </a>
 

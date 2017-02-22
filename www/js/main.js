@@ -82,24 +82,10 @@ function menealo(user, id) {
 
 var votePending = [];
 
-function setVotePending(key, id, value) {
-    var key = 'c' + id,
-        $voted, $notvoted;
-
+function setVotePending(key, $voted, $notvoted) {
     if ((typeof votePending[key] !== 'undefined') && votePending[key]) {
         clearTimeout(votePending[key]);
     }
-
-    if (value > 0) {
-        $voted = 'p';
-        $notvoted = 'n';
-    } else {
-        $voted = 'n';
-        $notvoted = 'p';
-    }
-
-    $voted = $('#vc-' + $voted + '-' + id);
-    $notvoted = $('#vc-' + $notvoted + '-' + id);
 
     if ($voted.hasClass('voted')) {
         $voted.removeClass('voted pending');
@@ -112,67 +98,55 @@ function setVotePending(key, id, value) {
     return true;
 }
 
-function menealo_comment(user, id, value) {
-    var key = 'c' + id;
-
-    if (!setVotePending(key, id, value)) {
+function vote(type, user, id, value) {
+    if ((type !== 'comment') && (type !== 'post')) {
         return;
     }
 
-    votePending[key] = setTimeout(function() {
-        var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id;
-        var url = base_url + "backend/menealo_comment?" + content;
+    var key = type + '-' + id;
+    var $voted, $notvoted;
 
-        $.getJSON(url, function(data) {
-            update_comment_vote(id, value, data);
-        });
-
-        reportAjaxStats('vote', 'comment');
-
-        votePending[key] = null;
-    }, 2000);
-}
-
-function menealo_post(user, id, value) {
-    var key = 'c' + id;
-
-    if (!setVotePending(key, id, value)) {
-        return;
-    }
-
-    votePending[key] = setTimeout(function() {
-        var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id;
-        var url = base_url + "backend/menealo_post?" + content;
-
-        $.getJSON(url, function(data) {
-            update_comment_vote(id, value, data);
-        });
-
-        reportAjaxStats('vote', 'post');
-
-        votePending[key] = null;
-    }, 2000);
-}
-
-function update_comment_vote(id, value, data) {
-    if (data.error) {
-        mDialog.notify("{% trans _('Error:') %} " + data.error, 5);
-        return false;
-    }
-
-    $('#vc-' + id).html('' + data.votes);
-    $('#vk-' + id).html('<i class="icon-karma">K</i> ' + data.karma);
-
-    if (value < 0) {
-        var $voted = $('#vc-n-' + id);
-        var $disabled = $('#vc-p-' + id);
+    if (value > 0) {
+        $voted = 'up';
+        $notvoted = 'down';
     } else {
-        var $voted = $('#vc-p-' + id);
-        var $disabled = $('#vc-n-' + id);
+        $voted = 'down';
+        $notvoted = 'up';
     }
 
-    $disabled.removeAttr('href').removeAttr('onclick').css('visibility', 'hidden');
+    $voted = $('[data-id="' + key + '"] .vote.' + $voted);
+    $notvoted = $('[data-id="' + key + '"] .vote.' + $notvoted);
+
+    if (!setVotePending(key, $voted, $notvoted)) {
+        return;
+    }
+
+    votePending[key] = setTimeout(function() {
+        var url = base_url + 'backend/menealo_' + type;
+        var content = 'id=' + id + '&user=' + user + '&value=' + value + '&key=' + base_key + '&l=' + link_id;
+
+        $.getJSON(url + '?' + content, function(data) {
+            updateVote($voted, $notvoted, id, data);
+        });
+
+        reportAjaxStats('vote', type);
+
+        votePending[key] = null;
+    }, 2000);
+}
+
+function updateVote($voted, $notvoted, id, data) {
+    if (data.error) {
+        return mDialog.notify("{% trans _('Error:') %} " + data.error, 5);
+    }
+
+    var $container = $voted.closest('.comment');
+
+    $container.find('#vc-' + id).html('' + data.votes);
+    $container.find('#vk-' + id).html('<i class="icon-karma">K</i> ' + data.karma);
+
     $voted.addClass('voted').removeClass('pending').removeAttr('href').removeAttr('onclick');
+    $notvoted.removeAttr('href').removeAttr('onclick').css('visibility', 'hidden');
 }
 
 function disable_vote_link(id, value, mess, background) {
