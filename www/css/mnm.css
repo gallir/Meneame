@@ -3296,10 +3296,28 @@ button.link.favorite {
     cursor: pointer;
 }
 
-#header-top #notifier:hover {}
+#header-top #notifier.nonzero .fa-bell {
+    -webkit-animation: blinker 2s linear infinite;
+    -moz-animation: blinker 2s linear infinite;
+    animation: blinker 2s linear infinite;
+}
 
-#header-top #notifier.nonzero {
-    color: #fff;
+@keyframes blinker {
+    50% {
+        color: #e35614;
+    }
+}
+
+@-webkit-keyframes blinker {
+    50% {
+        color: #e35614;
+    }
+}
+
+@-moz-keyframes blinker {
+    50% {
+        color: #e35614;
+    }
 }
 
 #notifier_panel {
