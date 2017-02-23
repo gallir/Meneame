@@ -3297,9 +3297,9 @@ button.link.favorite {
 }
 
 #header-top #notifier.nonzero .fa-bell {
-    -webkit-animation: blinker 2s linear infinite;
-    -moz-animation: blinker 2s linear infinite;
-    animation: blinker 2s linear infinite;
+    -webkit-animation: blinker 2s linear 2 forwards;
+    -moz-animation: blinker 2s linear 2 forwards;
+    animation: blinker 2s linear 2 forwards;
 }
 
 @keyframes blinker {
