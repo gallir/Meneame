@@ -88,12 +88,12 @@ function setVotePending(key, $voted, $notvoted) {
     }
 
     if ($voted.hasClass('voted')) {
-        $voted.removeClass('voted pending');
+        $voted.removeClass('voted pending').addClass('unhover');
         return false;
     }
 
-    $voted.addClass('voted pending');
-    $notvoted.removeClass('voted pending');
+    $voted.removeClass('unhover').addClass('voted pending');
+    $notvoted.removeClass('unhover voted pending');
 
     return true;
 }
