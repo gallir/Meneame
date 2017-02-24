@@ -55,7 +55,7 @@ switch ($operation) {
 
         update_status($report, $status);
 
-        die(header('Location: ' . $_SERVER['REQUEST_URI']));
+        die(header('Location: '.$_SERVER['REQUEST_URI']));
 }
 
 do_footer();

@@ -20,6 +20,11 @@ class Strike
         'violate_rules' => 'Viola las normas de uso',
     ];
 
+    public static $sortColumns = [
+        'user_login', 'strike_type', 'strike_reason', 'strike_report_id',
+        'strike_karma_old', 'strike_karma_new', 'strike_date', 'strike_modified', 'admin_login'
+    ];
+
     const SQL_SIMPLE = '
         strike_id AS id, strike_type AS type, strike_date AS date, strike_reason AS reason,
         strike_admin_id AS admin_id, strike_user_id AS user_id, strike_report_id AS report_id,
@@ -104,13 +109,30 @@ class Strike
         return $row;
     }
 
-    public static function list($orderBy, $orderMode, $offset, $limit)
+    public static function list($search, $orderBy, $orderMode, $offset, $limit)
     {
         global $db;
 
+        if ($search) {
+            $search = $db->escape($search);
+
+            $where = '
+                WHERE (
+                    user_login LIKE "%'.$search.'%"
+                    OR admin_login LIKE "%'.$search.'%"
+                    OR strike_type = "'.$search.'"
+                    OR strike_reason = "'.$search.'"
+                    OR strike_report_id = "'.(int)$search.'"
+                )
+            ';
+        } else {
+            $where = '';
+        }
+
         $list = $db->get_results('
             SELECT '.self::SQL.'
-            ORDER BY '.$orderBy.' '.$orderMode.'
+            '.$where.'
+            ORDER BY '.self::getValidOrder($orderBy, $orderMode).'
             LIMIT '.(int)$offset.', '.(int)$limit.';
         ');
 
@@ -126,11 +148,22 @@ class Strike
         return $list;
     }
 
-    public static function count()
+    public static function getValidOrder($column, $mode)
+    {
+        if (!in_array($column, self::$sortColumns)) {
+            $column = 'strike_date';
+        }
+
+        return $column.' '.(($mode === 'ASC') ? 'ASC' : 'DESC');
+    }
+
+    public static function count($search)
     {
         global $db;
 
-        return $db->get_var('SELECT COUNT(*) FROM strikes;');
+        if (empty($search)) {
+            return $db->get_var('SELECT COUNT(*) FROM strikes;');
+        }
     }
 
     public static function getTypes()

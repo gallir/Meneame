@@ -1,15 +1,53 @@
 <table class="decorated" style="font-size: 10pt">
     <tr>
-        <th style="white-space: nowrap">{% trans _('Usuario') %}</th>
-        <th>{% trans _('tipo') %}</th>
-        <th>{% trans _('motivo') %}</th>
-        <th>{% trans _('comentario') %}</th>
-        <th>{% trans _('reporte') %}</th>
-        <th>{% trans _('karma anterior') %}</th>
-        <th>{% trans _('karma nuevo') %}</th>
-        <th>{% trans _('creación') %}</th>
-        <th>{% trans _('fin') %}</th>
-        <th>{% trans _('admin') %}</th>
+        <th style="white-space: nowrap">
+            <a href="?{% exec URLQuery "order_by" "user_login" "order_mode" order_mode %}">
+                {% trans _('Usuario') %}
+            </a>
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "strike_type" "order_mode" order_mode %}">
+                {% trans _('tipo') %}
+            </a>
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "strike_reason" "order_mode" order_mode %}">
+                {% trans _('motivo') %}
+            </a>
+        </th>
+        <th>
+            {% trans _('comentario') %}
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "strike_report_id" "order_mode" order_mode %}">
+                {% trans _('reporte') %}
+            </a>
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "strike_karma_old" "order_mode" order_mode %}">
+                {% trans _('karma anterior') %}
+            </a>
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "strike_karma_new" "order_mode" order_mode %}">
+                {% trans _('karma nuevo') %}
+            </a>
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "strike_date" "order_mode" order_mode %}">
+                {% trans _('creación') %}
+            </a>
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "strike_expires_at" "order_mode" order_mode %}">
+                {% trans _('fin') %}
+            </a>
+        </th>
+        <th>
+            <a href="?{% exec URLQuery "order_by" "admin_login" "order_mode" order_mode %}">
+                {% trans _('admin') %}
+            </a>
+        </th>
         <th>&nbsp;</th>
     </tr>
 

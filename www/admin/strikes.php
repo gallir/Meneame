@@ -58,18 +58,14 @@ function do_strike_list($selected_tab)
         $strike_date = 'all';
     }
 
-    if (empty($_REQUEST['order_by'])) {
-        $orderBy = 'strike_date';
-        $orderMode = 'DESC';
-    } else {
-        $orderBy = preg_replace('/[^a-z_]/i', '', $_REQUEST['order_by']);
-        $orderMode = ($orderBy === 'strike_date') ? 'DESC' : 'ASC';
-    }
+    $rows = Strike::count($_REQUEST['s']);
+    $strikes = Strike::list($_REQUEST['s'], $_REQUEST['order_by'], $_REQUEST['order_mode'], $offset, $page_size);
 
-    $total = Strike::count();
-    $strikes = Strike::list($orderBy, $orderMode, $offset, $page_size);
+    $order_mode = ($_REQUEST['order_mode'] === 'DESC') ? 'ASC' : 'DESC';
 
-    Haanga::Load('admin/strikes/list.html', compact('selected_tab', 'strikes'));
+    Haanga::Load('admin/strikes/list.html', compact(
+        'selected_tab', 'strikes', 'order_mode'
+    ));
 
     do_pages($rows, $page_size, false);
 }
