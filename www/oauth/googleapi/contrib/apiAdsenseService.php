@@ -28,7 +28,8 @@ require_once 'service/apiServiceRequest.php';
    *   $urlchannels = $adsenseService->urlchannels;
    *  </code>
    */
-  class UrlchannelsServiceResource extends apiServiceResource {
+  class UrlchannelsServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -41,15 +42,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param int maxResults The maximum number of URL channels to include in the response, used for paging.
      * @return UrlChannels
      */
-    public function listUrlchannels($adClientId, $optParams = array()) {
-      $params = array('adClientId' => $adClientId);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new UrlChannels($data);
-      } else {
-        return $data;
-      }
+    public function listUrlchannels($adClientId, $optParams = array())
+    {
+        $params = array('adClientId' => $adClientId);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new UrlChannels($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -61,7 +63,8 @@ require_once 'service/apiServiceRequest.php';
    *   $adunits = $adsenseService->adunits;
    *  </code>
    */
-  class AdunitsServiceResource extends apiServiceResource {
+  class AdunitsServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -75,15 +78,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param int maxResults The maximum number of ad units to include in the response, used for paging.
      * @return AdUnits
      */
-    public function listAdunits($adClientId, $optParams = array()) {
-      $params = array('adClientId' => $adClientId);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new AdUnits($data);
-      } else {
-        return $data;
-      }
+    public function listAdunits($adClientId, $optParams = array())
+    {
+        $params = array('adClientId' => $adClientId);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new AdUnits($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -95,7 +99,8 @@ require_once 'service/apiServiceRequest.php';
    *   $adclients = $adsenseService->adclients;
    *  </code>
    */
-  class AdclientsServiceResource extends apiServiceResource {
+  class AdclientsServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -107,15 +112,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param int maxResults The maximum number of ad clients to include in the response, used for paging.
      * @return AdClients
      */
-    public function listAdclients($optParams = array()) {
-      $params = array();
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new AdClients($data);
-      } else {
-        return $data;
-      }
+    public function listAdclients($optParams = array())
+    {
+        $params = array();
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new AdClients($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -127,7 +133,8 @@ require_once 'service/apiServiceRequest.php';
    *   $reports = $adsenseService->reports;
    *  </code>
    */
-  class ReportsServiceResource extends apiServiceResource {
+  class ReportsServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -149,15 +156,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string dimension Dimensions to base the report on.
      * @return AdsenseReportsGenerateResponse
      */
-    public function generate($startDate, $endDate, $optParams = array()) {
-      $params = array('startDate' => $startDate, 'endDate' => $endDate);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('generate', array($params));
-      if ($this->useObjects()) {
-        return new AdsenseReportsGenerateResponse($data);
-      } else {
-        return $data;
-      }
+    public function generate($startDate, $endDate, $optParams = array())
+    {
+        $params = array('startDate' => $startDate, 'endDate' => $endDate);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('generate', array($params));
+        if ($this->useObjects()) {
+            return new AdsenseReportsGenerateResponse($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -169,7 +177,8 @@ require_once 'service/apiServiceRequest.php';
    *   $customchannels = $adsenseService->customchannels;
    *  </code>
    */
-  class CustomchannelsServiceResource extends apiServiceResource {
+  class CustomchannelsServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -182,15 +191,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param int maxResults The maximum number of custom channels to include in the response, used for paging.
      * @return CustomChannels
      */
-    public function listCustomchannels($adClientId, $optParams = array()) {
-      $params = array('adClientId' => $adClientId);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new CustomChannels($data);
-      } else {
-        return $data;
-      }
+    public function listCustomchannels($adClientId, $optParams = array())
+    {
+        $params = array('adClientId' => $adClientId);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new CustomChannels($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -210,365 +220,459 @@ require_once 'service/apiServiceRequest.php';
  *
  * @author Google, Inc.
  */
-class apiAdsenseService extends apiService {
-  public $urlchannels;
-  public $adunits;
-  public $adclients;
-  public $reports;
-  public $customchannels;
+class apiAdsenseService extends apiService
+{
+    public $urlchannels;
+    public $adunits;
+    public $adclients;
+    public $reports;
+    public $customchannels;
   /**
    * Constructs the internal representation of the Adsense service.
    *
    * @param apiClient apiClient
    */
-  public function __construct(apiClient $apiClient) {
-    $this->rpcPath = '/rpc';
-    $this->restBasePath = '/adsense/v1/';
-    $this->version = 'v1';
-    $this->serviceName = 'adsense';
-    $this->io = $apiClient->getIo();
+  public function __construct(apiClient $apiClient)
+  {
+      $this->rpcPath = '/rpc';
+      $this->restBasePath = '/adsense/v1/';
+      $this->version = 'v1';
+      $this->serviceName = 'adsense';
+      $this->io = $apiClient->getIo();
 
-    $apiClient->addService($this->serviceName, $this->version);
-    $this->urlchannels = new UrlchannelsServiceResource($this, $this->serviceName, 'urlchannels', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"pageToken": {"type": "string", "location": "query"}, "adClientId": {"required": true, "type": "string", "location": "path"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "id": "adsense.urlchannels.list", "httpMethod": "GET", "path": "adclients/{adClientId}/urlchannels", "response": {"$ref": "UrlChannels"}}}}', true));
-    $this->adunits = new AdunitsServiceResource($this, $this->serviceName, 'adunits', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"includeInactive": {"type": "boolean", "location": "query"}, "pageToken": {"type": "string", "location": "query"}, "adClientId": {"required": true, "type": "string", "location": "path"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "id": "adsense.adunits.list", "httpMethod": "GET", "path": "adclients/{adClientId}/adunits", "response": {"$ref": "AdUnits"}}}}', true));
-    $this->adclients = new AdclientsServiceResource($this, $this->serviceName, 'adclients', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"pageToken": {"type": "string", "location": "query"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "response": {"$ref": "AdClients"}, "httpMethod": "GET", "path": "adclients", "id": "adsense.adclients.list"}}}', true));
-    $this->reports = new ReportsServiceResource($this, $this->serviceName, 'reports', json_decode('{"methods": {"generate": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"sort": {"pattern": "(\\+|-)?[a-zA-Z_]+", "repeated": true, "type": "string", "location": "query"}, "startDate": {"pattern": "\\d{4}-\\d{2}-\\d{2}", "required": true, "type": "string", "location": "query"}, "endDate": {"pattern": "\\d{4}-\\d{2}-\\d{2}", "required": true, "type": "string", "location": "query"}, "locale": {"pattern": "[a-zA-Z_]+", "type": "string", "location": "query"}, "metric": {"pattern": "[a-zA-Z_]+", "repeated": true, "type": "string", "location": "query"}, "maxResults": {"format": "int32", "maximum": "50000", "minimum": "0", "location": "query", "type": "integer"}, "filter": {"pattern": "[a-zA-Z_]+(==|=@).+", "repeated": true, "type": "string", "location": "query"}, "currency": {"pattern": "[a-zA-Z]+", "type": "string", "location": "query"}, "startIndex": {"format": "int32", "maximum": "5000", "minimum": "0", "location": "query", "type": "integer"}, "dimension": {"pattern": "[a-zA-Z_]+", "repeated": true, "type": "string", "location": "query"}}, "id": "adsense.reports.generate", "httpMethod": "GET", "path": "reports", "response": {"$ref": "AdsenseReportsGenerateResponse"}}}}', true));
-    $this->customchannels = new CustomchannelsServiceResource($this, $this->serviceName, 'customchannels', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"pageToken": {"type": "string", "location": "query"}, "adClientId": {"required": true, "type": "string", "location": "path"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "id": "adsense.customchannels.list", "httpMethod": "GET", "path": "adclients/{adClientId}/customchannels", "response": {"$ref": "CustomChannels"}}}}', true));
+      $apiClient->addService($this->serviceName, $this->version);
+      $this->urlchannels = new UrlchannelsServiceResource($this, $this->serviceName, 'urlchannels', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"pageToken": {"type": "string", "location": "query"}, "adClientId": {"required": true, "type": "string", "location": "path"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "id": "adsense.urlchannels.list", "httpMethod": "GET", "path": "adclients/{adClientId}/urlchannels", "response": {"$ref": "UrlChannels"}}}}', true));
+      $this->adunits = new AdunitsServiceResource($this, $this->serviceName, 'adunits', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"includeInactive": {"type": "boolean", "location": "query"}, "pageToken": {"type": "string", "location": "query"}, "adClientId": {"required": true, "type": "string", "location": "path"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "id": "adsense.adunits.list", "httpMethod": "GET", "path": "adclients/{adClientId}/adunits", "response": {"$ref": "AdUnits"}}}}', true));
+      $this->adclients = new AdclientsServiceResource($this, $this->serviceName, 'adclients', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"pageToken": {"type": "string", "location": "query"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "response": {"$ref": "AdClients"}, "httpMethod": "GET", "path": "adclients", "id": "adsense.adclients.list"}}}', true));
+      $this->reports = new ReportsServiceResource($this, $this->serviceName, 'reports', json_decode('{"methods": {"generate": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"sort": {"pattern": "(\\+|-)?[a-zA-Z_]+", "repeated": true, "type": "string", "location": "query"}, "startDate": {"pattern": "\\d{4}-\\d{2}-\\d{2}", "required": true, "type": "string", "location": "query"}, "endDate": {"pattern": "\\d{4}-\\d{2}-\\d{2}", "required": true, "type": "string", "location": "query"}, "locale": {"pattern": "[a-zA-Z_]+", "type": "string", "location": "query"}, "metric": {"pattern": "[a-zA-Z_]+", "repeated": true, "type": "string", "location": "query"}, "maxResults": {"format": "int32", "maximum": "50000", "minimum": "0", "location": "query", "type": "integer"}, "filter": {"pattern": "[a-zA-Z_]+(==|=@).+", "repeated": true, "type": "string", "location": "query"}, "currency": {"pattern": "[a-zA-Z]+", "type": "string", "location": "query"}, "startIndex": {"format": "int32", "maximum": "5000", "minimum": "0", "location": "query", "type": "integer"}, "dimension": {"pattern": "[a-zA-Z_]+", "repeated": true, "type": "string", "location": "query"}}, "id": "adsense.reports.generate", "httpMethod": "GET", "path": "reports", "response": {"$ref": "AdsenseReportsGenerateResponse"}}}}', true));
+      $this->customchannels = new CustomchannelsServiceResource($this, $this->serviceName, 'customchannels', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/adsense", "https://www.googleapis.com/auth/adsense.readonly"], "parameters": {"pageToken": {"type": "string", "location": "query"}, "adClientId": {"required": true, "type": "string", "location": "path"}, "maxResults": {"format": "int32", "maximum": "10000", "minimum": "0", "location": "query", "type": "integer"}}, "id": "adsense.customchannels.list", "httpMethod": "GET", "path": "adclients/{adClientId}/customchannels", "response": {"$ref": "CustomChannels"}}}}', true));
   }
 }
 
-class AdClient extends apiModel {
-  public $productCode;
-  public $kind;
-  public $id;
-  public $supportsReporting;
-  public function setProductCode($productCode) {
-    $this->productCode = $productCode;
-  }
-  public function getProductCode() {
-    return $this->productCode;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setId($id) {
-    $this->id = $id;
-  }
-  public function getId() {
-    return $this->id;
-  }
-  public function setSupportsReporting($supportsReporting) {
-    $this->supportsReporting = $supportsReporting;
-  }
-  public function getSupportsReporting() {
-    return $this->supportsReporting;
-  }
+class AdClient extends apiModel
+{
+    public $productCode;
+    public $kind;
+    public $id;
+    public $supportsReporting;
+    public function setProductCode($productCode)
+    {
+        $this->productCode = $productCode;
+    }
+    public function getProductCode()
+    {
+        return $this->productCode;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setSupportsReporting($supportsReporting)
+    {
+        $this->supportsReporting = $supportsReporting;
+    }
+    public function getSupportsReporting()
+    {
+        return $this->supportsReporting;
+    }
 }
 
-class AdClients extends apiModel {
-  public $nextPageToken;
-  protected $__itemsType = 'AdClient';
-  protected $__itemsDataType = 'array';
-  public $items;
-  public $kind;
-  public $etag;
-  public function setNextPageToken($nextPageToken) {
-    $this->nextPageToken = $nextPageToken;
-  }
-  public function getNextPageToken() {
-    return $this->nextPageToken;
-  }
-  public function setItems(/* array(AdClient) */ $items) {
-    $this->assertIsArray($items, 'AdClient', __METHOD__);
-    $this->items = $items;
-  }
-  public function getItems() {
-    return $this->items;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setEtag($etag) {
-    $this->etag = $etag;
-  }
-  public function getEtag() {
-    return $this->etag;
-  }
+class AdClients extends apiModel
+{
+    public $nextPageToken;
+    protected $__itemsType = 'AdClient';
+    protected $__itemsDataType = 'array';
+    public $items;
+    public $kind;
+    public $etag;
+    public function setNextPageToken($nextPageToken)
+    {
+        $this->nextPageToken = $nextPageToken;
+    }
+    public function getNextPageToken()
+    {
+        return $this->nextPageToken;
+    }
+    public function setItems(/* array(AdClient) */ $items)
+    {
+        $this->assertIsArray($items, 'AdClient', __METHOD__);
+        $this->items = $items;
+    }
+    public function getItems()
+    {
+        return $this->items;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setEtag($etag)
+    {
+        $this->etag = $etag;
+    }
+    public function getEtag()
+    {
+        return $this->etag;
+    }
 }
 
-class AdUnit extends apiModel {
-  public $status;
-  public $kind;
-  public $code;
-  public $id;
-  public $name;
-  public function setStatus($status) {
-    $this->status = $status;
-  }
-  public function getStatus() {
-    return $this->status;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setCode($code) {
-    $this->code = $code;
-  }
-  public function getCode() {
-    return $this->code;
-  }
-  public function setId($id) {
-    $this->id = $id;
-  }
-  public function getId() {
-    return $this->id;
-  }
-  public function setName($name) {
-    $this->name = $name;
-  }
-  public function getName() {
-    return $this->name;
-  }
+class AdUnit extends apiModel
+{
+    public $status;
+    public $kind;
+    public $code;
+    public $id;
+    public $name;
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+    public function getCode()
+    {
+        return $this->code;
+    }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
 }
 
-class AdUnits extends apiModel {
-  public $nextPageToken;
-  protected $__itemsType = 'AdUnit';
-  protected $__itemsDataType = 'array';
-  public $items;
-  public $kind;
-  public $etag;
-  public function setNextPageToken($nextPageToken) {
-    $this->nextPageToken = $nextPageToken;
-  }
-  public function getNextPageToken() {
-    return $this->nextPageToken;
-  }
-  public function setItems(/* array(AdUnit) */ $items) {
-    $this->assertIsArray($items, 'AdUnit', __METHOD__);
-    $this->items = $items;
-  }
-  public function getItems() {
-    return $this->items;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setEtag($etag) {
-    $this->etag = $etag;
-  }
-  public function getEtag() {
-    return $this->etag;
-  }
+class AdUnits extends apiModel
+{
+    public $nextPageToken;
+    protected $__itemsType = 'AdUnit';
+    protected $__itemsDataType = 'array';
+    public $items;
+    public $kind;
+    public $etag;
+    public function setNextPageToken($nextPageToken)
+    {
+        $this->nextPageToken = $nextPageToken;
+    }
+    public function getNextPageToken()
+    {
+        return $this->nextPageToken;
+    }
+    public function setItems(/* array(AdUnit) */ $items)
+    {
+        $this->assertIsArray($items, 'AdUnit', __METHOD__);
+        $this->items = $items;
+    }
+    public function getItems()
+    {
+        return $this->items;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setEtag($etag)
+    {
+        $this->etag = $etag;
+    }
+    public function getEtag()
+    {
+        return $this->etag;
+    }
 }
 
-class AdsenseReportsGenerateResponse extends apiModel {
-  public $rows;
-  public $warnings;
-  public $totals;
-  protected $__headersType = 'AdsenseReportsGenerateResponseHeaders';
-  protected $__headersDataType = 'array';
-  public $headers;
-  public $totalMatchedRows;
-  public $averages;
-  public function setRows(/* array(string) */ $rows) {
-    $this->assertIsArray($rows, 'string', __METHOD__);
-    $this->rows = $rows;
-  }
-  public function getRows() {
-    return $this->rows;
-  }
-  public function setWarnings(/* array(string) */ $warnings) {
-    $this->assertIsArray($warnings, 'string', __METHOD__);
-    $this->warnings = $warnings;
-  }
-  public function getWarnings() {
-    return $this->warnings;
-  }
-  public function setTotals(/* array(string) */ $totals) {
-    $this->assertIsArray($totals, 'string', __METHOD__);
-    $this->totals = $totals;
-  }
-  public function getTotals() {
-    return $this->totals;
-  }
-  public function setHeaders(/* array(AdsenseReportsGenerateResponseHeaders) */ $headers) {
-    $this->assertIsArray($headers, 'AdsenseReportsGenerateResponseHeaders', __METHOD__);
-    $this->headers = $headers;
-  }
-  public function getHeaders() {
-    return $this->headers;
-  }
-  public function setTotalMatchedRows($totalMatchedRows) {
-    $this->totalMatchedRows = $totalMatchedRows;
-  }
-  public function getTotalMatchedRows() {
-    return $this->totalMatchedRows;
-  }
-  public function setAverages(/* array(string) */ $averages) {
-    $this->assertIsArray($averages, 'string', __METHOD__);
-    $this->averages = $averages;
-  }
-  public function getAverages() {
-    return $this->averages;
-  }
+class AdsenseReportsGenerateResponse extends apiModel
+{
+    public $rows;
+    public $warnings;
+    public $totals;
+    protected $__headersType = 'AdsenseReportsGenerateResponseHeaders';
+    protected $__headersDataType = 'array';
+    public $headers;
+    public $totalMatchedRows;
+    public $averages;
+    public function setRows(/* array(string) */ $rows)
+    {
+        $this->assertIsArray($rows, 'string', __METHOD__);
+        $this->rows = $rows;
+    }
+    public function getRows()
+    {
+        return $this->rows;
+    }
+    public function setWarnings(/* array(string) */ $warnings)
+    {
+        $this->assertIsArray($warnings, 'string', __METHOD__);
+        $this->warnings = $warnings;
+    }
+    public function getWarnings()
+    {
+        return $this->warnings;
+    }
+    public function setTotals(/* array(string) */ $totals)
+    {
+        $this->assertIsArray($totals, 'string', __METHOD__);
+        $this->totals = $totals;
+    }
+    public function getTotals()
+    {
+        return $this->totals;
+    }
+    public function setHeaders(/* array(AdsenseReportsGenerateResponseHeaders) */ $headers)
+    {
+        $this->assertIsArray($headers, 'AdsenseReportsGenerateResponseHeaders', __METHOD__);
+        $this->headers = $headers;
+    }
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+    public function setTotalMatchedRows($totalMatchedRows)
+    {
+        $this->totalMatchedRows = $totalMatchedRows;
+    }
+    public function getTotalMatchedRows()
+    {
+        return $this->totalMatchedRows;
+    }
+    public function setAverages(/* array(string) */ $averages)
+    {
+        $this->assertIsArray($averages, 'string', __METHOD__);
+        $this->averages = $averages;
+    }
+    public function getAverages()
+    {
+        return $this->averages;
+    }
 }
 
-class AdsenseReportsGenerateResponseHeaders extends apiModel {
-  public $currency;
-  public $type;
-  public $name;
-  public function setCurrency($currency) {
-    $this->currency = $currency;
-  }
-  public function getCurrency() {
-    return $this->currency;
-  }
-  public function setType($type) {
-    $this->type = $type;
-  }
-  public function getType() {
-    return $this->type;
-  }
-  public function setName($name) {
-    $this->name = $name;
-  }
-  public function getName() {
-    return $this->name;
-  }
+class AdsenseReportsGenerateResponseHeaders extends apiModel
+{
+    public $currency;
+    public $type;
+    public $name;
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
+    }
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    public function getType()
+    {
+        return $this->type;
+    }
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
 }
 
-class CustomChannel extends apiModel {
-  public $kind;
-  public $code;
-  public $id;
-  public $name;
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setCode($code) {
-    $this->code = $code;
-  }
-  public function getCode() {
-    return $this->code;
-  }
-  public function setId($id) {
-    $this->id = $id;
-  }
-  public function getId() {
-    return $this->id;
-  }
-  public function setName($name) {
-    $this->name = $name;
-  }
-  public function getName() {
-    return $this->name;
-  }
+class CustomChannel extends apiModel
+{
+    public $kind;
+    public $code;
+    public $id;
+    public $name;
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+    public function getCode()
+    {
+        return $this->code;
+    }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
 }
 
-class CustomChannels extends apiModel {
-  public $nextPageToken;
-  protected $__itemsType = 'CustomChannel';
-  protected $__itemsDataType = 'array';
-  public $items;
-  public $kind;
-  public $etag;
-  public function setNextPageToken($nextPageToken) {
-    $this->nextPageToken = $nextPageToken;
-  }
-  public function getNextPageToken() {
-    return $this->nextPageToken;
-  }
-  public function setItems(/* array(CustomChannel) */ $items) {
-    $this->assertIsArray($items, 'CustomChannel', __METHOD__);
-    $this->items = $items;
-  }
-  public function getItems() {
-    return $this->items;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setEtag($etag) {
-    $this->etag = $etag;
-  }
-  public function getEtag() {
-    return $this->etag;
-  }
+class CustomChannels extends apiModel
+{
+    public $nextPageToken;
+    protected $__itemsType = 'CustomChannel';
+    protected $__itemsDataType = 'array';
+    public $items;
+    public $kind;
+    public $etag;
+    public function setNextPageToken($nextPageToken)
+    {
+        $this->nextPageToken = $nextPageToken;
+    }
+    public function getNextPageToken()
+    {
+        return $this->nextPageToken;
+    }
+    public function setItems(/* array(CustomChannel) */ $items)
+    {
+        $this->assertIsArray($items, 'CustomChannel', __METHOD__);
+        $this->items = $items;
+    }
+    public function getItems()
+    {
+        return $this->items;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setEtag($etag)
+    {
+        $this->etag = $etag;
+    }
+    public function getEtag()
+    {
+        return $this->etag;
+    }
 }
 
-class UrlChannel extends apiModel {
-  public $kind;
-  public $id;
-  public $urlPattern;
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setId($id) {
-    $this->id = $id;
-  }
-  public function getId() {
-    return $this->id;
-  }
-  public function setUrlPattern($urlPattern) {
-    $this->urlPattern = $urlPattern;
-  }
-  public function getUrlPattern() {
-    return $this->urlPattern;
-  }
+class UrlChannel extends apiModel
+{
+    public $kind;
+    public $id;
+    public $urlPattern;
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setUrlPattern($urlPattern)
+    {
+        $this->urlPattern = $urlPattern;
+    }
+    public function getUrlPattern()
+    {
+        return $this->urlPattern;
+    }
 }
 
-class UrlChannels extends apiModel {
-  public $nextPageToken;
-  protected $__itemsType = 'UrlChannel';
-  protected $__itemsDataType = 'array';
-  public $items;
-  public $kind;
-  public $etag;
-  public function setNextPageToken($nextPageToken) {
-    $this->nextPageToken = $nextPageToken;
-  }
-  public function getNextPageToken() {
-    return $this->nextPageToken;
-  }
-  public function setItems(/* array(UrlChannel) */ $items) {
-    $this->assertIsArray($items, 'UrlChannel', __METHOD__);
-    $this->items = $items;
-  }
-  public function getItems() {
-    return $this->items;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setEtag($etag) {
-    $this->etag = $etag;
-  }
-  public function getEtag() {
-    return $this->etag;
-  }
+class UrlChannels extends apiModel
+{
+    public $nextPageToken;
+    protected $__itemsType = 'UrlChannel';
+    protected $__itemsDataType = 'array';
+    public $items;
+    public $kind;
+    public $etag;
+    public function setNextPageToken($nextPageToken)
+    {
+        $this->nextPageToken = $nextPageToken;
+    }
+    public function getNextPageToken()
+    {
+        return $this->nextPageToken;
+    }
+    public function setItems(/* array(UrlChannel) */ $items)
+    {
+        $this->assertIsArray($items, 'UrlChannel', __METHOD__);
+        $this->items = $items;
+    }
+    public function getItems()
+    {
+        return $this->items;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setEtag($etag)
+    {
+        $this->etag = $etag;
+    }
+    public function getEtag()
+    {
+        return $this->etag;
+    }
 }

@@ -2,9 +2,9 @@
 
 class Haanga_Extension_Tag_SetSafe
 {
-    public $is_block = FALSE;
+    public $is_block = false;
 
-    static function generator($cmp, $args)
+    public static function generator($cmp, $args)
     {
         foreach ($args as $arg) {
             if (Haanga_AST::is_var($arg)) {

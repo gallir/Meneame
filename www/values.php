@@ -5,20 +5,30 @@ include(mnminclude.'html1.php');
 
 /*
 if (!$current_user->admin) {
-	do_error(_('acceso prohibido'), 403);
-	die();
+    do_error(_('acceso prohibido'), 403);
+    die();
 }
 */
 
-function print_time($secs) {
-	if ( $secs < 60 ) return $secs . ' ' . _("segundos");
-	elseif ( $secs == 60 ) return "1" . ' ' . _("minuto");
-	elseif ( $secs % 60 == 0 && $secs < 3600) return ($secs / 60) . ' ' ._("minutos");
-	elseif ( $secs == 3600) return "1" . ' ' . _("hora");
-	elseif ( $secs % 3600 == 0 && $secs < 86400) return ($secs / 3600) . ' ' ._("horas");
-	elseif ( $secs == 86400) return "1" . ' ' . _("día");
-	elseif ( $secs % 86400 == 0 ) return ($secs / 86400) . ' ' ._("días");
-	else return $secs . ' ' . _("segundos");
+function print_time($secs)
+{
+    if ($secs < 60) {
+        return $secs . ' ' . _("segundos");
+    } elseif ($secs == 60) {
+        return "1" . ' ' . _("minuto");
+    } elseif ($secs % 60 == 0 && $secs < 3600) {
+        return ($secs / 60) . ' ' ._("minutos");
+    } elseif ($secs == 3600) {
+        return "1" . ' ' . _("hora");
+    } elseif ($secs % 3600 == 0 && $secs < 86400) {
+        return ($secs / 3600) . ' ' ._("horas");
+    } elseif ($secs == 86400) {
+        return "1" . ' ' . _("día");
+    } elseif ($secs % 86400 == 0) {
+        return ($secs / 86400) . ' ' ._("días");
+    } else {
+        return $secs . ' ' . _("segundos");
+    }
 }
 
 do_header(_('Información sobre valores de karma y límites') . ' | ' . _('menéame'));
@@ -44,43 +54,43 @@ echo _("El karma de un usuario puede ir de").' '.$globals['min_karma'].' '._("a"
 				<br/>
 				';
 
-if($globals['min_karma_for_links']) {
-				echo _("Karma mínimo para enviar historias") . ': ' . $globals['min_karma_for_links'] . '<br/>
+if ($globals['min_karma_for_links']) {
+    echo _("Karma mínimo para enviar historias") . ': ' . $globals['min_karma_for_links'] . '<br/>
 				<br/>
 				';
 }
 
-if($globals['min_karma_for_comments']) {
-				echo _("Karma mínimo para enviar comentarios") . ': '. $globals['min_karma_for_comments'] . '<br/>
+if ($globals['min_karma_for_comments']) {
+    echo _("Karma mínimo para enviar comentarios") . ': '. $globals['min_karma_for_comments'] . '<br/>
 				<br/>
 				';
 }
 
-if($globals['min_karma_for_comments']) {
-	echo _("Karma mínimo para reportar comentarios") . ': '. $globals['min_karma_for_report_comments'] . '<br/>
+if ($globals['min_karma_for_comments']) {
+    echo _("Karma mínimo para reportar comentarios") . ': '. $globals['min_karma_for_report_comments'] . '<br/>
 				<br/>
 				';
 }
 
-if($globals['min_karma_for_comment_votes']) {
-				echo _("Karma mínimo para votar comentarios") . ': ' . $globals['min_karma_for_comment_votes'] . '<br/>
+if ($globals['min_karma_for_comment_votes']) {
+    echo _("Karma mínimo para votar comentarios") . ': ' . $globals['min_karma_for_comment_votes'] . '<br/>
 				<br/>
 				';
 }
 
-if($globals['min_karma_for_posts']) {
-				echo _("Karma mínimo para enviar nótames") . ': ' . $globals['min_karma_for_posts'] . '<br/>
+if ($globals['min_karma_for_posts']) {
+    echo _("Karma mínimo para enviar nótames") . ': ' . $globals['min_karma_for_posts'] . '<br/>
 				<br/>
 				';
 }
 
-if($globals['min_karma_for_sneaker']) {
-				echo _("Karma mínimo para hablar en la fisgona") . ': ' . $globals['min_karma_for_sneaker'] . '<br/>
+if ($globals['min_karma_for_sneaker']) {
+    echo _("Karma mínimo para hablar en la fisgona") . ': ' . $globals['min_karma_for_sneaker'] . '<br/>
 				<br/>
 				';
 }
 
-echo				_("Karma instantáneo ganado por un usuario en el momento que se publica uno de sus envíos") . ': ' . $globals['instant_karma_per_published'] . '<br/>
+echo                _("Karma instantáneo ganado por un usuario en el momento que se publica uno de sus envíos") . ': ' . $globals['instant_karma_per_published'] . '<br/>
 				<br/>
 				'._("Karma instantáneo perdido por un usuario en el momento que se de-publica uno de sus envíos") . ': ' . $globals['instant_karma_per_depublished'] . '<br/>
 				<br/>
@@ -94,7 +104,7 @@ echo				_("Karma instantáneo ganado por un usuario en el momento que se publica
 echo '
 		<fieldset id="comments">
 			<legend>'._('comentarios').'</legend>
-				'._("Tiempo para editar un comentario") . ': ' . print_time( $globals['comment_edit_time'] ) . '<br/>
+				'._("Tiempo para editar un comentario") . ': ' . print_time($globals['comment_edit_time']) . '<br/>
 				<br/>
 				'._("Karma a partir del cual se destacan los comentarios") . ': ' . $globals['comment_highlight_karma'] . '<br/>
 				<br/>
@@ -218,11 +228,10 @@ echo '
 				'._("Se considera «nuevo usuario» a los usuarios que no hayan enviado ningún meneo o se hayan registrado hace menos de "). print_time($globals['new_user_time']) . '<br/>
 				<br/>';
 if ($globals['min_user_votes']) {
+    $total_links = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_status = 'queued'");
 
-$total_links = (int) $db->get_var("select count(*) from links where link_date > date_sub(now(), interval 24 hour) and link_status = 'queued'");
 
-
-echo '
+    echo '
 				'._("Un «nuevo usuario» con karma &lt; "). $globals['new_user_karma'] ._(" y sin envíos deberá votar ") . $globals['min_user_votes'] . _(" meneos antes de poder enviar").'<br/>
 				<br/>
 				'._("Un «nuevo usuario» con karma &lt; "). $globals['new_user_karma'] . _(" y con envíos deberá votar (cifra dinámica) ") . min(4, intval($total_links/20)) . _(" * (1 + nº de envíos del usuario en las últimas 24 h. que no estén en estado «discard») meneos para poder enviar") . '<br/>
@@ -243,4 +252,3 @@ echo '
 
 do_footer_menu();
 do_footer();
-

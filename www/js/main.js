@@ -80,50 +80,73 @@ function menealo(user, id) {
     reportAjaxStats('vote', 'link');
 }
 
-function menealo_comment(user, id, value) {
-    var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id;
-    var url = base_url + "backend/menealo_comment?" + content;
+var votePending = [];
 
-    respond_comment_vote(id, value);
+function setVotePending(key, $voted, $notvoted) {
+    if ((typeof votePending[key] !== 'undefined') && votePending[key]) {
+        clearTimeout(votePending[key]);
+    }
 
-    $.getJSON(url, function(data) {
-        update_comment_vote(id, value, data);
-    });
-
-    reportAjaxStats('vote', 'comment');
-}
-
-function menealo_post(user, id, value) {
-    var content = "id=" + id + "&user=" + user + "&value=" + value + "&key=" + base_key + "&l=" + link_id;
-    var url = base_url + "backend/menealo_post?" + content;
-
-    respond_comment_vote(id, value);
-
-    $.getJSON(url, function(data) {
-        update_comment_vote(id, value, data);
-    });
-
-    reportAjaxStats('vote', 'post');
-}
-
-function respond_comment_vote(id, value) {
-    $('#vc-p-' + id).addClass('voted').attr('onclick', '').unbind('click');
-    $('#vc-n-' + id).addClass('voted').attr('onclick', '').unbind('click');
-}
-
-function update_comment_vote(id, value, data) {
-    if (data.error) {
-        mDialog.notify("{% trans _('Error:') %} " + data.error, 5);
+    if ($voted.hasClass('voted')) {
+        $voted.removeClass('voted pending').addClass('unhover');
         return false;
     }
 
-    $('#vc-' + id).html(data.votes + "");
-    $('#vk-' + id).html(data.karma + "");
-    $('#vc-n-' + id).hide();
+    $voted.removeClass('unhover').addClass('voted pending');
+    $notvoted.removeClass('unhover voted pending');
 
-    if (value < 0) {
-        $('#vc-p-' + id).removeClass('up').addClass('down');
+    return true;
+}
+
+function vote(type, user, id, value) {
+    if ((type !== 'comment') && (type !== 'post')) {
+        return;
     }
+
+    var key = type + '-' + id;
+    var $voted, $notvoted;
+
+    if (value > 0) {
+        $voted = 'up';
+        $notvoted = 'down';
+    } else {
+        $voted = 'down';
+        $notvoted = 'up';
+    }
+
+    $voted = $('[data-id="' + key + '"] .vote.' + $voted);
+    $notvoted = $('[data-id="' + key + '"] .vote.' + $notvoted);
+
+    if (!setVotePending(key, $voted, $notvoted)) {
+        return;
+    }
+
+    votePending[key] = setTimeout(function() {
+        var url = base_url + 'backend/menealo_' + type;
+        var content = 'id=' + id + '&user=' + user + '&value=' + value + '&key=' + base_key + '&l=' + link_id;
+
+        $.getJSON(url + '?' + content, function(data) {
+            updateVote($voted, $notvoted, id, data);
+        });
+
+        reportAjaxStats('vote', type);
+
+        votePending[key] = null;
+    }, 2000);
+}
+
+function updateVote($voted, $notvoted, id, data) {
+    if (data.error) {
+        return mDialog.notify("{% trans _('Error:') %} " + data.error, 5);
+    }
+
+    var $container = $voted.closest('.comment');
+
+    $container.find('#vc-' + id).html('' + data.votes);
+    $container.find('#vk-' + id).html('<i class="icon-karma">K</i> ' + data.karma);
+
+    $voted.addClass('voted').removeClass('pending').removeAttr('href').removeAttr('onclick');
+    $notvoted.removeAttr('href').removeAttr('onclick').css('visibility', 'hidden');
 }
 
 function disable_vote_link(id, value, mess, background) {
@@ -917,7 +940,7 @@ var mDialog = new function() {
 };
 
 function comment_edit(id, DOMid) {
-    $target = $('#' + DOMid).parent();
+    $target = $('#' + DOMid).closest('.comment').parent();
 
     $.getJSON(base_url_sub + 'comment_ajax', {
         id: id
@@ -955,9 +978,9 @@ function comment_edit(id, DOMid) {
 }
 
 function comment_reply(id, prefix) {
-    prefix != null ? prefix : '';
+    prefix = prefix || '';
 
-    var $parent = $("#cid-" + prefix + id).parent();
+    var $parent = $('#cid-' + prefix + id).closest('.comment');
 
     if ($parent.find('#comment_ajax_form').length > 0) {
         return;
@@ -967,7 +990,7 @@ function comment_reply(id, prefix) {
 
     var $target = $('<div class="threader"></div>');
 
-    $parent.append($target);
+    $parent.after($target);
 
     $.getJSON(base_url_sub + 'comment_ajax', {
         reply_to: id
@@ -990,13 +1013,14 @@ function comment_reply(id, prefix) {
             async: false,
             dataType: 'json',
             success: function(data) {
-                if (!data.error) {
-                    $e.remove();
-                    $target.append(data.html);
-                } else {
+                if (data.error) {
                     mDialog.notify("error: " + data.error, 5);
+                    return;
                 }
 
+                $e.remove();
+
+                $target.append(data.html).find('.comment-expand').remove();
                 $target.trigger('DOMChanged', $target);
             },
             error: function() {
@@ -1344,8 +1368,11 @@ function show_total_answers(type, id, answers) {
         dom_id = '#pid-' + id;
     }
 
-    element = $(dom_id).siblings(".comment-meta").children(".comment-votes-info");
-    element.append('&nbsp;<span onClick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas ') %}" class="answers"><span class="counter">' + answers + '</span></span>');
+    $(dom_id).closest('.comment').find('.comment-footer').append(
+        '<a href="javascript:void(0);" onclick="javascript:show_answers(\'' + type + '\',' + id + ')" title="' + answers + ' {% trans _('respuestas') %}" class="comment-answers">'
+        + '<i class="fa fa-comments"></i>&nbsp;' + answers
+        + '</a>'
+    );
 }
 
 function show_answers(type, id) {
@@ -1368,13 +1395,11 @@ function show_answers(type, id) {
 
     $.get(base_url + 'backend/' + program, { "type": type, "id": id }, function(html) {
         /* Added a double check to avoid duplicated answers on latency problems */
-        var current_answers = $('#answers-' + id);
-
-        if (current_answers.length) {
+        if ($('#answers-' + id).length) {
             return;
         }
 
-        element = $(dom_id).parent().parent();
+        element = $(dom_id).closest('.comment').parent();
         element.append('<div class="comment-answers" id="answers-' + id + '">' + html + '</div>');
         element.trigger('DOMChanged', element);
     });
@@ -2713,18 +2738,11 @@ $(document).ready(function() {
     });
 
     if (is_mobile) {
-        var $subHeader = $('.dropdown-menu.menu-subheader'),
+        var $window = $(window),
+            $subHeader = $('.dropdown-menu.menu-subheader'),
             $subHeaderA = $subHeader.find('a'),
             $menuItemSLLi = $('.menu01-itemsl > li'),
             $menuItemSRLi = $('.menu01-itemsr > li');
-
-        $(window).scroll(function() {
-            if ($(this).scrollTop() > 116) {
-                $('.header-sub-wrapper').addClass('fixed').show();
-            } else {
-                $('.header-sub-wrapper').removeClass('fixed').hide();
-            }
-        });
 
         if ($subHeaderA.length) {
             var select = $('<select class="select-menu-more-options" onchange="location=this.value"/>');

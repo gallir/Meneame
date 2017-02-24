@@ -46,7 +46,7 @@ if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
 //// End recovery
 
 // Check user, admin and authenticated user
-if ($current_user->user_id > 0 && (empty($_REQUEST['login']) || $_REQUEST['login'] == $current_user->user_login) ) {
+if ($current_user->user_id > 0 && (empty($_REQUEST['login']) || $_REQUEST['login'] == $current_user->user_login)) {
     $login = $current_user->user_login;
 } elseif (!empty($_REQUEST['login']) && $current_user->user_level === 'god') {
     $login = $db->escape($_REQUEST['login']);
@@ -109,7 +109,8 @@ Haanga::Load('profile.html', compact('user', 'form', 'messages'));
 
 do_footer();
 
-function save_profile() {
+function save_profile()
+{
     global $db, $user, $current_user, $globals, $admin_mode, $site_key, $bio_max;
 
     $errors = 0; // benjami: control added (2005-12-22)
@@ -118,12 +119,12 @@ function save_profile() {
 
     $form_hash = md5($site_key.$user->id.$current_user->user_id);
 
-    if(isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id ) {
+    if (isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id) {
         $old_user_login = $user->username;
         $old_user_id = $user->id;
         $user->disable(true);
 
-        Log::insert('user_delete', $old_user_id, $old_user_id );
+        Log::insert('user_delete', $old_user_id, $old_user_id);
         syslog(LOG_NOTICE, "Meneame, disabling $old_user_id ($old_user_login) by $current_user->user_login -> $user->username ");
 
         $current_user->Logout(get_user_uri($user->username));
@@ -131,7 +132,7 @@ function save_profile() {
         die;
     }
 
-    if (!isset($_POST['save_profile']) || !isset($_POST['process']) || ($_POST['user_id'] != $current_user->user_id && !$admin_mode) ) {
+    if (!isset($_POST['save_profile']) || !isset($_POST['process']) || ($_POST['user_id'] != $current_user->user_id && !$admin_mode)) {
         return;
     }
 
@@ -151,7 +152,7 @@ function save_profile() {
         if (!check_username($newname)) {
             array_push($messages, _('nombre de usuario erróneo, caracteres no admitidos'));
             $errors++;
-        } elseif (user_exists($newname, $user->id) ) {
+        } elseif (user_exists($newname, $user->id)) {
             array_push($messages, _('el usuario ya existe'));
             $errors++;
         } else {
@@ -261,7 +262,7 @@ function save_profile() {
     $user->names = clean_text($_POST['names']);
 
     if (!empty($_POST['password']) || !empty($_POST['password2'])) {
-        if (!check_password($_POST["password"]) ) {
+        if (!check_password($_POST["password"])) {
             array_push($messages, _('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números'));
             $errors = 1;
         } elseif (trim($_POST['password']) !== trim($_POST['password2'])) {
@@ -280,7 +281,7 @@ function save_profile() {
     $user->comment_pref=intval($_POST['comment_pref']) + (intval($_POST['show_friends']) & 1) * 2 + (intval($_POST['show_2cols']) & 1) * 4;
 
     // Manage avatars upload
-    if (!empty($_FILES['image']['tmp_name']) ) {
+    if (!empty($_FILES['image']['tmp_name'])) {
         if (avatars_check_upload_size('image')) {
             $avatar_mtime = avatars_manage_upload($user->id, 'image');
 

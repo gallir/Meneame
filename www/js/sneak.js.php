@@ -31,15 +31,15 @@ var friend_nicks = new Array();
 
 <?php
 if ($current_user->user_id > 0) {
-	echo "user_login = '$current_user->user_login';\n";
-	$friends = $db->get_col("select user_login from users, friends where friend_type='manual' and friend_from = $current_user->user_id and friend_value > 0 and user_id = friend_to");
-	if ($friends) {
-		$i = 0;
-		foreach ($friends as $friend) {
-			echo "friend_nicks.push('".mb_strtolower($friend)."');\n";
-			$i++;
-		}
-	}
+    echo "user_login = '$current_user->user_login';\n";
+    $friends = $db->get_col("select user_login from users, friends where friend_type='manual' and friend_from = $current_user->user_id and friend_value > 0 and user_id = friend_to");
+    if ($friends) {
+        $i = 0;
+        foreach ($friends as $friend) {
+            echo "friend_nicks.push('".mb_strtolower($friend)."');\n";
+            $i++;
+        }
+    }
 }
 ?>
 var global_options = new Object;

@@ -350,6 +350,10 @@ class Poll
     {
         global $db;
 
+        if (empty($related_ids)) {
+            return array();
+        }
+
         $query = '
             SELECT SQL_NO_CACHE *, NULL AS `voted`, TRUE AS `simple`,
                 IF (`end_at` < NOW(), TRUE, FALSE) AS `finished`
@@ -364,6 +368,10 @@ class Poll
     public static function selectFromRelatedIds($related, array $related_ids)
     {
         global $db, $current_user;
+
+        if (empty($related_ids)) {
+            return array();
+        }
 
         if ($current_user) {
             $query = '

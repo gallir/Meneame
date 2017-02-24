@@ -17,13 +17,13 @@ $offset=($page-1)*$page_size;
 $cat=$_REQUEST['category'];
 
 do_header($globals['site_name']);
-do_tabs('main','published');
+do_tabs('main', 'published');
 
 echo '<div id="newswrap">'."\n";
 
 if ($page == 1 && ($top = Link::top())) {
-	$vars = array('self' => $top);
-	Haanga::Load("mobile/link_top.html", $vars);
+    $vars = array('self' => $top);
+    Haanga::Load("mobile/link_top.html", $vars);
 }
 
 $rows = Link::count('published');
@@ -31,15 +31,12 @@ $sql = "SELECT".Link::SQL."INNER JOIN (SELECT link FROM sub_statuses $from WHERE
 
 $links = $db->object_iterator($sql, "LinkMobile");
 if ($links) {
-	foreach($links as $link) {
-		$link->print_summary();
-	}
+    foreach ($links as $link) {
+        $link->print_summary();
+    }
 }
 
 do_pages($rows, $page_size);
 echo '</div>'."\n";
 
 do_footer();
-
-
-?>

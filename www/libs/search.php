@@ -1,5 +1,5 @@
 <?php
-require_once (mnminclude.'sphinxapi.php');
+require_once(mnminclude.'sphinxapi.php');
 
 function do_search($by_date = false, $start = 0, $count = 50, $proximity = true)
 {
@@ -22,8 +22,8 @@ function sphinx_client()
         return $cl;
     }
 
-    $cl = new SphinxClient ();
-    $cl->SetServer ($globals['sphinx_server'], $globals['sphinx_port']);
+    $cl = new SphinxClient();
+    $cl->SetServer($globals['sphinx_server'], $globals['sphinx_port']);
 
     // Request for status values, it's used in other sites
     $globals['status_values'] = $db->get_enum_values('links', 'link_status');
@@ -49,7 +49,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
         return $response;
     }
 
-    $cl->SetLimits ( $start, $count );
+    $cl->SetLimits($start, $count);
 
     if ($_REQUEST['w'] == 'links') {
         $cl->SetFieldWeights(array('title' => 3, 'tags' => 3, 'url' => 1, 'content' => 1));
@@ -147,9 +147,9 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
     }
 
     if ($by_date || $_REQUEST['o'] === 'date' || $_REQUEST['p'] === 'url') {
-        $cl->SetSortMode (SPH_SORT_ATTR_DESC, 'date');
+        $cl->SetSortMode(SPH_SORT_ATTR_DESC, 'date');
     } elseif ($_REQUEST['o'] === 'pure') {
-        $cl->SetSortMode (SPH_SORT_RELEVANCE);
+        $cl->SetSortMode(SPH_SORT_RELEVANCE);
     } else {
         // If "root_time", it will center the search on that timestamp
         if ($_REQUEST['root_time'] > 0) {
@@ -178,9 +178,9 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
         $cl->SetSortMode(SPH_SORT_EXPR, $exp);
     }
 
-    $cl->SetMatchMode (SPH_MATCH_EXTENDED); // TODO: Alert, deprecated in 2.2
+    $cl->SetMatchMode(SPH_MATCH_EXTENDED); // TODO: Alert, deprecated in 2.2
 
-    if ($words_count == 1 || $_REQUEST['p'] === 'url' ) {
+    if ($words_count == 1 || $_REQUEST['p'] === 'url') {
         // Don't use rank ofr one word
         $cl->SetRankingMode(SPH_RANK_NONE);
     } elseif ($proximity) {
@@ -202,7 +202,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
         array_push($queries, $q);
     } elseif ($words_count < 5) {
-        $q = $cl->AddQuery ( "$f $words", $indices );
+        $q = $cl->AddQuery("$f $words", $indices);
 
         array_push($queries, $q);
     }
@@ -232,7 +232,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
             $c++;
         }
 
-        $q = $cl->AddQuery ( "$f $words", $indices );
+        $q = $cl->AddQuery("$f $words", $indices);
 
         array_push($queries, $q);
     }
@@ -249,7 +249,7 @@ function sphinx_do_search($by_date = false, $start = 0, $count = 10, $proximity 
 
         $response['rows'] += $res["total_found"];
 
-        foreach ( $res["matches"] as $doc => $docinfo ) {
+        foreach ($res["matches"] as $doc => $docinfo) {
             if (!$recorded[$doc]) {
                 $response['ids'][$n] = $doc;
                 $response['weights']["$doc"] = $docinfo['weight'];
@@ -275,7 +275,7 @@ function sphinx_doc_hits($q, $index = 'links')
     }
 
     $hits = PHP_INT_MAX;
-    $keys = $cl->BuildKeywords ($q, $index, true);
+    $keys = $cl->BuildKeywords($q, $index, true);
 
     if (!is_array($keys)) {
         return $hits;
@@ -383,11 +383,11 @@ function search_parse_query()
                 $_REQUEST['o'] = 'date';
                 break;
 
-            case 'url';
+            case 'url':
                 $_REQUEST['p'] = 'url';
                 break;
 
-            case 'title';
+            case 'title':
                 $_REQUEST['p'] = 'title';
                 break;
 

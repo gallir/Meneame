@@ -18,59 +18,60 @@ $page_size = $globals['page_size'] * 2;
 $items = array(_('usuario'),  _('karma'), _('noticias'), _('noticias publicadas'), _('comentarios'), _('votos últimos 2 meses'));
 
 if (check_ban($globals['user_ip'], 'proxy')) {
-	return;
+    return;
 }
 
 
 // Warn, empty() return true even if sortby=0
-if ( !strlen($_GET['sortby']) > 0) {
-	$sortby = 1;
+if (!strlen($_GET['sortby']) > 0) {
+    $sortby = 1;
 } else {
-	$sortby = intval($_GET['sortby']);
-	if($sortby < 0 || $sortby > 3)
-		$sortby = 1;
+    $sortby = intval($_GET['sortby']);
+    if ($sortby < 0 || $sortby > 3) {
+        $sortby = 1;
+    }
 }
 
 switch ($sortby) {
-	case 0:
-		$select = "SELECT user_id ";
-		$from_where = " FROM users ";
-		$order_by = " ORDER BY user_login ";
-		break;
-	case 1:
-		$select = "SELECT user_id ";
-		$from_where = " FROM users ";
-		$order_by = " ORDER BY user_karma DESC ";
-		break;
+    case 0:
+        $select = "SELECT user_id ";
+        $from_where = " FROM users ";
+        $order_by = " ORDER BY user_login ";
+        break;
+    case 1:
+        $select = "SELECT user_id ";
+        $from_where = " FROM users ";
+        $order_by = " ORDER BY user_karma DESC ";
+        break;
 /* Disabled because it's to much for the database
    TODO: Implement a cache, with Haanga
-	case 2:
-		$select = "SELECT user_id, count(*) as count ";
-		$from_where = " FROM links, users WHERE user_level not in ('disabled', 'autodisabled') and link_author=user_id GROUP BY link_author";
-		$order_by = " ORDER BY count DESC ";
-		break;
-	case 3:
-		$select = "SELECT user_id, count(*) as count ";
-		$from_where = " FROM links, users WHERE user_level not in ('disabled', 'autodisabled') and link_status = 'published' AND link_author=user_id GROUP BY link_author";
-		$order_by = " ORDER BY count DESC ";
-		break;
-	case 4:
-		$select = "SELECT user_id, count(*) as count ";
-		$from_where = " FROM comments, users WHERE user_level not in ('disabled', 'autodisabled') and comment_user_id=user_id GROUP BY comment_user_id";
-		$order_by = " ORDER BY count DESC ";
-		break;
-	case 5:
-		$select = "SELECT user_id, count(*) as count ";
-		$from_where = " FROM votes, users WHERE vote_type='links' and vote_user_id=user_id GROUP BY vote_user_id";
-		$order_by = " ORDER BY count DESC ";
-		break;
+    case 2:
+        $select = "SELECT user_id, count(*) as count ";
+        $from_where = " FROM links, users WHERE user_level not in ('disabled', 'autodisabled') and link_author=user_id GROUP BY link_author";
+        $order_by = " ORDER BY count DESC ";
+        break;
+    case 3:
+        $select = "SELECT user_id, count(*) as count ";
+        $from_where = " FROM links, users WHERE user_level not in ('disabled', 'autodisabled') and link_status = 'published' AND link_author=user_id GROUP BY link_author";
+        $order_by = " ORDER BY count DESC ";
+        break;
+    case 4:
+        $select = "SELECT user_id, count(*) as count ";
+        $from_where = " FROM comments, users WHERE user_level not in ('disabled', 'autodisabled') and comment_user_id=user_id GROUP BY comment_user_id";
+        $order_by = " ORDER BY count DESC ";
+        break;
+    case 5:
+        $select = "SELECT user_id, count(*) as count ";
+        $from_where = " FROM votes, users WHERE vote_type='links' and vote_user_id=user_id GROUP BY vote_user_id";
+        $order_by = " ORDER BY count DESC ";
+        break;
 */
 }
 
 $sql = "$select $from_where $order_by LIMIT $page_size";
-if (! ($users = unserialize(memcache_mget($sql))) ) {
-	$users = $db->get_results($sql);
-	memcache_madd($sql, serialize($users), 3600);
+if (! ($users = unserialize(memcache_mget($sql)))) {
+    $users = $db->get_results($sql);
+    memcache_madd($sql, serialize($users), 3600);
 }
 
 
@@ -82,18 +83,18 @@ echo '<div class="topheading"><h2>'._('estadísticas de usuarios').'</h2></div>'
 echo '<table class="decorated"><tr>';
 
 // Print headers
-for($i=0; $i<count($items); $i++) {
-	echo '<th class="short">';
-	if($i==$sortby) {
-		echo '<span class="info_s">'.$items[$i].'</span>';
-	 } elseif ($i <= 1 && $i > 0) { // Disabled other options, we need a cached system
-		// Don't show order by votes or comment
-		// Too much CPU and disk IO consuption
-		echo '<a href="top_users?sortby='.$i.'">'.$items[$i].'</a>';
-	} else {
-		echo $items[$i];
-	}
-	echo '</th>';
+for ($i=0; $i<count($items); $i++) {
+    echo '<th class="short">';
+    if ($i==$sortby) {
+        echo '<span class="info_s">'.$items[$i].'</span>';
+    } elseif ($i <= 1 && $i > 0) { // Disabled other options, we need a cached system
+        // Don't show order by votes or comment
+        // Too much CPU and disk IO consuption
+        echo '<a href="top_users?sortby='.$i.'">'.$items[$i].'</a>';
+    } else {
+        echo $items[$i];
+    }
+    echo '</th>';
 }
 
 echo '</tr>';
@@ -101,27 +102,27 @@ echo '</tr>';
 $user = new User;
 
 if ($users) {
-	foreach($users as $dbuser) {
-		$user->id=$dbuser->user_id;
-		$user->read();
-		$user->all_stats();
-		echo '<tr>';
-		echo '<td style="font-size:100%"><a href="'.get_user_uri($user->username).'" class="tooltip u:'.$user->id.'"><img class="avatar" src="'.get_avatar_url($user->id, $user->avatar, 20).'" width="20" height="20" alt="avatar"/>&nbsp;'.$user->username.'</a></td>';
-		echo '<td class="short">'.$user->karma.'&nbsp;';
-		$user->print_medals();
-		echo '</td>';
-		echo '<td class="short">'.$user->total_links.'</td>';
-		if($user->total_links>0)
-			echo '<td class="short">'.$user->published_links.'&nbsp;('.intval($user->published_links/$user->total_links*100).'%)</td>';
-		else
-			echo '<td class="short">'.$user->published_links.'&nbsp;(-)</td>';
-		echo '<td class="short">'.$user->total_comments.'</td>';
-		echo '<td class="short">'.$user->total_votes.'</td>';
-		echo '</tr>';
-	}
+    foreach ($users as $dbuser) {
+        $user->id=$dbuser->user_id;
+        $user->read();
+        $user->all_stats();
+        echo '<tr>';
+        echo '<td style="font-size:100%"><a href="'.get_user_uri($user->username).'" class="tooltip u:'.$user->id.'"><img class="avatar" src="'.get_avatar_url($user->id, $user->avatar, 20).'" width="20" height="20" alt="avatar"/>&nbsp;'.$user->username.'</a></td>';
+        echo '<td class="short">'.$user->karma.'&nbsp;';
+        $user->print_medals();
+        echo '</td>';
+        echo '<td class="short">'.$user->total_links.'</td>';
+        if ($user->total_links>0) {
+            echo '<td class="short">'.$user->published_links.'&nbsp;('.intval($user->published_links/$user->total_links*100).'%)</td>';
+        } else {
+            echo '<td class="short">'.$user->published_links.'&nbsp;(-)</td>';
+        }
+        echo '<td class="short">'.$user->total_comments.'</td>';
+        echo '<td class="short">'.$user->total_votes.'</td>';
+        echo '</tr>';
+    }
 }
 echo "</table>\n\n";
 echo "</div>\n";
 do_footer_menu();
 do_footer();
-

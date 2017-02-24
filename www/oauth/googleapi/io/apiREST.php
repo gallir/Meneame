@@ -24,8 +24,9 @@ require_once "service/apiUtils.php";
  * @author Chris Chabot <chabotc@google.com>
  * @author Chirag Shah <chirags@google.com>
  */
-class apiREST {
-  /**
+class apiREST
+{
+    /**
    * Executes a apiServiceRequest using a RESTful call by transforming it into a apiHttpRequest,
    * execute it via apiIO::authenticatedRequest() and returning the json decoded result
    *
@@ -34,30 +35,31 @@ class apiREST {
    * @throws apiServiceException on server side error (ie: not authenticated, invalid or
    * malformed post body, invalid url)
    */
-  static public function execute(apiServiceRequest $req) {
-    $result = null;
-    $postBody = $req->getPostBody();
-    $url = self::createRequestUri($req->getRestBasePath(), $req->getRestPath(), $req->getParameters());
+  public static function execute(apiServiceRequest $req)
+  {
+      $result = null;
+      $postBody = $req->getPostBody();
+      $url = self::createRequestUri($req->getRestBasePath(), $req->getRestPath(), $req->getParameters());
 
-    $httpRequest = new apiHttpRequest($url, $req->getHttpMethod(), null, $postBody);
+      $httpRequest = new apiHttpRequest($url, $req->getHttpMethod(), null, $postBody);
     // Add a content-type: application/json header so the server knows how to interpret the post body
     if ($postBody) {
-      $contentTypeHeader = array(
+        $contentTypeHeader = array(
           'Content-Type: application/json; charset=UTF-8',
           'Content-Length: ' . apiUtils::getStrLen($postBody)
       );
-      if ($httpRequest->getHeaders()) {
-        $contentTypeHeader = array_merge($httpRequest->getHeaders(), $contentTypeHeader);
-      }
-      $httpRequest->setHeaders($contentTypeHeader);
+        if ($httpRequest->getHeaders()) {
+            $contentTypeHeader = array_merge($httpRequest->getHeaders(), $contentTypeHeader);
+        }
+        $httpRequest->setHeaders($contentTypeHeader);
     }
 
-    $httpRequest = $req->getIo()->authenticatedRequest($httpRequest);
-    $decodedResponse = self::decodeHttpResponse($httpRequest);
+      $httpRequest = $req->getIo()->authenticatedRequest($httpRequest);
+      $decodedResponse = self::decodeHttpResponse($httpRequest);
 
     //FIXME currently everything is wrapped in a data envelope, but hopefully this might change some day
     $ret = isset($decodedResponse['data']) ? $decodedResponse['data'] : $decodedResponse;
-    return $ret;
+      return $ret;
   }
 
   
@@ -68,32 +70,33 @@ class apiREST {
    * @param apiHttpRequest $response The http response to be decoded.
    * @return mixed|null
    */
-  static function decodeHttpResponse($response) {
-    $code = $response->getResponseHttpCode();
-    $body = $response->getResponseBody();
-    $decoded = null;
+  public static function decodeHttpResponse($response)
+  {
+      $code = $response->getResponseHttpCode();
+      $body = $response->getResponseBody();
+      $decoded = null;
     
-    if ($code != '200' && $code != '201' && $code != '204') {
-      $decoded = json_decode($body, true);
-      $err = 'Error calling ' . $response->getMethod() . ' ' . $response->getUrl();
-      if ($decoded != null && isset($decoded['error']['message']) && isset($decoded['error']['code'])) {
-        // if we're getting a json encoded error definition, use that instead of the raw response
+      if ($code != '200' && $code != '201' && $code != '204') {
+          $decoded = json_decode($body, true);
+          $err = 'Error calling ' . $response->getMethod() . ' ' . $response->getUrl();
+          if ($decoded != null && isset($decoded['error']['message']) && isset($decoded['error']['code'])) {
+              // if we're getting a json encoded error definition, use that instead of the raw response
         // body for improved readability
         $err .= ": ({$decoded['error']['code']}) " . $decoded['error']['message'];
-      } else {
-        $err .= ": ($code) $body";
+          } else {
+              $err .= ": ($code) $body";
+          }
+          throw new apiServiceException($err);
       }
-      throw new apiServiceException($err);
-    }
     
     // Only attempt to decode the response, if the response code wasn't (204) 'no content'
     if ($code != '204') {
-      $decoded = json_decode($body, true);
-      if ($decoded == null) {
-        throw new apiServiceException("Invalid json in service response: $body");
-      }
+        $decoded = json_decode($body, true);
+        if ($decoded == null) {
+            throw new apiServiceException("Invalid json in service response: $body");
+        }
     }
-    return $decoded;
+      return $decoded;
   }
 
   
@@ -106,45 +109,46 @@ class apiREST {
    * @param array $params
    * @return string $requestUrl
    */
-  static function createRequestUri($basePath, $restPath, $params) {
-    $requestUrl = $basePath . $restPath;
-    $uriTemplateVars = array();
-    $queryVars = array();
-    foreach ($params as $paramName => $paramSpec) {
-      // Discovery v1.0 puts the canonical location under the 'location' field.
+  public static function createRequestUri($basePath, $restPath, $params)
+  {
+      $requestUrl = $basePath . $restPath;
+      $uriTemplateVars = array();
+      $queryVars = array();
+      foreach ($params as $paramName => $paramSpec) {
+          // Discovery v1.0 puts the canonical location under the 'location' field.
       if (! isset($paramSpec['location'])) {
-        $paramSpec['location'] = $paramSpec['restParameterType'];
+          $paramSpec['location'] = $paramSpec['restParameterType'];
       }
 
-      if ($paramSpec['type'] == 'boolean') {
-        $paramSpec['value'] = ($paramSpec['value']) ? 'true' : 'false';
-      }
-      if ($paramSpec['location'] == 'path') {
-        $uriTemplateVars[$paramName] = $paramSpec['value'];
-      } else {
-        if (isset($paramSpec['repeated']) && is_array($paramSpec['value'])) {
-          foreach ($paramSpec['value'] as $value) {
-            $queryVars[] = $paramName . '=' . rawurlencode($value);
+          if ($paramSpec['type'] == 'boolean') {
+              $paramSpec['value'] = ($paramSpec['value']) ? 'true' : 'false';
           }
-        } else {
-          $queryVars[] = $paramName . '=' . rawurlencode($paramSpec['value']);
-        }
+          if ($paramSpec['location'] == 'path') {
+              $uriTemplateVars[$paramName] = $paramSpec['value'];
+          } else {
+              if (isset($paramSpec['repeated']) && is_array($paramSpec['value'])) {
+                  foreach ($paramSpec['value'] as $value) {
+                      $queryVars[] = $paramName . '=' . rawurlencode($value);
+                  }
+              } else {
+                  $queryVars[] = $paramName . '=' . rawurlencode($paramSpec['value']);
+              }
+          }
       }
-    }
-    $queryVars[] = 'alt=json';
-    if (count($uriTemplateVars)) {
-      $uriTemplateParser = new URI_Template_Parser($requestUrl);
-      $requestUrl = $uriTemplateParser->expand($uriTemplateVars);
-    }
+      $queryVars[] = 'alt=json';
+      if (count($uriTemplateVars)) {
+          $uriTemplateParser = new URI_Template_Parser($requestUrl);
+          $requestUrl = $uriTemplateParser->expand($uriTemplateVars);
+      }
     //FIXME work around for the the uri template lib which url encodes
     // the @'s & confuses our servers.
     $requestUrl = str_replace('%40', '@', $requestUrl);
     //EOFIX
 
     if (count($queryVars)) {
-      $requestUrl .= '?' . implode($queryVars, '&');
+        $requestUrl .= '?' . implode($queryVars, '&');
     }
 
-    return $requestUrl;
+      return $requestUrl;
   }
 }

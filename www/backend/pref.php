@@ -9,7 +9,7 @@
 include('../config.php');
 
 if (!check_security_key($_POST['control_key'])) {
-	die;
+    die;
 }
 
 $user = intval($_POST['id']);
@@ -21,7 +21,7 @@ if (empty($key) || empty($user) || ($user != $current_user->user_id)) {
 }
 
 if (empty($_POST['set'])) {
-	$res = User::get_pref($user, $key, $value);
+    $res = User::get_pref($user, $key, $value);
 } else {
     $res = intval($_POST['value']);
     $res = User::set_pref($user, $key, $res) ? $res : false;

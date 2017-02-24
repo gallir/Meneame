@@ -60,7 +60,7 @@
 
     {% if site.show_admin %}
     <div class="footer text-center">
-        Admin | <a href="{{ owner.id | useruri }}" class="tooltip u:{{ owner.id }}">{{ owner.username }}</a>
+        Admin | <a href="{{ owner.username | useruri }}" class="tooltip u:{{ owner.id }}">{{ owner.username }}</a>
     </div>
     {% endif %}
 </div>

@@ -2,7 +2,7 @@
 
 class Haanga_Extension_Tag_Templatetag
 {
-    static function generator($compiler, $args)
+    public static function generator($compiler, $args)
     {
         if (count($args) != 1) {
             $compiler->Error("templatetag only needs one parameter");
@@ -13,12 +13,11 @@ class Haanga_Extension_Tag_Templatetag
             if (!is_string($type)) {
                 $compiler->Error("Invalid parameter");
             }
-        } else if (Haanga_AST::is_str($args[0])) {
+        } elseif (Haanga_AST::is_str($args[0])) {
             $type = $args[0]['string'];
         }
 
-        switch ($type)
-        {
+        switch ($type) {
         case 'openblock':
             $str = '{%';
             break;

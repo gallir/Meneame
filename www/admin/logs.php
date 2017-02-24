@@ -22,12 +22,12 @@ $orderby = $_REQUEST["order_by"];
 
 $selected_tab = "admin_logs";
 if ($_REQUEST["tab"]) {
-	$selected_tab = clean_input_string($_REQUEST["tab"]);
+    $selected_tab = clean_input_string($_REQUEST["tab"]);
 }
 
 $log_type = false;
 if (!empty($_REQUEST["log_type"])) {
-	$log_type = clean_input_string($_REQUEST["log_type"]);
+    $log_type = clean_input_string($_REQUEST["log_type"]);
 }
 
 do_admin_tabs($selected_tab);
@@ -35,46 +35,46 @@ do_admin_tabs($selected_tab);
 $key = get_security_key();
 
 switch ($operation) {
-	case 'list':
-		do_log_list($selected_tab, $search, $log_type, $orderby, $key);
-		break;
+    case 'list':
+        do_log_list($selected_tab, $search, $log_type, $orderby, $key);
+        break;
 }
 
 do_footer();
 
-function do_log_list($selected_tab, $search, $log_type, $orderby, $key) {
-	global $db, $offset, $page_size;
+function do_log_list($selected_tab, $search, $log_type, $orderby, $key)
+{
+    global $db, $offset, $page_size;
 
-	if (empty($orderby)) {
-		$orderby = 'log_date';
-		$order = "DESC";
-	} else {
-		$orderby = preg_replace('/[^a-z_]/i', '', $orderby);
-		if ($orderby == 'log_date') {
-			$order = "DESC";
-		} else {
-			$order = "ASC";
-		}
-	}
-	$where = 'WHERE 1=1';
-	if ($log_type) {
-		$where .= " AND log_type='" . $log_type. "'";
-	}
+    if (empty($orderby)) {
+        $orderby = 'log_date';
+        $order = "DESC";
+    } else {
+        $orderby = preg_replace('/[^a-z_]/i', '', $orderby);
+        if ($orderby == 'log_date') {
+            $order = "DESC";
+        } else {
+            $order = "ASC";
+        }
+    }
+    $where = 'WHERE 1=1';
+    if ($log_type) {
+        $where .= " AND log_type='" . $log_type. "'";
+    }
 
-	if ($search) {
-		$search_text = $db->escape($search);
-		$where .= " AND (admin.user_login LIKE '%$search_text%' OR u.user_login LIKE '%$search_text%')";
-	}
+    if ($search) {
+        $search_text = $db->escape($search);
+        $where .= " AND (admin.user_login LIKE '%$search_text%' OR u.user_login LIKE '%$search_text%')";
+    }
 
-	$rows = $db->get_var("SELECT count(*) FROM admin_logs " . $where);
-	$sql = "SELECT admin.user_login as admin_user_login, admin_logs.*, u.user_id as user_id, u.user_login as user_login, u.user_karma as user_karma, u.user_level as user_level FROM admin_logs 
+    $rows = $db->get_var("SELECT count(*) FROM admin_logs " . $where);
+    $sql = "SELECT admin.user_login as admin_user_login, admin_logs.*, u.user_id as user_id, u.user_login as user_login, u.user_karma as user_karma, u.user_level as user_level FROM admin_logs 
 			LEFT JOIN users as admin on (admin_logs.log_user_id=admin.user_id)
 			LEFT JOIN users as u on (admin_logs.log_ref_id=u.user_id) " . $where . " ORDER BY $orderby $order LIMIT $offset,$page_size";
 
-	$logs = $db->get_results($sql);
+    $logs = $db->get_results($sql);
 
-	Haanga::Load('admin/logs/list.html', compact('logs', 'selected_tab', 'key', 'search', 'log_type'));
+    Haanga::Load('admin/logs/list.html', compact('logs', 'selected_tab', 'key', 'search', 'log_type'));
 
-	do_pages($rows, $page_size, false);
-
+    do_pages($rows, $page_size, false);
 }

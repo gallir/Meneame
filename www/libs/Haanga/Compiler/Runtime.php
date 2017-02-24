@@ -47,14 +47,14 @@ final class Haanga_Compiler_Runtime extends Haanga_Compiler
      *
      *
      */
-    function get_function_name($name)
+    public function get_function_name($name)
     {
         return "haanga_".sha1($name);
     }
     // }}}
 
     // set_template_name($path) {{{
-    function set_template_name($path)
+    public function set_template_name($path)
     {
         return $path;
     }
@@ -65,22 +65,22 @@ final class Haanga_Compiler_Runtime extends Haanga_Compiler
     {
         $this->do_print($body,
             hexec('Haanga::Load', $details[0], $this->getScopeVariable(),
-            TRUE,
+            true,
             hvar('blocks'))
         );
     }
     // }}}
 
     // {% base "" %} {{{
-    function expr_call_base_template()
+    public function expr_call_base_template()
     {
-        return hexec('Haanga::Load', $this->subtemplate, 
-            $this->getScopeVariable(), TRUE, hvar('blocks'));
+        return hexec('Haanga::Load', $this->subtemplate,
+            $this->getScopeVariable(), true, hvar('blocks'));
     }
     // }}}
 
     // get_base_template($base) {{{
-    function get_base_template($base)
+    public function get_base_template($base)
     {
         $this->subtemplate = $base;
     }
@@ -88,19 +88,21 @@ final class Haanga_Compiler_Runtime extends Haanga_Compiler
 
     // Override get_Custom_tag {{{
     /**
-     *  
+     *
      *
      */
-    function get_custom_tag($name)
+    public function get_custom_tag($name)
     {
-        static $tag = NULL;
-        if (!$tag) $tag = Haanga_Extension::getInstance('Tag');
+        static $tag = null;
+        if (!$tag) {
+            $tag = Haanga_Extension::getInstance('Tag');
+        }
         $loaded = &$this->tags;
 
         if (!isset($loaded[$name])) {
             $this->prepend_op->comment("Load tag {$name} definition");
-            $this->prepend_op->do_exec('require_once', $tag->getFilePath($name, FALSE));
-            $loaded[$name] = TRUE;
+            $this->prepend_op->do_exec('require_once', $tag->getFilePath($name, false));
+            $loaded[$name] = true;
         }
 
         return $tag->getClassName($name)."::main";
@@ -108,22 +110,23 @@ final class Haanga_Compiler_Runtime extends Haanga_Compiler
     // }}}
 
     // Override get_custom_filter {{{
-    function get_custom_filter($name)
+    public function get_custom_filter($name)
     {
-        static $filter = NULL;
-        if (!$filter) $filter=Haanga_Extension::getInstance('Filter');
+        static $filter = null;
+        if (!$filter) {
+            $filter=Haanga_Extension::getInstance('Filter');
+        }
         $loaded = &$this->filters;
 
         if (!isset($loaded[$name])) {
             $this->prepend_op->comment("Load filter {$name} definition");
-            $this->prepend_op->do_exec('require_once', $filter->getFilePath($name, FALSE));
-            $loaded[$name] = TRUE;
+            $this->prepend_op->do_exec('require_once', $filter->getFilePath($name, false));
+            $loaded[$name] = true;
         }
 
         return $filter->getClassName($name)."::main";
     }
     // }}}
-    
 }
 
 /*

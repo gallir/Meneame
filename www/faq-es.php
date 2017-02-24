@@ -1,8 +1,8 @@
 <?php
-	include('config.php');
-	include(mnminclude.'html1.php');
-	do_header(_('FAQ') . ' | ' . _('menéame'));
-	$q = 1;
+    include('config.php');
+    include(mnminclude.'html1.php');
+    do_header(_('FAQ') . ' | ' . _('menéame'));
+    $q = 1;
 ?>
 <div id="singlewrap">
 <h2 class="faq-title">Las preguntas presuntamente frecuentes</h2>
@@ -205,5 +205,5 @@ Encontrarás los datos de <strong>contacto</strong> en <a href="http://meneame.n
 </div>
 <?php
 
-	do_footer_menu();
-	do_footer();
+    do_footer_menu();
+    do_footer();

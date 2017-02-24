@@ -2,9 +2,9 @@
 
 class Haanga_Extension_Tag_Buffer
 {
-    public $is_block = TRUE;
+    public $is_block = true;
 
-    static function generator($cmp, $args, $redirected)
+    public static function generator($cmp, $args, $redirected)
     {
         if (count($args) != 2) {
             $cmp->Error("buffer filter must have one parameter");
@@ -15,7 +15,7 @@ class Haanga_Extension_Tag_Buffer
         /* redirect buffer to $args[1] */
         $code->decl($args[1], $args[0]);
         /* telling to Haanga that we're handling the output */
-        $code->doesPrint = TRUE;
+        $code->doesPrint = true;
 
         /* $args[1] is already safe (it might have HTML) */
         $cmp->set_safe($args[1]['var']);

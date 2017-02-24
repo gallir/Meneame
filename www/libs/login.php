@@ -16,7 +16,7 @@ class UserAuth
     /* https://crackstation.net/hashing-security.htm
      * https://crackstation.net/hashing-security.htm#phpsourcecode
     */
-    static function hash($pass, $salt = false, $alg = false)
+    public static function hash($pass, $salt = false, $alg = false)
     {
         $salt = $salt ?: base64_encode(mcrypt_create_iv(24, MCRYPT_DEV_URANDOM));
         $alg = $alg ?: self::HASH_ALGORITHM;
@@ -24,7 +24,7 @@ class UserAuth
         return $alg.':'.$salt.':'.hash($alg, $salt.$pass);
     }
 
-    static function check_hash($hash, $pass)
+    public static function check_hash($hash, $pass)
     {
         $a = explode(':', $hash);
 
@@ -41,7 +41,7 @@ class UserAuth
         return $hash === $h;
     }
 
-    static function domain()
+    public static function domain()
     {
         global $globals;
 
@@ -52,7 +52,7 @@ class UserAuth
         return $domain = null;
     }
 
-    function __construct()
+    public function __construct()
     {
         global $db, $site_key, $globals;
 
@@ -102,7 +102,7 @@ class UserAuth
 
         if ($this->version == self::CURRENT_VERSION) {
             $key = md5($site_key.$user->user_login.$user->user_id.$user->pass_frag.$cookietime);
-        } else  {
+        } else {
             $key = md5($user->user_email.$site_key.$user->user_login.$user->user_id.$cookietime);
         }
 
@@ -166,7 +166,7 @@ class UserAuth
         '));
     }
 
-    function SetIDCookie($what, $remember = false)
+    public function SetIDCookie($what, $remember = false)
     {
         global $site_key, $globals;
 
@@ -178,7 +178,7 @@ class UserAuth
 
             $this->SetUserCookie();
 
-            setcookie('sticky', '', $globals['now'] - 3600,  $globals['base_url']);
+            setcookie('sticky', '', $globals['now'] - 3600, $globals['base_url']);
 
             return;
         }
@@ -209,7 +209,7 @@ class UserAuth
         setcookie('a', '1', $time, $globals['base_url'], self::domain(), false, false);
     }
 
-    function Authenticate($username, $pass = false, $remember = false/* Just this session */)
+    public function Authenticate($username, $pass = false, $remember = false/* Just this session */)
     {
         global $db, $globals;
 
@@ -245,14 +245,14 @@ class UserAuth
         return true;
     }
 
-    function Logout($url = './')
+    public function Logout($url = './')
     {
         $this->user_id = 0;
         $this->user_login = '';
         $this->admin = false;
         $this->authenticated = false;
 
-        $this->SetIDCookie (0, false);
+        $this->SetIDCookie(0, false);
 
         //header("Pragma: no-cache");
         header('HTTP/1.1 303 Load');
@@ -263,12 +263,12 @@ class UserAuth
         die(header('Location: '.$url));
     }
 
-    function Date()
+    public function Date()
     {
         return (int)$this->user_date;
     }
 
-    function SetUserCookie()
+    public function SetUserCookie()
     {
         global $globals;
 
@@ -283,7 +283,7 @@ class UserAuth
         );
     }
 
-    function AddClone()
+    public function AddClone()
     {
         global $globals;
 
@@ -292,7 +292,7 @@ class UserAuth
         if ($this->u && $globals['now'] - $this->u[2] < 86400 * 5) { // Only if it was stored recently
             $ids = explode("x", $this->u[1]);
 
-            while(count($ids) > 4) {
+            while (count($ids) > 4) {
                 array_shift($ids);
             }
         } else {
@@ -304,7 +304,7 @@ class UserAuth
         $this->u[1] = implode('x', $ids);
     }
 
-    function GetClones()
+    public function GetClones()
     {
         $clones = array();
 
@@ -319,7 +319,7 @@ class UserAuth
         return $clones;
     }
 
-    function GetOAuthIds($service = false)
+    public function GetOAuthIds($service = false)
     {
         global $db;
 
@@ -334,24 +334,24 @@ class UserAuth
         return $db->get_var("select uid from auths where user_id = $this->user_id and service = '$service'");
     }
 
-    static function signature($str)
+    public static function signature($str)
     {
         global $site_key;
 
         return substr(md5($str.$site_key), 0, 8);
     }
 
-    static function user_cookie_data()
+    public static function user_cookie_data()
     {
         // Return an array with u only if the signature is valid
-        if ($_COOKIE['u'] && ($u = explode(":", $_COOKIE['u'])) && $u[3] == self::signature($u[0].$u[1].$u[2]) ) {
+        if ($_COOKIE['u'] && ($u = explode(":", $_COOKIE['u'])) && $u[3] == self::signature($u[0].$u[1].$u[2])) {
             return $u;
         }
 
         return false;
     }
 
-    function get_clones($hours = 24, $all = false)
+    public function get_clones($hours = 24, $all = false)
     {
         // Return the count of cookies clones that voted before a given link, comment, note
         global $db;
@@ -366,7 +366,7 @@ class UserAuth
         return array_unique(array_merge($a, $b));
     }
 
-    static function check_clon_from_cookies()
+    public static function check_clon_from_cookies()
     {
         global $current_user, $globals;
 
@@ -387,7 +387,7 @@ class UserAuth
         }
     }
 
-    static function insert_clon($last, $previous, $ip = '')
+    public static function insert_clon($last, $previous, $ip = '')
     {
         global $globals, $db;
 
@@ -399,7 +399,7 @@ class UserAuth
         $db->query("INSERT IGNORE INTO clones (clon_to, clon_from, clon_ip) VALUES ($last, $previous, '$ip')");
     }
 
-    static function check_clon_votes($from, $id, $days = 7, $type = 'links')
+    public static function check_clon_votes($from, $id, $days = 7, $type = 'links')
     {
         // Return the count of cookies clones that voted before a given link, comment, note
         global $db;

@@ -1,13 +1,3 @@
-{% if self.url %}
-	<a href="{{ self.url }}"><strong>#{{ self.order }}</strong></a>&nbsp;&nbsp;
-{% else %}
-	{% if self.link_permalink %}
-		<a href="{{ self.link_permalink }}/c0{{ self.order }}#c-{{ self.order }}" rel="nofollow"><strong>#{{ self.order }}</strong></a>&nbsp;&nbsp;
-	{% else %}
-		<strong>#{{ self.order }}</strong>&nbsp;&nbsp;
-	{% endif %}
-{% endif %}
-
 {% if self.hide_comment %}
 	&#187;&nbsp;<a href="javascript:get_votes('get_comment.php','comment','cid-{{ self.prefix_id }}{{ self.id }}',0,{{ self.id }})" title="{% trans 'ver comentario' %}">{% trans 'ver comentario' %}</a>
 {% else %}
@@ -37,7 +27,7 @@
 	{% endif %}
 
 	{% if self.can_edit %}
-		&nbsp;&nbsp;<a 
+		&nbsp;&nbsp;<a
 		href="javascript:comment_edit({{ self.id }}, 'cid-{{ self.prefix_id }}{{ self.id }}')"
 		title="{% trans _('editar comentario') %}" class="mini-icon-text" ><i class="fa fa-edit"></i></a>
 	{% endif %}

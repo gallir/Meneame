@@ -37,7 +37,7 @@
 
 // Haanga_Exception {{{
 /**
- *  General exception class. It is thrown 
+ *  General exception class. It is thrown
  *  when something is not configured properly
  *
  */
@@ -54,4 +54,3 @@ class Haanga_Exception extends Exception
  * vim600: sw=4 ts=4 fdm=marker
  * vim<600: sw=4 ts=4
  */
-
