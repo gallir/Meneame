@@ -183,19 +183,27 @@ switch ($view) {
         break;
     case 'history':
         do_history();
-        if (! $globals['bot']) do_pages($rows, $page_size);
+        if (! $globals['bot']) {
+            do_pages($rows, $page_size);
+        }
         break;
     case 'commented':
         do_commented();
-        if (! $globals['bot']) do_pages($rows, $page_size, false);
+        if (! $globals['bot']) {
+            do_pages($rows, $page_size, false);
+        }
         break;
     case 'shaken':
         do_shaken();
-        if (! $globals['bot']) do_pages($rows, $page_size);
+        if (! $globals['bot']) {
+            do_pages($rows, $page_size);
+        }
         break;
     case 'friends_shaken':
         do_friends_shaken();
-        if (! $globals['bot']) do_pages(-1, $page_size);
+        if (! $globals['bot']) {
+            do_pages(-1, $page_size);
+        }
         break;
     case 'friends':
         do_friends(0);
@@ -211,15 +219,21 @@ switch ($view) {
         break;
     case 'favorites':
         do_favorites();
-        if (! $globals['bot']) do_pages($rows, $page_size);
+        if (! $globals['bot']) {
+            do_pages($rows, $page_size);
+        }
         break;
     case 'favorite_comments':
         do_favorite_comments();
-        if (! $globals['bot']) do_pages($rows, $page_size);
+        if (! $globals['bot']) {
+            do_pages($rows, $page_size);
+        }
         break;
     case 'shaken_comments':
         do_shaken_comments();
-        if (! $globals['bot']) do_pages($rows, $page_size);
+        if (! $globals['bot']) {
+            do_pages($rows, $page_size);
+        }
         break;
 /*
     case 'categories':
@@ -228,7 +242,9 @@ switch ($view) {
 */
     case 'conversation':
         do_conversation();
-        if (! $globals['bot']) do_pages($rows, $page_size, false);
+        if (! $globals['bot']) {
+            do_pages($rows, $page_size, false);
+        }
         break;
     case 'profile':
         do_profile();
@@ -242,7 +258,8 @@ echo '</div>'."\n";
 
 do_footer();
 
-function do_profile() {
+function do_profile()
+{
     global $user, $current_user, $db, $globals;
 
     if ($current_user->user_id == $user->id || $current_user->user_level == 'god') {
@@ -253,7 +270,7 @@ function do_profile() {
     $post = new Post;
 
     if (!$post->read_last($user->id)) {
-        $post = NULL;
+        $post = null;
     }
 
     if (!empty($user->url)) {
@@ -301,7 +318,7 @@ function do_profile() {
 
     $addresses = array();
 
-    if ($current_user->user_id == $user->id || ($current_user->user_level == 'god' &&  ! $user->admin) ) { // gods and admins know each other for sure, keep privacy
+    if ($current_user->user_id == $user->id || ($current_user->user_level == 'god' &&  ! $user->admin)) { // gods and admins know each other for sure, keep privacy
         $dbaddresses = $db->get_results("select distinct(vote_ip_int) as ip from votes where vote_type in ('links', 'comments', 'posts') and vote_user_id = $user->id order by vote_date desc limit 30");
 
         // Try with comments
@@ -329,7 +346,8 @@ function do_profile() {
     ));
 }
 
-function do_history () {
+function do_history()
+{
     global $db, $rows, $user, $offset, $page_size, $globals;
 
     $rows = $db->get_var("SELECT count(*) FROM links WHERE link_author=$user->id");
@@ -341,7 +359,7 @@ function do_history () {
 
     Link::$original_status = true; // Show status in original sub
 
-    foreach($links as $link_id) {
+    foreach ($links as $link_id) {
         $link = Link::from_db($link_id);
 
         if ($link && $link->votes > 0) {
@@ -350,7 +368,8 @@ function do_history () {
     }
 }
 
-function do_favorites () {
+function do_favorites()
+{
     global $db, $rows, $user, $offset, $page_size;
 
     $rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
@@ -366,7 +385,8 @@ function do_favorites () {
     }
 }
 
-function do_shaken () {
+function do_shaken()
+{
     global $db, $rows, $user, $offset, $page_size, $globals;
 
     if ($globals['bot']) {
@@ -403,7 +423,8 @@ function do_shaken () {
     echo '<br/><span style="color: #FF6400;"><strong>'._('Nota').'</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
 }
 
-function do_friends_shaken () {
+function do_friends_shaken()
+{
     global $db, $rows, $user, $offset, $page_size, $globals;
 
     if ($globals['bot']) {
@@ -430,7 +451,8 @@ function do_friends_shaken () {
     }
 }
 
-function do_commented () {
+function do_commented()
+{
     global $db, $rows, $user, $offset, $page_size;
 
     $rows = -1; // $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
@@ -441,7 +463,8 @@ function do_commented () {
     }
 }
 
-function do_conversation () {
+function do_conversation()
+{
     global $db, $rows, $user, $offset, $page_size, $current_user;
 
     $rows = -1; //$db->get_var("SELECT count(distinct(conversation_from)) FROM conversations WHERE conversation_user_to=$user->id and conversation_type='comment'");
@@ -458,7 +481,8 @@ function do_conversation () {
     }
 }
 
-function do_favorite_comments () {
+function do_favorite_comments()
+{
     global $db, $rows, $user, $offset, $page_size, $globals;
 
     $comment = new Comment;
@@ -471,7 +495,7 @@ function do_favorite_comments () {
 
     echo '<ol class="comments-list">';
 
-    foreach($comments as $comment_id) {
+    foreach ($comments as $comment_id) {
         echo '<li>';
         Comment::from_db($comment_id)->print_summary(2000, false);
         echo '</li>';
@@ -480,10 +504,12 @@ function do_favorite_comments () {
     echo "</ol>\n";
 }
 
-function do_shaken_comments () {
+function do_shaken_comments()
+{
     global $db, $rows, $user, $offset, $page_size;
 
-    $rows = -1; $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
+    $rows = -1;
+    $db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
     $comments = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id  and comment_id = vote_link_id and comment_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
 
     if (empty($comments)) {
@@ -512,7 +538,8 @@ function do_shaken_comments () {
     echo "</ol>\n";
 }
 
-function print_comment_list($comments, $user) {
+function print_comment_list($comments, $user)
+{
     global $globals, $current_user;
 
     $comment = new Comment;
@@ -565,7 +592,8 @@ function print_comment_list($comments, $user) {
     return $timestamp_read;
 }
 
-function do_friends($option) {
+function do_friends($option)
+{
     global $db, $user, $globals, $current_user;
 
     $prefered_id = $user->id;
@@ -599,7 +627,8 @@ function do_friends($option) {
     }
 }
 
-function do_subs() {
+function do_subs()
+{
     global $db, $user, $current_user, $globals;
 
     $sql = "select subs.* from subs, prefs where pref_user_id = $user->id and pref_key = 'sub_follow' and subs.id = pref_value order by name asc";
@@ -615,7 +644,7 @@ function do_subs() {
         if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
             $r = $sub->site_info->media_dim1 / $sub->site_info->media_dim2;
 
-            if ( $globals['mobile']) {
+            if ($globals['mobile']) {
                 $sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
             } else {
                 $sub->site_info->logo_height = $globals['media_sublogo_height'];
@@ -647,7 +676,7 @@ function do_subs() {
     $ownwed_subs = $db->get_results($sql);
     $owned_subs = array();
 
-    $ids_subs = array_map(function($row) {
+    $ids_subs = array_map(function ($row) {
         return (int)$row->id;
     }, $ownwed_subs);
 
@@ -664,7 +693,7 @@ function do_subs() {
         if ($sub->site_info->media_id > 0 && $sub->site_info->media_dim1 > 0 && $sub->site_info->media_dim2 > 0) {
             $r = $sub->site_info->media_dim1 / $sub->site_info->media_dim2;
 
-            if ( $globals['mobile']) {
+            if ($globals['mobile']) {
                 $sub->site_info->logo_height = $globals['media_sublogo_height_mobile'];
             } else {
                 $sub->site_info->logo_height = $globals['media_sublogo_height'];

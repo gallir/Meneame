@@ -28,7 +28,8 @@ require_once 'service/apiServiceRequest.php';
    *   $webfonts = $webfontsService->webfonts;
    *  </code>
    */
-  class WebfontsServiceResource extends apiServiceResource {
+  class WebfontsServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -40,15 +41,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string sort Enables sorting of the list
      * @return WebfontList
      */
-    public function listWebfonts($optParams = array()) {
-      $params = array();
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new WebfontList($data);
-      } else {
-        return $data;
-      }
+    public function listWebfonts($optParams = array())
+    {
+        $params = array();
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new WebfontList($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -68,72 +70,88 @@ require_once 'service/apiServiceRequest.php';
  *
  * @author Google, Inc.
  */
-class apiWebfontsService extends apiService {
-  public $webfonts;
+class apiWebfontsService extends apiService
+{
+    public $webfonts;
   /**
    * Constructs the internal representation of the Webfonts service.
    *
    * @param apiClient apiClient
    */
-  public function __construct(apiClient $apiClient) {
-    $this->rpcPath = '/rpc';
-    $this->restBasePath = '/webfonts/v1/';
-    $this->version = 'v1';
-    $this->serviceName = 'webfonts';
-    $this->io = $apiClient->getIo();
+  public function __construct(apiClient $apiClient)
+  {
+      $this->rpcPath = '/rpc';
+      $this->restBasePath = '/webfonts/v1/';
+      $this->version = 'v1';
+      $this->serviceName = 'webfonts';
+      $this->io = $apiClient->getIo();
 
-    $apiClient->addService($this->serviceName, $this->version);
-    $this->webfonts = new WebfontsServiceResource($this, $this->serviceName, 'webfonts', json_decode('{"methods": {"list": {"parameters": {"sort": {"enum": ["alpha", "date", "popularity", "style", "trending"], "type": "string", "location": "query"}}, "id": "webfonts.webfonts.list", "httpMethod": "GET", "path": "webfonts", "response": {"$ref": "WebfontList"}}}}', true));
+      $apiClient->addService($this->serviceName, $this->version);
+      $this->webfonts = new WebfontsServiceResource($this, $this->serviceName, 'webfonts', json_decode('{"methods": {"list": {"parameters": {"sort": {"enum": ["alpha", "date", "popularity", "style", "trending"], "type": "string", "location": "query"}}, "id": "webfonts.webfonts.list", "httpMethod": "GET", "path": "webfonts", "response": {"$ref": "WebfontList"}}}}', true));
   }
 }
 
-class Webfont extends apiModel {
-  public $kind;
-  public $variants;
-  public $subsets;
-  public $family;
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setVariants($variants) {
-    $this->variants = $variants;
-  }
-  public function getVariants() {
-    return $this->variants;
-  }
-  public function setSubsets($subsets) {
-    $this->subsets = $subsets;
-  }
-  public function getSubsets() {
-    return $this->subsets;
-  }
-  public function setFamily($family) {
-    $this->family = $family;
-  }
-  public function getFamily() {
-    return $this->family;
-  }
+class Webfont extends apiModel
+{
+    public $kind;
+    public $variants;
+    public $subsets;
+    public $family;
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setVariants($variants)
+    {
+        $this->variants = $variants;
+    }
+    public function getVariants()
+    {
+        return $this->variants;
+    }
+    public function setSubsets($subsets)
+    {
+        $this->subsets = $subsets;
+    }
+    public function getSubsets()
+    {
+        return $this->subsets;
+    }
+    public function setFamily($family)
+    {
+        $this->family = $family;
+    }
+    public function getFamily()
+    {
+        return $this->family;
+    }
 }
 
-class WebfontList extends apiModel {
-  protected $__itemsType = 'Webfont';
-  protected $__itemsDataType = 'array';
-  public $items;
-  public $kind;
-  public function setItems(/* array(Webfont) */ $items) {
-    $this->assertIsArray($items, 'Webfont', __METHOD__);
-    $this->items = $items;
-  }
-  public function getItems() {
-    return $this->items;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
+class WebfontList extends apiModel
+{
+    protected $__itemsType = 'Webfont';
+    protected $__itemsDataType = 'array';
+    public $items;
+    public $kind;
+    public function setItems(/* array(Webfont) */ $items)
+    {
+        $this->assertIsArray($items, 'Webfont', __METHOD__);
+        $this->items = $items;
+    }
+    public function getItems()
+    {
+        return $this->items;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
 }

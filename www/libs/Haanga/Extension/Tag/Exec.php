@@ -3,9 +3,9 @@
 
 class Haanga_Extension_Tag_Exec
 {
-    public $is_block = FALSE;
+    public $is_block = false;
 
-    static function generator($cmp, $args, $assign=NULL)
+    public static function generator($cmp, $args, $assign=null)
     {
         if (!$cmp->getOption('allow_exec')) {
             $cmp->Error("Tag exec is disabled for security reasons");
@@ -15,7 +15,7 @@ class Haanga_Extension_Tag_Exec
         $code = hcode();
         if (Haanga_AST::is_var($args[0])) {
             $args[0] = $args[0]['var'];
-        } else if (Haanga_AST::is_str($args[0])) {
+        } elseif (Haanga_AST::is_str($args[0])) {
             $args[0] = $args[0]['string'];
         } else {
             $cmp->Error("invalid param");
@@ -46,4 +46,3 @@ class Haanga_Extension_Tag_Exec
         return $code;
     }
 }
-

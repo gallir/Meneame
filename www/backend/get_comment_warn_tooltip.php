@@ -8,17 +8,23 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 // The code below was made by Beldar <beldar at gmail dot com>
 if (! defined('mnmpath')) {
-	include_once('../config.php');
-	header('Content-Type: text/html; charset=utf-8');
-	header('Cache-Control: public, s-maxage=300');
+    include_once('../config.php');
+    header('Content-Type: text/html; charset=utf-8');
+    header('Cache-Control: public, s-maxage=300');
 }
 
-if (empty($_GET['id'])) die;
+if (empty($_GET['id'])) {
+    die;
+}
 $link_id = intval($_GET['id']);
 $link = Link::from_db($link_id, null, false);
 
-if(! $link) die;
-if ($link->date < $globals['now'] - $globals['time_enabled_votes']) die;
+if (! $link) {
+    die;
+}
+if ($link->date < $globals['now'] - $globals['time_enabled_votes']) {
+    die;
+}
 
 $min_len = 20;
 $min_karma = 20;
@@ -26,19 +32,23 @@ $sql = "select comment_id, comment_karma, comment_karma + least(50, comment_orde
 
 
 $res = $db->get_row($sql);
-if (! $res) die;
+if (! $res) {
+    die;
+}
 
 $comment = Comment::from_db($res->comment_id);
-if(!$comment) die;
+if (!$comment) {
+    die;
+}
 
 echo '<div class="comment-body">';
-if ( $comment->type != 'admin') {
-	if ($comment->avatar) {
-		echo '<img class="avatar" src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
-	}
-	echo '<strong><span style="color:#3D72C3">' . $comment->username . '</span></strong>, karma: '.$comment->karma.'<br/>';
+if ($comment->type != 'admin') {
+    if ($comment->avatar) {
+        echo '<img class="avatar" src="'.get_avatar_url($comment->author, $comment->avatar, 40).'" width="40" height="40" alt="avatar" style="float:left; margin: 0 5px 4px 0;"/>';
+    }
+    echo '<strong><span style="color:#3D72C3">' . $comment->username . '</span></strong>, karma: '.$comment->karma.'<br/>';
 } else {
-	echo '<strong>' . get_server_name() . '</strong><br/>';
+    echo '<strong>' . get_server_name() . '</strong><br/>';
 }
 $comment->print_text(1000);
 echo '</div>';

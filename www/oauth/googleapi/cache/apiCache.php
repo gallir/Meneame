@@ -24,7 +24,8 @@ require_once "apiMemcacheCache.php";
  *
  * @author Chris Chabot <chabotc@google.com>
  */
-abstract class apiCache {
+abstract class apiCache
+{
 
   /**
    * Retrieves the data for the given key, or false if they
@@ -34,7 +35,7 @@ abstract class apiCache {
    * @param boolean|int $expiration Expiration time in seconds
    *
    */
-  abstract function get($key, $expiration = false);
+  abstract public function get($key, $expiration = false);
 
   /**
    * Store the key => $value set. The $value is serialized
@@ -43,14 +44,12 @@ abstract class apiCache {
    * @param String $key Key of the data
    * @param $value the data
    */
-  abstract function set($key, $value);
+  abstract public function set($key, $value);
 
   /**
    * Removes the key/data pair for the given $key
    *
    * @param String $key
    */
-  abstract function delete($key);
+  abstract public function delete($key);
 }
-
-

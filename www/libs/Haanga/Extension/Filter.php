@@ -42,7 +42,7 @@ class Haanga_Extension_Filter extends Haanga_Extension
      *
      *
      */
-    final function isValid($filter)
+    final public function isValid($filter)
     {
         static $cache = array();
         $filter = strtolower($filter);
@@ -50,22 +50,20 @@ class Haanga_Extension_Filter extends Haanga_Extension
         if (!isset($cache[$filter])) {
             $class_name = $this->getClassName($filter);
             if (class_exists($class_name)) {
-                $cache[$filter] = TRUE;
+                $cache[$filter] = true;
             } else {
-                $cache[$filter] = FALSE;
+                $cache[$filter] = false;
             }
         }
 
         return $cache[$filter];
     }
 
-    final function getClassName($filter)
+    final public function getClassName($filter)
     {
         $filter = str_replace("_", "", ucfirst($filter));
         return "Haanga_Extension_Filter_{$filter}";
     }
-
-
 }
 
 /*
@@ -76,4 +74,3 @@ class Haanga_Extension_Filter extends Haanga_Extension
  * vim600: sw=4 ts=4 fdm=marker
  * vim<600: sw=4 ts=4
  */
-

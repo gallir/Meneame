@@ -11,99 +11,109 @@
 
 // Warning, it redirects to the content of the variable
 if (!empty($globals['lounge'])) {
-	header('Location: http://'.get_server_name().$globals['base_url'].$globals['lounge']);
-	die;
+    header('Location: http://'.get_server_name().$globals['base_url'].$globals['lounge']);
+    die;
 }
 
-$globals['extra_js'] = Array();
-$globals['extra_css'] = Array();
+$globals['extra_js'] = array();
+$globals['extra_css'] = array();
 
-function do_tabs($tab_name, $tab_selected = false, $extra_tab = false) {
-	global $globals;
+function do_tabs($tab_name, $tab_selected = false, $extra_tab = false)
+{
+    global $globals;
 
-	$reload_text = _('recargar');
-	$active = ' class="tabmain-this"';
+    $reload_text = _('recargar');
+    $active = ' class="tabmain-this"';
 
-	if ($tab_name == "main" ) {
-		$items = array(
-			array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
-			array('url' => 'popular', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
-			array('url' => 'queue', 'name' => 'shakeit', 'title' => _('pendientes'), 'rel'=>true),
-		);
-		if ($extra_tab) {
-			if ($globals['link_permalink']) $url = $globals['link_permalink'];
-			else $url = __($globals['uri']);
-			$items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
-		}
-		$tabname = 'tabmain';
-	}
+    if ($tab_name == "main") {
+        $items = array(
+            array('url' => '', 'name' => 'published', 'title' => _('portada'), 'rel'=>true),
+            array('url' => 'popular', 'name' => 'popular', 'title' => _('populares'), 'rel'=>true),
+            array('url' => 'queue', 'name' => 'shakeit', 'title' => _('pendientes'), 'rel'=>true),
+        );
+        if ($extra_tab) {
+            if ($globals['link_permalink']) {
+                $url = $globals['link_permalink'];
+            } else {
+                $url = __($globals['uri']);
+            }
+            $items[] = array('url' => $url, 'name' => $tab_selected, 'title' => $tab_selected);
+        }
+        $tabname = 'tabmain';
+    }
 
-	return Haanga::Load('mobile/do_tabs.html', compact('items', 'reload_text', 'tab_selected', 'tabname', 'active'));
+    return Haanga::Load('mobile/do_tabs.html', compact('items', 'reload_text', 'tab_selected', 'tabname', 'active'));
 }
 
-function do_header($title, $id='home') {
-	global $current_user, $dblang, $globals;
+function do_header($title, $id='home')
+{
+    global $current_user, $dblang, $globals;
 
-	check_auth_page();
-	header('Content-type: text/html; charset=utf-8');
-	header('X-Frame-Options: SAMEORIGIN');
-	http_cache();
-	$globals['security_key'] = get_security_key();
-	setcookie('k', $globals['security_key'], 0, $globals['base_url']);
+    check_auth_page();
+    header('Content-type: text/html; charset=utf-8');
+    header('X-Frame-Options: SAMEORIGIN');
+    http_cache();
+    $globals['security_key'] = get_security_key();
+    setcookie('k', $globals['security_key'], 0, $globals['base_url']);
 
-	return Haanga::Load("mobile/header.html", compact('title', 'id'));
+    return Haanga::Load("mobile/header.html", compact('title', 'id'));
 }
 
-function do_footer($credits = true) {
-	return Haanga::Load('mobile/footer.html', compact('credits'));
+function do_footer($credits = true)
+{
+    return Haanga::Load('mobile/footer.html', compact('credits'));
 }
 
-function do_footer_menu() {
-	global $globals, $current_user;
-
+function do_footer_menu()
+{
+    global $globals, $current_user;
 }
 
-function force_authentication() {
-	global $current_user, $globals;
+function force_authentication()
+{
+    global $current_user, $globals;
 
-	if(!$current_user->authenticated) {
-		header('Location: '.$globals['base_url'].'login?return='.$globals['uri']);
-		die;
-	}
+    if (!$current_user->authenticated) {
+        header('Location: '.$globals['base_url'].'login?return='.$globals['uri']);
+        die;
+    }
 
-	return true;
+    return true;
 }
 
-function do_pages($total, $page_size=15) {
-	global $db;
+function do_pages($total, $page_size=15)
+{
+    global $db;
 
-	if ($total < $page_size) return;
+    if ($total < $page_size) {
+        return;
+    }
 
-	$query=preg_replace('/page=[0-9]+/', '', $_SERVER['QUERY_STRING']);
-	$query=preg_replace('/^&*(.*)&*$/', "$1", $query);
-	if(!empty($query)) {
-		$query = htmlspecialchars($query);
-		$query = "&amp;$query";
-	}
+    $query=preg_replace('/page=[0-9]+/', '', $_SERVER['QUERY_STRING']);
+    $query=preg_replace('/^&*(.*)&*$/', "$1", $query);
+    if (!empty($query)) {
+        $query = htmlspecialchars($query);
+        $query = "&amp;$query";
+    }
 
-	$current = get_current_page();
-	$total_pages=ceil($total/$page_size);
+    $current = get_current_page();
+    $total_pages=ceil($total/$page_size);
 
-	echo '<div class="pages">';
+    echo '<div class="pages">';
 
-	if($current==1) {
-		echo '<span class="nextprev">&#171;</span>';
-	} else {
-		$i = $current-1;
-		echo '<a href="?page='.$i.$query.'">&#171;</a>';
-	}
+    if ($current==1) {
+        echo '<span class="nextprev">&#171;</span>';
+    } else {
+        $i = $current-1;
+        echo '<a href="?page='.$i.$query.'">&#171;</a>';
+    }
 
-	echo '<span class="current">'.$current.'</span>';
-	if($current<$total_pages) {
-		$i = $current+1;
-		echo '<a href="?page='.$i.$query.'">&#187;</a>';
-	} else {
-		echo '<span class="nextprev">&#187;</span>';
-	}
-	echo "</div>\n";
+    echo '<span class="current">'.$current.'</span>';
+    if ($current<$total_pages) {
+        $i = $current+1;
+        echo '<a href="?page='.$i.$query.'">&#187;</a>';
+    } else {
+        echo '<span class="nextprev">&#187;</span>';
+    }
+    echo "</div>\n";
 }

@@ -20,45 +20,47 @@
  *
  * @author Chris Chabot <chabotc@google.com>
  */
-class apiRPC {
-
-  static public function execute($requests) {
-    $jsonRpcRequest = array();
-    foreach ($requests as $request) {
-      $parameters = array();
-      foreach ($request->getParameters() as $parameterName => $parameterVal) {
-        $parameters[$parameterName] = $parameterVal['value'];
-      }
-      $jsonRpcRequest[] = array(
+class apiRPC
+{
+    public static function execute($requests)
+    {
+        $jsonRpcRequest = array();
+        foreach ($requests as $request) {
+            $parameters = array();
+            foreach ($request->getParameters() as $parameterName => $parameterVal) {
+                $parameters[$parameterName] = $parameterVal['value'];
+            }
+            $jsonRpcRequest[] = array(
         'id' => $request->getBatchKey(),
         'method' => $request->getRpcName(),
         'params' => $parameters,
-      	'apiVersion' => 'v1'
+          'apiVersion' => 'v1'
       );
+        }
+        $httpRequest = new apiHttpRequest($request->getRpcPath());
+        $httpRequest->setHeaders(array('Content-Type: application/json'));
+        $httpRequest->setMethod('POST');
+        $httpRequest->setPostBody(json_encode($jsonRpcRequest));
+        $httpRequest = $request->getIo()->authenticatedRequest($httpRequest);
+        if (($decodedResponse = json_decode($httpRequest->getResponseBody(), true)) != false) {
+            $ret = array();
+            foreach ($decodedResponse as $response) {
+                $ret[$response['id']] = self::checkNextLink($response['result']);
+            }
+            return $ret;
+        } else {
+            throw new apiServiceException("Invalid json returned by the json-rpc end-point");
+        }
     }
-    $httpRequest = new apiHttpRequest($request->getRpcPath());
-    $httpRequest->setHeaders(array('Content-Type: application/json'));
-    $httpRequest->setMethod('POST');
-    $httpRequest->setPostBody(json_encode($jsonRpcRequest));
-    $httpRequest = $request->getIo()->authenticatedRequest($httpRequest);
-    if (($decodedResponse = json_decode($httpRequest->getResponseBody(), true)) != false) {
-      $ret = array();
-      foreach ($decodedResponse as $response) {
-        $ret[$response['id']] = self::checkNextLink($response['result']);
-      }
-      return $ret;
-    } else {
-      throw new apiServiceException("Invalid json returned by the json-rpc end-point");
-    }
-  }
 
-  static private function checkNextLink($response) {
-    if (isset($response['links']) && isset($response['links']['next'][0]['href'])) {
-      parse_str($response['links']['next'][0]['href'], $params);
-      if (isset($params['c'])) {
-        $response['continuationToken'] = $params['c'];
-      }
+    private static function checkNextLink($response)
+    {
+        if (isset($response['links']) && isset($response['links']['next'][0]['href'])) {
+            parse_str($response['links']['next'][0]['href'], $params);
+            if (isset($params['c'])) {
+                $response['continuationToken'] = $params['c'];
+            }
+        }
+        return $response;
     }
-    return $response;
-  }
 }

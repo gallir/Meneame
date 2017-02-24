@@ -139,7 +139,7 @@ function check_register_error()
         return _('nombre de usuario erróneo, caracteres no admitidos o no comienzan con una letra');
     }
 
-    if (user_exists(trim($_POST['username'])) ) {
+    if (user_exists(trim($_POST['username']))) {
         return _('el usuario ya existe');
     }
 
@@ -147,7 +147,7 @@ function check_register_error()
         return _('el correo electrónico no es correcto');
     }
 
-    if (email_exists(trim($_POST['email'])) ) {
+    if (email_exists(trim($_POST['email']))) {
         return _('dirección de correo duplicada, o fue usada recientemente');
     }
 

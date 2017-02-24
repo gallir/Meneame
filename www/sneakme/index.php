@@ -83,7 +83,7 @@ switch ($argv[0]) {
             // Individual post
             $user->id = $db->get_var("select post_user_id from posts where post_id=$post_id");
 
-            if(!$user->read()) {
+            if (!$user->read()) {
                 do_error(_('usuario no encontrado'), 404);
             }
 
@@ -113,13 +113,13 @@ switch ($argv[0]) {
             // User is specified
             $user->username = $db->escape($argv[0]);
 
-            if(!$user->read() || $user->disabled()) {
+            if (!$user->read() || $user->disabled()) {
                 do_error(_('usuario no encontrado'), 404);
             }
 
             $globals['noindex'] = true;
 
-            switch($argv[1]) {
+            switch ($argv[1]) {
                 case '_friends':
                     $view = 1;
                     $page_title = sprintf(_('amigos de %s'), $user->username);
@@ -200,7 +200,6 @@ if ($tab_option == 4) {
         sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
 
     );
-
 } elseif ($tab_option == 1 && $current_user->user_id > 0) {
     $conversation_extra = ' [<span id="p_c_counter">0</span>]';
     $view = 0;
@@ -253,7 +252,7 @@ if ($view != 4) {
     $posts = $db->get_results("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id) $order_by", 'Post');
 
     if ($posts) {
-        $all_ids = array_map(function($value) {
+        $all_ids = array_map(function ($value) {
             return $value->id;
         }, $posts);
 
@@ -404,7 +403,7 @@ function do_voted_posts()
     $posts = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, posts WHERE vote_type='posts' and vote_user_id=$user->id and post_id = vote_link_id and post_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
     $time_read = 0;
 
-    $all_ids = array_map(function($value) {
+    $all_ids = array_map(function ($value) {
         return $value->id;
     }, $posts);
 

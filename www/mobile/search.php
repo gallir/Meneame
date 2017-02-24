@@ -22,13 +22,13 @@ $_REQUEST['q'] = trim(stripslashes($_REQUEST['q']));
 $response = do_search(false, $offset, $page_size);
 $search_txt = htmlspecialchars($_REQUEST['q']);
 do_header(sprintf(_('búsqueda de «%s»'), $search_txt));
-do_tabs('main',_('búsqueda'), __($_SERVER['REQUEST_URI']));
+do_tabs('main', _('búsqueda'), __($_SERVER['REQUEST_URI']));
 
 echo '<div id="newswrap">'."\n";
 
-if(!empty($_REQUEST['q'])) {
-	echo '<div style="background:#FFE2C5;margin: 4px; padding:4px;">'._('búsqueda'). ': <em>'.$search_txt.'</em>';
-	echo '&nbsp;&nbsp;'._('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f",$response['time']).' '._('segundos').'</div>';
+if (!empty($_REQUEST['q'])) {
+    echo '<div style="background:#FFE2C5;margin: 4px; padding:4px;">'._('búsqueda'). ': <em>'.$search_txt.'</em>';
+    echo '&nbsp;&nbsp;'._('encontrados').': '.$response['rows'].', '._('tiempo total').': '.sprintf("%1.3f", $response['time']).' '._('segundos').'</div>';
 }
 
 echo '<form action="'.$globals['base_url'].'search.php" method="get">' . "\n";
@@ -40,16 +40,15 @@ echo '</fieldset>';
 echo '</form>';
 
 if ($response['ids']) {
-	$rows = min($response['rows'], 1000);
-	foreach($response['ids'] as $link_id) {
-		$link = new LinkMobile;
-		$link->id=$link_id;
-		$link->read();
-		$link->print_summary('full', $link->status == 'published' ? 100 : 20);
-	}
+    $rows = min($response['rows'], 1000);
+    foreach ($response['ids'] as $link_id) {
+        $link = new LinkMobile;
+        $link->id=$link_id;
+        $link->read();
+        $link->print_summary('full', $link->status == 'published' ? 100 : 20);
+    }
 }
 
 do_pages($rows, $page_size);
 echo '</div>';
 do_footer();
-?>

@@ -12,39 +12,38 @@ include(mnminclude.'geo.php');
 header('Content-Type: text/plain; charset=UTF-8');
 stats_increment('ajax');
 
-if(!($id=intval($_REQUEST['id']))) {
-	error(_('falta el id'). " $link");
+if (!($id=intval($_REQUEST['id']))) {
+    error(_('falta el id'). " $link");
 }
 
 $type = $_REQUEST['type'];
 
 if ($type == 'user') {
-	if ($id != $current_user->user_id) {
-		error(_('usuario incorrecto'));
-	}
+    if ($id != $current_user->user_id) {
+        error(_('usuario incorrecto'));
+    }
 } elseif ($type == 'link') {
-	$link = new Link;
-	$link->id = $id;
-	if ( ! $link->read() ) {
-		error(_('Artículo inexistente'));
-	}
-	if (! $link->is_map_editable() ) {
-		error(_("noticia no modificable"));
-	}
+    $link = new Link;
+    $link->id = $id;
+    if (! $link->read()) {
+        error(_('Artículo inexistente'));
+    }
+    if (! $link->is_map_editable()) {
+        error(_("noticia no modificable"));
+    }
 } else {
-	error(_('tipo incorrecto'));
+    error(_('tipo incorrecto'));
 }
 
-if(geo_delete($type, $id)) {
-	echo "OK";
+if (geo_delete($type, $id)) {
+    echo "OK";
 } else {
-	error(_('borrado anteriormente'));
+    error(_('borrado anteriormente'));
 }
 
 
-function error($mess) {
-	echo "ERROR: $mess\n";
-	die;
+function error($mess)
+{
+    echo "ERROR: $mess\n";
+    die;
 }
-
-?>

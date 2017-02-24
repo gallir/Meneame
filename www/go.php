@@ -8,7 +8,8 @@
 
 include_once('./config.php');
 
-function do_redirection($url, $code = 301) {
+function do_redirection($url, $code = 301)
+{
     if (empty($_GET['quiet'])) {
         redirect($url, $code);
     }

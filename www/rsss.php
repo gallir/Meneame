@@ -20,7 +20,7 @@ $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" titl
 do_header(_('apuntes de blogs') . ' | ' . _('menéame'));
 do_tabs('main', _('apuntes'), true);
 
-/*** SIDEBAR 
+/*** SIDEBAR
 echo '<div id="sidebar">';
 do_banner_right();
 do_best_stories();
@@ -39,18 +39,17 @@ echo '<table class="decorated">';
 $entries = $db->get_results("select rss.blog_id, rss.user_id, title, url, user_login, user_avatar, blogs.blog_url, blogs.blog_title from rss, users, blogs where rss.blog_id = blogs.blog_id and rss.user_id = users.user_id order by rss.date desc limit $offset,$page_size");
 
 if ($entries) {
-	foreach ($entries as $entry) {
-		$title = strip_tags($entry->title);
-		$url = clean_input_string($entry->url);
-		$blog_title = strip_tags($entry->blog_title);
+    foreach ($entries as $entry) {
+        $title = strip_tags($entry->title);
+        $url = clean_input_string($entry->url);
+        $blog_title = strip_tags($entry->blog_title);
 
-		echo '<tr>';
-		echo '<td style="width:35px"><a href="'.get_user_uri($entry->user_login).'" class="tooltip u:'.$entry->user_id.'"><img class="avatar" src="'.get_avatar_url($entry->user_id, $entry->user_avatar, 25).'" width="25" height="25" alt="avatar"/></a></td>';
-		echo '<td style="font-size:110%;width:30%"><a href="'.$entry->blog_url.'" rel="nofollow">'.$blog_title.'</a></td>';
-		echo '<td style="font-size:120%"><a href="'.$url.'" rel="nofollow">'.$title.'</a></td>';
-		echo '</tr>';
-	}
-
+        echo '<tr>';
+        echo '<td style="width:35px"><a href="'.get_user_uri($entry->user_login).'" class="tooltip u:'.$entry->user_id.'"><img class="avatar" src="'.get_avatar_url($entry->user_id, $entry->user_avatar, 25).'" width="25" height="25" alt="avatar"/></a></td>';
+        echo '<td style="font-size:110%;width:30%"><a href="'.$entry->blog_url.'" rel="nofollow">'.$blog_title.'</a></td>';
+        echo '<td style="font-size:120%"><a href="'.$url.'" rel="nofollow">'.$title.'</a></td>';
+        echo '</tr>';
+    }
 }
 echo '</table>';
 echo '<fieldset id="nota"><legend>'._('nota').'</legend>';
@@ -63,4 +62,3 @@ do_pages($rows, $page_size);
 echo '</div>';
 do_footer_menu();
 do_footer();
-

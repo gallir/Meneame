@@ -27,33 +27,34 @@ require_once "external/OAuth.php";
  * @author Chris Chabot <chabotc@google.com>
  *
  */
-class apiOAuth extends apiAuth {
-
-  public $cacheKey;
-  protected $consumerToken;
-  protected $accessToken;
-  protected $privateKeyFile;
-  protected $developerKey;
-  public $io;
-  public $cache;
-  public $service;
+class apiOAuth extends apiAuth
+{
+    public $cacheKey;
+    protected $consumerToken;
+    protected $accessToken;
+    protected $privateKeyFile;
+    protected $developerKey;
+    public $io;
+    public $cache;
+    public $service;
 
   /**
    * Instantiates the class, but does not initiate the login flow, leaving it
    * to the discretion of the caller.
    */
-  public function __construct() {
-    global $apiClient;
-    $this->io = $apiClient->getIo();
-    $this->cache = $apiClient->getCache();
+  public function __construct()
+  {
+      global $apiClient;
+      $this->io = $apiClient->getIo();
+      $this->cache = $apiClient->getCache();
     
-    global $apiConfig;
-    if (!empty($apiConfig['developer_key'])) {
-      $this->setDeveloperKey($apiConfig['developer_key']);
-    }
-    $this->consumerToken = new apiClientOAuthConsumer($apiConfig['oauth_consumer_key'], $apiConfig['oauth_consumer_secret'], NULL);
-    $this->signatureMethod = new apiClientOAuthSignatureMethod_HMAC_SHA1();
-    $this->cacheKey = 'OAuth:' . $apiConfig['oauth_consumer_key']; // Scope data to the local user as well, or else multiple local users will share the same OAuth credentials.
+      global $apiConfig;
+      if (!empty($apiConfig['developer_key'])) {
+          $this->setDeveloperKey($apiConfig['developer_key']);
+      }
+      $this->consumerToken = new apiClientOAuthConsumer($apiConfig['oauth_consumer_key'], $apiConfig['oauth_consumer_secret'], null);
+      $this->signatureMethod = new apiClientOAuthSignatureMethod_HMAC_SHA1();
+      $this->cacheKey = 'OAuth:' . $apiConfig['oauth_consumer_key']; // Scope data to the local user as well, or else multiple local users will share the same OAuth credentials.
   }
 
   /**
@@ -67,25 +68,26 @@ class apiOAuth extends apiAuth {
    * @param string $consumerSecret
    * @return apiOAuth3Legged the logged-in provider instance
    */
-  public function authenticate($service) {
-    global $apiConfig;
-    $this->service = $service;
-    $this->service['authorization_token_url'] .= '?scope=' . apiClientOAuthUtil::urlencodeRFC3986($service['scope']) . '&domain=' . apiClientOAuthUtil::urlencodeRFC3986($apiConfig['site_name']) . '&oauth_token=';
-    if (isset($_GET['oauth_verifier']) && isset($_GET['oauth_token'])  && isset($_GET['uid'])) {
-      $uid = $_GET['uid'];
-      $secret = $this->cache->get($this->cacheKey.":nonce:" . $uid);
-      $this->cache->delete($this->cacheKey.":nonce:" . $uid);
-      $token = $this->upgradeRequestToken($_GET['oauth_token'], $secret, $_GET['oauth_verifier']);
-      return json_encode($token);
-    } else {
-      // Initialize the OAuth dance, first request a request token, then kick the client to the authorize URL
+  public function authenticate($service)
+  {
+      global $apiConfig;
+      $this->service = $service;
+      $this->service['authorization_token_url'] .= '?scope=' . apiClientOAuthUtil::urlencodeRFC3986($service['scope']) . '&domain=' . apiClientOAuthUtil::urlencodeRFC3986($apiConfig['site_name']) . '&oauth_token=';
+      if (isset($_GET['oauth_verifier']) && isset($_GET['oauth_token'])  && isset($_GET['uid'])) {
+          $uid = $_GET['uid'];
+          $secret = $this->cache->get($this->cacheKey.":nonce:" . $uid);
+          $this->cache->delete($this->cacheKey.":nonce:" . $uid);
+          $token = $this->upgradeRequestToken($_GET['oauth_token'], $secret, $_GET['oauth_verifier']);
+          return json_encode($token);
+      } else {
+          // Initialize the OAuth dance, first request a request token, then kick the client to the authorize URL
       // First we store the current URL in our cache, so that when the oauth dance is completed we can return there
       $callbackUrl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-      $uid = uniqid();
-      $token = $this->obtainRequestToken($callbackUrl, $uid);
-      $this->cache->set($this->cacheKey.":nonce:" . $uid,  $token->secret);
-      $this->redirectToAuthorization($token);
-    }
+          $uid = uniqid();
+          $token = $this->obtainRequestToken($callbackUrl, $uid);
+          $this->cache->set($this->cacheKey.":nonce:" . $uid, $token->secret);
+          $this->redirectToAuthorization($token);
+      }
   }
 
   /**
@@ -94,30 +96,33 @@ class apiOAuth extends apiAuth {
    * and every time the user comes back the access token from the authentication() flow should be re-used (it essentially never expires)
    * @param object $accessToken
    */
-  public function setAccessToken($accessToken) {
-    $accessToken = json_decode($accessToken, true);
-    if ($accessToken == null) {
-      throw new apiAuthException("Could not json decode the access token");
-    }
-    if (! isset($accessToken['key']) || ! isset($accessToken['secret'])) {
-      throw new apiAuthException("Invalid OAuth token, missing key and/or secret");
-    }
-    $this->accessToken = new apiClientOAuthConsumer($accessToken['key'], $accessToken['secret']);
+  public function setAccessToken($accessToken)
+  {
+      $accessToken = json_decode($accessToken, true);
+      if ($accessToken == null) {
+          throw new apiAuthException("Could not json decode the access token");
+      }
+      if (! isset($accessToken['key']) || ! isset($accessToken['secret'])) {
+          throw new apiAuthException("Invalid OAuth token, missing key and/or secret");
+      }
+      $this->accessToken = new apiClientOAuthConsumer($accessToken['key'], $accessToken['secret']);
   }
 
   /**
    * Returns the current access token
    */
-  public function getAccessToken() {
-    return $this->accessToken;
+  public function getAccessToken()
+  {
+      return $this->accessToken;
   }
 
 
   /**
    * Set the developer key to use, these are obtained through the API Console
    */
-  public function setDeveloperKey($developerKey) {
-    $this->developerKey = $developerKey;
+  public function setDeveloperKey($developerKey)
+  {
+      $this->developerKey = $developerKey;
   }
 
   /**
@@ -126,16 +131,17 @@ class apiOAuth extends apiAuth {
    * @param apiCache $cache cache class to use (file,apc,memcache,mysql)
    * @param oauthVerifier
    */
-  public function upgradeRequestToken($requestToken, $requestTokenSecret, $oauthVerifier) {
-    $ret = $this->requestAccessToken($requestToken, $requestTokenSecret, $oauthVerifier);
-    $matches = array();
-    @parse_str($ret, $matches);
-    if (!isset($matches['oauth_token']) || !isset($matches['oauth_token_secret'])) {
-      throw new apiAuthException("Error authorizing access key (result was: {$ret})");
-    }
+  public function upgradeRequestToken($requestToken, $requestTokenSecret, $oauthVerifier)
+  {
+      $ret = $this->requestAccessToken($requestToken, $requestTokenSecret, $oauthVerifier);
+      $matches = array();
+      @parse_str($ret, $matches);
+      if (!isset($matches['oauth_token']) || !isset($matches['oauth_token_secret'])) {
+          throw new apiAuthException("Error authorizing access key (result was: {$ret})");
+      }
     // The token was upgraded to an access token, we can now continue to use it.
     $this->accessToken = new apiClientOAuthConsumer(apiClientOAuthUtil::urldecodeRFC3986($matches['oauth_token']), apiClientOAuthUtil::urldecodeRFC3986($matches['oauth_token_secret']));
-    return $this->accessToken;
+      return $this->accessToken;
   }
 
   /**
@@ -145,30 +151,32 @@ class apiOAuth extends apiAuth {
    * @param string $requestTokenSecret the request token secret
    * @return array('http_code' => HTTP response code (200, 404, 401, etc), 'data' => the html document)
    */
-  protected function requestAccessToken($requestToken, $requestTokenSecret, $oauthVerifier) {
-    global $apiConfig;
-    $accessToken = new apiClientOAuthConsumer($requestToken, $requestTokenSecret);
-    $accessRequest = apiClientOAuthRequest::from_consumer_and_token($this->consumerToken, $accessToken, "GET", $this->service['access_token_url'], array('oauth_verifier' => $oauthVerifier));
-    $accessRequest->sign_request($this->signatureMethod, $this->consumerToken, $accessToken);
-    $request = $this->io->makeRequest(new apiHttpRequest($accessRequest));
-    if ($request->getResponseHttpCode() != 200) {
-      throw new apiAuthException("Could not fetch access token, http code: " . $request->getResponseHttpCode() . ', response body: '. $request->getResponseBody());
-    }
-    return $request->getResponseBody();
+  protected function requestAccessToken($requestToken, $requestTokenSecret, $oauthVerifier)
+  {
+      global $apiConfig;
+      $accessToken = new apiClientOAuthConsumer($requestToken, $requestTokenSecret);
+      $accessRequest = apiClientOAuthRequest::from_consumer_and_token($this->consumerToken, $accessToken, "GET", $this->service['access_token_url'], array('oauth_verifier' => $oauthVerifier));
+      $accessRequest->sign_request($this->signatureMethod, $this->consumerToken, $accessToken);
+      $request = $this->io->makeRequest(new apiHttpRequest($accessRequest));
+      if ($request->getResponseHttpCode() != 200) {
+          throw new apiAuthException("Could not fetch access token, http code: " . $request->getResponseHttpCode() . ', response body: '. $request->getResponseBody());
+      }
+      return $request->getResponseBody();
   }
 
   /**
    * Obtains a request token from the specified provider.
    */
-  public function obtainRequestToken($callbackUrl, $uid) {
-    $callbackParams = (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?') . 'uid=' . urlencode($uid);
-    $ret = $this->requestRequestToken($callbackUrl . $callbackParams);
-    $matches = array();
-    preg_match('/oauth_token=(.*)&oauth_token_secret=(.*)&oauth_callback_confirmed=(.*)/', $ret, $matches);
-    if (!is_array($matches) || count($matches) != 4) {
-      throw new apiAuthException("Error retrieving request key ({$ret})");
-    }
-    return new apiClientOAuthToken(apiClientOAuthUtil::urldecodeRFC3986($matches[1]), apiClientOAuthUtil::urldecodeRFC3986($matches[2]));
+  public function obtainRequestToken($callbackUrl, $uid)
+  {
+      $callbackParams = (strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?') . 'uid=' . urlencode($uid);
+      $ret = $this->requestRequestToken($callbackUrl . $callbackParams);
+      $matches = array();
+      preg_match('/oauth_token=(.*)&oauth_token_secret=(.*)&oauth_callback_confirmed=(.*)/', $ret, $matches);
+      if (!is_array($matches) || count($matches) != 4) {
+          throw new apiAuthException("Error retrieving request key ({$ret})");
+      }
+      return new apiClientOAuthToken(apiClientOAuthUtil::urldecodeRFC3986($matches[1]), apiClientOAuthUtil::urldecodeRFC3986($matches[2]));
   }
 
   /**
@@ -176,17 +184,18 @@ class apiOAuth extends apiAuth {
    *
    * @return array('http_code' => HTTP response code (200, 404, 401, etc), 'data' => the html document)
    */
-  protected function requestRequestToken($callbackUrl) {
-    global $apiConfig;
-    $requestTokenRequest = apiClientOAuthRequest::from_consumer_and_token($this->consumerToken, NULL, "GET", $this->service['request_token_url'], array());
-    $requestTokenRequest->set_parameter('scope', $this->service['scope']);
-    $requestTokenRequest->set_parameter('oauth_callback', $callbackUrl);
-    $requestTokenRequest->sign_request($this->signatureMethod, $this->consumerToken, NULL);
-    $request = $this->io->makeRequest(new apiHttpRequest($requestTokenRequest));
-    if ($request->getResponseHttpCode() != 200) {
-      throw new apiAuthException("Couldn't fetch request token, http code: " . $request->getResponseHttpCode() . ', response body: '. $request->getResponseBody());
-    }
-    return $request->getResponseBody();
+  protected function requestRequestToken($callbackUrl)
+  {
+      global $apiConfig;
+      $requestTokenRequest = apiClientOAuthRequest::from_consumer_and_token($this->consumerToken, null, "GET", $this->service['request_token_url'], array());
+      $requestTokenRequest->set_parameter('scope', $this->service['scope']);
+      $requestTokenRequest->set_parameter('oauth_callback', $callbackUrl);
+      $requestTokenRequest->sign_request($this->signatureMethod, $this->consumerToken, null);
+      $request = $this->io->makeRequest(new apiHttpRequest($requestTokenRequest));
+      if ($request->getResponseHttpCode() != 200) {
+          throw new apiAuthException("Couldn't fetch request token, http code: " . $request->getResponseHttpCode() . ', response body: '. $request->getResponseBody());
+      }
+      return $request->getResponseBody();
   }
 
   /**
@@ -196,10 +205,11 @@ class apiOAuth extends apiAuth {
    * @param OAuthToken $token the request token
    * @param string $callbackUrl the URL to return to post-authorization (passed to login site)
    */
-  public function redirectToAuthorization($token) {
-    global $apiConfig;
-    $authorizeRedirect = $this->service['authorization_token_url']. $token->key;
-    header("Location: $authorizeRedirect");
+  public function redirectToAuthorization($token)
+  {
+      global $apiConfig;
+      $authorizeRedirect = $this->service['authorization_token_url']. $token->key;
+      header("Location: $authorizeRedirect");
   }
 
   /**
@@ -211,28 +221,29 @@ class apiOAuth extends apiAuth {
    * @param string $postBody for POST/PUT requests, the postBody is included in the signature
    * @return string the signed url
    */
-  public function sign(apiHttpRequest $request) {
-    // add the developer key to the request before signing it
+  public function sign(apiHttpRequest $request)
+  {
+      // add the developer key to the request before signing it
     if ($this->developerKey) {
-      $request->setUrl($request->getUrl() . ((strpos($request->getUrl(), '?') === false) ? '?' : '&') . 'key='.urlencode($this->developerKey));
+        $request->setUrl($request->getUrl() . ((strpos($request->getUrl(), '?') === false) ? '?' : '&') . 'key='.urlencode($this->developerKey));
     }
     // and sign the request
     $oauthRequest = apiClientOAuthRequest::from_request($request->getMethod(), $request->getBaseUrl(), $request->getQueryParams());
-    $params = $this->mergeParameters($request->getQueryParams());
-    foreach ($params as $key => $val) {
-      if (is_array($val)) {
-        $val = implode(',', $val);
+      $params = $this->mergeParameters($request->getQueryParams());
+      foreach ($params as $key => $val) {
+          if (is_array($val)) {
+              $val = implode(',', $val);
+          }
+          $oauthRequest->set_parameter($key, $val);
       }
-      $oauthRequest->set_parameter($key, $val);
-    }
-    $oauthRequest->sign_request($this->signatureMethod, $this->consumerToken, $this->accessToken);
-    $authHeaders = $oauthRequest->to_header();
-    $headers = $request->getHeaders();
-    $headers[] = $authHeaders;
-    $request->setHeaders($headers);
+      $oauthRequest->sign_request($this->signatureMethod, $this->consumerToken, $this->accessToken);
+      $authHeaders = $oauthRequest->to_header();
+      $headers = $request->getHeaders();
+      $headers[] = $authHeaders;
+      $request->setHeaders($headers);
     // and add the access token key to it (since it doesn't include the secret, it's still secure to store this in cache)
     $request->accessKey = $this->accessToken->key;
-    return $request;
+      return $request;
   }
 
   /**
@@ -242,15 +253,16 @@ class apiOAuth extends apiAuth {
    * @param array $params the user-supplied params that will be appended to the url
    * @return array the combined parameters
    */
-  protected function mergeParameters($params) {
-    $defaults = array(
+  protected function mergeParameters($params)
+  {
+      $defaults = array(
       'oauth_nonce' => md5(microtime() . mt_rand()),
       'oauth_version' => apiClientOAuthRequest::$version, 'oauth_timestamp' => time(),
       'oauth_consumer_key' => $this->consumerToken->key
     );
-    if ($this->accessToken != null) {
-      $params['oauth_token'] = $this->accessToken->key;
-    }
-    return array_merge($defaults, $params);
+      if ($this->accessToken != null) {
+          $params['oauth_token'] = $this->accessToken->key;
+      }
+      return array_merge($defaults, $params);
   }
 }

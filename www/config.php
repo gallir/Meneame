@@ -26,7 +26,7 @@
 //
 
 if (defined('config_done')) {
-    return TRUE; // If not "included_once"
+    return true; // If not "included_once"
 }
 
 define('config_done', 1);
@@ -45,7 +45,7 @@ define('config_done', 1);
 // $globals['force_ssl'] = True;
 
 // Specify the name of the ssl server, ensure you have also setup "cookies_domain
-$globals['ssl_server'] = False;
+$globals['ssl_server'] = false;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
@@ -67,7 +67,7 @@ $globals['page_size'] = 20;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
 $globals['ads'] = true;
 $globals['external_ads'] = $external_ads = true;
-$globals['behind_load_balancer'] = False; // LB as those in Amazon EC2 don't send the real remote address
+$globals['behind_load_balancer'] = false; // LB as those in Amazon EC2 don't send the real remote address
 //$globals['email_domain'] = 'my_email_domain.com'; // Used for sending emails bots and scrips, if not defined it uses server_name
 //$globals['notify_email'] = 'my_email_domain.com'; // used for sending notifications, now only used for Amazon SNS/SES notifications
 
@@ -283,7 +283,7 @@ $globals['sphinx_port'] = 9312;
 
 $globals['avatars_check_always'] = true;
 $globals['avatars_max_size'] = 1024*1024;
-$globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
+$globals['avatars_allowed_sizes'] = array(80, 40, 25, 20);
 
 // If you use nginx define X-Accel-Redirect, or X-Sendfile for Apache module
 // See: https://tn123.org/mod_xsendfile/ http://wiki.nginx.org/XSendfile
