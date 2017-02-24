@@ -100,7 +100,7 @@ function do_login_post()
         return array(_('el código de seguridad no es correcto'), $failed);
     }
 
-    if (strlen($password) > 0 && $current_user->Authenticate($username, $password, $_POST['persistent']) == false) {
+    if (strlen($password) > 0 && !$current_user->Authenticate($username, $password, $_POST['persistent'])) {
         Log::insert('login_failed', $globals['user_ip_int'], 0);
 
         $failed++;

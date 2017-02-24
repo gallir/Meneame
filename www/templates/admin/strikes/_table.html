@@ -1,0 +1,40 @@
+<table class="decorated" style="font-size: 10pt">
+    <tr>
+        <th style="white-space: nowrap">{% trans _('Usuario') %}</th>
+        <th>{% trans _('tipo') %}</th>
+        <th>{% trans _('motivo') %}</th>
+        <th>{% trans _('comentario') %}</th>
+        <th>{% trans _('reporte') %}</th>
+        <th>{% trans _('karma anterior') %}</th>
+        <th>{% trans _('karma nuevo') %}</th>
+        <th>{% trans _('creación') %}</th>
+        <th>{% trans _('fin') %}</th>
+        <th>{% trans _('admin') %}</th>
+        <th>&nbsp;</th>
+    </tr>
+
+    {% for strike in strikes %}
+
+    <tr>
+        <td>
+            <a target="_blank" href="{{ globals.base_url }}user/{{ strike.user_login }}/{{ strike.user_id }}" class="tooltip u:{{ strike.user_id }}" style="overflow: hidden;white-space: nowrap;">
+                {{ strike.user_login }}
+            </a>
+        </td>
+        <td>{{ strike.type|Capfirst }}</td>
+        <td>{{ strike.reason_message }}</td>
+        <td>{{ strike.comment|txt_shorter:50|clean_text }}</td>
+        <td>{% if strike.report_id %} {{ strike.report_id }} {% else %} N/A {% endif %}</td>
+        <td>{{ strike.karma_old }}</td>
+        <td>{{ strike.karma_new }}</td>
+        <td>{{ strike.date }}</td>
+        <td>{{ strike.expires_at }}</td>
+        <td>{{ strike.admin_login }}</td>
+        <td>
+            <a href="strikes.php?tab=strikes&op=new&strike_user={{ strike.user_login }}" title="Añadir" class="btn btn-default btn-sm">
+                <i class="fa fa-plus"></i>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

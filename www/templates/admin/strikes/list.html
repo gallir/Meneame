@@ -1,115 +1,17 @@
 <div id="singlewrap">
     <div class="genericform" style="margin:0">
         <div style="float:right;">
-            <form method="get" action="{{globals.base_url}}admin/strikes.php">
-                <input type="hidden" name="tab" value="{{selected_tab}}"/>
-                <input type="hidden" name="key" value="{{key}}"/>
-                <input type="text" name="s" {% if search %} value="{{ search }}" {% else %} value="{% trans _('buscar') %}..." {% endif %} onblur="if(this.value=='') this.value='{% trans _('buscar') %}...';" onfocus="if(this.value=='{% trans _('buscar') %}...') this.value='';"/>&nbsp;
-                <input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="{{ globals.base_static }}img/common/search-03.png">
+            <form method="get" action="{{ globals.base_url }}admin/strikes.php">
+                <input type="hidden" name="tab" value="{{ selected_tab }}" />
+                <input type="text" name="s" {% if search %} value="{{ search }}" {% endif %} placeholder="{% trans _('buscar') %}..." />&nbsp;
+                <input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="{{ globals.base_static }}img/common/search-03.png" />
             </form>
         </div>
 
         {% if current_user.user_level == "god" %}
-        &nbsp; [ <a href="{{ globals.base_url}}admin/strikes.php?op=new">{% trans _('Nuevo strike') %}</a> ]
+        &nbsp; [ <a href="{{ globals.base_url }}admin/strikes.php?op=new">{% trans _('Nuevo strike') %}</a> ]
         {% endif %}
 
-        <table class="decorated" style="font-size: 10pt">
-            <tr>
-                <th width="25%">
-                    <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=ban_text">
-                        {% trans _('Usuario') %}
-                    </a>
-                </th>
-
-                <th>
-                    {% trans _('tipo') %}
-                </th>
-                <th>
-                    {% trans _('motivo') %}
-                </th>
-
-                <th width="30%">
-                    {% trans _('comentario') %}
-                </th>
-                <th>
-                    {% trans _('reporte') %}
-                </th>
-
-                <th>
-                    {% trans _('karma anterior') %}
-                </th>
-
-                <th>
-                    {% trans _('karma nuevo') %}
-                </th>
-
-                <th>
-                    {% trans _('fecha creación') %}
-                </th>
-                <th>
-                    {% trans _('admin') %}
-                </th>
-
-            </tr>
-            {% for strike in strikes %}
-            <tr>
-                <td>
-                    <a target="_blank" href="{{globals.base_url}}user/{{strike.user_login}}/{{strike.user_id}}" class="tooltip u:{{strike.user_id}}" style="overflow: hidden;white-space: nowrap;">
-                        {{ strike.user_login }}
-                    </a>
-                </td>
-                <td>
-                    {{strike.type|Capfirst}}
-                </td>
-                <td>
-                    {% if strike.reason == 'insult' %}
-                    Insultos directos
-                    {% endif %}
-                    {% if strike.reason == 'incites_hatred' %}
-                    Incitación al odio
-                    {% endif %}
-                    {% if strike.reason == 'advertising' %}
-                    Promoción comercial de productos o servicios
-                    {% endif %}
-                    {% if strike.reason == 'violence_porn' %}
-                    Material pornográfico o de violencia gráfica
-                    {% endif %}
-                    {% if strike.reason == 'private_data' %}
-                    Contiene datos personales propios o de un tercero
-                    {% endif %}
-                    {% if strike.reason == 'legality' %}
-                    Incumple la legalidad española vigente
-                    {% endif %}
-                    {% if strike.reason == 'violate_rules' %}
-                    Viola las normas de uso
-                    {% endif %}
-                    {% if strike.reason == 'inappropriate_content' %}
-                    Contenido inapropiado
-                    {% endif %}
-                    {% if strike.reason == 'spam' %}
-                    Spam
-                    {% endif %}
-
-                <td class="tooltip b:{{ban.ban_id}}" style="overflow: hidden;white-space: nowrap;">
-                    {{ strike.comment|txt_shorter:50|clean_text }}
-                </td>
-                <td>
-                    {% if strike.report_id %}
-                    {{strike.report_id}}
-                    {% else %}
-                    N/A
-                    {% endif %}
-                </td>
-                <td>
-                    {{strike.old_karma}}
-                </td>
-                <td>
-                    {{strike.new_karma}}
-                </td>
-                <td>{{strike.date}}</td>
-                <td>{{strike.admin_login}}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% include 'admin/strikes/_table.html' %}
     </div>
 </div>

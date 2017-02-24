@@ -386,6 +386,29 @@ $globals['new_source_bonus'] = 1.05;
 $globals['new_source_max_hours'] = 240;
 $globals['new_source_min_hours'] = 48;
 
+$globals['strikes'] = array(
+    'strike1' => array(
+        'name' => 'Strike 1',
+        'karma' => 4.01,
+        'hours' => 12,
+        'restore' => -2
+    ),
+
+    'strike2' => array(
+        'name' => 'Strike 2',
+        'karma' => 4.01,
+        'hours' => 24,
+        'restore' => -4
+    ),
+
+    'strike3' => array(
+        'name' => 'Strike 3',
+        'karma' => 4.01,
+        'hours' => 72,
+        'restore' => -6
+    )
+);
+
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
 $globals['anon_to_user_votes'] = 0.2;

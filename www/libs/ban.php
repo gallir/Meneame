@@ -19,10 +19,10 @@ function check_ban_proxy()
 function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = false)
 {
     global $db, $globals;
-    
+
     $ban_text = $db->escape($ban_text);
     $ban_type = $db->escape($ban_type);
-    
+
     // If check_valid == false does not check for validity of the address
     // in order to avoid problems with bad links in external pages
     switch ($ban_type) {
@@ -181,15 +181,15 @@ function del_ban($ban_id)
 class Ban
 {
     public $ban_id = 0;
-    
-    public function Ban($ban_id=0)
+
+    public function __construct($ban_id=0)
     {
         if ($ban_id>0) {
             $this->ban_id = intval($ban_id);
             $this->read();
         }
     }
-    
+
     public function read()
     {
         global $db;
@@ -220,7 +220,7 @@ class Ban
         $this->read = false;
         return false;
     }
-    
+
     public function store()
     {
         global $db;
