@@ -118,11 +118,14 @@ class Strike
 
             $where = '
                 WHERE (
-                    user_login LIKE "%'.$search.'%"
-                    OR admin_login LIKE "%'.$search.'%"
+                    admin.user_login LIKE "%'.$search.'%"
+                    OR users.user_login LIKE "%'.$search.'%"
                     OR strike_type = "'.$search.'"
                     OR strike_reason = "'.$search.'"
-                    OR strike_report_id = "'.(int)$search.'"
+                    OR (
+                        strike_report_id > 0
+                        AND strike_report_id = "'.(int)$search.'"
+                    )
                 )
             ';
         } else {

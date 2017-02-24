@@ -22,10 +22,12 @@ if ($_REQUEST['tab']) {
     $selected_tab = 'comment_reports';
 }
 
-if (!empty($_REQUEST['report_status'])) {
-    $report_status = (array)$_REQUEST['report_status'];
-} else {
+if (empty($_REQUEST['report_status'])) {
     $report_status = array('pending', 'debate');
+} elseif (is_array($_REQUEST['report_status'])) {
+    $report_status = $_REQUEST['report_status'];
+} elseif ($_REQUEST['report_status'] === 'all') {
+    $report_status = array('pending', 'debate', 'penalized', 'dismissed');
 }
 
 if (!empty($_REQUEST['report_date'])) {
@@ -94,8 +96,13 @@ function do_report_list($selected_tab, $report_status, $report_date, $key, $stat
         $where .= ' AND report_date > "'.date('Y-m-d H:i:s', $globals['now'] - $ts).'"';
     }
 
-    if ($_REQUEST['s']) {
-        $where .= ' AND authors.user_login LIKE "%'.$db->escape($_REQUEST['s']).'%"';
+    if ($search = $_REQUEST['s']) {
+        $where .= '
+            AND (
+                authors.user_login LIKE "%'.$db->escape($search).'%"
+                OR report_id = "'.(int)$search.'"
+            )
+        ';
         $rows = 0;
     } else {
         $rows = $db->get_var('SELECT COUNT(*) FROM reports '.$where.';');

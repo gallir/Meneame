@@ -62,14 +62,22 @@
         <td>{{ strike.type|Capfirst }}</td>
         <td>{{ strike.reason_message }}</td>
         <td>{{ strike.comment|txt_shorter:50|clean_text }}</td>
-        <td>{% if strike.report_id %} {{ strike.report_id }} {% else %} N/A {% endif %}</td>
+        <td>
+            {% if strike.report_id %}
+            <a href="{{ globals.base_url }}admin/reports.php?s={{ strike.report_id }}&amp;report_status=all">
+                {{ strike.report_id }}
+            </a>
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
         <td>{{ strike.karma_old }}</td>
         <td>{{ strike.karma_new }}</td>
         <td>{{ strike.date }}</td>
         <td>{{ strike.expires_at }}</td>
         <td>{{ strike.admin_login }}</td>
         <td>
-            <a href="strikes.php?tab=strikes&amp;op=new&amp;strike_user={{ strike.user_login }}" title="Añadir" class="btn btn-default btn-xs">
+            <a href="?tab=strikes&amp;op=new&amp;strike_user={{ strike.user_login }}" title="Añadir" class="btn btn-default btn-xs">
                 <i class="fa fa-plus"></i>
             </a>
         </td>

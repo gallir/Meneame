@@ -58,13 +58,13 @@ function do_strike_list($selected_tab)
         $strike_date = 'all';
     }
 
-    $rows = Strike::count($_REQUEST['s']);
-    $strikes = Strike::list($_REQUEST['s'], $_REQUEST['order_by'], $_REQUEST['order_mode'], $offset, $page_size);
+    $rows = Strike::count($search);
+    $strikes = Strike::list($search, $_REQUEST['order_by'], $_REQUEST['order_mode'], $offset, $page_size);
 
     $order_mode = ($_REQUEST['order_mode'] === 'DESC') ? 'ASC' : 'DESC';
 
     Haanga::Load('admin/strikes/list.html', compact(
-        'selected_tab', 'strikes', 'order_mode'
+        'selected_tab', 'strikes', 'order_mode', 'search'
     ));
 
     do_pages($rows, $page_size, false);
