@@ -12,8 +12,7 @@ $globals['ads'] = false;
 
 if (!$current_user->admin) {
     Haanga::Load('admin/no_access.html');
-    do_footer();
-    die;
+    die(do_footer());
 }
 
 function do_admin_tabs($tab_selected = false)
@@ -32,4 +31,19 @@ function do_admin_tabs($tab_selected = false)
     ];
 
     Haanga::Load('admin/tabs.html', compact('tabs', 'tab_selected'));
+}
+
+function URLQuery()
+{
+    parse_str($_SERVER['QUERY_STRING'], $data);
+
+    $args = func_get_args();
+    $count = count($args);
+    $changes = array();
+
+    for ($i = 0; $i < $count; $i += 2) {
+        $changes[$args[$i]] = $args[$i + 1];
+    }
+
+    return http_build_query(array_filter(array_replace($data, $changes)));
 }

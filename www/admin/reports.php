@@ -4,7 +4,7 @@
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
 // 		http://www.affero.org/oagpl.html
-// AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
+// AFFERO GENERAL PUBLIC LICENSE is also included in the file called 'COPYING'.
 
 $globals['skip_check_ip_noaccess'] = true;
 include('../config.php');
@@ -14,105 +14,108 @@ include('libs/admin.php');
 $page_size = 40;
 $offset = (get_current_page() - 1) * $page_size;
 
-$operation = $_REQUEST["op"] ? $_REQUEST["op"] : 'list';
-$search = $_REQUEST["s"];
-$orderby = $_REQUEST["order_by"];
+$operation = $_REQUEST['op'] ?: 'list';
 
-$selected_tab = "comment_reports";
-if ($_REQUEST["tab"]) {
-    $selected_tab = clean_input_string($_REQUEST["tab"]);
+if ($_REQUEST['tab']) {
+    $selected_tab = clean_input_string($_REQUEST['tab']);
+} else {
+    $selected_tab = 'comment_reports';
 }
 
-$report_status = array('pending', 'debate');
-if (!empty($_REQUEST["report_status"])) {
-    $report_status = $_REQUEST["report_status"];
+if (!empty($_REQUEST['report_status'])) {
+    $report_status = (array)$_REQUEST['report_status'];
+} else {
+    $report_status = array('pending', 'debate');
 }
 
-$report_date = 'all';
-if (!empty($_REQUEST["report_date"])) {
-    $report_date = clean_input_string($_REQUEST["report_date"]);
+if (!empty($_REQUEST['report_date'])) {
+    $report_date = clean_input_string($_REQUEST['report_date']);
+} else {
+    $report_date = 'all';
 }
 
 $statistics = calculate_statistics();
-
 $key = get_security_key();
 
 switch ($operation) {
     case 'list':
         do_header(_('Comment reports'));
         do_admin_tabs($selected_tab);
-        do_report_list($selected_tab, $search, $report_status, $report_date, $orderby, $key, $statistics);
+        do_report_list($selected_tab, $report_status, $report_date, $key, $statistics);
+
         break;
+
     case 'change_status':
         if (!check_security_key($_REQUEST['key'])) {
             die;
         }
+
         $report = Report::from_db($_REQUEST['report_id']);
         $status = $_REQUEST['new_report_status'];
+
         update_status($report, $status);
-        header("Location: " . $_SERVER['REQUEST_URI']);
-        break;
+
+        die(header('Location: ' . $_SERVER['REQUEST_URI']));
 }
 
 do_footer();
 
-function do_report_list($selected_tab, $search, $report_status, $report_date, $orderby, $key, $statistics)
+function do_report_list($selected_tab, $report_status, $report_date, $key, $statistics)
 {
     global $db, $offset, $page_size, $globals;
 
-    if (empty($orderby)) {
-        $orderby = 'report_num';
-        $order = "DESC";
-    } else {
-        $orderby = preg_replace('/[^a-z_]/i', '', $orderby);
-        if ($orderby == 'report_num') {
-            $order = "DESC";
-        } else {
-            $order = "ASC";
-        }
-    }
+    $where = ' WHERE report_type = "'.Report::REPORT_TYPE_LINK_COMMENT.'"';
 
-    $where = "WHERE report_type='" . Report::REPORT_TYPE_LINK_COMMENT . "'";
     if ($report_status) {
-        $where .= " AND report_status IN ('" . join("','", $report_status) . "')";
+        $where .= ' AND report_status IN ("'.implode('","', $report_status).'")';
     }
 
-    if ($report_date) {
-        switch ($report_date) {
-            case 'two_hours':
-                $ts = $globals['now'] - 7200;
-                break;
-            case 'six_hours':
-                $ts = $globals['now'] - 6 * 3600;
-                break;
-            case 'twelve_hours':
-                $ts = $globals['now'] - 12 * 3600;
-                break;
-            case 'one_day':
-                $ts = $globals['now'] - 86400;
-                break;
-            case 'one_week':
-                $ts = $globals['now'] - 7 * 86400;
-                break;
-        }
+    $ts = null;
 
-        if ($report_date != 'all') {
-            $where .= " AND report_date > FROM_UNIXTIME($ts)";
-        }
+    switch ($report_date) {
+        case 'two_hours':
+            $ts = 7200;
+            break;
+        case 'six_hours':
+            $ts = 6 * 3600;
+            break;
+        case 'twelve_hours':
+            $ts = 12 * 3600;
+            break;
+        case 'one_day':
+            $ts = 86400;
+            break;
+        case 'one_week':
+            $ts = 7 * 86400;
+            break;
     }
 
-    if ($search) {
-        $search_text = $db->escape($search);
-        $where .= " AND (report.author_user_login LIKE '%$search_text%')";
+    if ($ts) {
+        $where .= ' AND report_date > "'.date('Y-m-d H:i:s', $globals['now'] - $ts).'"';
     }
 
-    $rows = $db->get_var("SELECT count(*) FROM reports " . $where);
+    if ($_REQUEST['s']) {
+        $where .= ' AND authors.user_login LIKE "%'.$db->escape($_REQUEST['s']).'%"';
+        $rows = 0;
+    } else {
+        $rows = $db->get_var('SELECT COUNT(*) FROM reports '.$where.';');
+    }
 
-    $sql = "SELECT" . Report::SQL_COMMENT_GROUPED . " $where GROUP BY ref_id, reason ORDER BY $orderby $order LIMIT $offset,$page_size";
+    $orderBy = Report::getValidOrder($_REQUEST['order_by'], $_REQUEST['order_mode']);
+    $order_mode = strstr($orderBy, 'DESC') ? 'ASC' : 'DESC';
 
-    $reports = group_by_comment($db->get_results($sql));
+    $reports = group_by_comment($db->get_results('
+        SELECT '.Report::SQL_COMMENT_GROUPED.'
+        '.$where.'
+        GROUP BY ref_id, reason
+        ORDER BY '.$orderBy.'
+        LIMIT '.$offset.', '.$page_size.';
+    '));
 
-    Haanga::Load('admin/reports/list.html', compact('reports', 'selected_tab', 'key', 'search', 'report_status', 'report_date', 'statistics'));
+    Haanga::Load('admin/reports/list.html', compact(
+        'reports', 'selected_tab', 'key', 'search', 'report_status', 'report_date', 'statistics',
+        'order_mode'
+    ));
 
     do_pages($rows, $page_size, false);
 }

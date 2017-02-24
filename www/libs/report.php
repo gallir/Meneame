@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//		http://www.affero.org/oagpl.html
+//      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class Report extends LCPBase
@@ -26,18 +26,18 @@ class Report extends LCPBase
     const REPORT_REASON_BREACH_LEGALITY = 'legality';
 
     const SQL_COMMENT = " report_id as id, report_type as type, report_date as date, report_modified as modified, report_status as status, report_reason as reason, reporters.user_id as reporter_id, reporters.user_level as reporter_user_level, reporters.user_login as reporter_user_login, authors.user_id as author_id, authors.user_level as author_user_level, authors.user_login as author_user_login, revisors.user_id as revisor_id, revisors.user_level as revisor_user_level, revisors.user_login as revisor_user_login, report_ip as ip, comment_id as ref_id, comment_order, comment_link_id, link_uri as comment_link_uri FROM reports
-	LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
-	LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
-	LEFT JOIN links on (comments.comment_link_id = links.link_id)
-	LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
-	LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by) ";
+    LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
+    LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
+    LEFT JOIN links on (comments.comment_link_id = links.link_id)
+    LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
+    LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by) ";
 
     const SQL_COMMENT_GROUPED = " count(*) as report_num, report_id as id, report_type as type, report_date as date, report_modified as modified, report_status as status, report_reason as reason, reporters.user_id as reporter_id, reporters.user_level as reporter_user_level, reporters.user_login as reporter_user_login, authors.user_id as author_id, authors.user_level as author_user_level, authors.user_login as author_user_login, revisors.user_id as revisor_id, revisors.user_level as revisor_user_level, revisors.user_login as revisor_user_login, report_ip as ip, comment_id as ref_id, comment_order, comment_link_id, link_uri as comment_link_uri FROM reports
-	LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
-	LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
-	LEFT JOIN links on (comments.comment_link_id = links.link_id)
-	LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
-	LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by) ";
+    LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
+    LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
+    LEFT JOIN links on (comments.comment_link_id = links.link_id)
+    LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
+    LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by) ";
 
     // sql fields to build an object from mysql
     public $id = 0;
@@ -78,6 +78,15 @@ class Report extends LCPBase
             self::REPORT_REASON_REVEILS_PRIVATE_DATA,
             self::REPORT_REASON_BREACH_LEGALITY
         ));
+    }
+
+    public static function getValidOrder($column, $mode)
+    {
+        if (!in_array($column, ['report_id', 'report_num', 'author_user_login', 'report_date', 'report_status', 'revisor_user_login', 'report_modified'])) {
+            $column = 'report_num';
+        }
+
+        return $column.' '.(($mode === 'ASC') ? 'ASC' : 'DESC');
     }
 
     public static function check_min_karma()

@@ -4,7 +4,7 @@
             <form method="get" action="{{globals.base_url}}admin/bans.php">
                 <input type="hidden" name="tab" value="{{selected_tab}}"/>
                 <input type="hidden" name="key" value="{{key}}"/>
-                <input type="text" name="s" {% if search %} value="{{ search }}" {% else %} value="{% trans _('buscar') %}..." {% endif %} onblur="if(this.value=='') this.value='{% trans _('buscar') %}...';" onfocus="if(this.value=='{% trans _('buscar') %}...') this.value='';"/>&nbsp;
+                <input type="text" name="s" value="{{ search }}" placeholder="{% trans _('buscar') %}..." />&nbsp;
                 <input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="{{ globals.base_static }}img/common/search-03.png">
             </form>
         </div>
