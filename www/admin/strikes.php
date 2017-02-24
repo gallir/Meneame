@@ -12,48 +12,23 @@ include('../config.php');
 include(mnminclude.'html1.php');
 include('libs/admin.php');
 
-$page_size = 40;
-$offset = (get_current_page() - 1) * $page_size;
-
-$operation = $_REQUEST['op'] ?: 'list';
-$search = $_REQUEST['s'];
-$orderBy = $_REQUEST['order_by'];
-
 if (!empty($_REQUEST['tab'])) {
     $selected_tab = clean_input_string($_REQUEST['tab']);
 } else {
     $selected_tab = 'strikes';
 }
 
-if (!empty($_REQUEST['type'])) {
-    $type = clean_input_string($_REQUEST['type']);
-} else {
-    $type = 'all';
-}
-
-if (!empty($_REQUEST['strike_date'])) {
-    $strike_date = clean_input_string($_REQUEST['strike_date']);
-} else {
-    $strike_date = 'all';
-}
-
-if (!empty($_REQUEST['strike_user'])) {
-    $user_login = clean_input_url($_REQUEST['strike_user']);
-} else {
-    $user_login = null;
-}
-
-switch ($operation) {
+switch ($_REQUEST['op'] ?: 'list') {
     case 'list':
         do_header(_('listado de strikes'));
         do_admin_tabs($selected_tab);
-        do_strike_list($selected_tab, $search, $type, $strike_date, $orderBy);
+        do_strike_list($selected_tab);
         break;
 
     case 'new':
         do_header(_('nuevo strike'));
         do_admin_tabs($selected_tab);
-        do_new_strike($selected_tab, $orderBy, $user_login);
+        do_new_strike($selected_tab);
         break;
 
     case 'save';
@@ -63,15 +38,31 @@ switch ($operation) {
 
 do_footer();
 
-function do_strike_list($selected_tab, $search, $type, $strike_date, $orderBy)
+function do_strike_list($selected_tab)
 {
-    global $db, $offset, $page_size, $globals;
+    global $db, $globals;
 
-    if (empty($orderBy)) {
+    $page_size = 40;
+    $offset = (get_current_page() - 1) * $page_size;
+    $search = $_REQUEST['s'];
+
+    if (!empty($_REQUEST['type'])) {
+        $type = clean_input_string($_REQUEST['type']);
+    } else {
+        $type = 'all';
+    }
+
+    if (!empty($_REQUEST['strike_date'])) {
+        $strike_date = clean_input_string($_REQUEST['strike_date']);
+    } else {
+        $strike_date = 'all';
+    }
+
+    if (empty($_REQUEST['order_by'])) {
         $orderBy = 'strike_date';
         $orderMode = 'DESC';
     } else {
-        $orderBy = preg_replace('/[^a-z_]/i', '', $orderBy);
+        $orderBy = preg_replace('/[^a-z_]/i', '', $_REQUEST['order_by']);
         $orderMode = ($orderBy === 'strike_date') ? 'DESC' : 'ASC';
     }
 
@@ -83,15 +74,21 @@ function do_strike_list($selected_tab, $search, $type, $strike_date, $orderBy)
     do_pages($rows, $page_size, false);
 }
 
-function do_new_strike($selected_tab, $orderBy, $user_login)
+function do_new_strike($selected_tab)
 {
-    global $db, $offset, $page_size, $globals;
+    global $db;
+
+    if (!empty($_REQUEST['strike_user'])) {
+        $user_login = clean_input_url($_REQUEST['strike_user']);
+    } else {
+        $user_login = null;
+    }
 
     $strikes = $types = $reasons = $banned = array();
 
     $user = new User();
 
-    if (($user->username = $user_login) && $user->read()) {
+    if ($user_login && ($user->username = $user_login) && $user->read()) {
         $types = Strike::getUserValidTypes($user->id);
         $strikes = Strike::getUserStrikes($user->id);
         $reasons = Strike::$reasons;
@@ -130,6 +127,7 @@ function do_save_strike()
     $strike->admin_id = $current_user->user_id;
     $strike->comment = clean_text($_POST['comment']);
     $strike->reason = clean_input_string($_POST['reason']);
+    $strike->report_id = (int)$_POST['report_id'];
 
     $strike->store();
 

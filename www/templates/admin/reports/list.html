@@ -31,7 +31,7 @@
         <table class="table table-condensed table-striped table-hover" style="font-size: 12px;">
             <tr>
 
-                <th style="width: 20%">
+                <th>
                     <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}">
                         {% trans _('comentario') %}
                     </a>
@@ -43,7 +43,7 @@
                     </a>
                 </th>
 
-                <th style="width: 20%">
+                <th style="white-space: nowrap">
                     <a href="{{globals.base_url}}admin/reports.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=report_reason">
                         {% trans _('motivo') %}
                     </a>
@@ -82,6 +82,7 @@
                         {% trans _('fecha última modificación') %}
                     </a>
                 </th>
+                <th>{% trans _('strike') %}</th>
             </tr>
 
             {% for row in reports %}
@@ -257,8 +258,13 @@
                         --
                         {% endif %}
                     </td>
-
                 {% endif %}
+
+                <td>
+                    <a href="{{globals.base_url}}admin/strikes.php?op=new&amp;report_id={{ report.id }}&amp;strike_user={{ report.author_user_login }}" class="btn btn-default btn-xs">
+                        <i class="fa fa-plus fa-sm"></i>
+                    </a>
+                </td>
             </tr>
             {% endfor %}
             {% endfor %}

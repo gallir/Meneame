@@ -23,6 +23,7 @@
 
         <form method="post" name="newban" action="{{ globals.base_url }}admin/strikes.php?tab={{ selected_tab }}">
             <input type="hidden" name="user_id" value="{{ user.id }}" />
+            <input type="hidden" name="report_id" value="{{ _REQUEST.report_id | intval }}" />
 
             <table class="decorated" style="font-size: 10pt">
                 <tr>

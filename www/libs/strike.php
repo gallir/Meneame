@@ -184,6 +184,7 @@ class Strike
         }
 
         $this->executeAction();
+        $this->executeReport();
 
         $db->commit();
 
@@ -272,6 +273,25 @@ class Strike
         ');
 
         LogAdmin::insert($this->type, $this->user_id, $current_user->user_id, $this->user->level, 'disabled');
+    }
+
+    private function executeReport()
+    {
+        global $db, $current_user;
+
+        if (!$this->report_id) {
+            return;
+        }
+
+        $db->query('
+            UPDATE `reports`
+            SET
+                `report_modified` = NOW(),
+                `report_status` = "penalized",
+                `report_revised_by` = "'.(int)$current_user->user_id.'"
+            WHERE `report_id` = "'.(int)$this->report_id.'"
+            LIMIT 1;
+        ');
     }
 
     public static function getUserStrikes($user_id)
