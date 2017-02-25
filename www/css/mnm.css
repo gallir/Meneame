@@ -2290,7 +2290,7 @@ select.options-comments {
     padding-left: 10px;
 }
 
-.comment.admin, .comment-body .comment-body.new {
+.comment.admin .comment-body, .comment-body .comment-body.new {
     background: #FFD5AD;
     color: #000;
 }
