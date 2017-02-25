@@ -22,24 +22,25 @@ class Strike
 
     public static $sortColumns = [
         'user_login', 'strike_type', 'strike_reason', 'strike_report_id',
-        'strike_karma_old', 'strike_karma_new', 'strike_date', 'strike_modified', 'admin_login'
+        'strike_karma_old', 'strike_karma_new', 'strike_karma_restore',
+        'strike_date', 'strike_modified', 'admin_login'
     ];
 
     const SQL_SIMPLE = '
         strike_id AS id, strike_type AS type, strike_date AS date, strike_reason AS reason,
         strike_admin_id AS admin_id, strike_user_id AS user_id, strike_report_id AS report_id,
-        strike_karma_old AS karma_old, strike_karma_new AS karma_new, strike_comment AS comment,
-        strike_hours AS hours, strike_expires_at AS expires_at, strike_ip AS ip
+        strike_karma_old AS karma_old, strike_karma_new AS karma_new, strike_karma_restore AS karma_restore,
+        strike_comment AS comment, strike_hours AS hours, strike_expires_at AS expires_at, strike_ip AS ip
         FROM strikes
     ';
 
     const SQL = '
         strike_id AS id, strike_type AS type, strike_date AS date, strike_reason AS reason,
         strike_admin_id AS admin_id, strike_user_id AS user_id, strike_report_id AS report_id,
-        strike_karma_old AS karma_old, strike_karma_new AS karma_new, strike_comment AS comment,
-        strike_hours AS hours, strike_expires_at AS expires_at, strike_ip AS ip, admin.user_id AS admin_id,
-        admin.user_login AS admin_login, users.user_id AS user_id, users.user_login AS user_login,
-        users.user_karma AS actual_karma
+        strike_karma_old AS karma_old, strike_karma_new AS karma_new, strike_karma_restore AS karma_restore,
+        strike_comment AS comment, strike_hours AS hours, strike_expires_at AS expires_at, strike_ip AS ip,
+        admin.user_id AS admin_id, admin.user_login AS admin_login, users.user_id AS user_id,
+        users.user_login AS user_login, users.user_karma AS actual_karma
         FROM strikes
         LEFT JOIN users AS admin ON (admin.user_id = strike_admin_id)
         LEFT JOIN users ON (users.user_id = strike_user_id)
@@ -88,7 +89,7 @@ class Strike
         }
 
         $this->karma_new = $type['karma'];
-        $this->karma_restore = $type['restore'];
+        $this->karma_restore = $this->karma_old + $type['restore'];
         $this->hours = $type['hours'];
     }
 
@@ -241,7 +242,7 @@ class Strike
                 `strike_admin_id` = "'.(int)$this->admin_id.'",
                 `strike_karma_old` = "'.(float)$this->karma_old.'",
                 `strike_karma_new` = "'.(float)$this->karma_new.'",
-                `strike_karma_restore` = "'.(int)$this->karma_restore.'",
+                `strike_karma_restore` = "'.(float)$this->karma_restore.'",
                 `strike_hours` = "'.(int)$this->hours.'",
                 `strike_expires_at` = "'.$this->expires_at.'",
                 `strike_comment` = "'.$this->comment.'",
