@@ -6,11 +6,11 @@
         {% else %}
             <li>
         {% endif %}
-            <a href="{{turl}}">{{text}}</a>
+            <a href="{{ turl }}">{{ text }}</a>
         </li>
     {% endfor %}
 {% else %}
-    <h1>{{options}}</h1>
+    <h1>{{ options }}</h1>
 {% endif %}
 
 {% if between %}
@@ -19,7 +19,7 @@
 
 {% if rss %}
 	<li class="icon wideonly">
-        <a href="{{globals.base_url}}{{rss}}" title="{{rss_title}}">
+        <a href="{{ globals.base_url }}{{ rss }}" title="{{ rss_title }}">
             <i class="fa fa-rss-square"></i>
         </a>
     </li>

@@ -12,7 +12,7 @@
 
 <form  enctype="multipart/form-data" action="{{ form.auth_link }}profile?login={{ user.username }}" method="post" id="thisform" name="thisform" autocomplete="off">
 <fieldset><legend>
-<span class="sign">{% trans _('opciones de usuario') %} <a href="{%exec  get_user_uri user.username %}">{{ user.username }}</a>: {{ user.level }}</span></legend>
+<span class="sign">{% trans _('opciones de usuario') %} <a href="{% exec  get_user_uri user.username %}">{{ user.username }}</a>: {{ user.level }}</span></legend>
 
 <img class="thumbnail" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" />
 <input type="hidden" name="process" value="1" />

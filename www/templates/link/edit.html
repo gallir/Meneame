@@ -55,8 +55,7 @@
 
                 {% if not link.is_new
                     && (link.votes > 0 && (link.status != 'published' OR current_user.user_level == 'god' OR link.is_sub_owner)
-                    && (( not link.discarded && current_user.user_id == link.author) OR current_user.admin OR link.is_sub_owner))
-                %}
+                    && (( not link.discarded && current_user.user_id == link.author) OR current_user.admin OR link.is_sub_owner)) %}
 
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <select name="status">

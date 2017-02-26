@@ -3,10 +3,10 @@
 	<form id="thisform" action="">
         <select name="type" id="type">
             {% for option in options.types %}
-				<option value="{{option}}"
+				<option value="{{ option }}"
                 {% if option == options.type %}
                     selected="selected"
-                {% endif %}>{{option}}
+                {% endif %}>{{ option }}
                 </option>
             {% endfor %}
         </select>

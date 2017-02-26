@@ -5,7 +5,7 @@
                 {% if globals.mobile && self.show_shakebox %}
                 <div class="news-shakeit {{ self.box_class }}">
                     <div class="votes">
-                        <a id="a-votes-{{ self.id}}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
+                        <a id="a-votes-{{ self.id }}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
                         {% trans _('meneos') %}
                     </div>
 
@@ -15,7 +15,7 @@
                         {% if not self.votes_enabled %}
                         <span class="closed">{% trans _('cerrado') %}</span>
                         {% else %} {% if not self.voted %}
-                        <a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+                        <a href="javascript:menealo({{ current_user.user_id }}, {{ self.id }})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
                         {% else %} {% if self.voted > 0 %}
                         <span id="a-shake-{{ self.id }}">{% trans _('¡hecho!') %}</span>
                         {% else %}
@@ -89,7 +89,7 @@
             <div class="shake-container">
                 <div class="news-shakeit {{ self.box_class }}">
                     <div class="votes">
-                        <a id="a-votes-{{ self.id}}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
+                        <a id="a-votes-{{ self.id }}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
                         {% trans _('meneos') %}
                     </div>
 
@@ -101,7 +101,7 @@
 
                         {% else %} {% if not self.voted %}
 
-                        <a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+                        <a href="javascript:menealo({{ current_user.user_id }}, {{ self.id }})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
 
                         {% else %} {% if self.voted > 0 %}
 
@@ -175,10 +175,10 @@
 
                 {% if self.can_vote_negative %}
                 <form method="post" class="m-20">
-                    <select name="ratings" onchange="report_problem(this.form, {{current_user.user_id}}, {{self.id}})">
+                    <select name="ratings" onchange="report_problem(this.form, {{ current_user.user_id }}, {{ self.id }})">
                         <option value="0" selected="selected">{% trans _('problema') %}</option>
                         {% for pkey, pvalue in globals.negative_votes_values %}
-                        <option value="{{pkey}}">{{ pvalue }}</option>
+                        <option value="{{ pkey }}">{{ pvalue }}</option>
                         {% endfor %}
                     </select>
                 </form>

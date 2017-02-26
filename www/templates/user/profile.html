@@ -3,8 +3,8 @@
 
     <div class="user-profile-info">
         <h1>{{ user.username }}</h1>
-        <a class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">MODIFICAR PERFIL</a>
-        <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{%trans _('cerrar sesión')%}" class="action-link" href="{{ globals.base_url}}profile?login={{user.username|urlencode}}">LOGOUT</a>
+        <a class="action-link" href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}">MODIFICAR PERFIL</a>
+        <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{% trans _('cerrar sesión') %}" class="action-link" href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}">LOGOUT</a>
     </div>
 
     <fieldset>
@@ -62,7 +62,7 @@
         <legend>{% trans _('perfil personal') %}</legend>
 
         <div style="float:right;text-align:center">
-            <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{user.username}}" title="avatar" />
+            <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
 
             {% if current_user.user_id == user.id %}
                 {% inline 'user/avatar_upload.html' %}
@@ -79,7 +79,7 @@
 
             {% if geodiv %}
                 {% exec geo_distance my_latlng, globals.latlng as distance %}
-                <p style="color: #FF9400; font-size: 90%">{{user.username}} {% trans _('está a') %}<strong>{{distance|intval}} kms</strong></p>
+                <p style="color: #FF9400; font-size: 90%">{{ user.username }} {% trans _('está a') %}<strong>{{ distance|intval }} kms</strong></p>
             {% endif %}
 
             {% endif %}
@@ -91,7 +91,7 @@
                 <th>{% trans _('usuario') %}:</th>
                 <td>
                     {% if url %}
-                    <a href="{{url}}" {{nofollow}}><strong>{{user.username}}</strong></a>
+                    <a href="{{ url }}" {{ nofollow }}><strong>{{ user.username }}</strong></a>
                     {% else %}
                     {{ user.username }}
                     {% endif %}
@@ -99,19 +99,19 @@
                     {% exec user.print_medals %}
 
                     {% if current_user.admin AND nclones %}
-                    (<a class="fancybox" href="{{globals.base_url}}backend/ip_clones.php?id={{user.id}}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
+                    (<a class="fancybox" href="{{ globals.base_url }}backend/ip_clones.php?id={{ user.id }}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
                     {% endif %}
 
                     {% if friend_icon %}
-                    &nbsp;<a id="friend-{{current_user.user_id}}-{{user.id}}" href="javascript:get_votes('get_friend.php','{{current_user.user_id}}','friend-{{current_user.user_id}}-{{user.id}}',0,'{{user.id}}')">{{ friend_icon }}</a>
+                    &nbsp;<a id="friend-{{ current_user.user_id }}-{{ user.id }}" href="javascript:get_votes('get_friend.php','{{ current_user.user_id }}','friend-{{ current_user.user_id }}-{{ user.id }}',0,'{{ user.id }}')">{{ friend_icon }}</a>
                     {% endif %}
 
                     {% if user.id == current_user.user_id OR current_user.admin %}
-                    ({% trans  _('id') %}: <em>{{user.id}}</em>, <em>{{user.level}}</em>)
+                    ({% trans  _('id') %}: <em>{{ user.id }}</em>, <em>{{ user.level }}</em>)
                     {% endif %}
 
                     {% if current_user.admin %}
-                    (<em>{{user.username_register}}</em>)
+                    (<em>{{ user.username_register }}</em>)
                     {% endif %}
 
                     {% if user.friendship > 0 %}
@@ -124,7 +124,7 @@
             {% if user.names %}
             <tr>
                 <th>{% trans _('nombre') %}:</th>
-                <td>{{user.names}}</td>
+                <td>{{ user.names }}</td>
             </tr>
             {% endif %}
 
@@ -138,14 +138,14 @@
             {% if show_email %}
             <tr>
                 <th>{% trans _('IM/email') %}:</th>
-                <td> {{user.public_info}}</td>
+                <td> {{ user.public_info }}</td>
             </tr>
             {% endif %}
 
             {% if url %}
             <tr>
                 <th>{% trans _('sitio web') %}:</th>
-                <td><a href="{{url}}" {{nofollow}}>{{url}}</a></td>
+                <td><a href="{{ url }}" {{ nofollow }}>{{ url }}</a></td>
             </tr>
             {% endif %}
 
@@ -158,9 +158,9 @@
             <tr>
                 <th>{% trans _('email') %}:</th>
                 <td>
-                    {{user.email}}
+                    {{ user.email }}
                     {% if current_user.user_level == 'god' %}
-                    (<em>{{user->email_register}}</em>)
+                    (<em>{{ user->email_register }}</em>)
                     {% endif %}
                 </td>
             </tr>
@@ -170,7 +170,7 @@
             <tr>
                 <th>{% trans _('clave API') %}:</th>
                 <td>
-                    <a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{user.id}}" title="API key">{% trans _('leer clave API') %}</a>
+                    <a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{ user.id }}" title="API key">{% trans _('leer clave API') %}</a>
                     ({% trans _('no la divulgues') %})
                 </td>
             </tr>
@@ -178,11 +178,11 @@
             {% if user.adcode %}
             <tr>
                 <th>{% trans _('Código AdSense') %}:</th>
-                <td>{{user.adcode}}&nbsp;</td>
+                <td>{{ user.adcode }}&nbsp;</td>
             </tr>
             <tr>
                 <th>{% trans _('Canal AdSense') %}:</th>
-                <td>{{user.adchannel}}&nbsp;</td>
+                <td>{{ user.adchannel }}&nbsp;</td>
             </tr>
             {% endif %}
 
@@ -191,9 +191,9 @@
             <tr>
                 <th>{% trans _('karma') %}:</th>
                 <td>
-                    {{user.karma}}
+                    {{ user.karma }}
                     {% if (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin') && user.karma_log %}
-                    (<a class="fancybox" href="{{globals.base_url}}backend/get_karma_numbers.php?id={{user.id}}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
+                    (<a class="fancybox" href="{{ globals.base_url }}backend/get_karma_numbers.php?id={{ user.id }}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
                     {% endif %}
                 </td>
             </tr>
@@ -206,32 +206,32 @@
             {% if user.stats %}
 
             <tr>
-                <th>{% trans _('noticias enviadas')%}:</th>
-                <td>{{user.total_links}}</td>
+                <th>{% trans _('noticias enviadas') %}:</th>
+                <td>{{ user.total_links }}</td>
             </tr>
 
             {% if entropy %}
             <tr>
                 <th><em>{% trans _('entropía') %}</em>:</th>
-                <td>{{entropy}}%</td>
+                <td>{{ entropy }}%</td>
             </tr>
             {% endif %}
 
             <tr>
                 <th>{% trans _('noticias publicadas') %}:</th>
-                <td>{{user.published_links}} ({{percent}}%)</td>
+                <td>{{ user.published_links }} ({{ percent }}%)</td>
             </tr>
             <tr>
                 <th>{% trans _('comentarios') %}:</th>
-                <td>{{user.total_comments}}</td>
+                <td>{{ user.total_comments }}</td>
             </tr>
             <tr>
                 <th>{% trans _('notas') %}:</th>
-                <td>{{user.total_posts}}</td>
+                <td>{{ user.total_posts }}</td>
             </tr>
             <tr>
                 <th>{% trans _('número de votos') %}:</th>
-                <td>{{user.total_votes}}</td>
+                <td>{{ user.total_votes }}</td>
             </tr>
 
             {% endif %}
@@ -239,7 +239,7 @@
             {% if user.id == current_user.user_id %}
             <tr>
                 <th>{% trans _('IP actual') %}:</th>
-                <td>{{globals.user_ip}}</td>
+                <td>{{ globals.user_ip }}</td>
             </tr>
             {% endif %}
         </table>
@@ -253,7 +253,7 @@
 
     {% if geo_form %}
     <div class="geoform">
-        {{geo_form}}
+        {{ geo_form }}
     </div>
     {% endif %}
 
@@ -267,7 +267,7 @@
 
         <tt>
             {% for address in addresses %}
-            {{address}}&nbsp;
+            {{ address }}&nbsp;
             {% endfor %}
         </tt>
     </fieldset>

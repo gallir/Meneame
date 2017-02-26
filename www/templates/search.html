@@ -3,18 +3,18 @@
     <div class="genericform" style="text-align: center; margin-left: 20px; margin-right: 20px">
     <fieldset>
 	<form id="thisform">
-	    <input type="search" placeholder="{% trans _('buscar...') %}" autofocus name="q" value="{{ _REQUEST.words|escape}}" class="form-full"/>
+	    <input type="search" placeholder="{% trans _('buscar...') %}" autofocus name="q" value="{{ _REQUEST.words|escape }}" class="form-full"/>
 	    <input class="button" type="submit" value="{% trans _('buscar') %}" />
 
 	    <br />
 
         {% for id,values in options %}
-	        <select name="{{id}}" id="{{id}}">
+	        <select name="{{ id }}" id="{{ id }}">
             {% for oid, option in values %}
                 {% if (forloop.counter0 === oid OR forloop.counter0-1 === oid) AND oid !== '' %}
-                    <option value="{{option}}"{% if selected[id] == option %} selected="selected"{%endif%}>{{option}}</option>
+                    <option value="{{ option }}"{% if selected[id] == option %} selected="selected"{% endif %}>{{ option }}</option>
                 {% else %}
-                    <option value="{{oid}}"{% if selected[id] == oid %} selected="selected"{%endif%}>{{option}}</option>
+                    <option value="{{ oid }}"{% if selected[id] == oid %} selected="selected"{% endif %}>{{ option }}</option>
                 {% endif %}
             {% endfor %}
             {% if id == "p" %}
@@ -58,8 +58,8 @@
 	    </script>
     {% if _REQUEST.q %}
 	    <div style="font-size:85%;margin-top: 5px">
-        {% trans _('encontrados') %}: {{response.rows}}, {% trans _('tiempo total') %}: {{response.time|stringformat:"%1.3f"}} {% trans _('segundos') %}
-	        <a href="{{globals.base_url}}{{rss_program}}?{{_SERVER.QUERY_STRING|escape}}"><img src="{{globals.base_static}}img/common/feed-icon-001.png" width="18" height="18" alt="rss2" style="vertical-align:top"/></a>
+        {% trans _('encontrados') %}: {{ response.rows }}, {% trans _('tiempo total') %}: {{ response.time|stringformat:"%1.3f" }} {% trans _('segundos') %}
+	        <a href="{{ globals.base_url }}{{ rss_program }}?{{ _SERVER.QUERY_STRING|escape }}"><img src="{{ globals.base_static }}img/common/feed-icon-001.png" width="18" height="18" alt="rss2" style="vertical-align:top"/></a>
 	    </div>
     {% endif %}
     </fieldset>

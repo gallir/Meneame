@@ -2,7 +2,7 @@
 
 <div id="flot" style="width:100%;height:150px;"></div>
 
-<script type="text/javascript"> 
+<script type="text/javascript">
 addPostCode(function () {
 	var tickSize;
 	if (is_mobile) {
@@ -22,10 +22,10 @@ addPostCode(function () {
 	};
 	var data = [];
 	var placeholder = $("#flot");
-	$.getJSON(base_url+"backend/user-votes-history.json.php?id={{ user.id }}", 
+	$.getJSON(base_url+"backend/user-votes-history.json.php?id={{ user.id }}",
 		function (json) {
 			for (i=0; i<json.length; i++) {
-				data.push(json[i]); 
+				data.push(json[i]);
 			}
 			$.plot(placeholder, data, options);
 		});
@@ -34,7 +34,7 @@ addPostCode(function () {
     function weekendAreas(axes) {
         var markings = [];
         var d = new Date(axes.xaxis.min);
-        
+
         d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
         d.setUTCSeconds(0);
         d.setUTCMinutes(0);
@@ -49,6 +49,6 @@ addPostCode(function () {
     }
 
 });
-</script> 
+</script>
 
 </fieldset>

@@ -1,8 +1,8 @@
-<li id="c-{{self.order}}">
-    <div class="{{comment_class}}" id="cid-{{self.id}}">
-        <strong>#{{self.order}}</strong>&nbsp;&nbsp;
+<li id="c-{{ self.order }}">
+    <div class="{{ comment_class }}" id="cid-{{ self.id }}">
+        <strong>#{{ self.order }}</strong>&nbsp;&nbsp;
         {% if self.hide_comment %}
-			&#187;&nbsp;<a href="javascript:load_html('get_commentmobile.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans _('ver comentario') %}">{% trans _('ver comentario') %}</a>
+			&#187;&nbsp;<a href="javascript:load_html('get_commentmobile.php','comment','cid-{{ self.id }}',0,{{ self.id }})" title="{% trans _('ver comentario') %}">{% trans _('ver comentario') %}</a>
         {% else %}
             {{ self.txt_content }}
 
@@ -21,7 +21,7 @@
 
             {% if self.is_truncated %}
 			...&nbsp;&nbsp;
-			<a href="javascript:load_html('get_commentmobile.php','comment','cid-{{self.id}}',0,{{self.id}})" title="{% trans _('resto del comentario') %}">
+			<a href="javascript:load_html('get_commentmobile.php','comment','cid-{{ self.id }}',0,{{ self.id }})" title="{% trans _('resto del comentario') %}">
                 &#187;&nbsp;{% trans _('ver todo el comentario') %}</a>
             {% endif %}
         {% endif %}
@@ -32,8 +32,8 @@
     {% trans _("por %s el %s") author date %}
 
     {% if self.type != 'admin' AND self.user_level != 'disabled' %}
-	    &nbsp;&nbsp;{% trans  _('votos') %}: <span id="vc-{{self.id}}">{{self.votes}}</span>,
-        {% trans _('karma') %}: <span id="vk-{{self.id }}">{{self.karma}}</span>
+	    &nbsp;&nbsp;{% trans  _('votos') %}: <span id="vc-{{ self.id }}">{{ self.votes }}</span>,
+        {% trans _('karma') %}: <span id="vk-{{ self.id }}">{{ self.karma }}</span>
     {% endif %}
     </div>
 </li>

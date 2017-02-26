@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{globals.lang}}" prefix="og: http://ogp.me/ns#">
+<html lang="{{ globals.lang }}" prefix="og: http://ogp.me/ns#">
     {% if ! globals.partial %}
     <head>
         <meta charset="utf-8" />
@@ -22,11 +22,11 @@
         {% endif %}
 
         {% if globals.tags %}
-        <meta name="keywords" content="{{globals.tags}}" />
+        <meta name="keywords" content="{{ globals.tags }}" />
         {% endif %}
 
         {% if globals.description %}
-        <meta name="description" content="{{globals.description}}" />
+        <meta name="description" content="{{ globals.description }}" />
         {% endif %}
 
         {% if globals.permalink AND title %}
@@ -34,31 +34,31 @@
         {# Twitter Card #}
 
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="{{title}}">
+        <meta name="twitter:title" content="{{ title }}">
 
         {% if globals.twitter_user %}
-        <meta name="twitter:site" content="@{{globals.twitter_user}}">
+        <meta name="twitter:site" content="@{{ globals.twitter_user }}">
         {% endif %}
 
         {% if globals.thumbnail %}
-        <meta property="og:image" content="{{globals.thumbnail}}" />
-        <meta name="twitter:image" content="{{globals.thumbnail}}" />
+        <meta property="og:image" content="{{ globals.thumbnail }}" />
+        <meta name="twitter:image" content="{{ globals.thumbnail }}" />
         {% endif %}
 
         <meta property="og:url" content="{{ globals.permalink }}">
-        <meta property="og:title" content="{{title}}">
+        <meta property="og:title" content="{{ title }}">
         <meta property="og:description" content="{{ globals.description }}">
 
         {% endif %}
 
-        <link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda')%}" href="{{ globals.scheme }}//{{globals.server_name}}{{ globals.base_url_general }}opensearch" />
-        <link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas')%}" href="//{{globals.server_name}}{{ globals.base_url }}rss" />
-        <link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes')%}" href="//{{globals.server_name}}{{ globals.base_url }}rss?status=queued" />
+        <link rel="search" type="application/opensearchdescription+xml" title="{% trans _('búsqueda') %}" href="{{ globals.scheme }}//{{ globals.server_name }}{{ globals.base_url_general }}opensearch" />
+        <link rel="alternate" type="application/rss+xml" title="{% trans _('publicadas') %}" href="//{{ globals.server_name }}{{ globals.base_url }}rss" />
+        <link rel="alternate" type="application/rss+xml" title="{% trans _('pendientes') %}" href="//{{ globals.server_name }}{{ globals.base_url }}rss?status=queued" />
 
         {% endif %}
         {# /Save bandwidth for mobiles #}
 
-        <title>{{title}}</title>
+        <title>{{ title }}</title>
 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -69,17 +69,17 @@
         {% endif %}
 
         {% if globals.css_main %}
-        <link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{globals.css_main}}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{ globals.css_main }}" rel="stylesheet" type="text/css" media="all" />
         {% endif %}
 
         {% for css in globals.extra_css %}
-        <link href="{{globals.base_static}}css/{{css}}" rel="stylesheet" type="text/css" media="all" />
+        <link href="{{ globals.base_static }}css/{{ css }}" rel="stylesheet" type="text/css" media="all" />
         {% endfor %}
 
         {# <meta name="mobile-web-app-capable" content="yes"> #}
 
         {% if globals.favicon %}
-        <link rel="shortcut icon" href="{{globals.base_static}}{{globals.favicon}}" type="image/x-icon" />
+        <link rel="shortcut icon" href="{{ globals.base_static }}{{ globals.favicon }}" type="image/x-icon" />
         {% else %}
 
         <link rel="apple-touch-icon" sizes="180x180" href="{{ globals.base_static }}apple-touch-icon.png?v=E6bENepwgd">
@@ -94,10 +94,10 @@
 
         <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
 
-        {# <script src="{{ globals.base_url_general }}js/{{globals.js_basic}}" type="text/javascript" charset="utf-8"></script> #}
+        {# <script src="{{ globals.base_url_general }}js/{{ globals.js_basic }}" type="text/javascript" charset="utf-8"></script> #}
 
         {% if globals.extra_head %}
-            {{ globals.extra_head}}
+            {{ globals.extra_head }}
         {% endif %}
 
         {% try_include 'private/stats.html' %}
@@ -112,7 +112,7 @@
                 </a>
 
                 {% if not globals.mobile %}
-                <a href="{{ this_site.base_url }}m/{{ this_site.name }}" class="sub-name wideonly">{%if this_site.name_long %}{{this_site.name_long|upper }}{% else %}{% trans _('PORTADA') %}{% endif %}</a>
+                <a href="{{ this_site.base_url }}m/{{ this_site.name }}" class="sub-name wideonly">{% if this_site.name_long %}{{ this_site.name_long|upper }}{% else %}{% trans _('PORTADA') %}{% endif %}</a>
                 {% else %}
                 <a href="#" class="sub-selector"><i class="fa fa-chevron-down"></i></a>
                 <div id="nav-menu"></div>
@@ -146,26 +146,26 @@
                         </label>
                     </div>
 
-                    <a href="{{globals.base_url_general}}subs" class="discover-subs">DESCUBRIR NUEVOS SUBS</a>
+                    <a href="{{ globals.base_url_general }}subs" class="discover-subs">DESCUBRIR NUEVOS SUBS</a>
 
                     <ul class="official-subs">
                         <li>
-                            <a href="{{globals.base_url_general}}m/ciencia"><i class="fa fa-flask"></i>CIENCIA</a>
+                            <a href="{{ globals.base_url_general }}m/ciencia"><i class="fa fa-flask"></i>CIENCIA</a>
                         </li>
                         <li>
-                            <a href="{{globals.base_url_general}}m/drones"><i class="fa fa-space-shuttle"></i>DRONES</a>
+                            <a href="{{ globals.base_url_general }}m/drones"><i class="fa fa-space-shuttle"></i>DRONES</a>
                         </li>
                         <li>
-                            <a href="{{globals.base_url_general}}m/series"><i class="fa fa-television"></i>SERIES</a>
+                            <a href="{{ globals.base_url_general }}m/series"><i class="fa fa-television"></i>SERIES</a>
                         </li>
                         <li>
-                            <a href="{{globals.base_url_general}}m/startups"><i class="fa fa-pied-piper"></i>STARTUPS</a>
+                            <a href="{{ globals.base_url_general }}m/startups"><i class="fa fa-pied-piper"></i>STARTUPS</a>
                         </li>
                         <li>
-                            <a href="{{globals.base_url_general}}m/videojuegos"><i class="fa fa-gamepad"></i>VIDEOJUEGOS</a>
+                            <a href="{{ globals.base_url_general }}m/videojuegos"><i class="fa fa-gamepad"></i>VIDEOJUEGOS</a>
                         </li>
                         <li>
-                            <a href="{{globals.base_url_general}}m/retuit"><i class="fa fa-retweet"></i>RETUIT</a>
+                            <a href="{{ globals.base_url_general }}m/retuit"><i class="fa fa-retweet"></i>RETUIT</a>
                         </li>
                     </ul>
                 </div><!--header-center-->
@@ -206,7 +206,7 @@
 
             {% if globals.mobile AND this_site.sub %}
             <div class="header-sub-wrapper">
-                <div class="header-sub"><a href="{{ this_site.url }}">{{ this_site.name_long}}</a></div>
+                <div class="header-sub"><a href="{{ this_site.url }}">{{ this_site.name_long }}</a></div>
             </div>
             {% endif %}
 
@@ -223,7 +223,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{globals.base_url_general}}subs" class="chevron-right">Descubrir subs</a>
+                        <a href="{{ globals.base_url_general }}subs" class="chevron-right">Descubrir subs</a>
                     </li>
                     <li>
                         <a href="#" class="follow-subs chevron-right">Subs que sigues <span>{{ followed_subs|length }}</span></a>
@@ -266,7 +266,7 @@
 
         <div id="variable">
             <div id="wrap">
-                {% exec do_banner_top as foo%}
+                {% exec do_banner_top as foo %}
 
                 <div id="container">
                     {% if globals.mobile %}
@@ -275,11 +275,11 @@
                         <form action="{{ globals.base_url }}search" method="get" name="top_search">
                             {% if globals.search_options %}
                             {% for name, value in globals.search_options %}
-                            <input type="hidden" name="{{name}}" value="{{value}}" />
+                            <input type="hidden" name="{{ name }}" value="{{ value }}" />
                             {% endfor %}
                             {% endif %}
 
-                            <input class="searchbox" name="q" type="search" {% if globals.q %}value="{{globals.q|escape}}"{% endif %}/>
+                            <input class="searchbox" name="q" type="search" {% if globals.q %}value="{{ globals.q|escape }}"{% endif %}/>
                         </form>
                     </div>
 

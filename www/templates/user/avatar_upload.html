@@ -2,7 +2,7 @@
 <button id="avatar_upload" style="margin:0" title="{% trans _('imagen cuadrada de no más de 400 KB, sin transparencias') %}">{% trans _('cambiar avatar') %}</button>
 
 {% spacefull %}
-<script type="text/javascript"> 
+<script type="text/javascript">
 //<![CDATA[
 addPostCode(function() {
 	new AjaxUpload("avatar_upload", {name: "image",
@@ -17,18 +17,18 @@ function avatar_preupload() {
 	$('#avatar_upload').attr("disabled", true);
 	$('#avatar_indicator').html('<img src="'+base_static+'img/common/indicator_horizontal.gif"/>');
 }
- 
+
 function avatar_uploaded(file, response) {
 	if (response.error) {
 		alert(response.error);
-	} 
-	if (response.avatar_url.length > 0) { 
+	}
+	if (response.avatar_url.length > 0) {
 		$("#avatar").attr("src",response.avatar_url);
 	}
 	$('#avatar_indicator').html('');
 	$('#avatar_upload').attr("disabled", false);
 }
- 
+
 function select_meta(input, meta) {
 	if (input.checked) new_value = true;
 	else new_value = false;

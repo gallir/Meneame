@@ -1,7 +1,7 @@
 {# Share icons #}
 
 {#
-{% if not short_link  %}
+{% if not short_link %}
 	{% set short_link = link %}
 {% endif %}
 #}
@@ -20,7 +20,7 @@
 		</li>
 		{% endif %}
 		<li>
-			<a class="share-mail" href="mailto:?subject={{title}}&body={{ link_url }}" title="{% trans _('Compartir por %s') "Correo" %}"><i class="fa fa-envelope"></i>{% trans _('Compartir por %s') "Correo" %}</a>
+			<a class="share-mail" href="mailto:?subject={{ title }}&body={{ link_url }}" title="{% trans _('Compartir por %s') "Correo" %}"><i class="fa fa-envelope"></i>{% trans _('Compartir por %s') "Correo" %}</a>
 		</li>
 		<li>
 			<button class="share-link" data-clipboard-text="{{ short_link }}"><i class="fa fa-link"></i><span>{% trans _('Copiar enlace') %}</span></button>

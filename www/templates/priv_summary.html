@@ -1,8 +1,8 @@
 	<div class="{{ post_class }}" id="pid-{{ self.id }}">
 	{% if self.author == current_user.user_id %}
-		<a href="{{ self.to_username | useruri }}" class="tooltip u:{{ self.to}}"><img class="avatar" src="{% exec get_avatar_url self.to, self.to_avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
+		<a href="{{ self.to_username | useruri }}" class="tooltip u:{{ self.to }}"><img class="avatar" src="{% exec get_avatar_url self.to, self.to_avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
 	{% else %}
-		<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author}}"><img class="avatar" src="{% exec get_avatar_url self.author, self.avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
+		<a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}"><img class="avatar" src="{% exec get_avatar_url self.author, self.avatar, 40 %}" width="40" height="40" alt="{{ self.username }}"/></a>
 	{% endif %}
 
 	{{ self.content }}

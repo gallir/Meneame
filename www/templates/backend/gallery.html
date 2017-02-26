@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{globals.lang}}" lang="{{globals.lang}}">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ globals.lang }}" lang="{{ globals.lang }}">
 <head>
 </head>
 <body>
@@ -41,7 +41,7 @@ function formatTitle() {
 			extra = ' <span id="delete">[<span style="cursor: pointer; color: #0033B5" onClick="delete_image(\''+t_i_u[0]+'\','+t_i_u[1]+')">{% trans _("eliminar") %}</span>]</span>';
 		}
 	}
-		
+
 	who = '<div><a class="tooltip '+tooltip_code+':'+t_i_u[1]+'" href="'+url+'" target="_blank" style="margin-bottom: 4px"><span class="wideonly">' + type + '&nbsp;</span>' + t_i_u[2] + '</a>'+image_link+extra+'</div>';
 
 	return who;

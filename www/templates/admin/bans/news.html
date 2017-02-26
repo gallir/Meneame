@@ -1,45 +1,44 @@
 <div id="singlewrap">
     <div class="genericform" style="margin:0">
         <div style="float:right;">
-            <form method="get" action="{{globals.base_url}}admin/bans.php">
-                <input type="hidden" name="tab" value="{{selected_tab}}"/>
-                <input type="hidden" name="key" value="{{key}}"/>
+            <form method="get" action="{{ globals.base_url }}admin/bans.php">
+                <input type="hidden" name="tab" value="{{ selected_tab }}"/>
+                <input type="hidden" name="key" value="{{ key }}"/>
                 <input type="text" name="s" value="{{ search }}" placeholder="{% trans _('buscar') %}..." />&nbsp;
                 <input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="{{ globals.base_static }}img/common/search-03.png">
             </form>
         </div>
 
         {% if current_user.user_level == "god" %}
-        &nbsp; [ <a href="{{ globals.base_url}}admin/bans.php?tab={{ selected_tab }}&op=new">{% trans _('Nuevo ban')
-        %}</a> ]
+        &nbsp; [ <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}&op=new">{% trans _('Nuevo ban') %}</a> ]
         &nbsp; [ <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}&op=news">{% trans _('Múltiples bans') %}</a> ]
         {% endif %}
 
-        <form method="post" name="newban" action="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}">
-            <input type="hidden" name="key" value="{{key}}"/>
+        <form method="post" name="newban" action="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}">
+            <input type="hidden" name="key" value="{{ key }}"/>
 
             <table class="decorated" style="font-size: 10pt">
                 <tr>
                     <th width="25%">
-                        <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=ban_text">
-                            {{selected_tab}}
+                        <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=ban_text">
+                            {{ selected_tab }}
                         </a>
                     </th>
 
                     <th width="30%">
-                        <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=ban_comment">
+                        <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=ban_comment">
                             {% trans _('comentario') %}
                         </a>
                     </th>
 
                     <th>
-                        <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=ban_date">
+                        <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=ban_date">
                             {% trans _('fecha creación') %}
                         </a>
                     </th>
 
                     <th>
-                        <a href="{{globals.base_url}}admin/bans.php?tab={{selected_tab}}{% if search %}&s={{search}}{% endif %}&order_by=ban_expire">
+                        <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=ban_expire">
                             {% trans _('fecha caducidad') %}
                         </a>
                     </th>
@@ -67,7 +66,7 @@
                             {% set six_months = globals.now + 86400*180 %}
                             {% set one_year = globals.now + 86400*365 %}
                             <option value="UNDEFINED">{% trans _('Sin caducidad') %}</option>
-                            <option value="{{globals.now}}">{% trans _('Ahora') %}</option>
+                            <option value="{{ globals.now }}">{% trans _('Ahora') %}</option>
                             <option value="{{ two_hours }}">{% trans _('Ahora + dos horas') %}</option>
                             <option value="{{ one_day }}">{% trans _('Ahora + un día') %}</option>
                             <option value="{{ one_week }}">{% trans _('Ahora + una semana') %}</option>

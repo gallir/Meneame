@@ -1682,7 +1682,7 @@ td.count {
 
 .sidebox .warn {
     padding-left: 20px;
-    background: url({{globals.base_static}}img/common/error_s.png) no-repeat left center;
+    background: url({{ globals.base_static }}img/common/error_s.png) no-repeat left center;
     background-size: 16px 16px;
 }
 

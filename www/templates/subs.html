@@ -18,12 +18,12 @@
             <div class="row official-subs-slider">
                 {% for sub in official_subs %}
                 <div class="sub col-xs-2">
-                    <a href="{{globals.base_url_general}}m/{{sub.name}}">
-                        <img src="{{globals.base_url_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
+                    <a href="{{ globals.base_url_general }}m/{{ sub.name }}">
+                        <img src="{{ globals.base_url_static }}img/subs/{{ sub.extra_info.image_name }}" class="img-responsive">
                     </a>
                     <div class="sub-info">
-                        <a href="{{globals.base_url_general}}m/{{sub.name}}" class="sub-name">{{ sub.extra_info.show_name }}</a>
-                        <div class="followers"><span class="follower-number">{{sub.followers}}</span> SEGUIDORES</div>
+                        <a href="{{ globals.base_url_general }}m/{{ sub.name }}" class="sub-name">{{ sub.extra_info.show_name }}</a>
+                        <div class="followers"><span class="follower-number">{{ sub.followers }}</span> SEGUIDORES</div>
                         <div class="sub-follow" style="display:none;">
                             {% if sub.id != 0 %}
                             {% exec print_follow_sub sub.id as dummy %}
@@ -50,12 +50,12 @@
         <div class="row recommended-subs-slider">
             {% for sub in recommended_subs %}
             <div class="sub col-xs-2">
-                <a href="{{globals.base_url_general}}m/{{sub.name}}">
-                    <img src="{{globals.base_url_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
+                <a href="{{ globals.base_url_general }}m/{{ sub.name }}">
+                    <img src="{{ globals.base_url_static }}img/subs/{{ sub.extra_info.image_name }}" class="img-responsive">
                 </a>
                 <div class="sub-info">
-                    <a href="{{globals.base_url_general}}m/{{sub.name}}" class="sub-name">{{ sub.extra_info.show_name }}</a>
-                    <div class="followers"><span class="follower-number">{{sub.followers}}</span> SEGUIDORES</div>
+                    <a href="{{ globals.base_url_general }}m/{{ sub.name }}" class="sub-name">{{ sub.extra_info.show_name }}</a>
+                    <div class="followers"><span class="follower-number">{{ sub.followers }}</span> SEGUIDORES</div>
                     <div class="sub-follow" style="display:none;">
                         {% if sub.id != 0 %}
                         {% exec print_follow_sub sub.id as dummy %}

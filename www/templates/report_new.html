@@ -1,10 +1,10 @@
 <div class="reportform">
 
-    <form action="{{globals.base_url}}backend/report_comment.php?id={{comment.id}}&link={{link_id}}&user={{current_user.user_id}}" class="report" method="post" id="r_new_form">
+    <form action="{{ globals.base_url }}backend/report_comment.php?id={{ comment.id }}&link={{ link_id }}&user={{ current_user.user_id }}" class="report" method="post" id="r_new_form">
         <input type="hidden" name="randkey" value="{{ randkey }}"/>
         <input type="hidden" name="process" value="newreport"/>
-        <input type="hidden" name="key" value="{{key}}"/>
-        <input type="hidden" name="id" value="{{comment.id}}"/>
+        <input type="hidden" name="key" value="{{ key }}"/>
+        <input type="hidden" name="id" value="{{ comment.id }}"/>
         <input type="hidden" name="link_id" value="{{ link_id }}" />
         <input type="hidden" name="user_id" value="{{ current_user.user_id }}"/>
         <p>Especifica los motivos del reporte</p>
