@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 if (!defined('mnmpath')) {
-    include(dirname(__FILE__) . '/../config.php');
+    include(__DIR__ . '/../config.php');
     include(mnminclude . 'html1.php');
 }
 
@@ -129,7 +129,7 @@ function check_save_report($comment, $link_id)
     if (Report::already_reported($comment->id)) {
         return _('Ya has reportado este comentario.');
     }
-    
+
     // Check comments closed
     if ($comment->date < $globals['now'] - $globals['time_enabled_comments']) {
         return _('comentarios cerrados');

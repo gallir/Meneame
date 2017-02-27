@@ -5,7 +5,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 /* vim:set noet ci pi sts=0 sw=4 ts=4: */
 
-include(dirname(__FILE__) . '/../../config.php');
+include(__DIR__ . '/../../config.php');
 include(mnminclude.'html1.php');
 
 $globals['extra_css'][] = 'admin.css';

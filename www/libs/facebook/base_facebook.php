@@ -382,20 +382,20 @@ abstract class BaseFacebook
       // In any event, we don't have an access token, so say so.
       return false;
       }
-  
+
       if (empty($access_token_response)) {
           return false;
       }
-      
+
       $response_params = array();
       parse_str($access_token_response, $response_params);
-    
+
       if (!isset($response_params['access_token'])) {
           return false;
       }
-    
+
       $this->destroySession();
-    
+
       $this->setPersistentData(
       'access_token', $response_params['access_token']
     );
@@ -976,7 +976,7 @@ abstract class BaseFacebook
       self::errorLog('Invalid or no certificate authority found, '.
                      'using bundled information');
           curl_setopt($ch, CURLOPT_CAINFO,
-                  dirname(__FILE__) . '/fb_ca_chain_bundle.crt');
+                  __DIR__ . '/fb_ca_chain_bundle.crt');
           $result = curl_exec($ch);
       }
 

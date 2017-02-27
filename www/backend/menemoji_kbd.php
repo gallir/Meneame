@@ -1,6 +1,6 @@
 <?php
 if (! defined('mnmpath')) {
-    include(dirname(__FILE__).'/../config.php');
+    include(__DIR__.'/../config.php');
     include(mnminclude.'html1.php');
 }
 

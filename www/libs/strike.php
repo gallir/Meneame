@@ -344,6 +344,34 @@ class Strike
         return self::setReasonMessage($list);
     }
 
+    public static function restorePastStrikes()
+    {
+        global $db;
+
+        $db->transaction();
+
+        $db->query('
+            UPDATE `users`, `strikes`
+            SET `user_karma` = `strike_karma_restore`
+            WHERE (
+              `user_id` = `strike_user_id`
+              AND `strike_expires_at` < NOW()
+              AND `strike_restored` = 0
+            );
+        ');
+
+        $db->query('
+            UPDATE `strikes`
+            SET `strike_restored` = 1
+            WHERE (
+              `strike_expires_at` < NOW()
+              AND `strike_restored` = 0
+            );
+        ');
+
+        $db->commit();
+    }
+
     public static function getUserValidTypes($user_id)
     {
         $current = self::getUserTypes($user_id);

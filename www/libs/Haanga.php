@@ -192,7 +192,7 @@ class Haanga
         if (!$compiler) {
 
             /* Load needed files (to avoid autoload as much as possible) */
-            $dir = dirname(__FILE__);
+            $dir = __DIR__;
             require_once "{$dir}/Haanga/AST.php";
             require_once "{$dir}/Haanga/Compiler.php";
             require_once "{$dir}/Haanga/Compiler/Runtime.php";
@@ -329,7 +329,7 @@ class Haanga
                 $result = call_user_func(self::$check_set, $callback, true, self::$check_ttl);
             }
         }
-        
+
         if (!is_file($php) || ($check && filemtime($tpl) > filemtime($php))) {
             if (!is_file($tpl)) {
                 /* There is no template nor compiled file */
@@ -341,7 +341,7 @@ class Haanga
                 mkdir(dirname($php), 0777, true);
                 umask($old);
             }
-            
+
             $fp = fopen($php, "a+");
             /* try to block PHP file */
             if (!flock($fp, LOCK_EX | LOCK_NB)) {
@@ -414,8 +414,8 @@ class Haanga
                  */
                 touch($php, 300, 300);
                 chmod($php, 0777);
-            
-                
+
+
                 // compile temporarily
                 $compiler = self::getCompiler();
                 $code = $compiler->compile_file($tpl, false, $vars);
