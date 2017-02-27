@@ -79,14 +79,6 @@ $globals['cache-control'] = array();
 
 //echo "<!-- " . $globals['uri'] . "-->\n";
 
-// For PHP < 5
-if (!function_exists('htmlspecialchars_decode')) {
-    function htmlspecialchars_decode($text)
-    {
-        return strtr($text, array_flip(get_html_translation_table(HTML_SPECIALCHARS)));
-    }
-}
-
 if (($globals['is_cli'] === false) && $_SERVER['HTTP_HOST']) {
     // Check bots
     if (
