@@ -110,7 +110,7 @@ class Strike
         return $row;
     }
 
-    public static function list($search, $orderBy, $orderMode, $offset, $limit)
+    public static function listing($search, $orderBy, $orderMode, $offset, $limit)
     {
         global $db;
 

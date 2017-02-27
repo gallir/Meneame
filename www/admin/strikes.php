@@ -59,7 +59,7 @@ function do_strike_list($selected_tab)
     }
 
     $rows = Strike::count($search);
-    $strikes = Strike::list($search, $_REQUEST['order_by'], $_REQUEST['order_mode'], $offset, $page_size);
+    $strikes = Strike::listing($search, $_REQUEST['order_by'], $_REQUEST['order_mode'], $offset, $page_size);
 
     $order_mode = ($_REQUEST['order_mode'] === 'DESC') ? 'ASC' : 'DESC';
 
