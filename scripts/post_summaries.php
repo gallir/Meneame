@@ -7,7 +7,7 @@ $site_name = $argv[2];
 
 
 // Post to Twitter/Jaiku the most voted and commented during last 24 hr
-include(dirname(__FILE__).'/../www/config.php');
+include(__DIR__.'/../www/config.php');
 include(mnminclude.'external_post.php');
 
 $my_id = SitesMgr::get_id($site_name);
@@ -63,7 +63,7 @@ foreach ($link_sqls as $key => $sql) {
 		}
 		$text = "$intro: $link->title";
 
-		twitter_post($properties, $text, $url); 
+		twitter_post($properties, $text, $url);
 		facebook_post($properties, $link, $intro);
 
 		echo "$text $short_url\n"; continue;

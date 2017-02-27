@@ -14,7 +14,7 @@ $site_name = $argv[1];
 $link_id = (int) $argv[2];
 $status = $argv[3];
 
-include(dirname(__FILE__).'/../www/config.php');
+include(__DIR__.'/../www/config.php');
 include(mnminclude.'external_post.php');
 
 $my_id = SitesMgr::get_id($site_name);
@@ -33,7 +33,7 @@ if (! $link) {
 	echo "Link $link_id not found\n";
 	die;
 }
-if (! $link->sub_status || (!empty($status) && $link->sub_status != $status) ) { // Don't post 
+if (! $link->sub_status || (!empty($status) && $link->sub_status != $status) ) { // Don't post
 	syslog(LOG_INFO, "Status check ($status, $link->sub_status) didn't pass, exiting");
 	die;
 }
@@ -51,7 +51,7 @@ function do_posts($link) {
 	syslog(LOG_INFO, "Meneame, posting $link->uri");
 
 	$url = $link->get_permalink($info->sub);
-	echo "Posting $url: ".$globals['server_name']."\n"; 
+	echo "Posting $url: ".$globals['server_name']."\n";
 
 	// NEW format
 	$image = false;
