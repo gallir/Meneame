@@ -12,6 +12,7 @@ global $globals;
 
 $globals['start_time'] = microtime(true);
 $globals['now'] = intval($globals['start_time']);
+$globals['is_cli'] = (PHP_SAPI === 'cli');
 
 register_shutdown_function('shutdown');
 
@@ -37,35 +38,45 @@ if (!empty($globals['force_ssl']) && $_SERVER['SERVER_NAME'] !== $_SERVER['HTTP_
     $globals['force_ssl'] = false;
 }
 
-if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' || $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTPS'] === 'on') {
-    $globals['https'] = true;
-    $globals['scheme'] = 'https:';
-} else {
+if ($globals['is_cli']) {
     $globals['https'] = false;
-
-    if (!empty($globals['force_ssl'])) {
+    $globals['scheme'] = 'http:';
+    $globals['user_ip'] = false;
+    $globals['proxy_ip'] = false;
+    $globals['uri'] = false;
+} else {
+    if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' || $_SERVER['SERVER_PORT'] == 443 || $_SERVER['HTTPS'] === 'on') {
+        $globals['https'] = true;
         $globals['scheme'] = 'https:';
     } else {
-        $globals['scheme'] = 'http:';
+        $globals['https'] = false;
+
+        if (!empty($globals['force_ssl'])) {
+            $globals['scheme'] = 'https:';
+        } else {
+            $globals['scheme'] = 'http:';
+        }
     }
+
+    if ($globals['check_behind_proxy']) {
+        $globals['proxy_ip'] = $_SERVER['REMOTE_ADDR'];
+        $globals['user_ip'] = check_ip_behind_proxy();
+    } elseif ($globals['behind_load_balancer']) {
+        $globals['proxy_ip'] = $_SERVER['REMOTE_ADDR'];
+        $globals['user_ip'] = check_ip_behind_load_balancer();
+    } else {
+        $globals['user_ip'] = $_SERVER['REMOTE_ADDR'];
+        $globals['proxy_ip'] = false;
+    }
+
+    $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode($_SERVER['REQUEST_URI'])); // clean it for future use
 }
 
 // Use proxy and load balancer detection
-if ($globals['check_behind_proxy']) {
-    $globals['proxy_ip'] = $_SERVER["REMOTE_ADDR"];
-    $globals['user_ip'] = check_ip_behind_proxy();
-} elseif ($globals['behind_load_balancer']) {
-    $globals['proxy_ip'] = $_SERVER["REMOTE_ADDR"];
-    $globals['user_ip'] = check_ip_behind_load_balancer();
-} else {
-    $globals['user_ip'] = $_SERVER["REMOTE_ADDR"];
-    $globals['proxy_ip'] = false;
-}
 
 $globals['user_ip_int'] = inet_ptod($globals['user_ip']);
-
 $globals['cache-control'] = array();
-$globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode($_SERVER['REQUEST_URI'])); // clean  it for future use
+
 //echo "<!-- " . $globals['uri'] . "-->\n";
 
 // For PHP < 5
@@ -76,7 +87,7 @@ if (!function_exists('htmlspecialchars_decode')) {
     }
 }
 
-if ($_SERVER['HTTP_HOST']) {
+if (($globals['is_cli'] === false) && $_SERVER['HTTP_HOST']) {
     // Check bots
     if (
         empty($_SERVER['HTTP_USER_AGENT'])

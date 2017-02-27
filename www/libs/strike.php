@@ -39,7 +39,7 @@ class Strike
         strike_admin_id AS admin_id, strike_user_id AS user_id, strike_report_id AS report_id,
         strike_karma_old AS karma_old, strike_karma_new AS karma_new, strike_karma_restore AS karma_restore,
         strike_comment AS comment, strike_hours AS hours, strike_expires_at AS expires_at, strike_ip AS ip,
-        admin.user_id AS admin_id, admin.user_login AS admin_login, users.user_id AS user_id,
+        admin.user_id AS admin_id, admin.user_login AS admin_login,
         users.user_login AS user_login, users.user_karma AS actual_karma
         FROM strikes
         LEFT JOIN users AS admin ON (admin.user_id = strike_admin_id)
@@ -349,6 +349,20 @@ class Strike
         global $db;
 
         $db->transaction();
+
+        $list = $db->get_results('
+            SELECT '.self::SQL.'
+            WHERE (
+              `users`.`user_id` = `strike_user_id`
+              AND `strike_expires_at` < NOW()
+              AND `strike_restored` = 0
+            )
+            ORDER BY `strike_expires_at` ASC;
+        ');
+
+        foreach ($list as $row) {
+            LogAdmin::insert('strike_restore', $row->user_id, 0, $row->karma_old, $row->karma_restore);
+        }
 
         $db->query('
             UPDATE `users`, `strikes`
