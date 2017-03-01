@@ -1,6 +1,6 @@
 <div id="singlewrap">
     <div class="genericform" style="margin:0">
-        {% if current_user.user_level == "god" %}
+        {% if current_user.user_level == "admin" %}
         &nbsp; [ <a href="{{ globals.base_url }}admin/strikes.php?tab={{ selected_tab }}&op=new">{% trans _('Nuevo strike') %}</a> ]
         {% endif %}
 
