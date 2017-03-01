@@ -38,7 +38,7 @@
                     <td>
                         <select name="type" id="type" required>
                             {% for value in types %}
-                            <option value="{{ value.code }}" {% if key == next %}selected{% endif %}>{{ value.name }} - {{ user.karma }} &rarr; {{ value.karma }} * {{ value.days }} días &rarr; {{ value.karma_restore }}</option>
+                            <option value="{{ value.code }}" {% if value.code == next %}selected{% endif %}>{{ value.name }} - {{ user.karma }} &rarr; {{ value.karma }} * {{ value.days }} días &rarr; {{ value.karma_restore }}</option>
                             {% endfor %}
                         </select>
                     </td>
