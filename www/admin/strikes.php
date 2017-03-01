@@ -93,7 +93,7 @@ function do_new_strike($selected_tab)
     }
 
     if (Strike::getUserCurrentStrike($user->id)) {
-        $error = 'Este usuario ya dispone de un strike actualmente';
+        $error = 'Este usuario ya dispone de un strike aún no finalizado';
     } elseif ($user->level === 'disabled') {
         $error = 'Este usuario está actualmente baneado';
     } else {
