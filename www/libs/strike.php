@@ -8,8 +8,6 @@
 
 class Strike
 {
-    private static $current = array();
-
     public static $reasons = [
         'inappropriate_content' => 'Contenido inapropiado',
         'private_data' => 'Contiene datos personales propios o de un tercero',
@@ -64,11 +62,13 @@ class Strike
     public $hours = 0;
     public $expires_at;
     public $comment;
+    public $restored;
     public $ip;
 
     private $user;
+    private $current;
 
-    public function __construct(User $user, $type)
+    public function __construct(User $user, $type = null)
     {
         $this->user = $user;
 
@@ -77,26 +77,229 @@ class Strike
 
     public function setType($type)
     {
-        if (!self::isValidType($type)) {
+        if (empty($type) || !($type = self::getType($type))) {
             return;
         }
 
-        $this->type = $type;
+        $this->type = $type['code'];
         $this->karma_old = $this->user->karma;
+        $this->hours = $type['hours'];
+        $this->karma_restore = $this->getKarmaRestore($this->user->karma, $type['restore']);
+        $this->karma_new = $type['karma'] ?: $this->karma_restore;
+        $this->restored = ($this->hours === 0);
+    }
 
-        $type = self::getType($type);
+    public function getKarmaRestore($karma, $percent)
+    {
+        global $globals;
 
-        if (!is_array($type)) {
+        $new = round($karma * ((100 - $percent) / 100), 2);
+        $min = $globals['strikes_min_karma'];
+
+        if (($new >= $min) && ($new <= $karma)) {
+            return $new;
+        }
+
+        return ($min > $karma) ? $karma : $min;
+    }
+
+    public function getUserStrikes()
+    {
+        global $db;
+
+        if ($this->current !== null) {
+            return $this->current;
+        }
+
+        $list = $db->get_results('
+            SELECT '.self::SQL.'
+            WHERE `strike_user_id` = "'.(int)$this->user->id.'"
+            ORDER BY `strike_date` DESC;
+        ');
+
+        return $this->current = self::setReasonMessage($list);
+    }
+
+    public function getUserCurrentStrike()
+    {
+        $date = date('Y-m-d H:i:s');
+
+        foreach ($this->getUserStrikes() as $row) {
+            if ($row->expires_at > $date) {
+                return $row;
+            }
+        }
+    }
+
+    public function getUserTypes()
+    {
+        $types = self::getTypes();
+
+        foreach ($types as &$row) {
+            $row['karma_restore'] = $this->getKarmaRestore($this->user->karma, $row['restore']);
+            $row['days'] = $row['hours'] / 24;
+        }
+
+        return $types;
+    }
+
+    public function getNext()
+    {
+        $current = end(array_filter(array_unique(array_map(function($value) {
+            return $value->type;
+        }, $this->getUserStrikes()))));
+
+        $types = self::getTypes();
+        $total = count($types);
+
+        for ($i = 0; $i < $total; $i++) {
+            if ($types[$i]['code'] !== $current) {
+                continue;
+            }
+
+            if (empty($types[$i + 1])) {
+                return;
+            }
+
+            return $types[$i + 1]['code'];
+        }
+
+        return $types[0]['code'];
+    }
+
+    public function store()
+    {
+        global $db, $globals;
+
+        if ($this->id || empty($this->type)) {
             return;
         }
 
-        $this->hours = $type['hours'];
-        $this->karma_new = $type['karma'];
-        $this->karma_restore = $this->karma_old + $type['restore'];
+        $this->date = date('Y-m-d H:i:s');
+        $this->expires_at = date('Y-m-d H:i:s', strtotime('+'.(int)$this->hours.' hours'));
+        $this->user_id = $this->user->id;
+        $this->ip = $globals['user_ip'];
 
-        if ($this->karma_restore < $this->karma_new) {
-            $this->karma_restore = $this->karma_new;
+        if (!$this->insert()) {
+            $db->rollback();
+            return false;
         }
+
+        $this->executeAction();
+        $this->executeReport();
+
+        $db->commit();
+
+        return true;
+    }
+
+    private function insert()
+    {
+        global $db, $globals;
+
+        $response = $db->query('
+            INSERT INTO `strikes`
+            SET
+                `strike_type` = "'.$this->type.'",
+                `strike_reason` = "'.$this->reason.'",
+                `strike_user_id` = "'.(int)$this->user_id.'",
+                `strike_report_id` = "'.(int)$this->report_id.'",
+                `strike_admin_id` = "'.(int)$this->admin_id.'",
+                `strike_karma_old` = "'.(float)$this->karma_old.'",
+                `strike_karma_new` = "'.(float)$this->karma_new.'",
+                `strike_karma_restore` = "'.(float)$this->karma_restore.'",
+                `strike_hours` = "'.(int)$this->hours.'",
+                `strike_expires_at` = "'.$this->expires_at.'",
+                `strike_comment` = "'.$this->comment.'",
+                `strike_restored` = "'.$this->restored.'",
+                `strike_ip` = "'.$this->ip.'";
+        ');
+
+        if ($response) {
+            $this->id = $db->insert_id;
+        }
+
+        return $response;
+    }
+
+    private function executeAction()
+    {
+        $this->{'executeAction'.ucfirst($this->type)}();
+    }
+
+    private function executeActionStrike0()
+    {
+        $this->executeActionStrike();
+    }
+
+    private function executeActionStrike1()
+    {
+        $this->executeActionStrike();
+    }
+
+    private function executeActionStrike2()
+    {
+        $this->executeActionStrike();
+    }
+
+    private function executeActionStrike3()
+    {
+        $this->executeActionStrike();
+    }
+
+    private function executeActionStrike4()
+    {
+        $this->executeActionStrike();
+    }
+
+    private function executeActionStrike()
+    {
+        global $db, $current_user;
+
+        $db->query('
+            UPDATE `users`
+            SET `user_karma` = "'.(float)$this->karma_new.'"
+            WHERE `user_id` = "'.(int)$this->user_id.'"
+            LIMIT 1;
+        ');
+
+        LogAdmin::insert($this->type, $this->user_id, $current_user->user_id, $this->karma_old, $this->karma_new);
+    }
+
+    private function executeActionBan()
+    {
+        global $db, $current_user;
+
+        $db->query('
+            UPDATE `users`
+            SET
+                `user_level` = "disabled",
+                `user_karma` = "'.(float)$this->karma_restore.'"
+            WHERE `user_id` = "'.(int)$this->user_id.'"
+            LIMIT 1;
+        ');
+
+        LogAdmin::insert($this->type, $this->user_id, $current_user->user_id, $this->karma_old, $this->karma_restore);
+        LogAdmin::insert($this->type, $this->user_id, $current_user->user_id, $this->user->level, 'disabled');
+    }
+
+    private function executeReport()
+    {
+        global $db, $current_user;
+
+        if (!$this->report_id) {
+            return;
+        }
+
+        $db->query('
+            UPDATE `reports`
+            SET
+                `report_modified` = NOW(),
+                `report_status` = "penalized",
+                `report_revised_by` = "'.(int)$current_user->user_id.'"
+            WHERE `report_id` = "'.(int)$this->report_id.'"
+            LIMIT 1;
+        ');
     }
 
     public static function listing($search, $orderBy, $orderMode, $offset, $limit)
@@ -161,188 +364,25 @@ class Strike
 
     public static function getTypes()
     {
-        global $globals;
+        global $globals, $current_user;
 
-        return $globals['strikes'];
+        return array_filter($globals['strikes'], function($value) use ($current_user) {
+            return in_array($current_user->user_level, $value['roles']);
+        });
     }
 
     public static function getType($type)
     {
-        global $globals;
-
-        if ($type === 'ban') {
-            return $type;
+        foreach (self::getTypes() as $row) {
+            if ($row['code'] === $type) {
+                return $row;
+            }
         }
-
-        if (self::isValidType($type)) {
-            return $globals['strikes'][$type];
-        }
-    }
-
-    public static function isValidType($type)
-    {
-        global $globals;
-
-        return ($type === 'ban') || isset($globals['strikes'][$type]);
     }
 
     public static function isValidReason($reason)
     {
         return isset(self::$reasons[$reason]);
-    }
-
-    public function store()
-    {
-        global $db, $globals;
-
-        if ($this->id) {
-            return;
-        }
-
-        $this->date = date('Y-m-d H:i:s');
-        $this->expires_at = date('Y-m-d H:i:s', strtotime('+'.$this->hours.' hours'));
-        $this->user_id = $this->user->id;
-        $this->ip = $globals['user_ip'];
-
-        if (!$this->insert()) {
-            $db->rollback();
-            return false;
-        }
-
-        $this->executeAction();
-        $this->executeReport();
-
-        $db->commit();
-
-        return true;
-    }
-
-    private function insert()
-    {
-        global $db, $globals;
-
-        $response = $db->query('
-            INSERT INTO `strikes`
-            SET
-                `strike_type` = "'.$this->type.'",
-                `strike_reason` = "'.$this->reason.'",
-                `strike_user_id` = "'.(int)$this->user_id.'",
-                `strike_report_id` = "'.(int)$this->report_id.'",
-                `strike_admin_id` = "'.(int)$this->admin_id.'",
-                `strike_karma_old` = "'.(float)$this->karma_old.'",
-                `strike_karma_new` = "'.(float)$this->karma_new.'",
-                `strike_karma_restore` = "'.(float)$this->karma_restore.'",
-                `strike_hours` = "'.(int)$this->hours.'",
-                `strike_expires_at` = "'.$this->expires_at.'",
-                `strike_comment` = "'.$this->comment.'",
-                `strike_ip` = "'.$this->ip.'";
-        ');
-
-        if ($response) {
-            $this->id = $db->insert_id;
-        }
-
-        return $response;
-    }
-
-    private function executeAction()
-    {
-        $this->{'executeAction'.ucfirst($this->type)}();
-    }
-
-    private function executeActionStrike1()
-    {
-        $this->executeActionStrike();
-    }
-
-    private function executeActionStrike2()
-    {
-        $this->executeActionStrike();
-    }
-
-    private function executeActionStrike3()
-    {
-        $this->executeActionStrike();
-    }
-
-    private function executeActionStrike()
-    {
-        global $db, $current_user;
-
-        $db->query('
-            UPDATE `users`
-            SET `user_karma` = "'.(float)$this->karma_new.'"
-            WHERE `user_id` = "'.(int)$this->user_id.'"
-            LIMIT 1;
-        ');
-
-        LogAdmin::insert($this->type, $this->user_id, $current_user->user_id, $this->karma_old, $this->karma_new);
-    }
-
-    private function executeActionBan()
-    {
-        global $db, $current_user;
-
-        $db->query('
-            UPDATE `users`
-            SET `user_level` = "disabled"
-            WHERE `user_id` = "'.(int)$this->user_id.'"
-            LIMIT 1;
-        ');
-
-        LogAdmin::insert($this->type, $this->user_id, $current_user->user_id, $this->user->level, 'disabled');
-    }
-
-    private function executeReport()
-    {
-        global $db, $current_user;
-
-        if (!$this->report_id) {
-            return;
-        }
-
-        $db->query('
-            UPDATE `reports`
-            SET
-                `report_modified` = NOW(),
-                `report_status` = "penalized",
-                `report_revised_by` = "'.(int)$current_user->user_id.'"
-            WHERE `report_id` = "'.(int)$this->report_id.'"
-            LIMIT 1;
-        ');
-    }
-
-    public static function getUserStrikes($user_id)
-    {
-        global $db;
-
-        $list = $db->get_results('
-            SELECT '.self::SQL.'
-            WHERE `strike_user_id` = "'.(int)$user_id.'"
-            ORDER BY `strike_date` DESC;
-        ');
-
-        return self::setReasonMessage($list);
-    }
-
-    public static function getUserCurrentStrike($user_id)
-    {
-        global $db;
-
-        $row = $db->get_row('
-            SELECT '.self::SQL.'
-            WHERE (
-                `strike_user_id` = "'.(int)$user_id.'"
-                AND `strike_expires_at` > NOW()
-            )
-            LIMIT 1;
-        ');
-
-        if ($row->reason) {
-            $row->reason_message = self::$reasons[$row->reason];
-        }
-
-        return $row;
     }
 
     public static function restorePastStrikes()
@@ -367,7 +407,9 @@ class Strike
 
         $db->query('
             UPDATE `users`, `strikes`
-            SET `user_karma` = `strike_karma_restore`
+            SET
+                `user_karma` = `strike_karma_restore`,
+                `user_level` = IF(`user_level` = "disabled", "normal", `user_level`)
             WHERE (
               `user_id` = `strike_user_id`
               AND `strike_expires_at` < NOW()
@@ -385,51 +427,5 @@ class Strike
         ');
 
         $db->commit();
-    }
-
-    public static function getUserValidTypes($user_id)
-    {
-        return self::getTypes() + array(
-            'ban' => array(
-                'name' => 'Ban',
-                'karma' => '-',
-                'hours' => '-'
-            )
-        );
-    }
-
-    public static function isValidTypeForUser($user_id, $type)
-    {
-        return self::isValidType($type);
-    }
-
-    public static function getUserTypes($user_id)
-    {
-        if (isset(self::$current[$user_id])) {
-            return self::$current[$user_id];
-        }
-
-        return self::$current[$user_id] = array_filter(array_unique(array_map(function($value) {
-            return $value->type;
-        }, self::getUserStrikes($user_id))));
-    }
-
-    public static function getNext($user_id)
-    {
-        $current = self::getUserTypes($user_id);
-
-        if (in_array('strike1', $current)) {
-            return 'strike2';
-        }
-
-        if (in_array('strike2', $current)) {
-            return 'strike3';
-        }
-
-        if (in_array('strike3', $current)) {
-            return 'ban';
-        }
-
-        return 'strike1';
     }
 }

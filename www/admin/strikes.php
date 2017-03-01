@@ -87,12 +87,14 @@ function do_new_strike($selected_tab)
         $strikes = $types = $reasons = array();
         $next = $error = null;
 
-        Haanga::Load('admin/strikes/new.html', compact(
+        return Haanga::Load('admin/strikes/new.html', compact(
             'selected_tab', 'user', 'strikes', 'types', 'next', 'reasons', 'error'
         ));
     }
 
-    if (Strike::getUserCurrentStrike($user->id)) {
+    $strike = new Strike($user);
+
+    if ($strike->getUserCurrentStrike()) {
         $error = 'Este usuario ya dispone de un strike aún no finalizado';
     } elseif ($user->level === 'disabled') {
         $error = 'Este usuario está actualmente baneado';
@@ -100,9 +102,9 @@ function do_new_strike($selected_tab)
         $error = null;
     }
 
-    $types = Strike::getUserValidTypes($user->id);
-    $strikes = Strike::getUserStrikes($user->id);
-    $next = Strike::getNext($user->id);
+    $types = $strike->getUserTypes();
+    $strikes = $strike->getUserStrikes();
+    $next = $strike->getNext();
     $reasons = Strike::$reasons;
 
     Haanga::Load('admin/strikes/new.html', compact(
@@ -122,16 +124,15 @@ function do_save_strike()
         die('Usuario inexistente');
     }
 
-    // Check strike type
-    $type = $_POST['type'];
+    $strike = new Strike($user, $_POST['type']);
 
     // Check strike reason
-    if (!Strike::isValidTypeForUser($user->id, $type)) {
-        die('Tipo de strike no válido o ya aplicado');
+    if (!$strike->type) {
+        die('Tipo de strike no válido');
     }
 
     // Save strike
-    $strike = new Strike($user, $type);
+
     $strike->admin_id = $current_user->user_id;
     $strike->comment = clean_text($_POST['comment']);
     $strike->reason = clean_input_string($_POST['reason']);

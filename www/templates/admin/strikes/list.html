@@ -8,9 +8,7 @@
             </form>
         </div>
 
-        {% if current_user.user_level == "admin" %}
         &nbsp; [ <a href="{{ globals.base_url }}admin/strikes.php?op=new">{% trans _('Nuevo strike') %}</a> ]
-        {% endif %}
 
         {% include 'admin/strikes/_table.html' %}
     </div>

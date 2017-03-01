@@ -1,18 +1,21 @@
 <div id="singlewrap">
     <div class="genericform" style="margin:0">
         <form method="get" action="{{ globals.base_url }}admin/logs.php">
-        Tipo de log:
-        <select name="log_type" onchange="this.form.submit()">
-            <option value="">Todos</option>
-            <option value="change_user_level"{% if log_type=="change_user_level" %} selected="selected"{% endif %}>change_user_level</option>
-            <option value="change_karma"{% if log_type=="change_karma" %} selected="selected"{% endif %}>change_karma</option>
-            <option value="strike1"{% if log_type=="strike1" %} selected="selected"{% endif %}>strike1</option>
-            <option value="strike2"{% if log_type=="strike2" %} selected="selected"{% endif %}>strike2</option>
-            <option value="strike3"{% if log_type=="strike3" %} selected="selected"{% endif %}>strike3</option>
-            <option value="ban"{% if log_type=="ban" %} selected="selected"{% endif %}>ban</option>
-            <option value="strike_restore"{% if log_type=="strike_restore" %} selected="selected"{% endif %}>strike_restore</option>
-        </select>
+            Tipo de log:
+            <select name="log_type" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="change_user_level"{% if log_type=="change_user_level" %} selected="selected"{% endif %}>change_user_level</option>
+                <option value="change_karma"{% if log_type=="change_karma" %} selected="selected"{% endif %}>change_karma</option>
+                <option value="strike0"{% if log_type=="strike0" %} selected="selected"{% endif %}>strike0</option>
+                <option value="strike1"{% if log_type=="strike1" %} selected="selected"{% endif %}>strike1</option>
+                <option value="strike2"{% if log_type=="strike2" %} selected="selected"{% endif %}>strike2</option>
+                <option value="strike3"{% if log_type=="strike3" %} selected="selected"{% endif %}>strike3</option>
+                <option value="strike4"{% if log_type=="strike4" %} selected="selected"{% endif %}>strike4</option>
+                <option value="ban"{% if log_type=="ban" %} selected="selected"{% endif %}>ban</option>
+                <option value="strike_restore"{% if log_type=="strike_restore" %} selected="selected"{% endif %}>strike_restore</option>
+            </select>
         </form>
+
         <form method="get" action="{{ globals.base_url }}admin/logs.php">
             <div style="float:right;">
                 <input type="hidden" name="tab" value="{{ selected_tab }}"/>
@@ -22,62 +25,70 @@
             </div>
         </form>
 
-        <table class="decorated" style="font-size: 10pt">
-            <tr>
+        <table class="table table-condensed table-striped table-hover" style="font-size: 10pt">
+            <thead>
+                <tr>
+                    <th>
+                        <a href="?{% exec URLQuery "order_by" "user_login" %}">
+                            {% trans _('usuario') %}
+                        </a>
+                    </th>
 
-                <th style="width: 20%">
-                    <a href="{{ globals.base_url }}admin/logs.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=user_login">
-                        {% trans _('usuario') %}
-                    </a>
-                </th>
+                    <th>
+                        <a href="?{% exec URLQuery "order_by" "log_date" %}">
+                            {% trans _('fecha modificación') %}
+                        </a>
+                    </th>
 
-                <th>
-                    <a href="{{ globals.base_url }}admin/logs.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=log_date">
-                        {% trans _('fecha modificación') %}
-                    </a>
-                </th>
+                    <th>
+                        <a href="?{% exec URLQuery "order_by" "log_type" %}">
+                            {% trans _('tipo de modificación') %}
+                        </a>
+                    </th>
 
-                <th>
-                    <a href="{{ globals.base_url }}admin/logs.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=log_type">
-                        {% trans _('tipo de modificación') %}
-                    </a>
-                </th>
+                    <th>{% trans _('valor inicial') %} / {% trans _('valor_final') %}</th>
 
-                <th>
-                    <a href="{{ globals.base_url }}admin/logs.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}">
-                        {% trans _('valor inicial') %} / {% trans _('valor_final') %}
-                    </a>
-                </th>
+                    <th>
+                        <a href="?{% exec URLQuery "order_by" "admin_user_login" %}">
+                            {% trans _('admin') %}
+                        </a>
+                    </th>
 
-                <th>
-                    <a href="{{ globals.base_url }}admin/logs.php?tab={{ selected_tab }}{% if search %}&s={{ search }}{% endif %}&order_by=admin_user_login">
-                        {% trans _('admin') %}
-                    </a>
-                </th>
-            </tr>
-            {% for log in logs %}
-            <tr>
-                <td class="tooltip u:{{ log.user_id }}" style="overflow: hidden;white-space: nowrap;">
-                    {% if log.user_login %}
-                        <a target="_blank" href="{{ globals.base_url }}user/{{ log.user_login }}/{{ log.user_id }}">
+                    <th class="text-center">&nbsp;</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>
+                        {% if log.user_login %}
+                        <a href="{{ globals.base_url }}user/{{ log.user_login }}/{{ log.user_id }}" class="tooltip u:{{ log.user_id }}" style="overflow: hidden; white-space: nowrap;" target="_blank">
                             {{ log.user_login }}
                         </a>
-                    {% endif %}
-                </td>
-                <td>{{ log.log_date }}</td>
-                <td>{{ log.log_type }}</td>
-                {% if log.log_type == "change_karma" %}
+                        {% endif %}
+                    </td>
+                    <td>{{ log.log_date }}</td>
+                    <td>{{ log.log_type }}</td>
+
+                    {% if log.log_type == "change_karma" %}
                     <td>{{ log.log_old_value|stringformat:"%.2f" }} &rarr; {{ log.log_new_value|stringformat:"%.2f" }}
                         {% if log.log_old_value > log.log_new_value %}<span style="color:red;font-size: 15px;padding-left: 10px;">&darr;</span> {% else %}<span style="color:green;font-size:15px;padding-left: 10px;">&uarr;</span> {% endif %}
                     </td>
-                {% else %}
+                    {% else %}
                     <td>{{ log.log_old_value }} &rarr; {{ log.log_new_value }}</td>
-                {% endif %}
-                <td>
-                    {{ log.admin_user_login }}
-                </td>
-            </tr>
-            {% endfor %}
+                    {% endif %}
+
+                    <td>{{ log.admin_user_login }}</td>
+
+                    <td class="text-center">
+                        <a href="{{ globals.base_url }}admin/strikes.php?tab=strikes&amp;op=new&amp;strike_user={{ log.user_login }}" title="Información" class="btn btn-default btn-xs">
+                            <i class="fa fa-info"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 </div>

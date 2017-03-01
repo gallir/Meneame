@@ -386,26 +386,61 @@ $globals['new_source_bonus'] = 1.05;
 $globals['new_source_max_hours'] = 240;
 $globals['new_source_min_hours'] = 48;
 
+$globals['strikes_min_karma'] = 5;
+
 $globals['strikes'] = array(
-    'strike1' => array(
+    array(
+        'code' => 'strike0',
+        'name' => 'Strike 0',
+        'karma' => null,
+        'hours' => 0,
+        'restore' => 20,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'strike1',
         'name' => 'Strike 1',
         'karma' => 4.01,
-        'hours' => 12,
-        'restore' => -2
+        'hours' => 24,
+        'restore' => 20,
+        'roles' => ['admin', 'god']
     ),
 
-    'strike2' => array(
+    array(
+        'code' => 'strike2',
         'name' => 'Strike 2',
         'karma' => 4.01,
-        'hours' => 24,
-        'restore' => -4
+        'hours' => 24 * 2,
+        'restore' => 40,
+        'roles' => ['admin', 'god']
     ),
 
-    'strike3' => array(
+    array(
+        'code' => 'strike3',
         'name' => 'Strike 3',
         'karma' => 4.01,
-        'hours' => 72,
-        'restore' => -6
+        'hours' => 24 * 5,
+        'restore' => 50,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'strike4',
+        'name' => 'Strike 4',
+        'karma' => 4.01,
+        'hours' => 24 * 20,
+        'restore' => 60,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'ban',
+        'name' => 'Ban',
+        'karma' => null,
+        'hours' => 24 * 30 * 3,
+        'restore' => 70,
+        'roles' => ['god']
     )
 );
 
