@@ -3,34 +3,35 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//         http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 if (!defined('mnmpath')) {
-    include(__DIR__ . '/../config.php');
-    include(mnminclude . 'html1.php');
+    include __DIR__ . '/../config.php';
+    include mnminclude . 'html1.php';
 }
 
 array_push($globals['cache-control'], 'no-cache');
 http_cache();
 
-if (!empty($_REQUEST['id']) && ($id = intval($_REQUEST['id'])) > 0 && $current_user->user_id > 0) {
-    $comment = Comment::from_db($id);
-    if (!$comment) {
-        die;
-    }
-    $link_id = $comment->link;
-} else {
+if (empty($_REQUEST['id']) || !($id = (int)$_REQUEST['id']) || !$current_user->user_id) {
     die;
 }
 
-if ($_POST['process'] == 'newreport') {
+$comment = Comment::from_db($id) or die();
+$link_id = $comment->link;
+
+if ($_POST['process'] === 'newreport') {
     save_report($comment, $link_id);
-} elseif ($_POST['process'] == 'check_can_report') {
+}
+
+if ($_POST['process'] === 'check_can_report') {
     if (!check_security_key($_POST['key'])) {
         die;
     }
+
     $res = check_report($comment, $link_id);
+
     if (true === $res) {
         $data['html'] = '';
         $data['error'] = '';
@@ -40,10 +41,11 @@ if ($_POST['process'] == 'newreport') {
     }
 
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($data);
-} else {
-    print_edit_form($comment, $link_id);
+
+    die(json_encode($data));
 }
+
+print_edit_form($comment, $link_id);
 
 function check_report($comment, $link_id)
 {
@@ -85,11 +87,15 @@ function check_report($comment, $link_id)
 function print_edit_form($comment, $link_id)
 {
     global $current_user, $site_key;
-    $randkey = rand(1000000, 100000000);
-    $key = md5($randkey . $site_key);
-    echo Haanga::Load("report_new.html", compact('comment', 'link_id', 'current_user', 'site_key', 'randkey', 'key'), true);
-}
 
+    $randkey = rand(1000000, 100000000);
+
+    $key = md5($randkey . $site_key);
+
+    echo Haanga::Load("report_new.html", compact(
+        'comment', 'link_id', 'current_user', 'site_key', 'randkey', 'key'
+    ), true);
+}
 
 function check_save_report($comment, $link_id)
 {
@@ -121,7 +127,7 @@ function check_save_report($comment, $link_id)
     }
 
     // Check if user votes his own comment! :p
-    if ($current_user->user_id == $comment->user_id) {
+    if ($current_user->user_id == $comment->author) {
         return _('no puedes reportar tu propio comentario');
     }
 
@@ -136,7 +142,7 @@ function check_save_report($comment, $link_id)
     }
 
     // Check that is not a admin comment
-    if ($comment->type == 'admin') {
+    if ($comment->type === 'admin') {
         return _('Este comentario no se puede reportar');
     }
 
@@ -148,14 +154,27 @@ function check_save_report($comment, $link_id)
 
     // Check report state
 
-    $sql = "SELECT report_status from reports where report_type='" . Report::REPORT_TYPE_LINK_COMMENT . "' and report_ref_id={$report->ref_id} and report_status <>'" . Report::REPORT_STATUS_PENDING . "'";
-    $report_status = $db->get_var($sql);
+    $report_status = $db->get_var('
+        SELECT `report_status`
+        FROM `reports`
+        WHERE (
+            `report_type` = "'.Report::REPORT_TYPE_LINK_COMMENT.'"
+            AND `report_ref_id` = "'.(int)$report->ref_id.'"
+            AND `report_status` <> "'.Report::REPORT_STATUS_PENDING.'"
+        );
+    ');
 
     if ($report_status) {
         $report->status = $report_status;
     }
 
-    return $report->store();
+    $success = $report->store();
+
+    if (isset($_POST['ignore']) && (int)$_POST['ignore']) {
+        User::friend_insert($current_user->user_id, $comment->author, -1);
+    }
+
+    return $success;
 }
 
 function save_report($comment, $link_id)
@@ -171,5 +190,6 @@ function save_report($comment, $link_id)
     }
 
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($data);
+
+    die(json_encode($data));
 }

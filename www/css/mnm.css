@@ -3585,8 +3585,9 @@ input.uploadFile {
 }
 
 .reportform {
-    padding: 40px;
+    padding: 15px;
     background-color: #FFF5ED;
+    height: 100%;
 }
 
 .reportform p {

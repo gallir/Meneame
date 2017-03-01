@@ -1,5 +1,4 @@
 <div class="reportform">
-
     <form action="{{ globals.base_url }}backend/report_comment.php?id={{ comment.id }}&link={{ link_id }}&user={{ current_user.user_id }}" class="report" method="post" id="r_new_form">
         <input type="hidden" name="randkey" value="{{ randkey }}"/>
         <input type="hidden" name="process" value="newreport"/>
@@ -7,13 +6,16 @@
         <input type="hidden" name="id" value="{{ comment.id }}"/>
         <input type="hidden" name="link_id" value="{{ link_id }}" />
         <input type="hidden" name="user_id" value="{{ current_user.user_id }}"/>
-        <p>Especifica los motivos del reporte</p>
-        <input type="radio" name="report_reason" value="insult" checked="checked"> Insultos directos<br>
-        <input type="radio" name="report_reason" value="incites_hatred"> Incitación al odio<br>
-        <input type="radio" name="report_reason" value="advertising"> Promoción comercial de productos o servicios<br>
-        <input type="radio" name="report_reason" value="violence_porn"> Material pornográfico o de violencia gráfica<br>
-        <input type="radio" name="report_reason" value="private_data"> Contiene datos personales propios o de un tercero<br>
-        <input type="radio" name="report_reason" value="legality"> Incumple la legalidad española vigente<br>
-        <input type="submit" value="Enviar reporte" style="width: 100%;">
+
+        <label><input type="radio" name="report_reason" value="insult" checked="checked"> Insultos directos</label><br />
+        <label><input type="radio" name="report_reason" value="incites_hatred"> Incitación al odio</label><br />
+        <label><input type="radio" name="report_reason" value="advertising"> Promoción comercial de productos o servicios</label><br />
+        <label><input type="radio" name="report_reason" value="violence_porn"> Material pornográfico o de violencia gráfica</label><br />
+        <label><input type="radio" name="report_reason" value="private_data"> Contiene datos personales propios o de un tercero</label><br />
+        <label><input type="radio" name="report_reason" value="legality"> Incumple la legalidad española vigente</label><br />
+
+        <br /><label><input type="checkbox" name="ignore" value="1" checked /> Añadir a este usuario a ignore</label>
+
+        <br /><br /><input type="submit" value="Enviar reporte" style="width: 100%;">
     </form>
 </div>
