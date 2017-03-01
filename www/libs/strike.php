@@ -90,9 +90,13 @@ class Strike
             return;
         }
 
+        $this->hours = $type['hours'];
         $this->karma_new = $type['karma'];
         $this->karma_restore = $this->karma_old + $type['restore'];
-        $this->hours = $type['hours'];
+
+        if ($this->karma_restore < $this->karma_new) {
+            $this->karma_restore = $this->karma_new;
+        }
     }
 
     public static function listing($search, $orderBy, $orderMode, $offset, $limit)
