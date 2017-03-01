@@ -291,14 +291,24 @@ class Strike
             return;
         }
 
+        $report = $db->get_row('
+            SELECT `report_ref_id`, `report_reason`, `report_type`
+            FROM `reports`
+            WHERE `report_id` = "'.(int)$this->report_id.'"
+            LIMIT 1;
+        ');
+
         $db->query('
             UPDATE `reports`
             SET
                 `report_modified` = NOW(),
                 `report_status` = "penalized",
                 `report_revised_by` = "'.(int)$current_user->user_id.'"
-            WHERE `report_id` = "'.(int)$this->report_id.'"
-            LIMIT 1;
+            WHERE (
+                `report_ref_id` = "'.$report->report_ref_id.'"
+                AND `report_reason` = "'.$report->report_reason.'"
+                AND `report_type` = "'.$report->report_type.'"
+            );
         ');
     }
 
