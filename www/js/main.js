@@ -1290,8 +1290,8 @@ function show_report_dialog(comment_id) {
     if (is_mobile) {
         w = h = '100%';
     } else {
-        w = '400px';
-        h = '250px';
+        w = '500px';
+        h = '310px';
     }
 
     $.colorbox({
