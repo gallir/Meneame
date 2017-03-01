@@ -1108,7 +1108,13 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date')
         return;
     }
 
-    $ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link order by $order desc limit $count");
+	$where_not_banned = '';
+
+	if (isset($globals['subs_banned']) and is_array($globals['subs_banned']) and count($globals['subs_banned']) > 0) {
+		$where_not_banned = " and subs.name not in ('" . implode(",", $globals['subs_banned']) . "')";
+	}
+
+	$ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link $where_not_banned order by $order desc limit $count");
 
     if (empty($ids)) {
         memcache_madd($key, ' ', 300);
