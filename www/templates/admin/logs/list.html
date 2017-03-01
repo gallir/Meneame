@@ -6,6 +6,11 @@
             <option value="">Todos</option>
             <option value="change_user_level"{% if log_type=="change_user_level" %} selected="selected"{% endif %}>change_user_level</option>
             <option value="change_karma"{% if log_type=="change_karma" %} selected="selected"{% endif %}>change_karma</option>
+            <option value="strike1"{% if log_type=="strike1" %} selected="selected"{% endif %}>strike1</option>
+            <option value="strike2"{% if log_type=="strike2" %} selected="selected"{% endif %}>strike2</option>
+            <option value="strike3"{% if log_type=="strike3" %} selected="selected"{% endif %}>strike3</option>
+            <option value="ban"{% if log_type=="ban" %} selected="selected"{% endif %}>ban</option>
+            <option value="strike_restore"{% if log_type=="strike_restore" %} selected="selected"{% endif %}>strike_restore</option>
         </select>
         </form>
         <form method="get" action="{{ globals.base_url }}admin/logs.php">
