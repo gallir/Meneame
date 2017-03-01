@@ -337,10 +337,16 @@ function do_profile()
         }
     }
 
+    $strike = null;
+
+    if ($current_user->user_id == $user->id || (in_array($current_user->user_level, array('admin', 'god')))) {
+        $strike = (new Strike($user))->getUserCurrentStrike();
+    }
+
     $prefs = $user->get_prefs();
 
     return Haanga::Load('/user/profile.html', compact(
-        'post', 'selected', 'rss', 'rss_title', 'geodiv', 'prefs',
+        'post', 'selected', 'rss', 'rss_title', 'geodiv', 'prefs', 'strike',
         'user', 'my_latlng', 'url', 'nofollow', 'nclones', 'show_email',
         'entropy', 'percent', 'geo_form', 'addresses', 'friend_icon'
     ));

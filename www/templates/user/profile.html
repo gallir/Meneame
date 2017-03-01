@@ -242,6 +242,19 @@
                 <td>{{ globals.user_ip }}</td>
             </tr>
             {% endif %}
+
+            {% if (strike && (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin')) %}
+            <tr>
+                <th>{% trans _('Strike Aplicado') %}:</th>
+                <td>
+                    <strong>{{ strike.type }} ({{ strike.reason_message }})</strong>
+                    <p>{% trans _('Karma anterior') %} {{ strike.karma_old }}</p>
+                    <p>{% trans _('Karma actual') %} {{ strike.karma_new }}</p>
+                    <p>{% trans _('Karma final') %} {{ strike.karma_restore }}</p>
+                    <p>{% trans _('Finaliza') %} +-{{ strike.expires_at }}</p>
+                </td>
+            </tr>
+            {% endif %}
         </table>
 
         {% if user.id == current_user.user_id %}
