@@ -8,6 +8,8 @@
 
 class Strike
 {
+    private static $current = array();
+
     public static $reasons = [
         'inappropriate_content' => 'Contenido inapropiado',
         'private_data' => 'Contiene datos personales propios o de un tercero',
@@ -91,23 +93,6 @@ class Strike
         $this->karma_new = $type['karma'];
         $this->karma_restore = $this->karma_old + $type['restore'];
         $this->hours = $type['hours'];
-    }
-
-    public static function fromDB($id)
-    {
-        global $db;
-
-        $row = $db->get_object('
-            SELECT '.self::SQL_SIMPLE.'
-            WHERE `strike_id` = "'.(int)$id.'"
-            LIMIT 1;
-        ', 'Strike');
-
-        if ($row->reason) {
-            $row->reason_message = self::$reasons[$row->reason];
-        }
-
-        return $row;
     }
 
     public static function listing($search, $orderBy, $orderMode, $offset, $limit)
@@ -301,14 +286,6 @@ class Strike
             LIMIT 1;
         ');
 
-        $db->query('
-            INSERT INTO `bans`
-            SET
-                `ban_type` = "email",
-                `ban_text` = "'.$this->user->email.'",
-                `ban_comment` = "'.$this->comment.'";
-        ');
-
         LogAdmin::insert($this->type, $this->user_id, $current_user->user_id, $this->user->level, 'disabled');
     }
 
@@ -342,6 +319,26 @@ class Strike
         ');
 
         return self::setReasonMessage($list);
+    }
+
+    public static function getUserCurrentStrike($user_id)
+    {
+        global $db;
+
+        $row = $db->get_row('
+            SELECT '.self::SQL.'
+            WHERE (
+                `strike_user_id` = "'.(int)$user_id.'"
+                AND `strike_expires_at` > NOW()
+            )
+            LIMIT 1;
+        ');
+
+        if ($row->reason) {
+            $row->reason_message = self::$reasons[$row->reason];
+        }
+
+        return $row;
     }
 
     public static function restorePastStrikes()
@@ -388,35 +385,47 @@ class Strike
 
     public static function getUserValidTypes($user_id)
     {
-        $current = self::getUserTypes($user_id);
-        $types = self::getTypes();
-
-        if (in_array('strike3', $current)) {
-            return array();
-        }
-
-        if (in_array('strike2', $current)) {
-            return array('strike3' => $types['strike3']);
-        }
-
-        if (in_array('strike1', $current)) {
-            return array('strike2' => $types['strike2']);
-        }
-
-        return array('strike1' => $types['strike1']);
+        return self::getTypes() + array(
+            'ban' => array(
+                'name' => 'Ban',
+                'karma' => '-',
+                'hours' => '-'
+            )
+        );
     }
 
     public static function isValidTypeForUser($user_id, $type)
     {
-        if (self::isValidType($type)) {
-            return !in_array($type, self::getUserTypes($user_id));
-        }
+        return self::isValidType($type);
     }
 
     public static function getUserTypes($user_id)
     {
-        return array_filter(array_unique(array_map(function($value) {
+        if (isset(self::$current[$user_id])) {
+            return self::$current[$user_id];
+        }
+
+        return self::$current[$user_id] = array_filter(array_unique(array_map(function($value) {
             return $value->type;
         }, self::getUserStrikes($user_id))));
+    }
+
+    public static function getNext($user_id)
+    {
+        $current = self::getUserTypes($user_id);
+
+        if (in_array('strike1', $current)) {
+            return 'strike2';
+        }
+
+        if (in_array('strike2', $current)) {
+            return 'strike3';
+        }
+
+        if (in_array('strike3', $current)) {
+            return 'ban';
+        }
+
+        return 'strike1';
     }
 }

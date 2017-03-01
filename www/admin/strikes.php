@@ -80,21 +80,33 @@ function do_new_strike($selected_tab)
         $user_login = null;
     }
 
-    $strikes = $types = $reasons = $banned = array();
-
     $user = new User();
+    $user->username = $user_login;
 
-    if ($user_login && ($user->username = $user_login) && $user->read()) {
-        $types = Strike::getUserValidTypes($user->id);
-        $strikes = Strike::getUserStrikes($user->id);
-        $reasons = Strike::$reasons;
-        $banned = array_filter($strikes, function($value) {
-            return ($value->type === 'ban');
-        });
+    if (empty($user_login) || !$user->read()) {
+        $strikes = $types = $reasons = array();
+        $next = $error = null;
+
+        Haanga::Load('admin/strikes/new.html', compact(
+            'selected_tab', 'user', 'strikes', 'types', 'next', 'reasons', 'error'
+        ));
     }
 
+    if (Strike::getUserCurrentStrike($user->id)) {
+        $error = 'Este usuario ya dispone de un strike actualmente';
+    } elseif ($user->level === 'disabled') {
+        $error = 'Este usuario está actualmente baneado';
+    } else {
+        $error = null;
+    }
+
+    $types = Strike::getUserValidTypes($user->id);
+    $strikes = Strike::getUserStrikes($user->id);
+    $next = Strike::getNext($user->id);
+    $reasons = Strike::$reasons;
+
     Haanga::Load('admin/strikes/new.html', compact(
-        'selected_tab', 'user', 'strikes', 'types', 'reasons', 'banned'
+        'selected_tab', 'user', 'strikes', 'types', 'next', 'reasons', 'error'
     ));
 }
 

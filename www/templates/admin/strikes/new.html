@@ -15,9 +15,9 @@
         {% if user.id > 0 %}
         <br>
 
-        {% if banned %}
+        {% if error %}
 
-        <span style="color: red;">{% trans _('Este usuario ya ha sido baneado') %}</span><br><br>
+        <span style="color: red;">{{ error }}</span><br><br>
 
         {% else %}
 
@@ -43,10 +43,8 @@
                     <td>
                         <select name="type" id="type" required>
                             {% for key, value in types %}
-                            <option value="{{ key }}">{{ value.name }} ({{ user.karma }} &rarr; {{ value.karma }} / {{ value.hours }} horas)</option>
+                            <option value="{{ key }}" {% if key == next %}selected{% endif %}>{{ value.name }} ({{ user.karma }} &rarr; {{ value.karma }} / {{ value.hours }} horas)</option>
                             {% endfor %}
-
-                            <option value="ban">BAN</option>
                         </select>
                     </td>
                     <td>
