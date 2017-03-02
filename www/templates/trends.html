@@ -75,7 +75,7 @@
 			$flot.on("plothover", function (event, pos, item) {
 				if (item) {
 					var now = new Date().getTime();
-					if (now - lastRequest < 200 OR lastQuery == item.dataIndex) {
+					if (now - lastRequest < 200 || lastQuery == item.dataIndex) {
 						return;
 					}
 					lastRequest = now;
