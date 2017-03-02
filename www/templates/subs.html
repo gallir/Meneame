@@ -19,7 +19,7 @@
                 {% for sub in official_subs %}
                 <div class="sub col-xs-2">
                     <a href="{{globals.base_url_general}}m/{{sub.name}}">
-                        <img src="{{globals.base_url_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
+                        <img src="{{globals.base_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
                     </a>
                     <div class="sub-info">
                         <a href="{{globals.base_url_general}}m/{{sub.name}}" class="sub-name">{{ sub.extra_info.show_name }}</a>
@@ -51,7 +51,7 @@
             {% for sub in recommended_subs %}
             <div class="sub col-xs-2">
                 <a href="{{globals.base_url_general}}m/{{sub.name}}">
-                    <img src="{{globals.base_url_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
+                    <img src="{{globals.base_static}}img/subs/{{sub.extra_info.image_name}}" class="img-responsive">
                 </a>
                 <div class="sub-info">
                     <a href="{{globals.base_url_general}}m/{{sub.name}}" class="sub-name">{{ sub.extra_info.show_name }}</a>
