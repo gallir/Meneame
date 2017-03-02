@@ -116,7 +116,7 @@ function do_report_list($selected_tab, $report_status, $report_date, $key, $stat
         '.$where.'
         GROUP BY ref_id, reason
         ORDER BY '.$orderBy.'
-        LIMIT '.$offset.', '.$page_size.';
+        '.(($rows > 0) ? (' LIMIT '.$offset.', '.$page_size) : '').';
     '));
 
     Haanga::Load('admin/reports/list.html', compact(
