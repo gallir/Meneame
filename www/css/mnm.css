@@ -2322,6 +2322,17 @@ select.options-comments {
     background-color: #CAD0E2;
 }
 
+.comment.ignored .avatar, .comment.ignored .comment-text, .comment.ignored .comment-footer {
+    display: none !important;
+}
+
+.comment.ignored.comment-avatar-large .comment-header,
+.comment.ignored.comment-avatar-large .comment-header * {
+    height: auto !important;
+    line-height: inherit !important;
+    font-size: 12px;
+}
+
 .comment.phantom .comment-body {
     font-size: 90%;
     overflow: hidden;
