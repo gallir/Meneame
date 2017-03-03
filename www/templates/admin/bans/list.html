@@ -10,8 +10,8 @@
         </div>
 
         {% if current_user.user_level == "god" %}
-            &nbsp; [ <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}&op=new">{% trans _('Nuevo ban') %}</a> ]
-            &nbsp; [ <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}&op=news">{% trans _('Múltiples bans') %}</a> ]
+        &nbsp; [ <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}&op=new">{% trans _('Nuevo ban') %}</a> ]
+        &nbsp; [ <a href="{{ globals.base_url }}admin/bans.php?tab={{ selected_tab }}&op=news">{% trans _('Múltiples bans') %}</a> ]
         {% endif %}
 
         <table class="table table-condensed table-striped table-hover">

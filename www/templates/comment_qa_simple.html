@@ -5,17 +5,17 @@ p.a {margin-bottom: 10px;}
 </style>
 
 <div id="singlewrap" style="padding: 20px 3px;max-width:60em;margin:auto;">
-	<h3><a href="{{ link.permalink }}" class="l:{{ link.id }}">{{ link.title }}</a></h3>
+    <h3><a href="{{ link.permalink }}" class="l:{{ link.id }}">{{ link.title }}</a></h3>
 
 
-	<div style="margin-top: 20px; text-align: justify; text-justify: auto;">
-	{% for qa in qas %}
-		{% for q in qa.questions %}
-			<p class="q"><strong><a href="{{ q.username | user_uri }}">{{ q.username }}</a>: {{ q.content }}</strong></p>
-		{% endfor %}
-		<p>{{ qa.answer.content }}</p>
-		<br/>
-	{% endfor %}
-	</div>
+    <div style="margin-top: 20px; text-align: justify; text-justify: auto;">
+    {% for qa in qas %}
+        {% for q in qa.questions %}
+            <p class="q"><strong><a href="{{ q.username | user_uri }}">{{ q.username }}</a>: {{ q.content }}</strong></p>
+        {% endfor %}
+        <p>{{ qa.answer.content }}</p>
+        <br/>
+    {% endfor %}
+    </div>
 </div>
 

@@ -2,30 +2,30 @@
 
 {#
 {% if not short_link %}
-	{% set short_link = link %}
+    {% set short_link = link %}
 {% endif %}
 #}
 {% exec urlencode link as link_url %}
 <div class="wrapper-share-icons hide">
-	<ul class="share-icons" data-url="{{ link }}" data-title="{{ title }}">
-		<li>
-			<a class="share-facebook" href="#" onClick="share_fb(this)"><i class="fa fa-facebook-square"></i>{% trans _('Compartir en %s') "Facebook" %}</a>
-		</li>
-		<li>
-			<a class="share-twitter" href="#" onClick="share_tw(this)"><i class="fa fa-twitter-square"></i>{% trans _('Compartir en %s') "Twitter" %}</a>
-		</li>
-		{% if globals.mobile %}
-		<li>
-			<a class="share-whatsapp" href="whatsapp://send?text={{ title }} - {{ link_url }}" data-action="share/whatsapp/share"><i class="fa fa-whatsapp"></i>{% trans _('Compartir por %s') "Whatsapp" %}</a>
-		</li>
-		{% endif %}
-		<li>
-			<a class="share-mail" href="mailto:?subject={{ title }}&body={{ link_url }}" title="{% trans _('Compartir por %s') "Correo" %}"><i class="fa fa-envelope"></i>{% trans _('Compartir por %s') "Correo" %}</a>
-		</li>
-		<li>
-			<button class="share-link" data-clipboard-text="{{ short_link }}"><i class="fa fa-link"></i><span>{% trans _('Copiar enlace') %}</span></button>
-		</li>
-	</ul>
+    <ul class="share-icons" data-url="{{ link }}" data-title="{{ title }}">
+        <li>
+            <a class="share-facebook" href="#" onClick="share_fb(this)"><i class="fa fa-facebook-square"></i>{% trans _('Compartir en %s') "Facebook" %}</a>
+        </li>
+        <li>
+            <a class="share-twitter" href="#" onClick="share_tw(this)"><i class="fa fa-twitter-square"></i>{% trans _('Compartir en %s') "Twitter" %}</a>
+        </li>
+        {% if globals.mobile %}
+        <li>
+            <a class="share-whatsapp" href="whatsapp://send?text={{ title }} - {{ link_url }}" data-action="share/whatsapp/share"><i class="fa fa-whatsapp"></i>{% trans _('Compartir por %s') "Whatsapp" %}</a>
+        </li>
+        {% endif %}
+        <li>
+            <a class="share-mail" href="mailto:?subject={{ title }}&body={{ link_url }}" title="{% trans _('Compartir por %s') "Correo" %}"><i class="fa fa-envelope"></i>{% trans _('Compartir por %s') "Correo" %}</a>
+        </li>
+        <li>
+            <button class="share-link" data-clipboard-text="{{ short_link }}"><i class="fa fa-link"></i><span>{% trans _('Copiar enlace') %}</span></button>
+        </li>
+    </ul>
 </div>
 
 {#
@@ -42,9 +42,9 @@
 &nbsp;<div class="g-plusone" style="display:inline" data-size="small" data-count="false"></div>
 
 <script type="text/javascript">
-	window.___gcfg = {lang: 'es'};
-	$(function () {
-		$.getScript("https://apis.google.com/js/plusone.js");
-	});
+    window.___gcfg = {lang: 'es'};
+    $(function () {
+        $.getScript("https://apis.google.com/js/plusone.js");
+    });
 </script>
 #}

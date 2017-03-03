@@ -130,7 +130,7 @@
                 {% if ! globals.bot %}
 
                 <a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}">
-                    <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 80, false %}" data-2x="s:-40.:-80." class="avatar lazy img-responsive center-block" />
+                    <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 80, false %}" data-2x="s:-40.:-80." alt="{{ self.username }}" class="avatar lazy img-responsive center-block" />
                 </a>
 
                 <a href="{% exec get_user_uri self.username, 'history' %}" class="author">{{ self.username }}</a>
@@ -217,7 +217,7 @@
                     <div class="row metas">
                         <div class="col-xs-6 author">
                             <a href="{{ comment.user_login | useruri }}" class="tooltip u:{{ comment.user_id }}">
-                                <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url comment.user_id, comment.user_avatar, 40, false %}" data-2x="s:-40.:-40." class="avatar lazy" />
+                                <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url comment.user_id, comment.user_avatar, 40, false %}" data-2x="s:-40.:-40." alt="{{ comment.user_login }}class="avatar lazy" />
                                 {{ comment.user_login }}
                             </a>
                         </div>
@@ -245,7 +245,7 @@
                     <div class="metas">
                         <span class="author">
                             <a href="{{ link.username | useruri }}" class="tooltip u:{{ link.author }}">
-                                <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url link.author, link.avatar, 40, false %}" data-2x="s:-40.:-80." class="avatar lazy" />
+                                <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url link.author, link.avatar, 40, false %}" data-2x="s:-40.:-80." alt="{{ link.username }}" class="avatar lazy" />
                                 {{ link.username }}
                             </a>
                         </span>

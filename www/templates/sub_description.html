@@ -3,7 +3,7 @@
         <div class="logo text-center">
             {% if ! site.logo_url %}
             <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">
-                <img src="{{ globals.base_static }}img/mnm/h9_eli.png">
+                <img src="{{ globals.base_static }}img/mnm/h9_eli.png" alt="{{ site.name }}" />
             </a>
             {% else %}
             <a href="{{ site.base_url }}m/{{ site.name }}" title="{{ site.name_long|escape }}">

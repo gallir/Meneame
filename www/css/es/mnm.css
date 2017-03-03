@@ -161,9 +161,9 @@ user-select: none;
 -webkit-user-select: none;
 }
 @media (min-height: 600px) {
-	#header-top {
-	position: fixed;
-	}
+    #header-top {
+    position: fixed;
+    }
 }
 
 
@@ -309,8 +309,8 @@ cursor: pointer;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2),
-	(min-resolution: 192dpi) {
-	#header-center .logo-eli { background-image:url('../../img/mnm/h9_eli.svg'); }
+    (min-resolution: 192dpi) {
+    #header-center .logo-eli { background-image:url('../../img/mnm/h9_eli.svg'); }
 }
 
 #header-center .edname{
@@ -2532,10 +2532,10 @@ color: transparent !important;
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	.comment-footer .vote, .comment-footer .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-footer .answers, a.permalink, #header-top .userlogin, #nav-menu  {
-		background-image:url(../../img/common/icons-common-2x.png);
-	}
-	#header-top .logo-mnm, #footthingy { background-image:url('../../img/mnm/logos-common-2x.png'); }
+    .comment-footer .vote, .comment-footer .reply, .favorite, .share_icons span, .searchform .searchbox, .comment-footer .answers, a.permalink, #header-top .userlogin, #nav-menu  {
+        background-image:url(../../img/common/icons-common-2x.png);
+    }
+    #header-top .logo-mnm, #footthingy { background-image:url('../../img/mnm/logos-common-2x.png'); }
 }
 
 

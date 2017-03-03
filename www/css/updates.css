@@ -1445,7 +1445,7 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     }
 
     .subs-listing td.name {
-	padding: 10px 10px 10px 5px;
+    padding: 10px 10px 10px 5px;
     }
 
     .subs-listing .actions {

@@ -4,31 +4,31 @@
 
 <script type="text/javascript">
 addPostCode(function () {
-	var tickSize;
-	if (is_mobile) {
-		tickSize = 7;
-	} else {
-		tickSize = 1;
-	}
-	var options = {
-		legend: { position: "nw" },
-		xaxis: { mode: "time", tickSize: [tickSize, "day"], timeformat: "%d"},
-		series: {
-			lines: { show: false },
-			points: { show: true, radius: 1, fill: false },
-			shadowSize: 0,
-		},
-		grid: { markings: weekendAreas }
-	};
-	var data = [];
-	var placeholder = $("#flot");
-	$.getJSON(base_url+"backend/user-votes-history.json.php?id={{ user.id }}",
-		function (json) {
-			for (i=0; i<json.length; i++) {
-				data.push(json[i]);
-			}
-			$.plot(placeholder, data, options);
-		});
+    var tickSize;
+    if (is_mobile) {
+        tickSize = 7;
+    } else {
+        tickSize = 1;
+    }
+    var options = {
+        legend: { position: "nw" },
+        xaxis: { mode: "time", tickSize: [tickSize, "day"], timeformat: "%d"},
+        series: {
+            lines: { show: false },
+            points: { show: true, radius: 1, fill: false },
+            shadowSize: 0,
+        },
+        grid: { markings: weekendAreas }
+    };
+    var data = [];
+    var placeholder = $("#flot");
+    $.getJSON(base_url+"backend/user-votes-history.json.php?id={{ user.id }}",
+        function (json) {
+            for (i=0; i<json.length; i++) {
+                data.push(json[i]);
+            }
+            $.plot(placeholder, data, options);
+        });
 
 
     function weekendAreas(axes) {

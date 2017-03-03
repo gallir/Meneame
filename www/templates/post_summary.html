@@ -7,10 +7,11 @@
                     data-2x="s:-40.:-80."
                     data-src="{% exec get_avatar_url self.author, self.avatar, 40, false %}"
                     class="avatar tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
-                    width="40" height="40" />
+                    width="40" height="40"
+                    alt="{{ self.username }}" />
             </a>
             {% else %}
-            <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-40.jpg" class="avatar" width="40" height="40" />
+            <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-40.jpg" class="avatar" width="40" height="40" alt="{{ self.username }}" />
             {% endif %}
 
             <a class="username" href="{% exec post_get_base_url self.username %}">{{ self.username }}</a>
