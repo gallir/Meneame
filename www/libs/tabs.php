@@ -263,7 +263,7 @@ final class Tabs
             }
         }
 
-        $html .= '<li class="icon wideonly"><a href="' . $globals['base_url'] . $rss . '" title="' . $rss_title . '"><i class="fa fa-rss-square"></i></a></li>';
+        $html .= '<li class="icon wideonly"><a href="' . $globals['base_url'] . $rss . '" title="' . $rss_title . '"><i class="fa fa-rss-square"></i> RSS</a></li>';
         $html .= '</ul>' . "\n";
 
         return $html;
