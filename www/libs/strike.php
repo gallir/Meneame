@@ -345,6 +345,21 @@ class Strike
         return self::setReasonMessage($list);
     }
 
+    public static function pastNotRestored()
+    {
+        global $db;
+
+        return $db->get_results('
+            SELECT '.self::SQL.'
+            WHERE (
+              `users`.`user_id` = `strike_user_id`
+              AND `strike_expires_at` < NOW()
+              AND `strike_restored` = 0
+            )
+            ORDER BY `strike_expires_at` ASC;
+        ');
+    }
+
     public static function setReasonMessage($list)
     {
         foreach ($list as $row) {
@@ -395,47 +410,21 @@ class Strike
         return isset(self::$reasons[$reason]);
     }
 
-    public static function restorePastStrikes()
+    public static function restoreStrike($id)
     {
         global $db;
-
-        $db->transaction();
-
-        $list = $db->get_results('
-            SELECT '.self::SQL.'
-            WHERE (
-              `users`.`user_id` = `strike_user_id`
-              AND `strike_expires_at` < NOW()
-              AND `strike_restored` = 0
-            )
-            ORDER BY `strike_expires_at` ASC;
-        ');
-
-        foreach ($list as $row) {
-            LogAdmin::insert('strike_restore', $row->user_id, 0, $row->karma_old, $row->karma_restore);
-        }
 
         $db->query('
             UPDATE `users`, `strikes`
             SET
+                `strike_restored` = 1,
                 `user_karma` = `strike_karma_restore`,
                 `user_level` = IF(`user_level` = "disabled", "normal", `user_level`)
             WHERE (
-              `user_id` = `strike_user_id`
-              AND `strike_expires_at` < NOW()
-              AND `strike_restored` = 0
+                `strike_id` = "'.(int)$id.'"
+                AND `user_id` = `strike_user_id`
+                AND `strike_restored` = 0
             );
         ');
-
-        $db->query('
-            UPDATE `strikes`
-            SET `strike_restored` = 1
-            WHERE (
-              `strike_expires_at` < NOW()
-              AND `strike_restored` = 0
-            );
-        ');
-
-        $db->commit();
     }
 }
