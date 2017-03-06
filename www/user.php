@@ -275,7 +275,7 @@ function do_profile()
 
     $post = new Post;
 
-    if (!$post->read_last($user->id)) {
+    if ($user->ignored() || !$post->read_last($user->id)) {
         $post = null;
     }
 
@@ -318,13 +318,15 @@ function do_profile()
 
     if ($globals['do_geo'] && $current_user->user_id == $user->id) {
         ob_start();
+
         geo_coder_print_form('user', $current_user->user_id, $globals['latlng'], _('ubícate en el mapa (si te apetece)'), 'user');
+
         $geo_form = ob_get_clean();
     }
 
     $addresses = array();
 
-    if ($current_user->user_id == $user->id || ($current_user->user_level == 'god' && !$user->admin)) {
+    if ($current_user->user_id == $user->id || ($current_user->user_level === 'god' && !$user->admin)) {
         // gods and admins know each other for sure, keep privacy
         $dbaddresses = $db->get_results("select distinct(vote_ip_int) as ip from votes where vote_type in ('links', 'comments', 'posts') and vote_user_id = $user->id order by vote_date desc limit 30");
 
