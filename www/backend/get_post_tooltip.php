@@ -86,7 +86,7 @@ echo '<div class="comment-body">';
 
 if (
     ($current_user->user_id > 0)
-    && !in_array($current_user->user_level, array('admin', 'god'))
+    && !$current_user->admin
     && (User::friend_exists($current_user->user_id, $post->author) < 0)
 ) {
     echo _('[USUARIO IGNORADO]');

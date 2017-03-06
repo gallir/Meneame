@@ -1,35 +1,53 @@
-<fieldset><legend>{% trans _('votos/hora últimos 30 días') %}</legend>
-
-<div id="flot" style="width:100%;height:150px;"></div>
+<fieldset>
+    <legend>{% trans _('votos/hora últimos 30 días') %}</legend>
+    <div id="flot" style="width:100%;height:150px;"></div>
+</fieldset>
 
 <script type="text/javascript">
-addPostCode(function () {
+addPostCode(function() {
     var tickSize;
+
     if (is_mobile) {
         tickSize = 7;
     } else {
         tickSize = 1;
     }
+
     var options = {
-        legend: { position: "nw" },
-        xaxis: { mode: "time", tickSize: [tickSize, "day"], timeformat: "%d"},
+        legend: {
+            position: "nw"
+        },
+        xaxis: {
+            mode: "time",
+            tickSize: [tickSize, "day"],
+            timeformat: "%d"
+        },
         series: {
-            lines: { show: false },
-            points: { show: true, radius: 1, fill: false },
+            lines: {
+                show: false
+            },
+            points: {
+                show: true,
+                radius: 1,
+                fill: false
+            },
             shadowSize: 0,
         },
-        grid: { markings: weekendAreas }
+        grid: {
+            markings: weekendAreas
+        }
     };
+
     var data = [];
     var placeholder = $("#flot");
-    $.getJSON(base_url+"backend/user-votes-history.json.php?id={{ user.id }}",
-        function (json) {
-            for (i=0; i<json.length; i++) {
-                data.push(json[i]);
-            }
-            $.plot(placeholder, data, options);
-        });
 
+    $.getJSON(base_url + "backend/user-votes-history.json.php?id={{ user.id }}", function(json) {
+        for (i = 0; json && (i < json.length); i++) {
+            data.push(json[i]);
+        }
+
+        $.plot(placeholder, data, options);
+    });
 
     function weekendAreas(axes) {
         var markings = [];
@@ -39,16 +57,20 @@ addPostCode(function () {
         d.setUTCSeconds(0);
         d.setUTCMinutes(0);
         d.setUTCHours(0);
+
         var i = d.getTime();
+
         do {
-            markings.push({ xaxis: { from: i, to: i + 2 * 24 * 60 * 60 * 1000 } });
+            markings.push({
+                xaxis: {
+                    from: i,
+                    to: i + 2 * 24 * 60 * 60 * 1000
+                }
+            });
             i += 7 * 24 * 60 * 60 * 1000;
         } while (i < axes.xaxis.max);
 
         return markings;
     }
-
 });
 </script>
-
-</fieldset>

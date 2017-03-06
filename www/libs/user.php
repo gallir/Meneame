@@ -40,6 +40,8 @@ class User
     public $url = '';
     public $prefs = array();
 
+    private $friendship;
+
     const SQL = "user_id as id, user_login as username, user_login_register as username_register, user_level as level, user_comment_pref as comment_pref, UNIX_TIMESTAMP(user_date) as date, user_ip as ip, UNIX_TIMESTAMP(user_modification) as modification, user_pass as pass, user_email as email, user_email_register as email_register, user_names as names, user_lang as lang, user_karma as karma, user_avatar as avatar, user_public_info as public_info, user_url as url, user_adcode as adcode, user_adchannel as adchannel, user_phone as phone";
 
     public static function get_notification($id, $type)
@@ -470,6 +472,24 @@ class User
         return true;
     }
 
+    public function friendship()
+    {
+        global $db, $current_user;
+
+        if (($this->friendship === null) && $this->id && $current_user->user_id) {
+            $this->friendship = self::friend_exists($current_user->user_id, $this->id);
+        }
+
+        return $this->friendship;
+    }
+
+    public function ignored()
+    {
+        global $current_user;
+
+        return !$current_user->admin && ($this->friendship() === -1);
+    }
+
     public function store($full_save = true)
     {
         global $db, $current_user, $globals;
@@ -543,9 +563,7 @@ class User
             $this->$var = $value;
         }
 
-        if ($this->level === 'admin' || $this->level === 'god') {
-            $this->admin = true;
-        }
+        $this->admin = (($this->level === 'admin') || ($this->level === 'god'));
 
         return $this->read = true;
     }
@@ -764,7 +782,16 @@ class User
             return 0;
         }
 
-        return round($db->get_var("SELECT SQL_NO_CACHE friend_value FROM friends WHERE friend_type='manual' and friend_from = $from and friend_to = $to"));
+        return (int)$db->get_var('
+            SELECT SQL_NO_CACHE friend_value
+            FROM friends
+            WHERE (
+                friend_type = "manual"
+                AND friend_from = "'.(int)$from.'"
+                AND friend_to = "'.(int)$to.'"
+            )
+            LIMIT 1;
+        ');
     }
 
     public static function friend_insert($from, $to, $value = 1)
@@ -775,7 +802,7 @@ class User
             return 0;
         }
 
-        if (intval($db->get_var("SELECT SQL_NO_CACHE count(*) from users where user_id in ($from, $to)")) != 2) {
+        if ((int)$db->get_var("SELECT SQL_NO_CACHE count(*) FROM users WHERE user_id IN ($from, $to)") !== 2) {
             return false;
         }
 

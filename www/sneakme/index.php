@@ -6,25 +6,24 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-
 // TODO: this page just became unreadable
 //      Must add printing the threads with CommentTree and split the
 //      page with only one post.
 
-include_once('../config.php');
-include('common.php');
+include_once '../config.php';
+include 'common.php';
 
 $argv = $globals['path'];
 $argv[0] = clean_input_string($argv[0]);
 
 if ($argv[0] === '_priv') {
     // Load priv.php
-    include('priv.php');
+    include 'priv.php';
     die;
 }
 
-include(mnminclude.'html1.php');
-include(mnminclude.'favorites.php');
+include mnminclude . 'html1.php';
+include mnminclude . 'favorites.php';
 
 $globals['search_options'] = array('w' => 'posts');
 
@@ -32,8 +31,8 @@ $user = new User();
 
 $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
 $page_size = 50;
-$offset = (get_current_page()-1) * $page_size;
-$page_title = _('nótame') . ' | '. $globals['site_name'];
+$offset = (get_current_page() - 1) * $page_size;
+$page_title = _('nótame') . ' | ' . $globals['site_name'];
 $view = false;
 $short_content = false;
 
@@ -57,7 +56,7 @@ switch ($argv[0]) {
         $tab_option = 1;
         $where = 'post_id > 0';
         $order_by = 'ORDER BY post_id DESC';
-        $limit = 'LIMIT '.$offset.', '.$page_size;
+        $limit = 'LIMIT ' . $offset . ', ' . $page_size;
         $rows = Post::count();
         $min_date = date('Y-m-d 00:00:00', time() - (86400 * 10));
         $rss_option = 'sneakme_rss';
@@ -67,8 +66,8 @@ switch ($argv[0]) {
         $tab_option = 6;
         $where = 'post_id IN (SELECT post_id FROM polls WHERE post_id > 0)';
         $order_by = 'ORDER BY post_id DESC';
-        $limit = 'LIMIT '.$offset.', '.$page_size;
-        $rows = $db->get_var('SELECT COUNT(*) FROM posts WHERE '.$where);
+        $limit = 'LIMIT ' . $offset . ', ' . $page_size;
+        $rows = $db->get_var('SELECT COUNT(*) FROM posts WHERE ' . $where);
         $min_date = date('Y-m-d 00:00:00', time() - (86400 * 10));
         $rss_option = 'sneakme_rss';
         break;
@@ -87,8 +86,12 @@ switch ($argv[0]) {
                 do_error(_('usuario no encontrado'), 404);
             }
 
+            if ($user->ignored()) {
+                break;
+            }
+
             $post = Post::from_db($post_id);
-            $globals['permalink'] = 'http://'.get_server_name().post_get_base_url($post_id);
+            $globals['permalink'] = 'http://' . get_server_name() . post_get_base_url($post_id);
             $summary = text_to_summary($db->get_var("SELECT post_content from posts where post_id = $post_id"), 250);
 
             $globals['description'] = _('Autor') . ": $user->username, " . _('Resumen') . ': ' . $summary;
@@ -117,6 +120,10 @@ switch ($argv[0]) {
                 do_error(_('usuario no encontrado'), 404);
             }
 
+            if ($user->ignored()) {
+                break;
+            }
+
             $globals['noindex'] = true;
 
             switch ($argv[1]) {
@@ -128,7 +135,7 @@ switch ($argv[0]) {
                     $order_by = "ORDER BY post_id desc";
                     $limit = "LIMIT $offset,$page_size";
                     $rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $user->id and friend_to=post_user_id and friend_value > 0");
-                    $rss_option="sneakme_rss?friends_of=$user->id";
+                    $rss_option = "sneakme_rss?friends_of=$user->id";
                     break;
 
                 case '_favorites':
@@ -136,23 +143,23 @@ switch ($argv[0]) {
                     $page_title = sprintf(_('favoritas de %s'), $user->username);
                     $ids = $db->get_col("SELECT favorite_link_id FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post' ORDER BY favorite_link_id DESC LIMIT $offset,$page_size");
                     $from = "";
-                    $where = $ids ? ("post_id IN (".implode(',', $ids).")") : 'FALSE';
+                    $where = $ids ? ("post_id IN (" . implode(',', $ids) . ")") : 'FALSE';
                     $order_by = "ORDER BY post_id desc";
                     $limit = "";
                     $rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post'");
-                    $rss_option="sneakme_rss?favorites_of=$user->id";
+                    $rss_option = "sneakme_rss?favorites_of=$user->id";
                     break;
 
                 case '_conversation':
                     $view = 3;
                     $page_title = sprintf(_('conversación de %s'), $user->username);
                     $ids = $db->get_col("SELECT distinct conversation_from FROM conversations WHERE conversation_user_to=$user->id and conversation_type='post' ORDER BY conversation_time desc LIMIT $offset,$page_size");
-                    $where = $ids ? ("post_id IN (".implode(',', $ids).")") : 'FALSE';
+                    $where = $ids ? ("post_id IN (" . implode(',', $ids) . ")") : 'FALSE';
                     $from = "";
                     $order_by = "ORDER BY post_id desc ";
                     $limit = "";
                     $rows = -1; // $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
-                    $rss_option="sneakme_rss?conversation_of=$user->id";
+                    $rss_option = "sneakme_rss?conversation_of=$user->id";
                     break;
 
                 case '_votes':
@@ -170,7 +177,7 @@ switch ($argv[0]) {
                     $order_by = "ORDER BY post_id desc";
                     $limit = "LIMIT $offset,$page_size";
                     $rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
-                    $rss_option="sneakme_rss?user_id=$user->id";
+                    $rss_option = "sneakme_rss?user_id=$user->id";
             }
         }
 }
@@ -190,11 +197,15 @@ if ($tab_option == 4) {
         $whose = _('suyas');
     }
 
+    if ($current_user->user_id) {
+        $user->friendship = User::friend_exists($current_user->user_id, $user->id);
+    }
+
     $options = array(
         $whose => post_get_base_url($user->username),
         _('amigos') => post_get_base_url("$user->username/_friends"),
         _('favoritos') => post_get_base_url("$user->username/_favorites"),
-        _('conversación').$conversation_extra => post_get_base_url("$user->username/_conversation"),
+        _('conversación') . $conversation_extra => post_get_base_url("$user->username/_conversation"),
         _('votos') => post_get_base_url("$user->username/_votes"),
         sprintf(_('debates con %s'), $user->username) => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login&amp;u2=$user->username",
         sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
@@ -208,9 +219,9 @@ if ($tab_option == 4) {
         _('todas') => post_get_base_url(''),
         _('amigos') => post_get_base_url("$current_user->user_login/_friends"),
         _('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
-        _('conversación').$conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),
+        _('conversación') . $conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),
         _('votos') => post_get_base_url("$current_user->user_login/_votes"),
-        _('debates').'&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
+        _('debates') . '&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
     );
 } else {
     $options = false;
@@ -236,89 +247,94 @@ if (!$short_content) {
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
-echo '<div id="newswrap">'."\n";
-do_pages($rows, $page_size);
+echo '<div id="newswrap">' . "\n";
 
-echo '<div class="notes">';
+if ($user && $user->ignored()) {
+    Haanga::Load('user/ignored.html', array('user', 'current_user'));
+} else {
+    do_pages($rows, $page_size);
 
-if ($current_user->user_id > 0) {
-    $post = new Post;
-    $post->author = $current_user->user_id;
-    $post->print_edit_form();
-}
+    echo '<div class="notes">';
 
-if ($view != 4) {
-    $posts = $db->get_results("SELECT".Post::SQL."INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id) $order_by", 'Post');
+    if ($current_user->user_id > 0) {
+        $post = new Post;
+        $post->author = $current_user->user_id;
+        $post->print_edit_form();
+    }
 
-    if ($posts) {
-        $all_ids = array_map(function ($value) {
-            return $value->id;
-        }, $posts);
+    if ($view != 4) {
+        $posts = $db->get_results("SELECT" . Post::SQL . "INNER JOIN (SELECT post_id FROM posts $from WHERE $where $order_by $limit) as id USING (post_id) $order_by", 'Post');
 
-        $pollCollection = new PollCollection;
-        $pollCollection->loadFromRelatedIds('post_id', $all_ids);
+        if ($posts) {
+            $all_ids = array_map(function ($value) {
+                return $value->id;
+            }, $posts);
 
-        $ids = array();
+            $pollCollection = new PollCollection;
+            $pollCollection->loadFromRelatedIds('post_id', $all_ids);
 
-        echo '<ol class="comments-list">';
+            $ids = array();
 
-        $time_read = 0;
+            echo '<ol class="comments-list">';
 
-        foreach ($posts as $post) {
-            if (($post_id > 0) && ($user->id > 0) && ($user->id != $post->author)) {
-                echo '<li>'._('Error: nota no existente').'</li>';
-                continue;
+            $time_read = 0;
+
+            foreach ($posts as $post) {
+                if (($post_id > 0) && ($user->id > 0) && ($user->id != $post->author)) {
+                    echo '<li>' . _('Error: nota no existente') . '</li>';
+                    continue;
+                }
+
+                echo '<li>';
+
+                $post->poll = $pollCollection->get($post->id);
+                $post->print_summary();
+
+                echo '</li>';
+
+                if ($post->date > $time_read) {
+                    $time_read = $post->date;
+                }
+
+                if (!$post_id) {
+                    $ids[] = $post->id;
+                }
             }
 
-            echo '<li>';
+            echo "</ol>\n";
 
-            $post->poll = $pollCollection->get($post->id);
-            $post->print_summary();
+            if ($post_id > 0) {
+                // Print share button
+                echo '<div style="text-align:right">';
 
-            echo '</li>';
+                Haanga::Load('share.html', array(
+                    'link' => $globals['permalink'],
+                    'title' => $page_title,
+                ));
 
-            if ($post->date > $time_read) {
-                $time_read = $post->date;
+                echo '</div>';
+
+                print_answers($post_id, 1);
+            } else {
+                Haanga::Load('get_total_answers_by_ids.html', array(
+                    'type' => 'post',
+                    'ids' => implode(',', $ids),
+                ));
             }
 
-            if (!$post_id) {
-                $ids[] = $post->id;
+            // Update conversation time
+            if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
+                Post::update_read_conversation($time_read);
             }
-        }
-
-        echo "</ol>\n";
-
-        if ($post_id > 0) {
-            // Print share button
-            echo '<div style="text-align:right">';
-
-            Haanga::Load('share.html', array(
-                'link' => $globals['permalink'],
-                'title' => $page_title
-            ));
 
             echo '</div>';
-
-            print_answers($post_id, 1);
-        } else {
-            Haanga::Load('get_total_answers_by_ids.html', array(
-                'type' => 'post',
-                'ids' => implode(',', $ids)
-            ));
         }
-
-        // Update conversation time
-        if ($view == 3 && $time_read > 0 && $user->id == $current_user->user_id) {
-            Post::update_read_conversation($time_read);
-        }
-
-        echo '</div>';
+    } else {
+        do_voted_posts();
     }
-} else {
-    do_voted_posts();
-}
 
-do_pages($rows, $page_size);
+    do_pages($rows, $page_size);
+}
 
 echo '</div>';
 
@@ -377,7 +393,7 @@ function print_answers($id, $level, $visited = false)
         echo '</li>';
 
         if ($level > 0) {
-            $res = print_answers($answer->id, $level-1, array_merge($visited, $answers));
+            $res = print_answers($answer->id, $level - 1, array_merge($visited, $answers));
             $visited = array_merge($visited, $res);
         }
 
@@ -425,7 +441,7 @@ function do_voted_posts()
             $time_read = $post->date;
         }
 
-        echo '<div style="position: relative; background:'.$color.'; top: -27px; left: 43px; width:30px; height:16px; opacity: 0.5"></div>';
+        echo '<div style="position: relative; background:' . $color . '; top: -27px; left: 43px; width:30px; height:16px; opacity: 0.5"></div>';
         echo '</li>';
     }
 

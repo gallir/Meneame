@@ -256,7 +256,7 @@ class Comment extends LCPBase
     {
         global $globals, $current_user;
 
-        $this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
+        $this->ignored = ($current_user->user_id > 0 && $this->type !== 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
         $this->hidden = ($globals['comment_hidden_karma'] < 0 && $this->karma < $globals['comment_hidden_karma'])
             || ($this->user_level === 'disabled' && $this->type !== 'admin');
         $this->hide_comment = ! isset($this->not_ignored) && ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0));
@@ -272,7 +272,7 @@ class Comment extends LCPBase
             $this->html_id = $this->id;
         }
 
-        $this->can_edit =  (! isset($this->basic_summary) || ! $this->basic_summary) && (($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
+        $this->can_edit =  (! isset($this->basic_summary) || ! $this->basic_summary) && (($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type === 'admin') && $current_user->user_level == 'god'));
         if ($length > 0) {
             $this->truncate($length);
         }
@@ -322,7 +322,7 @@ class Comment extends LCPBase
             $this->css_class_footer .= ' phantom';
             $this->css_class .= ' phantom';
 
-            if ($this->ignored && !in_array($current_user->user_level, array('admin', 'god'))) {
+            if ($this->ignored && !$current_user->admin) {
                 $this->css_class_footer .= ' ignored';
                 $this->css_class .= ' ignored';
             }
@@ -592,8 +592,9 @@ class Comment extends LCPBase
         $comment->author=intval($_POST['user_id']);
         $comment->karma=round($current_user->user_karma);
         $comment->content=clean_text_with_tags($_POST['comment_content'], 0, false, 10000);
+
         // Check if is an admin comment
-        if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
+        if ($current_user->user_level === 'god' && $_POST['type'] === 'admin') {
             $comment->type = 'admin';
         }
 

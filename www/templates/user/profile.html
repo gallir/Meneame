@@ -109,7 +109,7 @@
                     (<em>{{ user.username_register }}</em>)
                     {% endif %}
 
-                    {% if user.friendship > 0 %}
+                    {% if user.friendship_reverse > 0 %}
                     <button style="font-size:85%;padding: 0px 1px;border: 0" type="button" onClick="priv_new({{ user.id }})" >{% trans _('enviar privado') %}</button>
                     {% endif %}
                 </td>

@@ -205,7 +205,7 @@ class Post extends LCPBase
             $this->css_class_footer .= ' phantom';
             $this->css_class .= ' phantom';
 
-            if ($this->ignored && !in_array($current_user->user_level, array('admin', 'god'))) {
+            if ($this->ignored && !$current_user->admin) {
                 $this->css_class_footer .= ' ignored';
                 $this->css_class .= ' ignored';
             }

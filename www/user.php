@@ -6,10 +6,10 @@
 //              http://www.affero.org/oagpl.html
 //              http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-include_once('config.php');
-include(mnminclude.'html1.php');
-include(mnminclude.'geo.php');
-include(mnminclude.'favorites.php');
+include_once 'config.php';
+include mnminclude . 'html1.php';
+include mnminclude . 'geo.php';
+include mnminclude . 'favorites.php';
 
 $page_size = $globals['page_size'];
 
@@ -38,7 +38,7 @@ if (!empty($_SERVER['PATH_INFO'])) {
     $_REQUEST['uid'] = intval($_REQUEST['uid']);
 
     if (!empty($_REQUEST['login'])) {
-        die(header('Location: '.html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])))));
+        die(header('Location: ' . html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])))));
     }
 }
 
@@ -48,7 +48,7 @@ if (empty($login)) {
     if ($current_user->user_id > 0) {
         die(header('Location: ' . html_entity_decode(get_user_uri($current_user->user_login))));
     } else {
-        die(header('Location: '.$globals['base_url']));
+        die(header('Location: ' . $globals['base_url']));
     }
 }
 
@@ -84,13 +84,13 @@ $view = clean_input_string($_REQUEST['view']) ?: 'profile';
 
 // The profile's use marked the current one as friend
 if ($current_user->user_id) {
-    $user->friendship = User::friend_exists($user->id, $current_user->user_id);
+    $user->friendship_reverse = User::friend_exists($user->id, $current_user->user_id);
 } else {
-    $user->friendship = 0;
+    $user->friendship_reverse = 0;
 }
 
 // For editing notes and sending privates
-if ($current_user->user_id == $user->id || $current_user->admin || $user->friendship) {
+if ($current_user->user_id == $user->id || $current_user->admin || $user->friendship_reverse) {
     $globals['extra_js'][] = 'ajaxupload.min.js';
 }
 
@@ -156,7 +156,7 @@ switch ($view) {
 }
 
 // Add canonical address
-$globals['extra_head'] = '<link rel="canonical" href="http://'.get_server_name().get_user_uri($user->username).'" />'."\n";
+$globals['extra_head'] = '<link rel="canonical" href="http://' . get_server_name() . get_user_uri($user->username) . '" />' . "\n";
 
 if (!empty($user->names)) {
     $header_title = "$login ($user->names)";
@@ -166,103 +166,109 @@ if (!empty($user->names)) {
 
 // Used to show the user the number of unread answers to her comments
 if ($current_user->user_id == $user->id) {
-    $globals['extra_comment_conversation'] = ' ['.Comment::get_unread_conversations($user->id).']';
+    $globals['extra_comment_conversation'] = ' [' . Comment::get_unread_conversations($user->id) . ']';
 } else {
     $globals['extra_comment_conversation'] = '';
 }
 
-do_header($header_title, 'profile', User::get_menu_items($view, $login), array('view'=> $view, 'login' => $login));
+do_header($header_title, 'profile', User::get_menu_items($view, $login), array('view' => $view, 'login' => $login));
 
-echo '<div id="singlewrap">'."\n";
+echo '<div id="singlewrap">' . "\n";
 
-$url_login = urlencode($login);
+if (($view !== 'profile') && $user->ignored()) {
+    do_ignored();
+} else {
+    switch ($view) {
+        case 'subs':
+            do_subs();
+            break;
+        case 'history':
+            do_history();
+            if (!$globals['bot']) {
+                do_pages($rows, $page_size);
+            }
+            break;
+        case 'commented':
+            do_commented();
+            if (!$globals['bot']) {
+                do_pages($rows, $page_size, false);
+            }
+            break;
+        case 'shaken':
+            do_shaken();
+            if (!$globals['bot']) {
+                do_pages($rows, $page_size);
+            }
+            break;
+        case 'friends_shaken':
+            do_friends_shaken();
+            if (!$globals['bot']) {
+                do_pages(-1, $page_size);
+            }
+            break;
+        case 'friends':
+            do_friends(0);
+            break;
+        case 'friend_of':
+            do_friends(1);
+            break;
+        case 'ignored':
+            do_friends(2);
+            break;
+        case 'friends_new':
+            do_friends(3);
+            break;
+        case 'favorites':
+            do_favorites();
+            if (!$globals['bot']) {
+                do_pages($rows, $page_size);
+            }
+            break;
+        case 'favorite_comments':
+            do_favorite_comments();
+            if (!$globals['bot']) {
+                do_pages($rows, $page_size);
+            }
+            break;
+        case 'shaken_comments':
+            do_shaken_comments();
+            if (!$globals['bot']) {
+                do_pages($rows, $page_size);
+            }
+            break;
 
-switch ($view) {
-    case 'subs':
-        do_subs();
-        break;
-    case 'history':
-        do_history();
-        if (! $globals['bot']) {
-            do_pages($rows, $page_size);
-        }
-        break;
-    case 'commented':
-        do_commented();
-        if (! $globals['bot']) {
-            do_pages($rows, $page_size, false);
-        }
-        break;
-    case 'shaken':
-        do_shaken();
-        if (! $globals['bot']) {
-            do_pages($rows, $page_size);
-        }
-        break;
-    case 'friends_shaken':
-        do_friends_shaken();
-        if (! $globals['bot']) {
-            do_pages(-1, $page_size);
-        }
-        break;
-    case 'friends':
-        do_friends(0);
-        break;
-    case 'friend_of':
-        do_friends(1);
-        break;
-    case 'ignored':
-        do_friends(2);
-        break;
-    case 'friends_new':
-        do_friends(3);
-        break;
-    case 'favorites':
-        do_favorites();
-        if (! $globals['bot']) {
-            do_pages($rows, $page_size);
-        }
-        break;
-    case 'favorite_comments':
-        do_favorite_comments();
-        if (! $globals['bot']) {
-            do_pages($rows, $page_size);
-        }
-        break;
-    case 'shaken_comments':
-        do_shaken_comments();
-        if (! $globals['bot']) {
-            do_pages($rows, $page_size);
-        }
-        break;
-/*
-    case 'categories':
-        do_categories();
-        break;
-*/
-    case 'conversation':
-        do_conversation();
-        if (! $globals['bot']) {
-            do_pages($rows, $page_size, false);
-        }
-        break;
-    case 'profile':
-        do_profile();
-        break;
-    default:
-        do_error(_('opción inexistente'), 404);
-        break;
+        case 'conversation':
+            do_conversation();
+            if (!$globals['bot']) {
+                do_pages($rows, $page_size, false);
+            }
+            break;
+        case 'profile':
+            do_profile();
+            break;
+        default:
+            do_error(_('opción inexistente'), 404);
+            break;
+    }
 }
 
-echo '</div>'."\n";
+echo '</div>' . "\n";
 
 do_footer();
+
+
+function do_ignored()
+{
+    global $user, $current_user;
+
+    return Haanga::Load('/user/ignored.html', compact('user'));
+}
 
 function do_profile()
 {
     global $user, $current_user, $db, $globals;
 
-    if ($current_user->user_id == $user->id || $current_user->user_level == 'god') {
+    if ($current_user->user_id == $user->id || $current_user->user_level === 'god') {
         $globals['extra_js'][] = 'jquery.flot.min.js';
         $globals['extra_js'][] = 'jquery.flot.time.min.js';
     }
@@ -275,17 +281,17 @@ function do_profile()
 
     if (!empty($user->url)) {
         $nofollow = ($user->karma < 10) ? 'rel="nofollow"' : '';
-        $url = preg_match('/^http/', $user->url) ? $user->url : ('http://'.$user->url);
+        $url = preg_match('/^http/', $user->url) ? $user->url : ('http://' . $user->url);
     }
 
     if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
         $friend_icon = User::friend_teaser($current_user->user_id, $user->id);
     }
 
-    $selected  = 0;
-    $rss       = 'rss?sent_by='.$user->id;
+    $selected = 0;
+    $rss = 'rss?sent_by=' . $user->id;
     $rss_title = _('envíos en rss2');
-    $geodiv    = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
+    $geodiv = $current_user->user_id > 0 && $current_user->user_id != $user->id && $globals['latlng'] && ($my_latlng = geo_latlng('user', $current_user->user_id));
     $show_email = $current_user->user_id > 0 && !empty($user->public_info) && ($current_user->user_id == $user->id || $current_user->user_level === 'god');
 
     $clones_from = "and clon_date > date_sub(now(), interval 30 day)";
@@ -305,7 +311,7 @@ function do_profile()
     }
 
     if ($user->total_links > 0 && $user->published_links > 0) {
-        $percent = intval($user->published_links/$user->total_links*100);
+        $percent = intval($user->published_links / $user->total_links * 100);
     } else {
         $percent = 0;
     }
@@ -318,7 +324,8 @@ function do_profile()
 
     $addresses = array();
 
-    if ($current_user->user_id == $user->id || ($current_user->user_level == 'god' &&  ! $user->admin)) { // gods and admins know each other for sure, keep privacy
+    if ($current_user->user_id == $user->id || ($current_user->user_level == 'god' && !$user->admin)) {
+        // gods and admins know each other for sure, keep privacy
         $dbaddresses = $db->get_results("select distinct(vote_ip_int) as ip from votes where vote_type in ('links', 'comments', 'posts') and vote_user_id = $user->id order by vote_date desc limit 30");
 
         // Try with comments
@@ -339,7 +346,7 @@ function do_profile()
 
     $strike = null;
 
-    if ($current_user->user_id == $user->id || (in_array($current_user->user_level, array('admin', 'god')))) {
+    if ($current_user->user_id == $user->id || $current_user->admin) {
         $strike = (new Strike($user))->getUserCurrentStrike();
     }
 
@@ -426,7 +433,7 @@ function do_shaken()
         echo "</div>\n";
     }
 
-    echo '<br/><span style="color: #FF6400;"><strong>'._('Nota').'</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
+    echo '<br/><span style="color: #FF6400;"><strong>' . _('Nota') . '</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
 }
 
 function do_friends_shaken()
@@ -537,7 +544,7 @@ function do_shaken_comments()
 
         $comment->print_summary(1000, false);
 
-        echo '<div class="box" style="margin:0 0 -16px 0;background:'.$color.';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:'.$color.';opacity: 0.5"></div>';
+        echo '<div class="box" style="margin:0 0 -16px 0;background:' . $color . ';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:' . $color . ';opacity: 0.5"></div>';
         echo '</li>';
     }
 
@@ -558,7 +565,7 @@ function print_comment_list($comments, $user)
         $comment = Comment::from_db($dbcomment->comment_id);
 
         // Don't show admin comment if it's her own profile.
-        if ($comment->type === 'admin' && ! $current_user->admin && $user->id == $comment->author) {
+        if ($comment->type === 'admin' && !$current_user->admin && $user->id == $comment->author) {
             continue;
         }
 
@@ -566,8 +573,8 @@ function print_comment_list($comments, $user)
             $link = Link::from_db($dbcomment->link_id, null, false); // Read basic
 
             echo '<h4>';
-            echo '<a href="'.$link->get_permalink().'">'. $link->title. '</a>';
-            echo ' ['.$link->comments.']';
+            echo '<a href="' . $link->get_permalink() . '">' . $link->title . '</a>';
+            echo ' [' . $link->comments . ']';
             echo '</h4>';
 
             $last_link = $link->id;
@@ -591,7 +598,7 @@ function print_comment_list($comments, $user)
 
     Haanga::Load('get_total_answers_by_ids.html', array(
         'type' => 'comment',
-        'ids' => implode(',', $ids)
+        'ids' => implode(',', $ids),
     ));
 
     // Return the timestamp of the most recent comment
@@ -620,12 +627,12 @@ function do_friends($option)
     }
 
     echo '<div style="padding: 5px 0px 10px 5px">';
-    echo '<div id="'.$prefered_type.'-container">'. "\n";
+    echo '<div id="' . $prefered_type . '-container">' . "\n";
 
-    require('backend/get_friends_bars.php');
+    require 'backend/get_friends_bars.php';
 
-    echo '</div>'. "\n";
-    echo '</div>'. "\n";
+    echo '</div>' . "\n";
+    echo '</div>' . "\n";
 
     // Post processing
     if (($option == 3) && ($user->id == $current_user->user_id)) {
@@ -657,7 +664,7 @@ function do_subs()
             }
 
             $sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
-            $sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
+            $sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id) . '/media_thumb-sub_logo-' . $sub->site_info->id . '.' . $sub->site_info->media_extension . '?' . $sub->site_info->media_date;
         }
 
         $sub->followers = 0;
@@ -683,11 +690,11 @@ function do_subs()
     $owned_subs = array();
 
     $ids_subs = array_map(function ($row) {
-        return (int)$row->id;
+        return (int) $row->id;
     }, $ownwed_subs);
 
     if ($ids_subs) {
-        $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+        $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN (' . implode(',', $ids_subs) . ') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
     } else {
         $followers = array();
     }
@@ -706,7 +713,7 @@ function do_subs()
             }
 
             $sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
-            $sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
+            $sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id) . '/media_thumb-sub_logo-' . $sub->site_info->id . '.' . $sub->site_info->media_extension . '?' . $sub->site_info->media_date;
         }
 
         $sub->followers = 0;
