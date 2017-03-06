@@ -258,7 +258,7 @@ class Comment extends LCPBase
 
         $this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
         $this->hidden = ($globals['comment_hidden_karma'] < 0 && $this->karma < $globals['comment_hidden_karma'])
-                        || ($this->user_level == 'disabled' && $this->type != 'admin');
+            || ($this->user_level === 'disabled' && $this->type !== 'admin');
         $this->hide_comment = ! isset($this->not_ignored) && ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0));
     }
 
@@ -322,7 +322,7 @@ class Comment extends LCPBase
             $this->css_class_footer .= ' phantom';
             $this->css_class .= ' phantom';
 
-            if ($this->ignored) {
+            if ($this->ignored && !in_array($current_user->user_level, array('admin', 'god'))) {
                 $this->css_class_footer .= ' ignored';
                 $this->css_class .= ' ignored';
             }

@@ -192,7 +192,7 @@ class Post extends LCPBase
             $this->read();
         }
 
-        $this->hidden = $this->karma < $globals['post_hide_karma'] || $this->user_level == 'disabled';
+        $this->hidden = $this->karma < $globals['post_hide_karma'] || $this->user_level === 'disabled';
         $this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
         $this->css_class = 'comment';
@@ -205,7 +205,7 @@ class Post extends LCPBase
             $this->css_class_footer .= ' phantom';
             $this->css_class .= ' phantom';
 
-            if ($this->ignored) {
+            if ($this->ignored && !in_array($current_user->user_level, array('admin', 'god'))) {
                 $this->css_class_footer .= ' ignored';
                 $this->css_class .= ' ignored';
             }
@@ -247,15 +247,17 @@ class Post extends LCPBase
 
         if (empty($this->basic_summary) && (($this->author == $current_user->user_id &&
             time() - $this->date < $globals['posts_edit_time']) ||
-            ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin']))) {
+            ($current_user->user_level === 'god' && time() - $this->date < $globals['posts_edit_time_admin']))) {
             // Admins can edit up to 10 days
             $this->can_edit = true;
         } else {
             $this->can_edit = false;
         }
+
         if ($length > 0) {
             $this->content = text_to_summary($this->content, $length);
         }
+
         $this->content = $this->to_html($this->content);
 
         if ($this->media_size > 0) {
