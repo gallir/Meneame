@@ -147,18 +147,20 @@
                         <br />
                         <select name="user_level">
                             {% for level in form.user_levels %}
-                            <option value="{{ level }}" {% if user.level==l evel %} selected="selected" {% endif %}>{{ level }}</option>
+                            <option value="{{ level }}" {% if user.level == level %} selected="selected" {% endif %}>{{ level }}</option>
                             {% endfor %}
                         </select>
-                        <p>
-                            <label for="karma">{% trans _('karma') %}:</label>
-                            <br/>
-                            <input type="text" autocomplete="off" name="karma" id="karma" value="{{ user.karma }}" />
-                        </p>
-                        {% endif %}
-                        <p>
-                            <input type="submit" name="save_profile" value="{% trans _('actualizar') %}" class="button" />
-                        </p>
+                    </p>
+
+                    <p>
+                        <label for="karma">{% trans _('karma') %}:</label>
+                        <br/>
+                        <input type="text" autocomplete="off" name="karma" id="karma" value="{{ user.karma }}" />
+                    </p>
+                    {% endif %}
+
+                    <p>
+                        <input type="submit" name="save_profile" value="{% trans _('actualizar') %}" class="button" />
                     </p>
                 </fieldset>
 
