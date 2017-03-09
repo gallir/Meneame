@@ -472,11 +472,11 @@ define('mnminclude', __DIR__.'/libs/');
 
 ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
 
+$globals['cli'] = (PHP_SAPI === 'cli');
+
 if (is_file(__DIR__.'/local.php')) {
     require __DIR__.'/local.php';
 }
-
-$globals['cli'] = (php_sapi_name() === 'cli');
 
 if ($globals['cli']) {
     /* Definition only for scripts executed 'off-line' */

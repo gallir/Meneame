@@ -185,7 +185,6 @@ class User
             }
         }
 
-
         if (count($affinity) > 0) {
             $log->text = serialize($affinity);
         } else {
@@ -488,6 +487,11 @@ class User
         global $current_user;
 
         return !$current_user->admin && ($this->friendship() === -1);
+    }
+
+    public function friend()
+    {
+        return ($this->friendship() === 1);
     }
 
     public function store($full_save = true)

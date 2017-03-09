@@ -6,30 +6,32 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+include(__DIR__.'/../config.php');
 
 header('Content-Type: text/plain; charset=UTF-8');
 
-if (!($to=intval($_REQUEST['id']))) {
-    error(_('falta el código de usuario'));
+if (!$current_user->user_id) {
+    die('ERROR: '._('usuario incorrecto'));
 }
 
-if (!($src = intval($_REQUEST['type']))) {
-    error(_('falta el código de usuario'));
-}
-
-if ($src != $current_user->user_id) {
-    error(_('usuario incorrecto'). " ($src, $current_user->user_id)");
+if (!($to = (int)$_REQUEST['id'])) {
+    die('ERROR: '._('falta el código de usuario'));
 }
 
 if (!check_security_key($_REQUEST['key'])) {
-    error(_('clave de control incorrecta'));
+    die('ERROR: '._('clave de control incorrecta'));
 }
 
-echo User::friend_add_delete($src, $to);
+switch ($_REQUEST['value']) {
+    case '0':
+        die((string)User::friend_delete($current_user->user_id, $to));
 
-function error($mess)
-{
-    echo "ERROR: $mess\n";
-    die;
+    case '1':
+        die((string)User::friend_insert($current_user->user_id, $to, 1));
+
+    case '-1':
+        die((string)User::friend_insert($current_user->user_id, $to, -1));
+
+    default:
+        die('ERROR: '._('opción incorrecta'));
 }

@@ -82,6 +82,7 @@
 
         <table class="keyvalue">
             {% if user.username %}
+
             <tr>
                 <th>{% trans _('usuario') %}:</th>
                 <td>
@@ -97,10 +98,6 @@
                     (<a class="fancybox" href="{{ globals.base_url }}backend/ip_clones.php?id={{ user.id }}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
                     {% endif %}
 
-                    {% if friend_icon %}
-                    &nbsp;<a id="friend-{{ current_user.user_id }}-{{ user.id }}" href="javascript:get_votes('get_friend.php','{{ current_user.user_id }}','friend-{{ current_user.user_id }}-{{ user.id }}',0,'{{ user.id }}')">{{ friend_icon }}</a>
-                    {% endif %}
-
                     {% if user.id == current_user.user_id OR current_user.admin %}
                     ({% trans  _('id') %}: <em>{{ user.id }}</em>, <em>{{ user.level }}</em>)
                     {% endif %}
@@ -114,6 +111,20 @@
                     {% endif %}
                 </td>
             </tr>
+
+            {% if friend_icon %}
+            <tr>
+                <th>{% trans _('relación') %}</th>
+                <td>
+                    <select onchange="user_relation({{ current_user.user_id }}, {{ user.id }}, this);">
+                        <option value="0">{% trans _('Sin relación') %}</option>
+                        <option value="1" {% if user.friendship == 1 %}selected{% endif %}>{% trans _('Amigos') %}</option>
+                        <option value="-1" {% if user.friendship == -1 %}selected{% endif %}>{% trans _('Ignorado') %}</option>
+                    </select>
+                </td>
+            </tr>
+            {% endif %}
+
             {% endif %}
 
             {% if user.names %}
