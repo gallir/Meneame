@@ -118,7 +118,7 @@
                 <td>
                     <select onchange="user_relation({{ current_user.user_id }}, {{ user.id }}, this);">
                         <option value="0">{% trans _('Sin relación') %}</option>
-                        <option value="1" {% if user.friendship == 1 %}selected{% endif %}>{% trans _('Amigos') %}</option>
+                        <option value="1" {% if user.friendship == 1 %}selected{% endif %}>{% trans _('Amigo') %}</option>
                         <option value="-1" {% if user.friendship == -1 %}selected{% endif %}>{% trans _('Ignorado') %}</option>
                     </select>
                 </td>
