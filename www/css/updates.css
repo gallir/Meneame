@@ -757,11 +757,11 @@ a.action-link span {
 .widget-official-subs-slider div.widget-title-wrapper {
     display: table-cell;
     vertical-align: middle;
-    padding: 5px;
+    padding: 0px 7px;
 }
 
 .widget-official-subs-slider div.sub-follow {
-    padding: 15px;
+    padding: 0px 15px;
 }
 
 .widget-official-subs-slider div.sub-info > a {
@@ -816,7 +816,7 @@ a.action-link span {
     font-weight: bold;
     font-size: 12px;
     display: inline-block;
-    background-color: #FE6117;
+    background-color: #FE6117 !important;
     background-image: linear-gradient(-180deg, rgba(199, 199, 199, 0.20) 0%, rgba(68, 68, 68, 0.20) 100%);
     border: 1px solid rgba(122, 47, 11, 0.45);
     box-shadow: 0px 0px 0px 0px #FFFFFF;
