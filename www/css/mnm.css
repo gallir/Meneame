@@ -1485,7 +1485,6 @@ img.emoji {
 }
 
 .avatar, .news-submitted img {
-    border: 1px solid #ccc;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
