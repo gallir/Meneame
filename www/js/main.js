@@ -407,19 +407,13 @@ function get_votes(program, type, container, page, id) {
 function user_relation(current_user_id, id, object)
 {
     var $this = $(object),
+        $parent = $this.parent(),
         url = base_url + 'backend/get_friend.php?id=' + id + '&value=' + $this.val() + '&key=' + base_key;
 
     $.ajax(url, {
         success: function(response) {
-            $('#user-relation-changed').remove();
-
-            var $changed = $('<span id="user-relation-changed">&nbsp;Cambiado!</span>');
-
-            $this.after($changed);
-
-            setTimeout(function() {
-                $changed.fadeOut('slow');
-            }, 2000);
+            $parent.find('img').remove();
+            $parent.append(response);
         }
     });
 }

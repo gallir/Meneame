@@ -121,6 +121,8 @@
                         <option value="1" {% if user.friendship == 1 %}selected{% endif %}>{% trans _('Amigo') %}</option>
                         <option value="-1" {% if user.friendship == -1 %}selected{% endif %}>{% trans _('Ignorado') %}</option>
                     </select>
+
+                    {{ friend_icon }}
                 </td>
             </tr>
             {% endif %}

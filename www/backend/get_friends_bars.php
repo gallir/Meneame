@@ -99,7 +99,13 @@ foreach ($dbusers as $dbuser) {
     echo '<div class="friends-item">';
     echo '<a href="'.get_user_uri($friend->username).'" title="'.$title.'">';
     echo '<img class="avatar" src="'.get_avatar_url($friend->id, $friend->avatar, 20).'" width="20" height="20" alt="'.$friend->username.'"/>';
-    echo $friend->username.'</a>';
+    echo $friend->username;
+    echo '</a>';
+
+    if ($current_user->user_id > 0 && $current_user->user_id != $friend->id) {
+        echo User::friend_teaser($current_user->user_id, $friend->id);
+    }
+
     echo '</div>';
 }
 

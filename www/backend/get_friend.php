@@ -24,14 +24,19 @@ if (!check_security_key($_REQUEST['key'])) {
 
 switch ($_REQUEST['value']) {
     case '0':
-        die((string)User::friend_delete($current_user->user_id, $to));
+        User::friend_delete($current_user->user_id, $to);
+        break;
 
     case '1':
-        die((string)User::friend_insert($current_user->user_id, $to, 1));
+        User::friend_insert($current_user->user_id, $to, 1);
+        break;
 
     case '-1':
-        die((string)User::friend_insert($current_user->user_id, $to, -1));
+        User::friend_insert($current_user->user_id, $to, -1);
+        break;
 
     default:
         die('ERROR: '._('opción incorrecta'));
 }
+
+die(User::friend_teaser($current_user->user_id, $to));
