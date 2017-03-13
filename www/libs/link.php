@@ -1360,17 +1360,13 @@ class Link extends LCPBase
     {
         global $globals;
 
-        if (!$page || $page == 1) {
-            $page = '';
-        } else {
-            $page = "/$page";
-        }
-
         if (empty($globals['canonical_server_name'])) {
             $server_name = $this->server_name;
         } else {
             $server_name = $globals['canonical_server_name'];
         }
+
+        $page = (!$page || $page == 1) ? '' : "/$page";
 
         return $globals['scheme'].'//'.$server_name.$this->get_relative_permalink(true).$page;
     }

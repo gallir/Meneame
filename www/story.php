@@ -27,7 +27,7 @@ $globals['cache-control'][] = 'max-age=3';
 
 $url_args = $globals['path'];
 
-if ($url_args[0] == 'story') {
+if ($url_args[0] === 'story') {
     array_shift($url_args); // Discard "story", TODO: but it should be discarded in dispatch and submnm
 }
 

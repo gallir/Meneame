@@ -2540,6 +2540,8 @@ li .comment-header .comment-expand {
     font-weight: bold;
     color: #3c3c3c;
     font-size: 11px;
+    margin: 0;
+    padding: 0 7px;
 }
 
 .news-details, .news-details.main {
