@@ -81,6 +81,31 @@ switch ($globals['meta']) {
         $tab_option = 0; // All
         $rows = Link::count('published');
         $where = "sub_statuses.id = ". SitesMgr::my_id()." AND status='published' ";
+
+        $official_subs = array();
+
+        if ($globals['widget_official_subs']) {
+            foreach (array_keys($globals['widget_official_subs']) as $sub_name) {
+                $sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
+                $sub->extra_info = $globals['widget_official_subs'][$sub_name];
+                $official_subs[] = $sub;
+            }
+
+            $ids_subs = array_map(function ($row) {
+                return (int)$row->id;
+            }, $official_subs);
+
+            $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+
+            foreach ($official_subs as $sub) {
+                foreach ($followers as $row) {
+                    if ($sub->id == $row->id) {
+                        $sub->followers = $row->c;
+                        break;
+                    }
+                }
+            }
+        }
 }
 
 do_header($pagetitle, _('portada'), false, $tab_option);
@@ -166,7 +191,7 @@ echo '<div id="newswrap">';
             $link->poll = $pollCollection->get($link->id);
             $link->max_len = 600;
 
-            Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size', 'sponsored_link'));
+            Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size', 'sponsored_link', 'official_subs'));
 
             $link->print_summary();
 
