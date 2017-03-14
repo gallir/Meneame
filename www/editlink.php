@@ -39,7 +39,8 @@ do_footer();
 
 exit;
 
-function do_edit($link) {
+function do_edit($link)
+{
     global $dblang, $db, $current_user, $globals;
 
     $link->status = $link->sub_status;
@@ -62,7 +63,8 @@ function do_edit($link) {
     Haanga::Load('link/edit.html', compact('globals', 'link', 'site_properties'));
 }
 
-function do_save($link) {
+function do_save($link)
+{
     global $dblang, $globals, $current_user, $db;
 
     $link->status = $link->sub_status;
@@ -195,7 +197,8 @@ function do_save($link) {
     return show_edit_result($link);
 }
 
-function link_edit_errors($link) {
+function link_edit_errors($link)
+{
     global $current_user, $globals;
 
     $errors = array();
@@ -220,7 +223,8 @@ function link_edit_errors($link) {
     return array_merge($errors, $link->check_field_errors());
 }
 
-function show_edit_result($link, array $errors = array()) {
+function show_edit_result($link, array $errors = array())
+{
     global $globals;
 
     $link->read();

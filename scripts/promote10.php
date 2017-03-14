@@ -339,8 +339,8 @@ function publish($site, $link) {
 
 	// read twitter and facebok configuration from subs' extended info
 	if (! $site_info->sub || $site_info->visible ) { // Only post if it's not a sub or it's visible (dmnm in mnm, f.e.)
-		syslog(LOG_INFO, "Meneame, calling: ".dirname(__FILE__)."/post_link.php $site_info->name $link->id");
-		passthru(dirname(__FILE__)."/post_link.php $site_info->name $link->id published");
+		syslog(LOG_INFO, "Meneame, calling: ".__DIR__."/post_link.php $site_info->name $link->id");
+		passthru(__DIR__."/post_link.php $site_info->name $link->id published");
 	}
 
 	// Publish the links of the source subs

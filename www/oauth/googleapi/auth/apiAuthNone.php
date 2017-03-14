@@ -20,41 +20,47 @@
  * @author Chris Chabot <chabotc@google.com>
  *
  */
-class apiAuthNone extends apiAuth {
+class apiAuthNone extends apiAuth
+{
+    public $developerKey = null;
 
-  public $developerKey = null;
-
-  public function __construct() {
-    global $apiConfig;
-    if (!empty($apiConfig['developer_key'])) {
-      $this->setDeveloperKey($apiConfig['developer_key']);
+    public function __construct()
+    {
+        global $apiConfig;
+        if (!empty($apiConfig['developer_key'])) {
+            $this->setDeveloperKey($apiConfig['developer_key']);
+        }
     }
-  }
 
-  public function authenticate($service) {
-    // noop
-  }
+    public function authenticate($service)
+    {
+        // noop
+    }
 
-  public function setAccessToken($accessToken) {
-    // noop
-  }
+    public function setAccessToken($accessToken)
+    {
+        // noop
+    }
 
-  public function getAccessToken() {
-    // noop
+    public function getAccessToken()
+    {
+        // noop
     return null;
-  }
+    }
 
   /**
    * Set the developer key to use, these are obtained through the API Console
    */
-  public function setDeveloperKey($developerKey) {
-    $this->developerKey = $developerKey;
+  public function setDeveloperKey($developerKey)
+  {
+      $this->developerKey = $developerKey;
   }
 
-  public function sign(apiHttpRequest $request) {
-    if ($this->developerKey) {
-      $request->setUrl($request->getUrl() . ((strpos($request->getUrl(), '?') === false) ? '?' : '&') . 'key='.urlencode($this->developerKey));
+    public function sign(apiHttpRequest $request)
+    {
+        if ($this->developerKey) {
+            $request->setUrl($request->getUrl() . ((strpos($request->getUrl(), '?') === false) ? '?' : '&') . 'key='.urlencode($this->developerKey));
+        }
+        return $request;
     }
-    return $request;
-  }
 }

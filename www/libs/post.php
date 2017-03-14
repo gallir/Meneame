@@ -27,7 +27,7 @@ class Post extends LCPBase
     const SQL = " SQL_NO_CACHE post_id as id, post_user_id as author, post_is_admin as admin, user_login as username, user_karma, user_level as user_level, post_randkey as randkey, post_votes as votes, post_karma as karma, post_ip_int as ip, user_avatar as avatar, post_content as content, UNIX_TIMESTAMP(posts.post_date) as date, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read`, admin_posts.admin_user_id as admin_user_id, admin_posts.admin_user_login as admin_user_login FROM posts
     LEFT JOIN users on (user_id = post_user_id)
     LEFT JOIN admin_posts on (admin_posts.admin_post_id = post_id)
-    LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = 'post' and favorite_link_id = post_id)
+    LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id = @user_id and favorite_type = 'post' and favorite_link_id = post_id)
     LEFT JOIN votes ON (post_date > @enabled_votes and @user_id > 0 and vote_type='posts' and vote_link_id = post_id and vote_user_id = @user_id)
     LEFT JOIN media ON (media.type='post' and media.id = post_id and media.version = 0) ";
 
@@ -133,13 +133,11 @@ class Post extends LCPBase
                 if ($full) {
                     Log::insert('post_new', $this->id, $post_author);
                 }
-
             }
 
             if ($post_is_admin && $r) {
                 $db->query("INSERT INTO admin_posts (admin_post_id, admin_user_id, admin_user_login) VALUES ($this->id, {$current_user->user_id},'{$current_user->user_login}')");
             }
-
         } else {
             $r = $db->query("UPDATE posts SET post_user_id=$post_author, post_karma=$post_karma, post_date=FROM_UNIXTIME($post_date), post_randkey=$post_randkey, post_content='$post_content' WHERE post_id=$this->id");
             if ($post_is_admin && $r) {
@@ -149,12 +147,10 @@ class Post extends LCPBase
             if ($r && $full) {
                 Log::conditional_insert('post_edit', $this->id, $post_author, 30);
             }
-
         }
         if ($r && $full) {
             $this->update_conversation();
         }
-
     }
 
     public function read()
@@ -196,7 +192,7 @@ class Post extends LCPBase
             $this->read();
         }
 
-        $this->hidden = $this->karma < $globals['post_hide_karma'] || $this->user_level == 'disabled';
+        $this->hidden = $this->karma < $globals['post_hide_karma'] || $this->user_level === 'disabled';
         $this->ignored = $current_user->user_id > 0 && User::friend_exists($current_user->user_id, $this->author) < 0;
 
         $this->css_class = 'comment';
@@ -208,6 +204,11 @@ class Post extends LCPBase
         if ($this->hidden || $this->ignored) {
             $this->css_class_footer .= ' phantom';
             $this->css_class .= ' phantom';
+
+            if ($this->ignored && !$current_user->admin) {
+                $this->css_class_footer .= ' ignored';
+                $this->css_class .= ' ignored';
+            }
 
             $this->poll = null;
         } elseif ($this->admin) {
@@ -246,16 +247,17 @@ class Post extends LCPBase
 
         if (empty($this->basic_summary) && (($this->author == $current_user->user_id &&
             time() - $this->date < $globals['posts_edit_time']) ||
-            ($current_user->user_level == 'god' && time() - $this->date < $globals['posts_edit_time_admin']))) {
+            ($current_user->user_level === 'god' && time() - $this->date < $globals['posts_edit_time_admin']))) {
             // Admins can edit up to 10 days
             $this->can_edit = true;
-
         } else {
             $this->can_edit = false;
         }
+
         if ($length > 0) {
             $this->content = text_to_summary($this->content, $length);
         }
+
         $this->content = $this->to_html($this->content);
 
         if ($this->media_size > 0) {
@@ -309,7 +311,6 @@ class Post extends LCPBase
         if ($this->voted) {
             return $this->voted;
         }
-
     }
 
     public function insert_vote($user_id = false, $value = 0)
@@ -414,7 +415,6 @@ class Post extends LCPBase
                         User::add_notification($to, 'post');
                     }
                     $db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to, 'post', from_unixtime($this->date), $this->id, $id)");
-
                 }
                 $refs++;
                 if (!in_array($id, $seen_ids)) {
@@ -424,7 +424,6 @@ class Post extends LCPBase
                 if (!in_array($to, $seen_users)) {
                     $seen_users[] = $to;
                 }
-
             }
         }
 
@@ -440,7 +439,6 @@ class Post extends LCPBase
         foreach ($to_unnotify as $to) {
             User::add_notification($to, 'post', -1);
         }
-
     }
 
     public function normalize_content()

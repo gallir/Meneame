@@ -13,11 +13,11 @@ include('../config.php');
 require_once(mnminclude.'favorites.php');
 
 if (!$current_user->user_id) {
-	die;
+    die;
 }
 
 if (!empty($_GET['redirect'])) {
-	die(do_redirect($_GET['redirect']));
+    die(do_redirect($_GET['redirect']));
 }
 
 header('Content-Type: application/json; charset=utf-8');
@@ -38,31 +38,31 @@ die(json_encode($notifications));
 
 function do_redirect($type)
 {
-	global $globals, $current_user;
+    global $globals, $current_user;
 
-	switch ($type) {
-		case 'privates':
-			$url = post_get_base_url('_priv');
-			break;
+    switch ($type) {
+        case 'privates':
+            $url = post_get_base_url('_priv');
+            break;
 
-		case 'posts':
-			$url = post_get_base_url($current_user->user_login).'/_conversation';
-			break;
+        case 'posts':
+            $url = post_get_base_url($current_user->user_login).'/_conversation';
+            break;
 
-		case 'comments':
-			$url = get_user_uri($current_user->user_login, 'conversation');
-			break;
+        case 'comments':
+            $url = get_user_uri($current_user->user_login, 'conversation');
+            break;
 
-		case 'friends':
-			$url = get_user_uri($current_user->user_login, 'friends_new');
-			break;
+        case 'friends':
+            $url = get_user_uri($current_user->user_login, 'friends_new');
+            break;
 
-		default:
-			$url = '/'; // If everything fails, it will be redirected to the home
-			break;
-	}
+        default:
+            $url = '/'; // If everything fails, it will be redirected to the home
+            break;
+    }
 
-	header('HTTP/1.1 302 Moved');
-	header('Location: '.$url);
-	header('Content-Length: 0');
+    header('HTTP/1.1 302 Moved');
+    header('Location: '.$url);
+    header('Content-Length: 0');
 }

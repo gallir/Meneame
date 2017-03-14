@@ -74,7 +74,8 @@ echo "</div>"."\n";
 
 do_footer();
 
-function save_sub($id) {
+function save_sub($id)
+{
     global $globals, $current_user, $db;
 
     // Double check
@@ -193,7 +194,8 @@ function save_sub($id) {
     return $id;
 }
 
-function sub_copy_from($id, $from) {
+function sub_copy_from($id, $from)
+{
     global $db;
 
     $r = $db->query("delete from subs_copy where dst = $id");
@@ -209,7 +211,8 @@ function sub_copy_from($id, $from) {
     }
 }
 
-function store_image($id) {
+function store_image($id)
+{
     global $site;
 
     $media = new Upload('sub_logo', $id, 0);
@@ -228,7 +231,8 @@ function store_image($id) {
     }
 }
 
-function update_subs_json() {
+function update_subs_json()
+{
     global $globals, $db;
 
     if ($globals['memcache_host']) {

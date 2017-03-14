@@ -753,6 +753,92 @@ a.action-link span {
     margin-right: 0;
 }
 
+
+.widget-official-subs-slider div.widget-title-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0px 7px;
+}
+
+.widget-official-subs-slider div.sub-follow {
+    padding: 0px 15px;
+}
+
+.widget-official-subs-slider div.sub-info > a {
+    font-weight: 300;
+}
+
+.widget-official-subs-slider div.sub.slick-active:first-child {
+    margin-left: 2px;
+}
+
+#widget-official-subs-slider {
+    background: #FCFCFC;
+    border: 1px solid #F0F0F0;
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.16);
+    border-radius: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 10px;
+}
+
+.widget-official-subs-slider {
+    text-align: center;
+}
+
+.widget-official-subs-slider div.title {
+    color: #FE6117;
+    font-family: "Open Sans";
+    font-weight: 300;
+    font-size: 38px;
+    line-height: 0.9;
+}
+
+.widget-official-subs-slider div.subtitle {
+    color: #FE6117;
+    font-family: "Open Sans";
+    font-weight: 300;
+    font-size: 13px;
+}
+
+.widget-official-subs-slider div.description {
+    font-family: Lato;
+    font-size: 12px;
+    color: #3C3C3C;
+    direction: ltr;
+    margin-top: 10px;
+}
+
+.widget-official-subs-slider a.meneame-button {
+    margin-top: 20px;
+    color: #fff;
+    padding: 5px 20px;
+    font-weight: bold;
+    font-size: 12px;
+    display: inline-block;
+    background-color: #FE6117 !important;
+    background-image: linear-gradient(-180deg, rgba(199, 199, 199, 0.20) 0%, rgba(68, 68, 68, 0.20) 100%);
+    border: 1px solid rgba(122, 47, 11, 0.45);
+    box-shadow: 0px 0px 0px 0px #FFFFFF;
+    border-radius: 3px;
+}
+
+.widget-official-subs-slider a.meneame-button:hover {
+    text-decoration: none;
+}
+
+/* borders for first and last active image */
+.widget-official-subs-slider div.slick-active:nth-child(2) > a, .widget-official-subs-slider div.slick-active:nth-child(2) img {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.widget-official-subs-slider div.slick-active:last-child > a, .widget-official-subs-slider div.slick-active:last-child img {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+
 .subs-listing {
     width: 100%;
     text-align: center;
@@ -838,7 +924,7 @@ a.action-link span {
     opacity: .7;
 }
 
-.official-subs-slider .sub, .recommended-subs-slider .sub {
+.official-subs-slider .sub, .recommended-subs-slider .sub, .widget-official-subs-slider .sub {
     float: left;
     padding: 0;
     margin: 0;
@@ -1445,7 +1531,7 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     }
 
     .subs-listing td.name {
-	padding: 10px 10px 10px 5px;
+    padding: 10px 10px 10px 5px;
     }
 
     .subs-listing .actions {

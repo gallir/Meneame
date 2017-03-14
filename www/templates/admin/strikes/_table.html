@@ -1,0 +1,93 @@
+<table class="table table-condensed table-striped table-hover" style="font-size: 10pt">
+    <tr>
+        <th class="text-center" style="white-space: nowrap">
+            <a href="?{% exec URLQuery "order_by" "user_login" "order_mode" order_mode %}">
+                {% trans _('Usuario') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_type" "order_mode" order_mode %}">
+                {% trans _('tipo') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_reason" "order_mode" order_mode %}">
+                {% trans _('motivo') %}
+            </a>
+        </th>
+        <th class="text-center">
+            {% trans _('comentario') %}
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_report_id" "order_mode" order_mode %}">
+                {% trans _('reporte') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_karma_old" "order_mode" order_mode %}">
+                {% trans _('K anterior') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_karma_new" "order_mode" order_mode %}">
+                {% trans _('K strike') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_karma_restore" "order_mode" order_mode %}">
+                {% trans _('K final') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_date" "order_mode" order_mode %}">
+                {% trans _('creación') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "strike_expires_at" "order_mode" order_mode %}">
+                {% trans _('fin') %}
+            </a>
+        </th>
+        <th class="text-center">
+            <a href="?{% exec URLQuery "order_by" "admin_login" "order_mode" order_mode %}">
+                {% trans _('admin') %}
+            </a>
+        </th>
+        <th class="text-center">&nbsp;</th>
+    </tr>
+
+    {% for strike in strikes %}
+
+    <tr>
+        <td class="text-center">
+            <a target="_blank" href="{{ globals.base_url }}user/{{ strike.user_login }}/{{ strike.user_id }}" class="tooltip u:{{ strike.user_id }}" style="overflow: hidden;white-space: nowrap;">
+                {{ strike.user_login }}
+            </a>
+        </td>
+        <td class="text-center">{{ strike.type|Capfirst }}</td>
+        <td class="text-center">{{ strike.reason_message }}</td>
+        <td class="text-center">{{ strike.comment|txt_shorter:50|clean_text }}</td>
+        <td class="text-center">
+            {% if strike.report_id %}
+            <a href="{{ globals.base_url }}admin/reports.php?s={{ strike.report_id }}&amp;report_status=all">
+                {{ strike.report_id }}
+            </a>
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+        <td class="text-center">{{ strike.karma_old }}</td>
+        <td class="text-center">{{ strike.karma_new }}</td>
+        <td class="text-center">{{ strike.karma_restore }}</td>
+        <td class="text-center">{{ strike.date }}</td>
+        <td class="text-center">{{ strike.expires_at }}</td>
+        <td class="text-center">{{ strike.admin_login }}</td>
+        <td class="text-center">
+            <a href="?tab=strikes&amp;op=new&amp;strike_user={{ strike.user_login }}" title="Información" class="btn btn-default btn-xs">
+                <i class="fa fa-info"></i>
+            </a>
+        </td>
+    </tr>
+
+    {% endfor %}
+</table>

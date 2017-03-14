@@ -22,8 +22,9 @@ require_once "apiP12Signer.php";
  *
  * @author Brian Eaton <beaton@google.com>
  */
-abstract class apiSigner {
-  /**
+abstract class apiSigner
+{
+    /**
    * Signs data, returns the signature as binary data.
    */
   abstract public function sign($data);

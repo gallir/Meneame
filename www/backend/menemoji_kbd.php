@@ -1,6 +1,6 @@
 <?php
 if (! defined('mnmpath')) {
-    include(dirname(__FILE__).'/../config.php');
+    include(__DIR__.'/../config.php');
     include(mnminclude.'html1.php');
 }
 
@@ -8,47 +8,47 @@ header('Content-Type: text/html; charset=utf-8');
 http_cache(86400*10); // 10 days cache
 
 $menemojis = array(
-			'angry' => 'angry.png',
-			'blank' => 'blank.png',
-			'cheesy' => 'cheesy.png',
-			'confused' => 'confused.png',
-			'cool' => 'cool.png',
-			'cry' => 'cry.gif',
-			'ffu' => 'ffu.png',
-			'goatse' => 'goatse.png',
-			'grin' =>'grin.png',
-			'hug' => 'hug.png',
-			'huh' => 'huh.png',
-			'kiss' => 'kiss.gif',
-			'lipssealed' => 'lipssealed.png',
-			'lol' => 'lol.gif',
-			'oops' => 'oops.png',
-			'palm' => 'palm.png',
-			'roll' => 'roll.gif',
-			'sad' => 'sad.png',
-			'shame' =>'shame.png',
-			'shit' => 'shit.png',
-			'shocked' => 'shocked.gif',
-			'smiley' => 'smiley.png',
-			'tongue' => 'tongue.png',
-			'troll' => 'troll.png',
-			'undecided' => 'undecided.png',
-			'wall' => 'wall.gif',
-			'wink' => 'wink.png',
-			'wow' => 'wow.png',
-			'coletas' => 'coletas.png',
-			'eli' => 'eli.png',
-			'foreveralone' => 'foreveralone.png',
-			'pagafantas' => 'pagafantas.png',
-			'popcorn' => 'popcorn.gif',
-			'take' => 'takemymoney.png',
-			'professor' => 'professor.png',
-			'peineta' => 'peineta.png',
-			'ferrari' => 'ferrari.png',
-			'calzador' => 'calzador.png',
-			'clap' => 'clap.gif',
-			'tinfoil' => 'tinfoil.gif',
-	);
+            'angry' => 'angry.png',
+            'blank' => 'blank.png',
+            'cheesy' => 'cheesy.png',
+            'confused' => 'confused.png',
+            'cool' => 'cool.png',
+            'cry' => 'cry.gif',
+            'ffu' => 'ffu.png',
+            'goatse' => 'goatse.png',
+            'grin' =>'grin.png',
+            'hug' => 'hug.png',
+            'huh' => 'huh.png',
+            'kiss' => 'kiss.gif',
+            'lipssealed' => 'lipssealed.png',
+            'lol' => 'lol.gif',
+            'oops' => 'oops.png',
+            'palm' => 'palm.png',
+            'roll' => 'roll.gif',
+            'sad' => 'sad.png',
+            'shame' =>'shame.png',
+            'shit' => 'shit.png',
+            'shocked' => 'shocked.gif',
+            'smiley' => 'smiley.png',
+            'tongue' => 'tongue.png',
+            'troll' => 'troll.png',
+            'undecided' => 'undecided.png',
+            'wall' => 'wall.gif',
+            'wink' => 'wink.png',
+            'wow' => 'wow.png',
+            'coletas' => 'coletas.png',
+            'eli' => 'eli.png',
+            'foreveralone' => 'foreveralone.png',
+            'pagafantas' => 'pagafantas.png',
+            'popcorn' => 'popcorn.gif',
+            'take' => 'takemymoney.png',
+            'professor' => 'professor.png',
+            'peineta' => 'peineta.png',
+            'ferrari' => 'ferrari.png',
+            'calzador' => 'calzador.png',
+            'clap' => 'clap.gif',
+            'tinfoil' => 'tinfoil.gif',
+    );
 
 $twemojis[_('gente')] = array(
 "1f600", "1f601", "1f602", "1f603", "1f604", "1f605", "1f606", "1f607", "1f608", "1f609", "1f60a", "1f60b", "1f60c", "1f60d", "1f60e", "1f60f", "1f610", "1f611", "1f612", "1f613", "1f614", "1f615", "1f616", "1f617", "1f618", "1f619", "1f61a", "1f61b", "1f61c", "1f61d", "1f61e", "1f61f", "1f620", "1f621", "1f622", "1f623", "1f624", "1f625", "1f626", "1f627", "1f628", "1f629", "1f62a", "1f62b", "1f62c", "1f62d", "1f62e", "1f62f", "1f630", "1f631", "1f632", "1f633", "1f634", "1f635", "1f636", "1f637", "1f638", "1f639", "1f63a", "1f63b", "1f63c", "1f63d", "1f63e", "1f63f", "1f640", "1f645", "1f646", "1f647", "1f648", "1f649", "1f64a", "1f64b", "1f64c", "1f64d", "1f64e", "1f64f",
@@ -62,7 +62,7 @@ $twemojis[_('naturaleza')] = array(
 "1f300", "1f301", "1f302", "1f303", "1f304", "1f305", "1f306", "1f307", "1f308", "1f309", "1f30a", "1f30b", "1f30c", "1f30d", "1f30e", "1f30f", "1f310", "1f311", "1f312", "1f313", "1f314", "1f315", "1f316", "1f317", "1f318", "1f319", "1f31a", "1f31b", "1f31c", "1f31d", "1f31e", "1f31f", "1f320", "1f330", "1f331", "1f332", "1f333", "1f334", "1f335", "1f337", "1f338", "1f339", "1f33a", "1f33b", "1f33c", "1f33d", "1f33e", "1f33f", "1f340", "1f341", "1f342", "1f343", "1f344", "1f345", "1f346", "1f347", "1f348", "1f349", "1f34a", "1f34b", "1f34c", "1f34d", "1f34e", "1f34f", "1f350", "1f351", "1f352", "1f353",
 ); // nature
 
-$twemojis[_('comida')] = array (
+$twemojis[_('comida')] = array(
 "1f354", "1f355", "1f356", "1f357", "1f358", "1f359", "1f35a", "1f35b", "1f35c", "1f35d", "1f35e", "1f35f", "1f360", "1f361", "1f362", "1f363", "1f364", "1f365", "1f366", "1f367", "1f368", "1f369", "1f36a", "1f36b", "1f36c", "1f36d", "1f36e", "1f36f", "1f370", "1f371", "1f372", "1f373", "1f374", "1f375", "1f376", "1f377", "1f378", "1f379", "1f37a", "1f37b", "1f37c", "1f380", "1f381", "1f382", ); // food
 
 $twemojis[_('cosas')] = array(
@@ -84,27 +84,27 @@ echo '<div class="emoji-kbd">';
 echo '<ul class="emojiCat">';
 echo '<li><a href="#" data-target="cat-meneame" class="emoji-tab active">menéame</a></li>';
 
-if (! $globals['mobile'] ) {
-	foreach ($twemojis as $cat => $v) {
-		echo '<li><a href="#" data-target="cat-'.$cat.'" class="emoji-tab">'.$cat.'</a></li>';
-	}
+if (! $globals['mobile']) {
+    foreach ($twemojis as $cat => $v) {
+        echo '<li><a href="#" data-target="cat-'.$cat.'" class="emoji-tab">'.$cat.'</a></li>';
+    }
 }
 echo '</ul>';
 
 echo '<div id="cat-meneame" class="emoji-panel active">';
 foreach ($menemojis as $k => $v) {
-	echo '<img class="emoji-btn" data-emoji="'.$k.'" src="'.$globals['base_static'].'img/menemojis/36/'.$v.'" alt=":'.$k.':" title=":'.$k.':">';
+    echo '<img class="emoji-btn" data-emoji="'.$k.'" src="'.$globals['base_static'].'img/menemojis/36/'.$v.'" alt=":'.$k.':" title=":'.$k.':">';
 }
 echo '</div>';
 
-if (! $globals['mobile'] ) {
-	foreach ($twemojis as $cat => $values) {
-		echo '<div id="cat-'.$cat.'" class="emoji-panel">';
-		foreach ($values as $v) {
-			echo '<img class="emoji-btn" data-emoji="0x'.$v.'" src="'.$globals['base_static'].'img/twemojis/36/'.$v.'.png" alt="{0x'.$v.'}" title="{0x'.$v.'}">';
-		}
-		echo '</div>';
-	}
+if (! $globals['mobile']) {
+    foreach ($twemojis as $cat => $values) {
+        echo '<div id="cat-'.$cat.'" class="emoji-panel">';
+        foreach ($values as $v) {
+            echo '<img class="emoji-btn" data-emoji="0x'.$v.'" src="'.$globals['base_static'].'img/twemojis/36/'.$v.'.png" alt="{0x'.$v.'}" title="{0x'.$v.'}">';
+        }
+        echo '</div>';
+    }
 }
 
 echo '</div>';

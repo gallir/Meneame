@@ -22,7 +22,7 @@ $link = Link::from_db($comment->link, null, false);
 if ($link->is_discarded()) {
     $globals['ads'] = false;
     $globals['noindex'] = true;
-} elseif ($comment->karma < 50 || mb_strlen($comment->content) < 100 ) {
+} elseif ($comment->karma < 50 || mb_strlen($comment->content) < 100) {
     $globals['noindex'] = true;
 }
 
@@ -58,7 +58,7 @@ if (!$comment->hide_comment) {
     $globals['description'] = _('Autor') . ": $username, " . _('Resumen') . ': '. $description;
 
     if ($globals['media_public'] && $comment->media_size > 0) {
-         $globals['thumbnail'] = Upload::get_url('comment', $comment->id, 0, $comment->media_date, $comment->media_mime);
+        $globals['thumbnail'] = Upload::get_url('comment', $comment->id, 0, $comment->media_date, $comment->media_mime);
     } elseif ($comment->avatar) {
         $globals['thumbnail'] = get_avatar_url($comment->author, $comment->avatar, 80);
     }
@@ -155,7 +155,7 @@ function fill_tree($tree, $limit = 30)
         return 0;
     }
 
-    usort($res, function($a, $b) {
+    usort($res, function ($a, $b) {
         return ($a->child < $b->child) ? -1 : 1;
     });
 

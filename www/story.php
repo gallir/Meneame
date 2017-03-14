@@ -27,7 +27,7 @@ $globals['cache-control'][] = 'max-age=3';
 
 $url_args = $globals['path'];
 
-if ($url_args[0] == 'story') {
+if ($url_args[0] === 'story') {
     array_shift($url_args); // Discard "story", TODO: but it should be discarded in dispatch and submnm
 }
 
@@ -49,7 +49,7 @@ if (empty($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) { // C
     if ($id > 0 && ($link = Link::from_db($id))) {
         // Redirect to the right URL if the link has a "semantic" uri
         if (!empty($link->uri)) {
-            header ('HTTP/1.1 301 Moved Permanently');
+            header('HTTP/1.1 301 Moved Permanently');
             die(header('Location: ' . $link->get_permalink()));
         }
     } else {
@@ -60,7 +60,7 @@ if (empty($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) { // C
 // Check the link belong to the current site
 $site_id = SitesMgr::my_id();
 
-if ($link->is_sub && ($site_id != $link->sub_id) && (empty($link->sub_status) || ! $link->allow_main_link) ) {
+if ($link->is_sub && ($site_id != $link->sub_id) && (empty($link->sub_status) || ! $link->allow_main_link)) {
     // The link does not correspond to the current site, find one
     header('HTTP/1.1 301 Moved Permanently');
     die(header('Location: ' . $link->get_canonical_permalink()));
@@ -320,39 +320,39 @@ if (!empty($new_comment_error)) {
     add_javascript('mDialog.notify("'._('Aviso'). ": $new_comment_error".'", 5);');
 }
 
-do_tabs("main",_('noticia'), true);
+do_tabs("main", _('noticia'), true);
 
 if (empty($link->url) && (mb_strlen($link->content) > $globals['link_blog_len_min'])) {
     require __DIR__.'/story-blog.php';
 } else {
     /*** SIDEBAR ****/
     echo '<div id="sidebar">';
-        do_sub_message_right();
-        do_banner_right();
+    do_sub_message_right();
+    do_banner_right();
 
         // GEO
         if ($link->latlng) {
             echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
         }
 
-        if (!$current_user->user_id) {
-            do_most_clicked_stories();
-        }
+    if (!$current_user->user_id) {
+        do_most_clicked_stories();
+    }
 
-        do_banner_promotions();
+    do_banner_promotions();
 
-        if (! $current_user->user_id) {
-            do_best_stories();
-        }
+    if (! $current_user->user_id) {
+        do_best_stories();
+    }
 
-        do_rss_box();
+    do_rss_box();
     echo '</div>';
     /*** END SIDEBAR ***/
 
     echo '<div id="newswrap">';
-        $link->print_summary();
+    $link->print_summary();
 
-        require __DIR__.'/story-comments.php';
+    require __DIR__.'/story-comments.php';
     echo '</div>';
 }
 
@@ -362,7 +362,8 @@ do_footer();
 
 exit;
 
-function print_story_tabs($option) {
+function print_story_tabs($option)
+{
     global $globals, $db, $link, $current_user;
 
     $active = array();
@@ -398,7 +399,8 @@ function print_story_tabs($option) {
     echo $html;
 }
 
-function do_comment_pages($total, $current, $reverse = true) {
+function do_comment_pages($total, $current, $reverse = true)
+{
     global $db, $globals;
 
     if (!$globals['comments_page_size'] || $total <= $globals['comments_page_size']) {
@@ -452,7 +454,8 @@ function do_comment_pages($total, $current, $reverse = true) {
     echo '</div>';
 }
 
-function get_comment_page_url($i, $total, $query, $reverse = false) {
+function get_comment_page_url($i, $total, $query, $reverse = false)
+{
     global $globals;
 
     if (($i == $total && $reverse) || ($i == 1 && ! $reverse)) {
@@ -462,7 +465,8 @@ function get_comment_page_url($i, $total, $query, $reverse = false) {
     return $query.'/'.$i;
 }
 
-function print_external_analysis($link) {
+function print_external_analysis($link)
+{
     $data = Annotation::from_db("analysis_$link->id");
 
     if (empty($data)) {
@@ -474,10 +478,11 @@ function print_external_analysis($link) {
     Haanga::Load('link_external_analysis.html', compact('objects'));
 }
 
-function print_relevant_comments($link) {
+function print_relevant_comments($link)
+{
     global $globals, $db;
 
-    if ($link->comments < 10 ) {
+    if ($link->comments < 10) {
         return;
     }
 
@@ -508,7 +513,8 @@ function print_relevant_comments($link) {
     $now = intval($globals['now']/60) * 60;
     $res = $db->get_results("select comment_id, comment_order, comment_karma, comment_karma + comment_order * 0.7 as val, length(comment_content) as comment_len, user_id, user_avatar, vote_value from comments LEFT JOIN votes ON ($check_vote > 0 and vote_type = 'links' and vote_link_id = comment_link_id and vote_user_id = comment_user_id), users where comment_link_id = $link->id and comment_votes >= $min_votes and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $extra_limit");
 
-    function cmp_comment_val($a, $b) {
+    function cmp_comment_val($a, $b)
+    {
         if ($a->val == $b->val) {
             return 0;
         }
@@ -577,13 +583,14 @@ function print_relevant_comments($link) {
 
         echo $output;
 
-        if($do_cache) {
+        if ($do_cache) {
             memcache_madd($key, $output, 300);
         }
     }
 }
 
-function get_highlighted_comment($obj) {
+function get_highlighted_comment($obj)
+{
     // Read the object for printing the summary
     $self = Comment::from_db($obj->id);
     $self->link_id = $obj->link_id;
@@ -604,7 +611,8 @@ function get_highlighted_comment($obj) {
     return $self;
 }
 
-function print_votes_raw($link) {
+function print_votes_raw($link)
+{
     global $globals, $db;
 
     header("Content-Type: text/plain");
@@ -621,7 +629,8 @@ function print_votes_raw($link) {
 }
 
 /* Get a list of the answers and their questions */
-function get_qanda($link) {
+function get_qanda($link)
+{
     include_once(mnminclude.'commenttree.php');
 
     global $db;
@@ -655,7 +664,8 @@ function get_qanda($link) {
 /* Show a very simple list of questions and answers
    ready to copy&paste for eldiario.es
 */
-function do_qanda_text($link) {
+function do_qanda_text($link)
+{
     global $globals, $db;
 
     $cleaner = function ($comment) use ($link) {
@@ -672,7 +682,6 @@ function do_qanda_text($link) {
             $username = $db->get_var("select user_login from users, comments where user_id = comment_user_id and comment_link_id = $link->id and comment_order = $order");
 
             return "<em>@$username</em>";
-
         }, $comment->content);
 
         $comment->content = preg_replace('/[\n]{3,}/', "\n", $comment->content);

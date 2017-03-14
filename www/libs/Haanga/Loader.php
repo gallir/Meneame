@@ -13,7 +13,7 @@ spl_autoload_register(function ($class) {
     */
 
     // classes {{{
-    static $classes = array (
+    static $classes = array(
   'haanga' => '/../Haanga.php',
   'haanga_extension' => '/Extension.php',
   'haanga_exception' => '/Exception.php',
@@ -81,25 +81,25 @@ spl_autoload_register(function ($class) {
     // }}}
 
     // deps {{{
-    static $deps    = array (
-  'hg_parser' => 
-  array (
+    static $deps    = array(
+  'hg_parser' =>
+  array(
     0 => 'haanga_compiler_parser',
   ),
-  'haanga_compiler_runtime' => 
-  array (
+  'haanga_compiler_runtime' =>
+  array(
     0 => 'haanga_compiler',
   ),
-  'haanga_extension_filter' => 
-  array (
+  'haanga_extension_filter' =>
+  array(
     0 => 'haanga_extension',
   ),
-  'haanga_extension_filter_translation' => 
-  array (
+  'haanga_extension_filter_translation' =>
+  array(
     0 => 'haanga_extension_filter_trans',
   ),
-  'haanga_extension_tag' => 
-  array (
+  'haanga_extension_tag' =>
+  array(
     0 => 'haanga_extension',
   ),
 );
@@ -116,14 +116,10 @@ spl_autoload_register(function ($class) {
         }
 
         if (!class_exists($class, false)) {
-
             require __DIR__  . $classes[$class];
-
         }
         return true;
     }
 
     return false;
 });
-
-

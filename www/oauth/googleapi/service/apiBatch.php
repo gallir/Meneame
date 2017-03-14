@@ -20,7 +20,8 @@
  *
  * @author Chris Chabot <chabotc@google.com>
  */
-class apiBatch {
+class apiBatch
+{
 
   /**
    * Execute one or multiple Google API requests, takes one or multiple requests as param
@@ -31,9 +32,9 @@ class apiBatch {
    *   );
    *   print_r($ret['getPeopleKey']);
    */
-  static public function execute( /* polymorphic */) {
-    $requests = func_get_args();
-    return apiRPC::execute($requests);
+  public static function execute(/* polymorphic */)
+  {
+      $requests = func_get_args();
+      return apiRPC::execute($requests);
   }
-
 }

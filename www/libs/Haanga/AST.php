@@ -37,7 +37,7 @@
 
 /**
  *  Simple AST (abstract syntax tree) helper class. This
- *  helps to generate array structure that is then translated by 
+ *  helps to generate array structure that is then translated by
  *  the Haanga_Generator class.
  *
  */
@@ -45,7 +45,7 @@ class Haanga_AST
 {
     public $stack = array();
     public $current = array();
-    public $doesPrint = FALSE;
+    public $doesPrint = false;
 
 
     // getLast() {{{
@@ -55,7 +55,7 @@ class Haanga_AST
      *
      *  @return array
      */
-    function & getLast()
+    public function & getLast()
     {
         $f = array();
         if (count($this->stack) == 0) {
@@ -66,10 +66,10 @@ class Haanga_AST
     // }}}
 
 
-    static protected function check_type($obj, $type)
+    protected static function check_type($obj, $type)
     {
         if (is_string($obj)) {
-            return FALSE;
+            return false;
         }
         if (is_object($obj)) {
             $obj = $obj->getArray();
@@ -108,12 +108,12 @@ class Haanga_AST
         return array("number" => $number);
     }
 
-    function stack_size()
+    public function stack_size()
     {
         return count($this->stack);
     }
 
-    function append_ast(Haanga_AST $obj)
+    public function append_ast(Haanga_AST $obj)
     {
         $this->end();
         $obj->end();
@@ -122,26 +122,26 @@ class Haanga_AST
         return $this;
     }
 
-    static function constant($str)
+    public static function constant($str)
     {
         return array('constant' => $str);
     }
 
-    function comment($str)
+    public function comment($str)
     {
         $this->stack[] = array("op" => "comment", 'comment' => $str);
 
         return $this;
     }
 
-    function declare_function($name)
+    public function declare_function($name)
     {
         $this->stack[] = array('op' => 'function', 'name' => $name);
 
         return $this;
     }
 
-    function do_return($name)
+    public function do_return($name)
     {
         $this->getValue($name, $expr);
         $this->stack[] = array('op' => 'return', $expr);
@@ -149,7 +149,7 @@ class Haanga_AST
         return $this;
     }
 
-    function do_if($expr)
+    public function do_if($expr)
     {
         $this->getValue($expr, $vexpr);
         $this->stack[] = array('op' => 'if', 'expr' => $vexpr);
@@ -157,28 +157,28 @@ class Haanga_AST
         return $this;
     }
 
-    function do_else()
+    public function do_else()
     {
         $this->stack[] = array('op' => 'else');
 
         return $this;
     }
 
-    function do_endif()
+    public function do_endif()
     {
         $this->stack[] = array('op' => 'end_if');
 
         return $this;
     }
 
-    function do_endfunction()
+    public function do_endfunction()
     {
         $this->stack[] = array('op' => 'end_function');
 
         return $this;
     }
 
-    function v()
+    public function v()
     {
         $var = array();
         foreach (func_get_args() as $id => $def) {
@@ -197,19 +197,19 @@ class Haanga_AST
         return $this;
     }
 
-    final function __get($property)
+    final public function __get($property)
     {
         $property = strtolower($property);
         if (isset($this->current[$property])) {
             return $this->current[$property];
         }
-        return FALSE;
+        return false;
     }
 
-    static function fromArrayGetAST($obj)
+    public static function fromArrayGetAST($obj)
     {
         $class = __CLASS__;
-        if ($obj InstanceOf $class) {
+        if ($obj instanceof $class) {
             return $obj;
         }
         foreach (array('op_expr', 'expr_cond', 'exec', 'var', 'string', 'number', 'constant') as $type) {
@@ -221,21 +221,21 @@ class Haanga_AST
         }
     }
 
-    static function getValue($obj, &$value, $get_all=FALSE)
+    public static function getValue($obj, &$value, $get_all=false)
     {
         $class = __CLASS__;
 
-        if ($obj InstanceOf $class) {
+        if ($obj instanceof $class) {
             $value = $obj->getArray($get_all);
-        } else if (is_string($obj)) {
+        } elseif (is_string($obj)) {
             $value = self::str($obj);
-        } else if (is_numeric($obj) or $obj === 0) {
+        } elseif (is_numeric($obj) or $obj === 0) {
             $value = self::num($obj);
-        } else if ($obj === FALSE) {
-            $value = array('expr' => FALSE);
-        } else if ($obj === TRUE) {
-            $value = array('expr' => TRUE);
-        } else if (is_array($obj)) {
+        } elseif ($obj === false) {
+            $value = array('expr' => false);
+        } elseif ($obj === true) {
+            $value = array('expr' => true);
+        } elseif (is_array($obj)) {
             foreach (array('expr_cond', 'op_expr', 'exec', 'var', 'string', 'number', 'constant') as $type) {
                 if (isset($obj[$type])) {
                     $value = $obj;
@@ -244,15 +244,15 @@ class Haanga_AST
             }
             $h     = hcode()->arr();
             $first = 0;
-            foreach($obj as $key => $value) {
+            foreach ($obj as $key => $value) {
                 if ($key === $first) {
-                    $key = NULL;
+                    $key = null;
                     $first++;
                 }
                 $h->element($key, $value);
             }
             $value = $h->getArray();
-        } else if ($obj === NULL) {
+        } elseif ($obj === null) {
             $value = array();
         } else {
             var_Dump($obj);
@@ -260,16 +260,16 @@ class Haanga_AST
         }
     }
 
-    function getArray($get_all=FALSE)
+    public function getArray($get_all=false)
     {
         $this->end();
         if ($get_all) {
             return $this->stack;
         }
-        return isset($this->stack[0]) ?  $this->stack[0] : NULL;
+        return isset($this->stack[0]) ?  $this->stack[0] : null;
     }
 
-    function do_for($index, $min, $max, $step, Haanga_AST $body)
+    public function do_for($index, $min, $max, $step, Haanga_AST $body)
     {
         $def = array(
             'op'    => 'for',
@@ -280,16 +280,16 @@ class Haanga_AST
         );
 
         $this->stack[] = $def;
-        $this->stack   = array_merge($this->stack, $body->getArray(TRUE));
+        $this->stack   = array_merge($this->stack, $body->getArray(true));
         $this->stack[] = array('op' => 'end_for');
 
         return $this;
     }
 
-    function do_foreach($array, $value, $key, Haanga_AST $body)
+    public function do_foreach($array, $value, $key, Haanga_AST $body)
     {
         foreach (array('array', 'value', 'key') as $var) {
-            if ($$var === NULL) {
+            if ($$var === null) {
                 continue;
             }
             $var1 = & $$var;
@@ -309,27 +309,27 @@ class Haanga_AST
             $def['key'] = $key;
         }
         $this->stack[] = $def;
-        $this->stack   = array_merge($this->stack, $body->getArray(TRUE));
+        $this->stack   = array_merge($this->stack, $body->getArray(true));
         $this->stack[] = array('op' => 'end_foreach');
 
         return $this;
     }
 
-    function do_echo($stmt)
+    public function do_echo($stmt)
     {
         $this->getValue($stmt, $value);
         $this->stack[] = array('op' => 'print', $value);
         return $this;
     }
 
-    function do_global($array)
+    public function do_global($array)
     {
         $this->stack[] = array('op' => 'global',  'vars' => $array);
 
         return $this;
     }
 
-    function do_exec()
+    public function do_exec()
     {
         $params = func_get_args();
         $exec   = call_user_func_array('hexec', $params);
@@ -338,7 +338,7 @@ class Haanga_AST
         return $this;
     }
 
-    function exec($function)
+    public function exec($function)
     {
         $this->current = array('exec' => $function, 'args' => array());
         foreach (func_get_args() as $id => $param) {
@@ -349,20 +349,20 @@ class Haanga_AST
         return $this;
     }
 
-    function expr($operation, $term1, $term2=NULL)
+    public function expr($operation, $term1, $term2=null)
     {
         $this->getValue($term1, $value1);
-        if ($term2 !== NULL) {
+        if ($term2 !== null) {
             $this->getValue($term2, $value2);
         } else {
-            $value2 = NULL;
+            $value2 = null;
         }
         $this->current = array('op_expr' => $operation, $value1, $value2);
 
         return $this;
     }
 
-    function expr_cond($expr, $if_true, $if_false)
+    public function expr_cond($expr, $if_true, $if_false)
     {
         $this->getValue($expr, $vExpr);
         $this->getValue($if_true, $vIfTrue);
@@ -374,14 +374,14 @@ class Haanga_AST
     }
 
 
-    function arr()
+    public function arr()
     {
         $this->current = array('array' => array());
 
         return $this;
     }
 
-    function element($key=NULL, $value)
+    public function element($key=null, $value)
     {
         $last = & $this->current;
 
@@ -390,14 +390,14 @@ class Haanga_AST
         }
 
         $this->getValue($value, $val);
-        if ($key !== NULL) {
+        if ($key !== null) {
             $this->getValue($key, $kval);
             $val = array('key' => array($kval, $val));
         }
         $last['array'][] = $val;
     }
 
-    function decl_raw($name, $value)
+    public function decl_raw($name, $value)
     {
         if (is_string($name)) {
             $name = hvar($name);
@@ -413,7 +413,7 @@ class Haanga_AST
         return $this;
     }
 
-    function decl($name, $value)
+    public function decl($name, $value)
     {
         if (is_string($name)) {
             $name = hvar($name);
@@ -430,7 +430,7 @@ class Haanga_AST
         return $this;
     }
 
-    function append($name, $value)
+    public function append($name, $value)
     {
         if (is_string($name)) {
             $name = hvar($name);
@@ -441,7 +441,7 @@ class Haanga_AST
         return $this;
     }
 
-    function param($param)
+    public function param($param)
     {
         $last = & $this->current;
 
@@ -455,7 +455,7 @@ class Haanga_AST
         return $this;
     }
 
-    function end()
+    public function end()
     {
         if (count($this->current) > 0) {
             $this->stack[] = $this->current;
@@ -471,7 +471,7 @@ function hcode()
     return new Haanga_AST;
 }
 
-function hexpr($term1, $op='expr', $term2=NULL, $op2=NULL)
+function hexpr($term1, $op='expr', $term2=null, $op2=null)
 {
     $code = hcode();
     switch ($op2) {

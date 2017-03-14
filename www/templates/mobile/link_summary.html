@@ -3,7 +3,7 @@
         {% if self.show_shakebox %}
         <div class="news-shakeit {{ self.box_class }}">
             <div class="votes">
-                <a id="a-votes-{{ self.id}}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
+                <a id="a-votes-{{ self.id }}" href="{{ self.relative_permalink }}">{{ self.total_votes }}</a>
                 {% trans _('meneos') %}
             </div>
 
@@ -13,7 +13,7 @@
                 {% if not self.votes_enabled %}
                 <span class="closed">{% trans _('cerrado') %}</span>
                 {% else %} {% if not self.voted %}
-                <a href="javascript:menealo({{ current_user.user_id}}, {{self.id}})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
+                <a href="javascript:menealo({{ current_user.user_id }}, {{ self.id }})" id="a-shake-{{ self.id }}">{% trans _('menéalo') %}</a>
                 {% else %} {% if self.voted > 0 %}
                 <span id="a-shake-{{ self.id }}">{% trans _('¡hecho!') %}</span>
                 {% else %}
@@ -158,7 +158,7 @@
         {% if self.do_inline_friend_votes AND self.friend_votes %}
         <div style="padding: 3px 0 2px 0;">
             {% for vote in self.friend_votes %}
-            <a href="{{ vote.user_login | useruri }}" title="{{ vote.user_login }}: {% trans _('valor') %} {{vote.vote_value}}"><img class="avatar" src="{% exec get_avatar_url vote.user_id vote.user_avatar 40 %}" width="40" height="40" alt=""/></a>&nbsp;&nbsp;
+            <a href="{{ vote.user_login | useruri }}" title="{{ vote.user_login }}: {% trans _('valor') %} {{ vote.vote_value }}"><img class="avatar" src="{% exec get_avatar_url vote.user_id vote.user_avatar 40 %}" width="40" height="40" alt=""/></a>&nbsp;&nbsp;
             {% endfor %}
         </div>
         {% endif %}
@@ -214,7 +214,7 @@
 
                     <span class="tool karma" data-toggle="tooltip" data-placement="top" title="Karma">
                         <span class="karma-letter">K</span>
-                        <span class="karma-value" id="a-karma-{{self.id}}">
+                        <span class="karma-value" id="a-karma-{{ self.id }}">
                             {% if self.status == 'published' && self.sub_karma > 0 %}
                                 {{ self.sub_karma|intval }}
                             {% else %}
@@ -233,16 +233,16 @@
                                 {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
                             "
                             {% endif %}
-                        >{{ self.sub_name  }}</a>
+                        >{{ self.sub_name }}</a>
                     </span>
                     {% endif %}
 
                     {% if self.can_vote_negative %}
                     <form action="" id="problem-{{ self.id }}">
-                        <select name="ratings" onchange="report_problem(this.form,{{current_user.user_id}}, {{self.id}})">
+                        <select name="ratings" onchange="report_problem(this.form,{{ current_user.user_id }}, {{ self.id }})">
                             <option value="0" selected="selected">{% trans _('problema') %}</option>
                             {% for pkey, pvalue in globals.negative_votes_values %}
-                            <option value="{{pkey}}">{{ pvalue }}</option>
+                            <option value="{{ pkey }}">{{ pvalue }}</option>
                             {% endfor %}
                         </select>
                     </form>

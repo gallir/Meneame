@@ -26,7 +26,7 @@
 //
 
 if (defined('config_done')) {
-    return TRUE; // If not "included_once"
+    return true; // If not "included_once"
 }
 
 define('config_done', 1);
@@ -45,7 +45,7 @@ define('config_done', 1);
 // $globals['force_ssl'] = True;
 
 // Specify the name of the ssl server, ensure you have also setup "cookies_domain
-$globals['ssl_server'] = False;
+$globals['ssl_server'] = false;
 
 $globals['site_name'] = 'Menéame';
 $globals['site_shortname'] = 'mnm'; //Used to differentiate in keys
@@ -67,7 +67,7 @@ $globals['page_size'] = 20;
 $globals['anonnymous_vote'] = $anonnymous_vote = true;
 $globals['ads'] = true;
 $globals['external_ads'] = $external_ads = true;
-$globals['behind_load_balancer'] = False; // LB as those in Amazon EC2 don't send the real remote address
+$globals['behind_load_balancer'] = false; // LB as those in Amazon EC2 don't send the real remote address
 //$globals['email_domain'] = 'my_email_domain.com'; // Used for sending emails bots and scrips, if not defined it uses server_name
 //$globals['notify_email'] = 'my_email_domain.com'; // used for sending notifications, now only used for Amazon SNS/SES notifications
 
@@ -283,7 +283,7 @@ $globals['sphinx_port'] = 9312;
 
 $globals['avatars_check_always'] = true;
 $globals['avatars_max_size'] = 1024*1024;
-$globals['avatars_allowed_sizes'] = Array (80, 40, 25, 20);
+$globals['avatars_allowed_sizes'] = array(80, 40, 25, 20);
 
 // If you use nginx define X-Accel-Redirect, or X-Sendfile for Apache module
 // See: https://tn123.org/mod_xsendfile/ http://wiki.nginx.org/XSendfile
@@ -352,8 +352,10 @@ $globals['Amazon_S3_upload'] = true;
 $globals['Amazon_S3_delete_allowed'] = false;
 
 // Main javascript file
-$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
-$globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
+//$globals['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+//$globals['jquery2'] = '//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js';
+$globals['jquery'] = '/js/jquery/jquery.min.js';
+$globals['jquery2'] = '/js/jquery2/jquery.min.js';
 $globals['js_main'] = 'main.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'mnm.php';
@@ -384,6 +386,64 @@ $globals['new_source_bonus'] = 1.05;
 $globals['new_source_max_hours'] = 240;
 $globals['new_source_min_hours'] = 48;
 
+$globals['strikes_min_karma'] = 5;
+
+$globals['strikes'] = array(
+    array(
+        'code' => 'strike0',
+        'name' => 'Strike 0',
+        'karma' => null,
+        'hours' => 0,
+        'restore' => 20,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'strike1',
+        'name' => 'Strike 1',
+        'karma' => 4.01,
+        'hours' => 24,
+        'restore' => 20,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'strike2',
+        'name' => 'Strike 2',
+        'karma' => 4.01,
+        'hours' => 24 * 2,
+        'restore' => 40,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'strike3',
+        'name' => 'Strike 3',
+        'karma' => 4.01,
+        'hours' => 24 * 5,
+        'restore' => 50,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'strike4',
+        'name' => 'Strike 4',
+        'karma' => 4.01,
+        'hours' => 24 * 20,
+        'restore' => 60,
+        'roles' => ['admin', 'god']
+    ),
+
+    array(
+        'code' => 'ban',
+        'name' => 'Ban',
+        'karma' => null,
+        'hours' => 24 * 30 * 3,
+        'restore' => 70,
+        'roles' => ['god']
+    )
+);
+
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
 $globals['anon_to_user_votes'] = 0.2;
@@ -412,11 +472,11 @@ define('mnminclude', __DIR__.'/libs/');
 
 ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
 
+$globals['cli'] = (PHP_SAPI === 'cli');
+
 if (is_file(__DIR__.'/local.php')) {
     require __DIR__.'/local.php';
 }
-
-$globals['cli'] = (php_sapi_name() === 'cli');
 
 if ($globals['cli']) {
     /* Definition only for scripts executed 'off-line' */

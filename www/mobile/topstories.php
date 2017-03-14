@@ -22,7 +22,7 @@ $offset=($current_page-1)*$page_size;
 
 // Use memcache if available
 if ($globals['memcache_host'] && $current_page < 4) {
-	$memcache_key = 'topstories_'.$globals['site_shortname'].$from.'_'.$current_page;
+    $memcache_key = 'topstories_'.$globals['site_shortname'].$from.'_'.$current_page;
 }
 
 // we use this to allow sql caching
@@ -31,18 +31,18 @@ $sql = "SELECT SQL_CACHE link_id, link_votes+link_anonymous-link_negatives as vo
 $time_link = "link_date > $from_time AND";
 
 if (!($memcache_key
-		&& ($rows = memcache_mget($memcache_key.'rows'))
-		&& ($links = unserialize(memcache_mget($memcache_key)))) ) {
-	// Itr's not in cache, or memcache is disabled
-	$rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
-	if ($rows == 0) {
-		not_found();
-	}
-	$links = $db->get_results("$sql LIMIT $offset,$page_size");
-	if ($memcache_key) {
-		memcache_madd($memcache_key.'rows', $rows, 1800);
-		memcache_madd($memcache_key, serialize($links), 1800);
-	}
+        && ($rows = memcache_mget($memcache_key.'rows'))
+        && ($links = unserialize(memcache_mget($memcache_key))))) {
+    // Itr's not in cache, or memcache is disabled
+    $rows = $db->get_var("SELECT count(*) FROM links WHERE $time_link link_status = 'published'");
+    if ($rows == 0) {
+        not_found();
+    }
+    $links = $db->get_results("$sql LIMIT $offset,$page_size");
+    if ($memcache_key) {
+        memcache_madd($memcache_key.'rows', $rows, 1800);
+        memcache_madd($memcache_key, serialize($links), 1800);
+    }
 }
 
 
@@ -54,16 +54,14 @@ echo '<div id="newswrap">'."\n";
 
 
 if ($links) {
-	foreach($links as $dblink) {
-		$link = new LinkMobile;
-		$link->id=$dblink->link_id;
-		$link->read();
-		$link->print_summary();
-	}
+    foreach ($links as $dblink) {
+        $link = new LinkMobile;
+        $link->id=$dblink->link_id;
+        $link->read();
+        $link->print_summary();
+    }
 }
 do_pages($rows, $page_size);
 echo '</div>'."\n";
 
 do_footer();
-
-?>

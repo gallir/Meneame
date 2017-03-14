@@ -25,7 +25,8 @@ require_once 'io/apiRPC.php';
  *
  * @author Chris Chabot <chabotc@google.com>
  */
-interface apiIO {
+interface apiIO
+{
 
   /**
    * Called by the apiClient

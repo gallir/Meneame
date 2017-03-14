@@ -28,7 +28,8 @@ require_once 'service/apiServiceRequest.php';
    *   $text = $freebaseService->text;
    *  </code>
    */
-  class TextServiceResource extends apiServiceResource {
+  class TextServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -41,15 +42,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string format Sanitizing transformation.
      * @return ContentserviceGet
      */
-    public function get($id, $optParams = array()) {
-      $params = array('id' => $id);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('get', array($params));
-      if ($this->useObjects()) {
-        return new ContentserviceGet($data);
-      } else {
-        return $data;
-      }
+    public function get($id, $optParams = array())
+    {
+        $params = array('id' => $id);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('get', array($params));
+        if ($this->useObjects()) {
+            return new ContentserviceGet($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -62,8 +64,9 @@ require_once 'service/apiServiceRequest.php';
    *   $mqlread = $freebaseService->mqlread;
    *  </code>
    */
-  class MqlreadServiceResource extends apiServiceResource {
-    /**
+  class MqlreadServiceResource extends apiServiceResource
+  {
+      /**
      * Performs MQL Queries. (mqlread.mqlread)
      *
      * @param string $query An envelope containing a single MQL query.
@@ -78,13 +81,13 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param bool cost Show the costs or not.
      * @opt_param string as_of_time Run the query as it would've been run at the specified point in time.
      */
-    public function mqlread($query, $optParams = array()) {
-      $params = array('query' => $query);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('mqlread', array($params));
-      return $data;
+    public function mqlread($query, $optParams = array())
+    {
+        $params = array('query' => $query);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('mqlread', array($params));
+        return $data;
     }
-
   }
 
   /**
@@ -95,8 +98,9 @@ require_once 'service/apiServiceRequest.php';
    *   $image = $freebaseService->image;
    *  </code>
    */
-  class ImageServiceResource extends apiServiceResource {
-    /**
+  class ImageServiceResource extends apiServiceResource
+  {
+      /**
      * Returns the scaled/cropped image attached to a freebase node. (image.image)
      *
      * @param string $id Freebase entity or content id, mid, or guid.
@@ -108,13 +112,13 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param bool pad A boolean specifying whether the resulting image should be padded up to the requested dimensions.
      * @opt_param string mode Method used to scale or crop image.
      */
-    public function image($id, $optParams = array()) {
-      $params = array('id' => $id);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('image', array($params));
-      return $data;
+    public function image($id, $optParams = array())
+    {
+        $params = array('id' => $id);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('image', array($params));
+        return $data;
     }
-
   }
 
 
@@ -132,31 +136,36 @@ require_once 'service/apiServiceRequest.php';
  *
  * @author Google, Inc.
  */
-class apiFreebaseService extends apiService {
-  public $text;
+class apiFreebaseService extends apiService
+{
+    public $text;
   /**
    * Constructs the internal representation of the Freebase service.
    *
    * @param apiClient apiClient
    */
-  public function __construct(apiClient $apiClient) {
-    $this->rpcPath = '/rpc';
-    $this->restBasePath = '/freebase/v1/';
-    $this->version = 'v1';
-    $this->serviceName = 'freebase';
-    $this->io = $apiClient->getIo();
+  public function __construct(apiClient $apiClient)
+  {
+      $this->rpcPath = '/rpc';
+      $this->restBasePath = '/freebase/v1/';
+      $this->version = 'v1';
+      $this->serviceName = 'freebase';
+      $this->io = $apiClient->getIo();
 
-    $apiClient->addService($this->serviceName, $this->version);
-    $this->text = new TextServiceResource($this, $this->serviceName, 'text', json_decode('{"methods": {"get": {"parameters": {"format": {"default": "plain", "enum": ["html", "plain", "raw"], "location": "query", "type": "string"}, "id": {"repeated": true, "required": true, "type": "string", "location": "path"}, "maxlength": {"format": "uint32", "type": "integer", "location": "query"}}, "id": "freebase.text.get", "httpMethod": "GET", "path": "text{/id*}", "response": {"$ref": "ContentserviceGet"}}}}', true));
+      $apiClient->addService($this->serviceName, $this->version);
+      $this->text = new TextServiceResource($this, $this->serviceName, 'text', json_decode('{"methods": {"get": {"parameters": {"format": {"default": "plain", "enum": ["html", "plain", "raw"], "location": "query", "type": "string"}, "id": {"repeated": true, "required": true, "type": "string", "location": "path"}, "maxlength": {"format": "uint32", "type": "integer", "location": "query"}}, "id": "freebase.text.get", "httpMethod": "GET", "path": "text{/id*}", "response": {"$ref": "ContentserviceGet"}}}}', true));
   }
 }
 
-class ContentserviceGet extends apiModel {
-  public $result;
-  public function setResult($result) {
-    $this->result = $result;
-  }
-  public function getResult() {
-    return $this->result;
-  }
+class ContentserviceGet extends apiModel
+{
+    public $result;
+    public function setResult($result)
+    {
+        $this->result = $result;
+    }
+    public function getResult()
+    {
+        return $this->result;
+    }
 }

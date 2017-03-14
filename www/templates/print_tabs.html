@@ -1,14 +1,14 @@
-<ul class="{{tab_class}}">
+<ul class="{{ tab_class }}">
 {% for item in items %}
     <li {% if item.id == option OR item.selected %}class="selected"{% endif %}>
-            <a href="{{globals.base_url}}{{item.url}}">{{ item.title }}</a>
+            <a href="{{ globals.base_url }}{{ item.url }}">{{ item.title }}</a>
     </li>
 {% endfor %}
 
 {% if feed %}
     <li class="icon wideonly">
-        <a href="{{globals.base_url}}rss{{feed.url}}" title="{{feed.title}}" >
-            <i class="fa fa-rss-square"></i>
+        <a href="{{ globals.base_url }}rss{{ feed.url }}" title="{{ feed.title }}" >
+            <i class="fa fa-rss-square"></i> RSS
         </a>
     </li>
 {% endif %}

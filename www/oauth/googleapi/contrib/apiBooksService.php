@@ -28,7 +28,8 @@ require_once 'service/apiServiceRequest.php';
    *   $bookshelves = $booksService->bookshelves;
    *  </code>
    */
-  class BookshelvesServiceResource extends apiServiceResource {
+  class BookshelvesServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -41,15 +42,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string source String to identify the originator of this request.
      * @return Bookshelves
      */
-    public function listBookshelves($userId, $optParams = array()) {
-      $params = array('userId' => $userId);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new Bookshelves($data);
-      } else {
-        return $data;
-      }
+    public function listBookshelves($userId, $optParams = array())
+    {
+        $params = array('userId' => $userId);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new Bookshelves($data);
+        } else {
+            return $data;
+        }
     }
     /**
      * Retrieves a specific bookshelf for the specified user. (bookshelves.get)
@@ -62,15 +64,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string source String to identify the originator of this request.
      * @return Bookshelf
      */
-    public function get($userId, $shelf, $optParams = array()) {
-      $params = array('userId' => $userId, 'shelf' => $shelf);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('get', array($params));
-      if ($this->useObjects()) {
-        return new Bookshelf($data);
-      } else {
-        return $data;
-      }
+    public function get($userId, $shelf, $optParams = array())
+    {
+        $params = array('userId' => $userId, 'shelf' => $shelf);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('get', array($params));
+        if ($this->useObjects()) {
+            return new Bookshelf($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -83,7 +86,8 @@ require_once 'service/apiServiceRequest.php';
    *   $volumes = $booksService->volumes;
    *  </code>
    */
-  class BookshelvesVolumesServiceResource extends apiServiceResource {
+  class BookshelvesVolumesServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -100,15 +104,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string startIndex Index of the first element to return (starts at 0)
      * @return Volumes
      */
-    public function listBookshelvesVolumes($userId, $shelf, $optParams = array()) {
-      $params = array('userId' => $userId, 'shelf' => $shelf);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new Volumes($data);
-      } else {
-        return $data;
-      }
+    public function listBookshelvesVolumes($userId, $shelf, $optParams = array())
+    {
+        $params = array('userId' => $userId, 'shelf' => $shelf);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new Volumes($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -120,7 +125,8 @@ require_once 'service/apiServiceRequest.php';
    *   $volumes = $booksService->volumes;
    *  </code>
    */
-  class VolumesServiceResource extends apiServiceResource {
+  class VolumesServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -144,15 +150,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param bool showPreorders Set to true to show books available for preorder. Defaults to false.
      * @return Volumes
      */
-    public function listVolumes($q, $optParams = array()) {
-      $params = array('q' => $q);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new Volumes($data);
-      } else {
-        return $data;
-      }
+    public function listVolumes($q, $optParams = array())
+    {
+        $params = array('q' => $q);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new Volumes($data);
+        } else {
+            return $data;
+        }
     }
     /**
      * Gets volume information for a single volume. (volumes.get)
@@ -166,15 +173,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string partner Identifier of partner for whom to brand results.
      * @return Volume
      */
-    public function get($volumeId, $optParams = array()) {
-      $params = array('volumeId' => $volumeId);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('get', array($params));
-      if ($this->useObjects()) {
-        return new Volume($data);
-      } else {
-        return $data;
-      }
+    public function get($volumeId, $optParams = array())
+    {
+        $params = array('volumeId' => $volumeId);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('get', array($params));
+        if ($this->useObjects()) {
+            return new Volume($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -186,9 +194,8 @@ require_once 'service/apiServiceRequest.php';
    *   $mylibrary = $booksService->mylibrary;
    *  </code>
    */
-  class MylibraryServiceResource extends apiServiceResource {
-
-
+  class MylibraryServiceResource extends apiServiceResource
+  {
   }
 
 
@@ -200,7 +207,8 @@ require_once 'service/apiServiceRequest.php';
    *   $bookshelves = $booksService->bookshelves;
    *  </code>
    */
-  class MylibraryBookshelvesServiceResource extends apiServiceResource {
+  class MylibraryBookshelvesServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -212,11 +220,12 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string country ISO-3166-1 code to override the IP-based location.
      * @opt_param string source String to identify the originator of this request.
      */
-    public function clearVolumes($shelf, $optParams = array()) {
-      $params = array('shelf' => $shelf);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('clearVolumes', array($params));
-      return $data;
+    public function clearVolumes($shelf, $optParams = array())
+    {
+        $params = array('shelf' => $shelf);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('clearVolumes', array($params));
+        return $data;
     }
     /**
      * Removes a volume from a bookshelf. (bookshelves.removeVolume)
@@ -228,11 +237,12 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string country ISO-3166-1 code to override the IP-based location.
      * @opt_param string source String to identify the originator of this request.
      */
-    public function removeVolume($shelf, $volumeId, $optParams = array()) {
-      $params = array('shelf' => $shelf, 'volumeId' => $volumeId);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('removeVolume', array($params));
-      return $data;
+    public function removeVolume($shelf, $volumeId, $optParams = array())
+    {
+        $params = array('shelf' => $shelf, 'volumeId' => $volumeId);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('removeVolume', array($params));
+        return $data;
     }
     /**
      * Retrieves a list of bookshelves belonging to the authenticated user. (bookshelves.list)
@@ -243,15 +253,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string source String to identify the originator of this request.
      * @return Bookshelves
      */
-    public function listMylibraryBookshelves($optParams = array()) {
-      $params = array();
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new Bookshelves($data);
-      } else {
-        return $data;
-      }
+    public function listMylibraryBookshelves($optParams = array())
+    {
+        $params = array();
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new Bookshelves($data);
+        } else {
+            return $data;
+        }
     }
     /**
      * Adds a volume to a bookshelf. (bookshelves.addVolume)
@@ -263,11 +274,12 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string country ISO-3166-1 code to override the IP-based location.
      * @opt_param string source String to identify the originator of this request.
      */
-    public function addVolume($shelf, $volumeId, $optParams = array()) {
-      $params = array('shelf' => $shelf, 'volumeId' => $volumeId);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('addVolume', array($params));
-      return $data;
+    public function addVolume($shelf, $volumeId, $optParams = array())
+    {
+        $params = array('shelf' => $shelf, 'volumeId' => $volumeId);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('addVolume', array($params));
+        return $data;
     }
     /**
      * Retrieves a specific bookshelf belonging to the authenticated user. (bookshelves.get)
@@ -279,15 +291,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string source String to identify the originator of this request.
      * @return Bookshelf
      */
-    public function get($shelf, $optParams = array()) {
-      $params = array('shelf' => $shelf);
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('get', array($params));
-      if ($this->useObjects()) {
-        return new Bookshelf($data);
-      } else {
-        return $data;
-      }
+    public function get($shelf, $optParams = array())
+    {
+        $params = array('shelf' => $shelf);
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('get', array($params));
+        if ($this->useObjects()) {
+            return new Bookshelf($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -300,7 +313,8 @@ require_once 'service/apiServiceRequest.php';
    *   $volumes = $booksService->volumes;
    *  </code>
    */
-  class MylibraryBookshelvesVolumesServiceResource extends apiServiceResource {
+  class MylibraryBookshelvesVolumesServiceResource extends apiServiceResource
+  {
 
 
     /**
@@ -318,15 +332,16 @@ require_once 'service/apiServiceRequest.php';
      * @opt_param string startIndex Index of the first element to return (starts at 0)
      * @return Volumes
      */
-    public function listMylibraryBookshelvesVolumes($optParams = array()) {
-      $params = array();
-      $params = array_merge($params, $optParams);
-      $data = $this->__call('list', array($params));
-      if ($this->useObjects()) {
-        return new Volumes($data);
-      } else {
-        return $data;
-      }
+    public function listMylibraryBookshelvesVolumes($optParams = array())
+    {
+        $params = array();
+        $params = array_merge($params, $optParams);
+        $data = $this->__call('list', array($params));
+        if ($this->useObjects()) {
+            return new Volumes($data);
+        } else {
+            return $data;
+        }
     }
   }
 
@@ -346,931 +361,1183 @@ require_once 'service/apiServiceRequest.php';
  *
  * @author Google, Inc.
  */
-class apiBooksService extends apiService {
-  public $bookshelves;
-  public $volumes;
-  public $mylibrary;
+class apiBooksService extends apiService
+{
+    public $bookshelves;
+    public $volumes;
+    public $mylibrary;
   /**
    * Constructs the internal representation of the Books service.
    *
    * @param apiClient apiClient
    */
-  public function __construct(apiClient $apiClient) {
-    $this->rpcPath = '/rpc';
-    $this->restBasePath = '/books/v1/';
-    $this->version = 'v1';
-    $this->serviceName = 'books';
-    $this->io = $apiClient->getIo();
+  public function __construct(apiClient $apiClient)
+  {
+      $this->rpcPath = '/rpc';
+      $this->restBasePath = '/books/v1/';
+      $this->version = 'v1';
+      $this->serviceName = 'books';
+      $this->io = $apiClient->getIo();
 
-    $apiClient->addService($this->serviceName, $this->version);
-    $this->bookshelves = new BookshelvesServiceResource($this, $this->serviceName, 'bookshelves', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "userId": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "id": "books.bookshelves.list", "httpMethod": "GET", "path": "users/{userId}/bookshelves", "response": {"$ref": "Bookshelves"}}, "get": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "userId": {"required": true, "type": "string", "location": "path"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "id": "books.bookshelves.get", "httpMethod": "GET", "path": "users/{userId}/bookshelves/{shelf}", "response": {"$ref": "Bookshelf"}}}, "resources": {"volumes": {"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "showPreorders": {"type": "boolean", "location": "query"}, "maxResults": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "source": {"type": "string", "location": "query"}, "startIndex": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "userId": {"required": true, "type": "string", "location": "path"}}, "id": "books.bookshelves.volumes.list", "httpMethod": "GET", "path": "users/{userId}/bookshelves/{shelf}/volumes", "response": {"$ref": "Volumes"}}}}}}', true));
-    $this->volumes = new VolumesServiceResource($this, $this->serviceName, 'volumes', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"orderBy": {"enum": ["newest", "relevance"], "type": "string", "location": "query"}, "filter": {"enum": ["ebooks", "free-ebooks", "full", "paid-ebooks", "partial"], "type": "string", "location": "query"}, "projection": {"enum": ["full", "lite"], "type": "string", "location": "query"}, "libraryRestrict": {"enum": ["my-library", "no-restrict"], "type": "string", "location": "query"}, "langRestrict": {"type": "string", "location": "query"}, "country": {"type": "string", "location": "query"}, "printType": {"enum": ["all", "books", "magazines"], "type": "string", "location": "query"}, "maxResults": {"format": "uint32", "maximum": "40", "minimum": "0", "location": "query", "type": "integer"}, "q": {"required": true, "type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}, "startIndex": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "download": {"enum": ["epub"], "type": "string", "location": "query"}, "partner": {"type": "string", "location": "query"}, "showPreorders": {"type": "boolean", "location": "query"}}, "id": "books.volumes.list", "httpMethod": "GET", "path": "volumes", "response": {"$ref": "Volumes"}}, "get": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"partner": {"type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}, "projection": {"enum": ["full", "lite"], "type": "string", "location": "query"}, "volumeId": {"required": true, "type": "string", "location": "path"}, "country": {"type": "string", "location": "query"}}, "id": "books.volumes.get", "httpMethod": "GET", "path": "volumes/{volumeId}", "response": {"$ref": "Volume"}}}}', true));
-    $this->mylibrary = new MylibraryServiceResource($this, $this->serviceName, 'mylibrary', json_decode('{"resources": {"bookshelves": {"methods": {"clearVolumes": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "httpMethod": "POST", "path": "mylibrary/bookshelves/{shelf}/clearVolumes", "id": "books.mylibrary.bookshelves.clearVolumes"}, "removeVolume": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "volumeId": {"required": true, "type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "httpMethod": "POST", "path": "mylibrary/bookshelves/{shelf}/removeVolume", "id": "books.mylibrary.bookshelves.removeVolume"}, "list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}}, "response": {"$ref": "Bookshelves"}, "httpMethod": "GET", "path": "mylibrary/bookshelves", "id": "books.mylibrary.bookshelves.list"}, "addVolume": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "volumeId": {"required": true, "type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "httpMethod": "POST", "path": "mylibrary/bookshelves/{shelf}/addVolume", "id": "books.mylibrary.bookshelves.addVolume"}, "get": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "id": "books.mylibrary.bookshelves.get", "httpMethod": "GET", "path": "mylibrary/bookshelves/{shelf}", "response": {"$ref": "Bookshelf"}}}, "resources": {"volumes": {"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"projection": {"enum": ["full", "lite"], "type": "string", "location": "query"}, "country": {"type": "string", "location": "query"}, "showPreorders": {"type": "boolean", "location": "query"}, "maxResults": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "q": {"type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}, "startIndex": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "shelf": {"type": "string", "location": "path"}}, "id": "books.mylibrary.bookshelves.volumes.list", "httpMethod": "GET", "path": "mylibrary/bookshelves/{shelf}/volumes", "response": {"$ref": "Volumes"}}}}}}}}', true));
+      $apiClient->addService($this->serviceName, $this->version);
+      $this->bookshelves = new BookshelvesServiceResource($this, $this->serviceName, 'bookshelves', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "userId": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "id": "books.bookshelves.list", "httpMethod": "GET", "path": "users/{userId}/bookshelves", "response": {"$ref": "Bookshelves"}}, "get": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "userId": {"required": true, "type": "string", "location": "path"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "id": "books.bookshelves.get", "httpMethod": "GET", "path": "users/{userId}/bookshelves/{shelf}", "response": {"$ref": "Bookshelf"}}}, "resources": {"volumes": {"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "showPreorders": {"type": "boolean", "location": "query"}, "maxResults": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "source": {"type": "string", "location": "query"}, "startIndex": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "userId": {"required": true, "type": "string", "location": "path"}}, "id": "books.bookshelves.volumes.list", "httpMethod": "GET", "path": "users/{userId}/bookshelves/{shelf}/volumes", "response": {"$ref": "Volumes"}}}}}}', true));
+      $this->volumes = new VolumesServiceResource($this, $this->serviceName, 'volumes', json_decode('{"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"orderBy": {"enum": ["newest", "relevance"], "type": "string", "location": "query"}, "filter": {"enum": ["ebooks", "free-ebooks", "full", "paid-ebooks", "partial"], "type": "string", "location": "query"}, "projection": {"enum": ["full", "lite"], "type": "string", "location": "query"}, "libraryRestrict": {"enum": ["my-library", "no-restrict"], "type": "string", "location": "query"}, "langRestrict": {"type": "string", "location": "query"}, "country": {"type": "string", "location": "query"}, "printType": {"enum": ["all", "books", "magazines"], "type": "string", "location": "query"}, "maxResults": {"format": "uint32", "maximum": "40", "minimum": "0", "location": "query", "type": "integer"}, "q": {"required": true, "type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}, "startIndex": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "download": {"enum": ["epub"], "type": "string", "location": "query"}, "partner": {"type": "string", "location": "query"}, "showPreorders": {"type": "boolean", "location": "query"}}, "id": "books.volumes.list", "httpMethod": "GET", "path": "volumes", "response": {"$ref": "Volumes"}}, "get": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"partner": {"type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}, "projection": {"enum": ["full", "lite"], "type": "string", "location": "query"}, "volumeId": {"required": true, "type": "string", "location": "path"}, "country": {"type": "string", "location": "query"}}, "id": "books.volumes.get", "httpMethod": "GET", "path": "volumes/{volumeId}", "response": {"$ref": "Volume"}}}}', true));
+      $this->mylibrary = new MylibraryServiceResource($this, $this->serviceName, 'mylibrary', json_decode('{"resources": {"bookshelves": {"methods": {"clearVolumes": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "httpMethod": "POST", "path": "mylibrary/bookshelves/{shelf}/clearVolumes", "id": "books.mylibrary.bookshelves.clearVolumes"}, "removeVolume": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "volumeId": {"required": true, "type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "httpMethod": "POST", "path": "mylibrary/bookshelves/{shelf}/removeVolume", "id": "books.mylibrary.bookshelves.removeVolume"}, "list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}}, "response": {"$ref": "Bookshelves"}, "httpMethod": "GET", "path": "mylibrary/bookshelves", "id": "books.mylibrary.bookshelves.list"}, "addVolume": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "volumeId": {"required": true, "type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "httpMethod": "POST", "path": "mylibrary/bookshelves/{shelf}/addVolume", "id": "books.mylibrary.bookshelves.addVolume"}, "get": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"country": {"type": "string", "location": "query"}, "shelf": {"required": true, "type": "string", "location": "path"}, "source": {"type": "string", "location": "query"}}, "id": "books.mylibrary.bookshelves.get", "httpMethod": "GET", "path": "mylibrary/bookshelves/{shelf}", "response": {"$ref": "Bookshelf"}}}, "resources": {"volumes": {"methods": {"list": {"scopes": ["https://www.googleapis.com/auth/books"], "parameters": {"projection": {"enum": ["full", "lite"], "type": "string", "location": "query"}, "country": {"type": "string", "location": "query"}, "showPreorders": {"type": "boolean", "location": "query"}, "maxResults": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "q": {"type": "string", "location": "query"}, "source": {"type": "string", "location": "query"}, "startIndex": {"format": "uint32", "minimum": "0", "type": "integer", "location": "query"}, "shelf": {"type": "string", "location": "path"}}, "id": "books.mylibrary.bookshelves.volumes.list", "httpMethod": "GET", "path": "mylibrary/bookshelves/{shelf}/volumes", "response": {"$ref": "Volumes"}}}}}}}}', true));
   }
 }
 
-class Bookshelf extends apiModel {
-  public $kind;
-  public $description;
-  public $created;
-  public $volumeCount;
-  public $title;
-  public $updated;
-  public $access;
-  public $volumesLastUpdated;
-  public $id;
-  public $selfLink;
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setDescription($description) {
-    $this->description = $description;
-  }
-  public function getDescription() {
-    return $this->description;
-  }
-  public function setCreated($created) {
-    $this->created = $created;
-  }
-  public function getCreated() {
-    return $this->created;
-  }
-  public function setVolumeCount($volumeCount) {
-    $this->volumeCount = $volumeCount;
-  }
-  public function getVolumeCount() {
-    return $this->volumeCount;
-  }
-  public function setTitle($title) {
-    $this->title = $title;
-  }
-  public function getTitle() {
-    return $this->title;
-  }
-  public function setUpdated($updated) {
-    $this->updated = $updated;
-  }
-  public function getUpdated() {
-    return $this->updated;
-  }
-  public function setAccess($access) {
-    $this->access = $access;
-  }
-  public function getAccess() {
-    return $this->access;
-  }
-  public function setVolumesLastUpdated($volumesLastUpdated) {
-    $this->volumesLastUpdated = $volumesLastUpdated;
-  }
-  public function getVolumesLastUpdated() {
-    return $this->volumesLastUpdated;
-  }
-  public function setId($id) {
-    $this->id = $id;
-  }
-  public function getId() {
-    return $this->id;
-  }
-  public function setSelfLink($selfLink) {
-    $this->selfLink = $selfLink;
-  }
-  public function getSelfLink() {
-    return $this->selfLink;
-  }
+class Bookshelf extends apiModel
+{
+    public $kind;
+    public $description;
+    public $created;
+    public $volumeCount;
+    public $title;
+    public $updated;
+    public $access;
+    public $volumesLastUpdated;
+    public $id;
+    public $selfLink;
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+    public function getCreated()
+    {
+        return $this->created;
+    }
+    public function setVolumeCount($volumeCount)
+    {
+        $this->volumeCount = $volumeCount;
+    }
+    public function getVolumeCount()
+    {
+        return $this->volumeCount;
+    }
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+    public function setAccess($access)
+    {
+        $this->access = $access;
+    }
+    public function getAccess()
+    {
+        return $this->access;
+    }
+    public function setVolumesLastUpdated($volumesLastUpdated)
+    {
+        $this->volumesLastUpdated = $volumesLastUpdated;
+    }
+    public function getVolumesLastUpdated()
+    {
+        return $this->volumesLastUpdated;
+    }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setSelfLink($selfLink)
+    {
+        $this->selfLink = $selfLink;
+    }
+    public function getSelfLink()
+    {
+        return $this->selfLink;
+    }
 }
 
-class Bookshelves extends apiModel {
-  protected $__itemsType = 'Bookshelf';
-  protected $__itemsDataType = 'array';
-  public $items;
-  public $kind;
-  public function setItems(/* array(Bookshelf) */ $items) {
-    $this->assertIsArray($items, 'Bookshelf', __METHOD__);
-    $this->items = $items;
-  }
-  public function getItems() {
-    return $this->items;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
+class Bookshelves extends apiModel
+{
+    protected $__itemsType = 'Bookshelf';
+    protected $__itemsDataType = 'array';
+    public $items;
+    public $kind;
+    public function setItems(/* array(Bookshelf) */ $items)
+    {
+        $this->assertIsArray($items, 'Bookshelf', __METHOD__);
+        $this->items = $items;
+    }
+    public function getItems()
+    {
+        return $this->items;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
 }
 
-class DownloadAccessRestriction extends apiModel {
-  public $nonce;
-  public $kind;
-  public $justAcquired;
-  public $maxDownloadDevices;
-  public $downloadsAcquired;
-  public $signature;
-  public $volumeId;
-  public $deviceAllowed;
-  public $source;
-  public $restricted;
-  public $reasonCode;
-  public $message;
-  public function setNonce($nonce) {
-    $this->nonce = $nonce;
-  }
-  public function getNonce() {
-    return $this->nonce;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setJustAcquired($justAcquired) {
-    $this->justAcquired = $justAcquired;
-  }
-  public function getJustAcquired() {
-    return $this->justAcquired;
-  }
-  public function setMaxDownloadDevices($maxDownloadDevices) {
-    $this->maxDownloadDevices = $maxDownloadDevices;
-  }
-  public function getMaxDownloadDevices() {
-    return $this->maxDownloadDevices;
-  }
-  public function setDownloadsAcquired($downloadsAcquired) {
-    $this->downloadsAcquired = $downloadsAcquired;
-  }
-  public function getDownloadsAcquired() {
-    return $this->downloadsAcquired;
-  }
-  public function setSignature($signature) {
-    $this->signature = $signature;
-  }
-  public function getSignature() {
-    return $this->signature;
-  }
-  public function setVolumeId($volumeId) {
-    $this->volumeId = $volumeId;
-  }
-  public function getVolumeId() {
-    return $this->volumeId;
-  }
-  public function setDeviceAllowed($deviceAllowed) {
-    $this->deviceAllowed = $deviceAllowed;
-  }
-  public function getDeviceAllowed() {
-    return $this->deviceAllowed;
-  }
-  public function setSource($source) {
-    $this->source = $source;
-  }
-  public function getSource() {
-    return $this->source;
-  }
-  public function setRestricted($restricted) {
-    $this->restricted = $restricted;
-  }
-  public function getRestricted() {
-    return $this->restricted;
-  }
-  public function setReasonCode($reasonCode) {
-    $this->reasonCode = $reasonCode;
-  }
-  public function getReasonCode() {
-    return $this->reasonCode;
-  }
-  public function setMessage($message) {
-    $this->message = $message;
-  }
-  public function getMessage() {
-    return $this->message;
-  }
+class DownloadAccessRestriction extends apiModel
+{
+    public $nonce;
+    public $kind;
+    public $justAcquired;
+    public $maxDownloadDevices;
+    public $downloadsAcquired;
+    public $signature;
+    public $volumeId;
+    public $deviceAllowed;
+    public $source;
+    public $restricted;
+    public $reasonCode;
+    public $message;
+    public function setNonce($nonce)
+    {
+        $this->nonce = $nonce;
+    }
+    public function getNonce()
+    {
+        return $this->nonce;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setJustAcquired($justAcquired)
+    {
+        $this->justAcquired = $justAcquired;
+    }
+    public function getJustAcquired()
+    {
+        return $this->justAcquired;
+    }
+    public function setMaxDownloadDevices($maxDownloadDevices)
+    {
+        $this->maxDownloadDevices = $maxDownloadDevices;
+    }
+    public function getMaxDownloadDevices()
+    {
+        return $this->maxDownloadDevices;
+    }
+    public function setDownloadsAcquired($downloadsAcquired)
+    {
+        $this->downloadsAcquired = $downloadsAcquired;
+    }
+    public function getDownloadsAcquired()
+    {
+        return $this->downloadsAcquired;
+    }
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
+    public function getSignature()
+    {
+        return $this->signature;
+    }
+    public function setVolumeId($volumeId)
+    {
+        $this->volumeId = $volumeId;
+    }
+    public function getVolumeId()
+    {
+        return $this->volumeId;
+    }
+    public function setDeviceAllowed($deviceAllowed)
+    {
+        $this->deviceAllowed = $deviceAllowed;
+    }
+    public function getDeviceAllowed()
+    {
+        return $this->deviceAllowed;
+    }
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+    public function getSource()
+    {
+        return $this->source;
+    }
+    public function setRestricted($restricted)
+    {
+        $this->restricted = $restricted;
+    }
+    public function getRestricted()
+    {
+        return $this->restricted;
+    }
+    public function setReasonCode($reasonCode)
+    {
+        $this->reasonCode = $reasonCode;
+    }
+    public function getReasonCode()
+    {
+        return $this->reasonCode;
+    }
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+    public function getMessage()
+    {
+        return $this->message;
+    }
 }
 
-class ReadingPosition extends apiModel {
-  public $kind;
-  public $gbImagePosition;
-  public $epubCfiPosition;
-  public $updated;
-  public $volumeId;
-  public $pdfPosition;
-  public $gbTextPosition;
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setGbImagePosition($gbImagePosition) {
-    $this->gbImagePosition = $gbImagePosition;
-  }
-  public function getGbImagePosition() {
-    return $this->gbImagePosition;
-  }
-  public function setEpubCfiPosition($epubCfiPosition) {
-    $this->epubCfiPosition = $epubCfiPosition;
-  }
-  public function getEpubCfiPosition() {
-    return $this->epubCfiPosition;
-  }
-  public function setUpdated($updated) {
-    $this->updated = $updated;
-  }
-  public function getUpdated() {
-    return $this->updated;
-  }
-  public function setVolumeId($volumeId) {
-    $this->volumeId = $volumeId;
-  }
-  public function getVolumeId() {
-    return $this->volumeId;
-  }
-  public function setPdfPosition($pdfPosition) {
-    $this->pdfPosition = $pdfPosition;
-  }
-  public function getPdfPosition() {
-    return $this->pdfPosition;
-  }
-  public function setGbTextPosition($gbTextPosition) {
-    $this->gbTextPosition = $gbTextPosition;
-  }
-  public function getGbTextPosition() {
-    return $this->gbTextPosition;
-  }
+class ReadingPosition extends apiModel
+{
+    public $kind;
+    public $gbImagePosition;
+    public $epubCfiPosition;
+    public $updated;
+    public $volumeId;
+    public $pdfPosition;
+    public $gbTextPosition;
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setGbImagePosition($gbImagePosition)
+    {
+        $this->gbImagePosition = $gbImagePosition;
+    }
+    public function getGbImagePosition()
+    {
+        return $this->gbImagePosition;
+    }
+    public function setEpubCfiPosition($epubCfiPosition)
+    {
+        $this->epubCfiPosition = $epubCfiPosition;
+    }
+    public function getEpubCfiPosition()
+    {
+        return $this->epubCfiPosition;
+    }
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+    public function setVolumeId($volumeId)
+    {
+        $this->volumeId = $volumeId;
+    }
+    public function getVolumeId()
+    {
+        return $this->volumeId;
+    }
+    public function setPdfPosition($pdfPosition)
+    {
+        $this->pdfPosition = $pdfPosition;
+    }
+    public function getPdfPosition()
+    {
+        return $this->pdfPosition;
+    }
+    public function setGbTextPosition($gbTextPosition)
+    {
+        $this->gbTextPosition = $gbTextPosition;
+    }
+    public function getGbTextPosition()
+    {
+        return $this->gbTextPosition;
+    }
 }
 
-class Review extends apiModel {
-  public $rating;
-  public $kind;
-  protected $__authorType = 'ReviewAuthor';
-  protected $__authorDataType = '';
-  public $author;
-  public $title;
-  public $volumeId;
-  public $content;
-  protected $__sourceType = 'ReviewSource';
-  protected $__sourceDataType = '';
-  public $source;
-  public $date;
-  public $type;
-  public $fullTextUrl;
-  public function setRating($rating) {
-    $this->rating = $rating;
-  }
-  public function getRating() {
-    return $this->rating;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setAuthor(ReviewAuthor $author) {
-    $this->author = $author;
-  }
-  public function getAuthor() {
-    return $this->author;
-  }
-  public function setTitle($title) {
-    $this->title = $title;
-  }
-  public function getTitle() {
-    return $this->title;
-  }
-  public function setVolumeId($volumeId) {
-    $this->volumeId = $volumeId;
-  }
-  public function getVolumeId() {
-    return $this->volumeId;
-  }
-  public function setContent($content) {
-    $this->content = $content;
-  }
-  public function getContent() {
-    return $this->content;
-  }
-  public function setSource(ReviewSource $source) {
-    $this->source = $source;
-  }
-  public function getSource() {
-    return $this->source;
-  }
-  public function setDate($date) {
-    $this->date = $date;
-  }
-  public function getDate() {
-    return $this->date;
-  }
-  public function setType($type) {
-    $this->type = $type;
-  }
-  public function getType() {
-    return $this->type;
-  }
-  public function setFullTextUrl($fullTextUrl) {
-    $this->fullTextUrl = $fullTextUrl;
-  }
-  public function getFullTextUrl() {
-    return $this->fullTextUrl;
-  }
+class Review extends apiModel
+{
+    public $rating;
+    public $kind;
+    protected $__authorType = 'ReviewAuthor';
+    protected $__authorDataType = '';
+    public $author;
+    public $title;
+    public $volumeId;
+    public $content;
+    protected $__sourceType = 'ReviewSource';
+    protected $__sourceDataType = '';
+    public $source;
+    public $date;
+    public $type;
+    public $fullTextUrl;
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+    }
+    public function getRating()
+    {
+        return $this->rating;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setAuthor(ReviewAuthor $author)
+    {
+        $this->author = $author;
+    }
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    public function setVolumeId($volumeId)
+    {
+        $this->volumeId = $volumeId;
+    }
+    public function getVolumeId()
+    {
+        return $this->volumeId;
+    }
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+    public function getContent()
+    {
+        return $this->content;
+    }
+    public function setSource(ReviewSource $source)
+    {
+        $this->source = $source;
+    }
+    public function getSource()
+    {
+        return $this->source;
+    }
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+    public function getDate()
+    {
+        return $this->date;
+    }
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    public function getType()
+    {
+        return $this->type;
+    }
+    public function setFullTextUrl($fullTextUrl)
+    {
+        $this->fullTextUrl = $fullTextUrl;
+    }
+    public function getFullTextUrl()
+    {
+        return $this->fullTextUrl;
+    }
 }
 
-class ReviewAuthor extends apiModel {
-  public $displayName;
-  public function setDisplayName($displayName) {
-    $this->displayName = $displayName;
-  }
-  public function getDisplayName() {
-    return $this->displayName;
-  }
+class ReviewAuthor extends apiModel
+{
+    public $displayName;
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+    }
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
 }
 
-class ReviewSource extends apiModel {
-  public $extraDescription;
-  public $url;
-  public $description;
-  public function setExtraDescription($extraDescription) {
-    $this->extraDescription = $extraDescription;
-  }
-  public function getExtraDescription() {
-    return $this->extraDescription;
-  }
-  public function setUrl($url) {
-    $this->url = $url;
-  }
-  public function getUrl() {
-    return $this->url;
-  }
-  public function setDescription($description) {
-    $this->description = $description;
-  }
-  public function getDescription() {
-    return $this->description;
-  }
+class ReviewSource extends apiModel
+{
+    public $extraDescription;
+    public $url;
+    public $description;
+    public function setExtraDescription($extraDescription)
+    {
+        $this->extraDescription = $extraDescription;
+    }
+    public function getExtraDescription()
+    {
+        return $this->extraDescription;
+    }
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+    public function getUrl()
+    {
+        return $this->url;
+    }
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+    public function getDescription()
+    {
+        return $this->description;
+    }
 }
 
-class Volume extends apiModel {
-  public $kind;
-  protected $__accessInfoType = 'VolumeAccessInfo';
-  protected $__accessInfoDataType = '';
-  public $accessInfo;
-  protected $__saleInfoType = 'VolumeSaleInfo';
-  protected $__saleInfoDataType = '';
-  public $saleInfo;
-  public $etag;
-  protected $__userInfoType = 'VolumeUserInfo';
-  protected $__userInfoDataType = '';
-  public $userInfo;
-  protected $__volumeInfoType = 'VolumeVolumeInfo';
-  protected $__volumeInfoDataType = '';
-  public $volumeInfo;
-  public $id;
-  public $selfLink;
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
-  public function setAccessInfo(VolumeAccessInfo $accessInfo) {
-    $this->accessInfo = $accessInfo;
-  }
-  public function getAccessInfo() {
-    return $this->accessInfo;
-  }
-  public function setSaleInfo(VolumeSaleInfo $saleInfo) {
-    $this->saleInfo = $saleInfo;
-  }
-  public function getSaleInfo() {
-    return $this->saleInfo;
-  }
-  public function setEtag($etag) {
-    $this->etag = $etag;
-  }
-  public function getEtag() {
-    return $this->etag;
-  }
-  public function setUserInfo(VolumeUserInfo $userInfo) {
-    $this->userInfo = $userInfo;
-  }
-  public function getUserInfo() {
-    return $this->userInfo;
-  }
-  public function setVolumeInfo(VolumeVolumeInfo $volumeInfo) {
-    $this->volumeInfo = $volumeInfo;
-  }
-  public function getVolumeInfo() {
-    return $this->volumeInfo;
-  }
-  public function setId($id) {
-    $this->id = $id;
-  }
-  public function getId() {
-    return $this->id;
-  }
-  public function setSelfLink($selfLink) {
-    $this->selfLink = $selfLink;
-  }
-  public function getSelfLink() {
-    return $this->selfLink;
-  }
+class Volume extends apiModel
+{
+    public $kind;
+    protected $__accessInfoType = 'VolumeAccessInfo';
+    protected $__accessInfoDataType = '';
+    public $accessInfo;
+    protected $__saleInfoType = 'VolumeSaleInfo';
+    protected $__saleInfoDataType = '';
+    public $saleInfo;
+    public $etag;
+    protected $__userInfoType = 'VolumeUserInfo';
+    protected $__userInfoDataType = '';
+    public $userInfo;
+    protected $__volumeInfoType = 'VolumeVolumeInfo';
+    protected $__volumeInfoDataType = '';
+    public $volumeInfo;
+    public $id;
+    public $selfLink;
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
+    public function setAccessInfo(VolumeAccessInfo $accessInfo)
+    {
+        $this->accessInfo = $accessInfo;
+    }
+    public function getAccessInfo()
+    {
+        return $this->accessInfo;
+    }
+    public function setSaleInfo(VolumeSaleInfo $saleInfo)
+    {
+        $this->saleInfo = $saleInfo;
+    }
+    public function getSaleInfo()
+    {
+        return $this->saleInfo;
+    }
+    public function setEtag($etag)
+    {
+        $this->etag = $etag;
+    }
+    public function getEtag()
+    {
+        return $this->etag;
+    }
+    public function setUserInfo(VolumeUserInfo $userInfo)
+    {
+        $this->userInfo = $userInfo;
+    }
+    public function getUserInfo()
+    {
+        return $this->userInfo;
+    }
+    public function setVolumeInfo(VolumeVolumeInfo $volumeInfo)
+    {
+        $this->volumeInfo = $volumeInfo;
+    }
+    public function getVolumeInfo()
+    {
+        return $this->volumeInfo;
+    }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setSelfLink($selfLink)
+    {
+        $this->selfLink = $selfLink;
+    }
+    public function getSelfLink()
+    {
+        return $this->selfLink;
+    }
 }
 
-class VolumeAccessInfo extends apiModel {
-  public $publicDomain;
-  public $embeddable;
-  protected $__downloadAccessType = 'DownloadAccessRestriction';
-  protected $__downloadAccessDataType = '';
-  public $downloadAccess;
-  public $country;
-  public $textToSpeechPermission;
-  protected $__pdfType = 'VolumeAccessInfoPdf';
-  protected $__pdfDataType = '';
-  public $pdf;
-  public $viewability;
-  protected $__epubType = 'VolumeAccessInfoEpub';
-  protected $__epubDataType = '';
-  public $epub;
-  public $accessViewStatus;
-  public function setPublicDomain($publicDomain) {
-    $this->publicDomain = $publicDomain;
-  }
-  public function getPublicDomain() {
-    return $this->publicDomain;
-  }
-  public function setEmbeddable($embeddable) {
-    $this->embeddable = $embeddable;
-  }
-  public function getEmbeddable() {
-    return $this->embeddable;
-  }
-  public function setDownloadAccess(DownloadAccessRestriction $downloadAccess) {
-    $this->downloadAccess = $downloadAccess;
-  }
-  public function getDownloadAccess() {
-    return $this->downloadAccess;
-  }
-  public function setCountry($country) {
-    $this->country = $country;
-  }
-  public function getCountry() {
-    return $this->country;
-  }
-  public function setTextToSpeechPermission($textToSpeechPermission) {
-    $this->textToSpeechPermission = $textToSpeechPermission;
-  }
-  public function getTextToSpeechPermission() {
-    return $this->textToSpeechPermission;
-  }
-  public function setPdf(VolumeAccessInfoPdf $pdf) {
-    $this->pdf = $pdf;
-  }
-  public function getPdf() {
-    return $this->pdf;
-  }
-  public function setViewability($viewability) {
-    $this->viewability = $viewability;
-  }
-  public function getViewability() {
-    return $this->viewability;
-  }
-  public function setEpub(VolumeAccessInfoEpub $epub) {
-    $this->epub = $epub;
-  }
-  public function getEpub() {
-    return $this->epub;
-  }
-  public function setAccessViewStatus($accessViewStatus) {
-    $this->accessViewStatus = $accessViewStatus;
-  }
-  public function getAccessViewStatus() {
-    return $this->accessViewStatus;
-  }
+class VolumeAccessInfo extends apiModel
+{
+    public $publicDomain;
+    public $embeddable;
+    protected $__downloadAccessType = 'DownloadAccessRestriction';
+    protected $__downloadAccessDataType = '';
+    public $downloadAccess;
+    public $country;
+    public $textToSpeechPermission;
+    protected $__pdfType = 'VolumeAccessInfoPdf';
+    protected $__pdfDataType = '';
+    public $pdf;
+    public $viewability;
+    protected $__epubType = 'VolumeAccessInfoEpub';
+    protected $__epubDataType = '';
+    public $epub;
+    public $accessViewStatus;
+    public function setPublicDomain($publicDomain)
+    {
+        $this->publicDomain = $publicDomain;
+    }
+    public function getPublicDomain()
+    {
+        return $this->publicDomain;
+    }
+    public function setEmbeddable($embeddable)
+    {
+        $this->embeddable = $embeddable;
+    }
+    public function getEmbeddable()
+    {
+        return $this->embeddable;
+    }
+    public function setDownloadAccess(DownloadAccessRestriction $downloadAccess)
+    {
+        $this->downloadAccess = $downloadAccess;
+    }
+    public function getDownloadAccess()
+    {
+        return $this->downloadAccess;
+    }
+    public function setCountry($country)
+    {
+        $this->country = $country;
+    }
+    public function getCountry()
+    {
+        return $this->country;
+    }
+    public function setTextToSpeechPermission($textToSpeechPermission)
+    {
+        $this->textToSpeechPermission = $textToSpeechPermission;
+    }
+    public function getTextToSpeechPermission()
+    {
+        return $this->textToSpeechPermission;
+    }
+    public function setPdf(VolumeAccessInfoPdf $pdf)
+    {
+        $this->pdf = $pdf;
+    }
+    public function getPdf()
+    {
+        return $this->pdf;
+    }
+    public function setViewability($viewability)
+    {
+        $this->viewability = $viewability;
+    }
+    public function getViewability()
+    {
+        return $this->viewability;
+    }
+    public function setEpub(VolumeAccessInfoEpub $epub)
+    {
+        $this->epub = $epub;
+    }
+    public function getEpub()
+    {
+        return $this->epub;
+    }
+    public function setAccessViewStatus($accessViewStatus)
+    {
+        $this->accessViewStatus = $accessViewStatus;
+    }
+    public function getAccessViewStatus()
+    {
+        return $this->accessViewStatus;
+    }
 }
 
-class VolumeAccessInfoEpub extends apiModel {
-  public $downloadLink;
-  public $acsTokenLink;
-  public function setDownloadLink($downloadLink) {
-    $this->downloadLink = $downloadLink;
-  }
-  public function getDownloadLink() {
-    return $this->downloadLink;
-  }
-  public function setAcsTokenLink($acsTokenLink) {
-    $this->acsTokenLink = $acsTokenLink;
-  }
-  public function getAcsTokenLink() {
-    return $this->acsTokenLink;
-  }
+class VolumeAccessInfoEpub extends apiModel
+{
+    public $downloadLink;
+    public $acsTokenLink;
+    public function setDownloadLink($downloadLink)
+    {
+        $this->downloadLink = $downloadLink;
+    }
+    public function getDownloadLink()
+    {
+        return $this->downloadLink;
+    }
+    public function setAcsTokenLink($acsTokenLink)
+    {
+        $this->acsTokenLink = $acsTokenLink;
+    }
+    public function getAcsTokenLink()
+    {
+        return $this->acsTokenLink;
+    }
 }
 
-class VolumeAccessInfoPdf extends apiModel {
-  public $downloadLink;
-  public $acsTokenLink;
-  public function setDownloadLink($downloadLink) {
-    $this->downloadLink = $downloadLink;
-  }
-  public function getDownloadLink() {
-    return $this->downloadLink;
-  }
-  public function setAcsTokenLink($acsTokenLink) {
-    $this->acsTokenLink = $acsTokenLink;
-  }
-  public function getAcsTokenLink() {
-    return $this->acsTokenLink;
-  }
+class VolumeAccessInfoPdf extends apiModel
+{
+    public $downloadLink;
+    public $acsTokenLink;
+    public function setDownloadLink($downloadLink)
+    {
+        $this->downloadLink = $downloadLink;
+    }
+    public function getDownloadLink()
+    {
+        return $this->downloadLink;
+    }
+    public function setAcsTokenLink($acsTokenLink)
+    {
+        $this->acsTokenLink = $acsTokenLink;
+    }
+    public function getAcsTokenLink()
+    {
+        return $this->acsTokenLink;
+    }
 }
 
-class VolumeSaleInfo extends apiModel {
-  public $country;
-  protected $__retailPriceType = 'VolumeSaleInfoRetailPrice';
-  protected $__retailPriceDataType = '';
-  public $retailPrice;
-  public $isEbook;
-  public $saleability;
-  public $buyLink;
-  public $onSaleDate;
-  protected $__listPriceType = 'VolumeSaleInfoListPrice';
-  protected $__listPriceDataType = '';
-  public $listPrice;
-  public function setCountry($country) {
-    $this->country = $country;
-  }
-  public function getCountry() {
-    return $this->country;
-  }
-  public function setRetailPrice(VolumeSaleInfoRetailPrice $retailPrice) {
-    $this->retailPrice = $retailPrice;
-  }
-  public function getRetailPrice() {
-    return $this->retailPrice;
-  }
-  public function setIsEbook($isEbook) {
-    $this->isEbook = $isEbook;
-  }
-  public function getIsEbook() {
-    return $this->isEbook;
-  }
-  public function setSaleability($saleability) {
-    $this->saleability = $saleability;
-  }
-  public function getSaleability() {
-    return $this->saleability;
-  }
-  public function setBuyLink($buyLink) {
-    $this->buyLink = $buyLink;
-  }
-  public function getBuyLink() {
-    return $this->buyLink;
-  }
-  public function setOnSaleDate($onSaleDate) {
-    $this->onSaleDate = $onSaleDate;
-  }
-  public function getOnSaleDate() {
-    return $this->onSaleDate;
-  }
-  public function setListPrice(VolumeSaleInfoListPrice $listPrice) {
-    $this->listPrice = $listPrice;
-  }
-  public function getListPrice() {
-    return $this->listPrice;
-  }
+class VolumeSaleInfo extends apiModel
+{
+    public $country;
+    protected $__retailPriceType = 'VolumeSaleInfoRetailPrice';
+    protected $__retailPriceDataType = '';
+    public $retailPrice;
+    public $isEbook;
+    public $saleability;
+    public $buyLink;
+    public $onSaleDate;
+    protected $__listPriceType = 'VolumeSaleInfoListPrice';
+    protected $__listPriceDataType = '';
+    public $listPrice;
+    public function setCountry($country)
+    {
+        $this->country = $country;
+    }
+    public function getCountry()
+    {
+        return $this->country;
+    }
+    public function setRetailPrice(VolumeSaleInfoRetailPrice $retailPrice)
+    {
+        $this->retailPrice = $retailPrice;
+    }
+    public function getRetailPrice()
+    {
+        return $this->retailPrice;
+    }
+    public function setIsEbook($isEbook)
+    {
+        $this->isEbook = $isEbook;
+    }
+    public function getIsEbook()
+    {
+        return $this->isEbook;
+    }
+    public function setSaleability($saleability)
+    {
+        $this->saleability = $saleability;
+    }
+    public function getSaleability()
+    {
+        return $this->saleability;
+    }
+    public function setBuyLink($buyLink)
+    {
+        $this->buyLink = $buyLink;
+    }
+    public function getBuyLink()
+    {
+        return $this->buyLink;
+    }
+    public function setOnSaleDate($onSaleDate)
+    {
+        $this->onSaleDate = $onSaleDate;
+    }
+    public function getOnSaleDate()
+    {
+        return $this->onSaleDate;
+    }
+    public function setListPrice(VolumeSaleInfoListPrice $listPrice)
+    {
+        $this->listPrice = $listPrice;
+    }
+    public function getListPrice()
+    {
+        return $this->listPrice;
+    }
 }
 
-class VolumeSaleInfoListPrice extends apiModel {
-  public $amount;
-  public $currencyCode;
-  public function setAmount($amount) {
-    $this->amount = $amount;
-  }
-  public function getAmount() {
-    return $this->amount;
-  }
-  public function setCurrencyCode($currencyCode) {
-    $this->currencyCode = $currencyCode;
-  }
-  public function getCurrencyCode() {
-    return $this->currencyCode;
-  }
+class VolumeSaleInfoListPrice extends apiModel
+{
+    public $amount;
+    public $currencyCode;
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+    public function setCurrencyCode($currencyCode)
+    {
+        $this->currencyCode = $currencyCode;
+    }
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
+    }
 }
 
-class VolumeSaleInfoRetailPrice extends apiModel {
-  public $amount;
-  public $currencyCode;
-  public function setAmount($amount) {
-    $this->amount = $amount;
-  }
-  public function getAmount() {
-    return $this->amount;
-  }
-  public function setCurrencyCode($currencyCode) {
-    $this->currencyCode = $currencyCode;
-  }
-  public function getCurrencyCode() {
-    return $this->currencyCode;
-  }
+class VolumeSaleInfoRetailPrice extends apiModel
+{
+    public $amount;
+    public $currencyCode;
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+    public function setCurrencyCode($currencyCode)
+    {
+        $this->currencyCode = $currencyCode;
+    }
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
+    }
 }
 
-class VolumeUserInfo extends apiModel {
-  public $updated;
-  public $isPreordered;
-  public $isPurchased;
-  protected $__readingPositionType = 'ReadingPosition';
-  protected $__readingPositionDataType = '';
-  public $readingPosition;
-  protected $__reviewType = 'Review';
-  protected $__reviewDataType = '';
-  public $review;
-  public function setUpdated($updated) {
-    $this->updated = $updated;
-  }
-  public function getUpdated() {
-    return $this->updated;
-  }
-  public function setIsPreordered($isPreordered) {
-    $this->isPreordered = $isPreordered;
-  }
-  public function getIsPreordered() {
-    return $this->isPreordered;
-  }
-  public function setIsPurchased($isPurchased) {
-    $this->isPurchased = $isPurchased;
-  }
-  public function getIsPurchased() {
-    return $this->isPurchased;
-  }
-  public function setReadingPosition(ReadingPosition $readingPosition) {
-    $this->readingPosition = $readingPosition;
-  }
-  public function getReadingPosition() {
-    return $this->readingPosition;
-  }
-  public function setReview(Review $review) {
-    $this->review = $review;
-  }
-  public function getReview() {
-    return $this->review;
-  }
+class VolumeUserInfo extends apiModel
+{
+    public $updated;
+    public $isPreordered;
+    public $isPurchased;
+    protected $__readingPositionType = 'ReadingPosition';
+    protected $__readingPositionDataType = '';
+    public $readingPosition;
+    protected $__reviewType = 'Review';
+    protected $__reviewDataType = '';
+    public $review;
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+    public function setIsPreordered($isPreordered)
+    {
+        $this->isPreordered = $isPreordered;
+    }
+    public function getIsPreordered()
+    {
+        return $this->isPreordered;
+    }
+    public function setIsPurchased($isPurchased)
+    {
+        $this->isPurchased = $isPurchased;
+    }
+    public function getIsPurchased()
+    {
+        return $this->isPurchased;
+    }
+    public function setReadingPosition(ReadingPosition $readingPosition)
+    {
+        $this->readingPosition = $readingPosition;
+    }
+    public function getReadingPosition()
+    {
+        return $this->readingPosition;
+    }
+    public function setReview(Review $review)
+    {
+        $this->review = $review;
+    }
+    public function getReview()
+    {
+        return $this->review;
+    }
 }
 
-class VolumeVolumeInfo extends apiModel {
-  public $publishedDate;
-  public $subtitle;
-  protected $__dimensionsType = 'VolumeVolumeInfoDimensions';
-  protected $__dimensionsDataType = '';
-  public $dimensions;
-  public $language;
-  public $pageCount;
-  protected $__imageLinksType = 'VolumeVolumeInfoImageLinks';
-  protected $__imageLinksDataType = '';
-  public $imageLinks;
-  public $description;
-  public $previewLink;
-  public $printType;
-  public $mainCategory;
-  public $contentVersion;
-  protected $__industryIdentifiersType = 'VolumeVolumeInfoIndustryIdentifiers';
-  protected $__industryIdentifiersDataType = 'array';
-  public $industryIdentifiers;
-  public $authors;
-  public $publisher;
-  public $title;
-  public $ratingsCount;
-  public $infoLink;
-  public $categories;
-  public $averageRating;
-  public function setPublishedDate($publishedDate) {
-    $this->publishedDate = $publishedDate;
-  }
-  public function getPublishedDate() {
-    return $this->publishedDate;
-  }
-  public function setSubtitle($subtitle) {
-    $this->subtitle = $subtitle;
-  }
-  public function getSubtitle() {
-    return $this->subtitle;
-  }
-  public function setDimensions(VolumeVolumeInfoDimensions $dimensions) {
-    $this->dimensions = $dimensions;
-  }
-  public function getDimensions() {
-    return $this->dimensions;
-  }
-  public function setLanguage($language) {
-    $this->language = $language;
-  }
-  public function getLanguage() {
-    return $this->language;
-  }
-  public function setPageCount($pageCount) {
-    $this->pageCount = $pageCount;
-  }
-  public function getPageCount() {
-    return $this->pageCount;
-  }
-  public function setImageLinks(VolumeVolumeInfoImageLinks $imageLinks) {
-    $this->imageLinks = $imageLinks;
-  }
-  public function getImageLinks() {
-    return $this->imageLinks;
-  }
-  public function setDescription($description) {
-    $this->description = $description;
-  }
-  public function getDescription() {
-    return $this->description;
-  }
-  public function setPreviewLink($previewLink) {
-    $this->previewLink = $previewLink;
-  }
-  public function getPreviewLink() {
-    return $this->previewLink;
-  }
-  public function setPrintType($printType) {
-    $this->printType = $printType;
-  }
-  public function getPrintType() {
-    return $this->printType;
-  }
-  public function setMainCategory($mainCategory) {
-    $this->mainCategory = $mainCategory;
-  }
-  public function getMainCategory() {
-    return $this->mainCategory;
-  }
-  public function setContentVersion($contentVersion) {
-    $this->contentVersion = $contentVersion;
-  }
-  public function getContentVersion() {
-    return $this->contentVersion;
-  }
-  public function setIndustryIdentifiers(/* array(VolumeVolumeInfoIndustryIdentifiers) */ $industryIdentifiers) {
-    $this->assertIsArray($industryIdentifiers, 'VolumeVolumeInfoIndustryIdentifiers', __METHOD__);
-    $this->industryIdentifiers = $industryIdentifiers;
-  }
-  public function getIndustryIdentifiers() {
-    return $this->industryIdentifiers;
-  }
-  public function setAuthors(/* array(string) */ $authors) {
-    $this->assertIsArray($authors, 'string', __METHOD__);
-    $this->authors = $authors;
-  }
-  public function getAuthors() {
-    return $this->authors;
-  }
-  public function setPublisher($publisher) {
-    $this->publisher = $publisher;
-  }
-  public function getPublisher() {
-    return $this->publisher;
-  }
-  public function setTitle($title) {
-    $this->title = $title;
-  }
-  public function getTitle() {
-    return $this->title;
-  }
-  public function setRatingsCount($ratingsCount) {
-    $this->ratingsCount = $ratingsCount;
-  }
-  public function getRatingsCount() {
-    return $this->ratingsCount;
-  }
-  public function setInfoLink($infoLink) {
-    $this->infoLink = $infoLink;
-  }
-  public function getInfoLink() {
-    return $this->infoLink;
-  }
-  public function setCategories(/* array(string) */ $categories) {
-    $this->assertIsArray($categories, 'string', __METHOD__);
-    $this->categories = $categories;
-  }
-  public function getCategories() {
-    return $this->categories;
-  }
-  public function setAverageRating($averageRating) {
-    $this->averageRating = $averageRating;
-  }
-  public function getAverageRating() {
-    return $this->averageRating;
-  }
+class VolumeVolumeInfo extends apiModel
+{
+    public $publishedDate;
+    public $subtitle;
+    protected $__dimensionsType = 'VolumeVolumeInfoDimensions';
+    protected $__dimensionsDataType = '';
+    public $dimensions;
+    public $language;
+    public $pageCount;
+    protected $__imageLinksType = 'VolumeVolumeInfoImageLinks';
+    protected $__imageLinksDataType = '';
+    public $imageLinks;
+    public $description;
+    public $previewLink;
+    public $printType;
+    public $mainCategory;
+    public $contentVersion;
+    protected $__industryIdentifiersType = 'VolumeVolumeInfoIndustryIdentifiers';
+    protected $__industryIdentifiersDataType = 'array';
+    public $industryIdentifiers;
+    public $authors;
+    public $publisher;
+    public $title;
+    public $ratingsCount;
+    public $infoLink;
+    public $categories;
+    public $averageRating;
+    public function setPublishedDate($publishedDate)
+    {
+        $this->publishedDate = $publishedDate;
+    }
+    public function getPublishedDate()
+    {
+        return $this->publishedDate;
+    }
+    public function setSubtitle($subtitle)
+    {
+        $this->subtitle = $subtitle;
+    }
+    public function getSubtitle()
+    {
+        return $this->subtitle;
+    }
+    public function setDimensions(VolumeVolumeInfoDimensions $dimensions)
+    {
+        $this->dimensions = $dimensions;
+    }
+    public function getDimensions()
+    {
+        return $this->dimensions;
+    }
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+    public function setPageCount($pageCount)
+    {
+        $this->pageCount = $pageCount;
+    }
+    public function getPageCount()
+    {
+        return $this->pageCount;
+    }
+    public function setImageLinks(VolumeVolumeInfoImageLinks $imageLinks)
+    {
+        $this->imageLinks = $imageLinks;
+    }
+    public function getImageLinks()
+    {
+        return $this->imageLinks;
+    }
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    public function setPreviewLink($previewLink)
+    {
+        $this->previewLink = $previewLink;
+    }
+    public function getPreviewLink()
+    {
+        return $this->previewLink;
+    }
+    public function setPrintType($printType)
+    {
+        $this->printType = $printType;
+    }
+    public function getPrintType()
+    {
+        return $this->printType;
+    }
+    public function setMainCategory($mainCategory)
+    {
+        $this->mainCategory = $mainCategory;
+    }
+    public function getMainCategory()
+    {
+        return $this->mainCategory;
+    }
+    public function setContentVersion($contentVersion)
+    {
+        $this->contentVersion = $contentVersion;
+    }
+    public function getContentVersion()
+    {
+        return $this->contentVersion;
+    }
+    public function setIndustryIdentifiers(/* array(VolumeVolumeInfoIndustryIdentifiers) */ $industryIdentifiers)
+    {
+        $this->assertIsArray($industryIdentifiers, 'VolumeVolumeInfoIndustryIdentifiers', __METHOD__);
+        $this->industryIdentifiers = $industryIdentifiers;
+    }
+    public function getIndustryIdentifiers()
+    {
+        return $this->industryIdentifiers;
+    }
+    public function setAuthors(/* array(string) */ $authors)
+    {
+        $this->assertIsArray($authors, 'string', __METHOD__);
+        $this->authors = $authors;
+    }
+    public function getAuthors()
+    {
+        return $this->authors;
+    }
+    public function setPublisher($publisher)
+    {
+        $this->publisher = $publisher;
+    }
+    public function getPublisher()
+    {
+        return $this->publisher;
+    }
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    public function setRatingsCount($ratingsCount)
+    {
+        $this->ratingsCount = $ratingsCount;
+    }
+    public function getRatingsCount()
+    {
+        return $this->ratingsCount;
+    }
+    public function setInfoLink($infoLink)
+    {
+        $this->infoLink = $infoLink;
+    }
+    public function getInfoLink()
+    {
+        return $this->infoLink;
+    }
+    public function setCategories(/* array(string) */ $categories)
+    {
+        $this->assertIsArray($categories, 'string', __METHOD__);
+        $this->categories = $categories;
+    }
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+    public function setAverageRating($averageRating)
+    {
+        $this->averageRating = $averageRating;
+    }
+    public function getAverageRating()
+    {
+        return $this->averageRating;
+    }
 }
 
-class VolumeVolumeInfoDimensions extends apiModel {
-  public $width;
-  public $thickness;
-  public $height;
-  public function setWidth($width) {
-    $this->width = $width;
-  }
-  public function getWidth() {
-    return $this->width;
-  }
-  public function setThickness($thickness) {
-    $this->thickness = $thickness;
-  }
-  public function getThickness() {
-    return $this->thickness;
-  }
-  public function setHeight($height) {
-    $this->height = $height;
-  }
-  public function getHeight() {
-    return $this->height;
-  }
+class VolumeVolumeInfoDimensions extends apiModel
+{
+    public $width;
+    public $thickness;
+    public $height;
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+    public function getWidth()
+    {
+        return $this->width;
+    }
+    public function setThickness($thickness)
+    {
+        $this->thickness = $thickness;
+    }
+    public function getThickness()
+    {
+        return $this->thickness;
+    }
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+    public function getHeight()
+    {
+        return $this->height;
+    }
 }
 
-class VolumeVolumeInfoImageLinks extends apiModel {
-  public $medium;
-  public $smallThumbnail;
-  public $large;
-  public $extraLarge;
-  public $small;
-  public $thumbnail;
-  public function setMedium($medium) {
-    $this->medium = $medium;
-  }
-  public function getMedium() {
-    return $this->medium;
-  }
-  public function setSmallThumbnail($smallThumbnail) {
-    $this->smallThumbnail = $smallThumbnail;
-  }
-  public function getSmallThumbnail() {
-    return $this->smallThumbnail;
-  }
-  public function setLarge($large) {
-    $this->large = $large;
-  }
-  public function getLarge() {
-    return $this->large;
-  }
-  public function setExtraLarge($extraLarge) {
-    $this->extraLarge = $extraLarge;
-  }
-  public function getExtraLarge() {
-    return $this->extraLarge;
-  }
-  public function setSmall($small) {
-    $this->small = $small;
-  }
-  public function getSmall() {
-    return $this->small;
-  }
-  public function setThumbnail($thumbnail) {
-    $this->thumbnail = $thumbnail;
-  }
-  public function getThumbnail() {
-    return $this->thumbnail;
-  }
+class VolumeVolumeInfoImageLinks extends apiModel
+{
+    public $medium;
+    public $smallThumbnail;
+    public $large;
+    public $extraLarge;
+    public $small;
+    public $thumbnail;
+    public function setMedium($medium)
+    {
+        $this->medium = $medium;
+    }
+    public function getMedium()
+    {
+        return $this->medium;
+    }
+    public function setSmallThumbnail($smallThumbnail)
+    {
+        $this->smallThumbnail = $smallThumbnail;
+    }
+    public function getSmallThumbnail()
+    {
+        return $this->smallThumbnail;
+    }
+    public function setLarge($large)
+    {
+        $this->large = $large;
+    }
+    public function getLarge()
+    {
+        return $this->large;
+    }
+    public function setExtraLarge($extraLarge)
+    {
+        $this->extraLarge = $extraLarge;
+    }
+    public function getExtraLarge()
+    {
+        return $this->extraLarge;
+    }
+    public function setSmall($small)
+    {
+        $this->small = $small;
+    }
+    public function getSmall()
+    {
+        return $this->small;
+    }
+    public function setThumbnail($thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
+    }
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
 }
 
-class VolumeVolumeInfoIndustryIdentifiers extends apiModel {
-  public $identifier;
-  public $type;
-  public function setIdentifier($identifier) {
-    $this->identifier = $identifier;
-  }
-  public function getIdentifier() {
-    return $this->identifier;
-  }
-  public function setType($type) {
-    $this->type = $type;
-  }
-  public function getType() {
-    return $this->type;
-  }
+class VolumeVolumeInfoIndustryIdentifiers extends apiModel
+{
+    public $identifier;
+    public $type;
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    public function getType()
+    {
+        return $this->type;
+    }
 }
 
-class Volumes extends apiModel {
-  public $totalItems;
-  protected $__itemsType = 'Volume';
-  protected $__itemsDataType = 'array';
-  public $items;
-  public $kind;
-  public function setTotalItems($totalItems) {
-    $this->totalItems = $totalItems;
-  }
-  public function getTotalItems() {
-    return $this->totalItems;
-  }
-  public function setItems(/* array(Volume) */ $items) {
-    $this->assertIsArray($items, 'Volume', __METHOD__);
-    $this->items = $items;
-  }
-  public function getItems() {
-    return $this->items;
-  }
-  public function setKind($kind) {
-    $this->kind = $kind;
-  }
-  public function getKind() {
-    return $this->kind;
-  }
+class Volumes extends apiModel
+{
+    public $totalItems;
+    protected $__itemsType = 'Volume';
+    protected $__itemsDataType = 'array';
+    public $items;
+    public $kind;
+    public function setTotalItems($totalItems)
+    {
+        $this->totalItems = $totalItems;
+    }
+    public function getTotalItems()
+    {
+        return $this->totalItems;
+    }
+    public function setItems(/* array(Volume) */ $items)
+    {
+        $this->assertIsArray($items, 'Volume', __METHOD__);
+        $this->items = $items;
+    }
+    public function getItems()
+    {
+        return $this->items;
+    }
+    public function setKind($kind)
+    {
+        $this->kind = $kind;
+    }
+    public function getKind()
+    {
+        return $this->kind;
+    }
 }

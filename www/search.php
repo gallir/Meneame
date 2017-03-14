@@ -35,18 +35,18 @@ $globals['noindex'] = true;
 
 $response = do_search(false, $offset, $page_size);
 do_header(sprintf(_('búsqueda de «%s»'), htmlspecialchars($_REQUEST['words'])));
-do_tabs('main',_('búsqueda'), __($_SERVER['REQUEST_URI']));
+do_tabs('main', _('búsqueda'), __($_SERVER['REQUEST_URI']));
 
 switch ($_REQUEST['w']) {
-	case 'posts':
-		$rss_program = 'sneakme_rss';
-		break;
-	case 'comments':
-		$rss_program = 'comments_rss';
-		break;
-	case 'links':
-	default:
-		$rss_program = 'rss';
+    case 'posts':
+        $rss_program = 'sneakme_rss';
+        break;
+    case 'comments':
+        $rss_program = 'comments_rss';
+        break;
+    case 'links':
+    default:
+        $rss_program = 'rss';
 }
 
 /*** SIDEBAR ****/
@@ -57,11 +57,11 @@ echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
 $options = array(
-	'w' => array('links', 'posts', 'comments'),
-	'p' => array('' => _('campos...'), 'url', 'tags', 'title', 'site'),
-	's' => array('' => _('estado...'), 'published', 'queued', 'discard', 'autodiscard', 'abuse'),
-	'h' => array('' => _('período...'), 24 => _('24 horas'), 48 => _('48 horas'), 24*7 => _('última semana'), 24*30 => _('último mes'), 24*180 => _('6 meses'), 24*365 => _('1 año')),
-	'o' => array('' => _('por relevancia'), 'date' => _('por fecha')),
+    'w' => array('links', 'posts', 'comments'),
+    'p' => array('' => _('campos...'), 'url', 'tags', 'title', 'site'),
+    's' => array('' => _('estado...'), 'published', 'queued', 'discard', 'autodiscard', 'abuse'),
+    'h' => array('' => _('período...'), 24 => _('24 horas'), 48 => _('48 horas'), 24*7 => _('última semana'), 24*30 => _('último mes'), 24*180 => _('6 meses'), 24*365 => _('1 año')),
+    'o' => array('' => _('por relevancia'), 'date' => _('por fecha')),
 );
 
 $selected = array('w' => $_REQUEST['w'], 'p' => $_REQUEST['p'], 's' => $_REQUEST['s'], 'h'=> $_REQUEST['h'], 'o' => $_REQUEST['o']);
@@ -71,41 +71,45 @@ Haanga::Load('search.html', compact('options', 'selected', 'response', 'rss_prog
 do_footer_menu();
 do_footer();
 
-function print_result() {
-	global $response, $page_size;
-	if ($response['ids']) {
-		$rows = min($response['rows'], 1000);
-		foreach($response['ids'] as $id) {
-			switch ($_REQUEST['w']) {
-				case 'posts':
-					$obj = Post::from_db($id);
-					break;
-				case 'comments':
-					$obj = Comment::from_db($id);
-					break;
-				case 'links':
-				default:
-					$obj = Link::from_db($id);
-			}
+function print_result()
+{
+    global $response, $page_size;
+    if ($response['ids']) {
+        $rows = min($response['rows'], 1000);
+        foreach ($response['ids'] as $id) {
+            switch ($_REQUEST['w']) {
+                case 'posts':
+                    $obj = Post::from_db($id);
+                    break;
+                case 'comments':
+                    $obj = Comment::from_db($id);
+                    break;
+                case 'links':
+                default:
+                    $obj = Link::from_db($id);
+            }
 
-			if (!$obj) continue;
+            if (!$obj) {
+                continue;
+            }
 
-			$obj->basic_summary = true;
-			switch ($_REQUEST['w']) {
-				case 'posts':
-					$obj->print_summary(800);
-					break;
-				case 'comments':
-					if ($obj->type == 'admin' && !$current_user->admin) continue;
-					// link_object
-					$obj->print_summary(800);
-					break;
-				case 'links':
-				default:
-					$obj->print_summary();
-			}
-		}
-	}
-	do_pages($rows, $page_size);
+            $obj->basic_summary = true;
+            switch ($_REQUEST['w']) {
+                case 'posts':
+                    $obj->print_summary(800);
+                    break;
+                case 'comments':
+                    if ($obj->type == 'admin' && !$current_user->admin) {
+                        continue;
+                    }
+                    // link_object
+                    $obj->print_summary(800);
+                    break;
+                case 'links':
+                default:
+                    $obj->print_summary();
+            }
+        }
+    }
+    do_pages($rows, $page_size);
 }
-

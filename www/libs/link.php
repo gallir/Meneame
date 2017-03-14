@@ -71,7 +71,7 @@ class Link extends LCPBase
         LEFT JOIN media ON (media.type="link" and media.id = link_id and media.version = 0)
     ';
 
-    static function from_db($id, $key = 'id', $complete = true)
+    public static function from_db($id, $key = 'id', $complete = true)
     {
         global $db, $current_user;
 
@@ -97,7 +97,7 @@ class Link extends LCPBase
         return $db->get_object($sql, 'Link');
     }
 
-    static function count($status = '', $force = false)
+    public static function count($status = '', $force = false)
     {
         global $db, $globals;
 
@@ -121,7 +121,7 @@ class Link extends LCPBase
         return $count;
     }
 
-    static function duplicates($url, $site = false)
+    public static function duplicates($url, $site = false)
     {
         global $db;
 
@@ -167,7 +167,7 @@ class Link extends LCPBase
         return $db->get_var("SELECT link_id FROM links $from_extra WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 $where_extra ORDER by link_id asc limit 1");
     }
 
-    static function visited($id)
+    public static function visited($id)
     {
         global $globals;
 
@@ -193,7 +193,7 @@ class Link extends LCPBase
         return $found !== false;
     }
 
-    function add_click($no_go = false)
+    public function add_click($no_go = false)
     {
         global $globals, $db;
 
@@ -209,7 +209,7 @@ class Link extends LCPBase
         }
     }
 
-    static function store_clicks()
+    public static function store_clicks()
     {
         global $globals, $db;
 
@@ -288,7 +288,7 @@ class Link extends LCPBase
         $db->show_errors = $show_errors;
     }
 
-    static function top()
+    public static function top()
     {
         global $globals;
 
@@ -314,7 +314,7 @@ class Link extends LCPBase
         return $link;
     }
 
-    function json_votes_info($value = false)
+    public function json_votes_info($value = false)
     {
         $dict = array();
         $dict['id'] = $this->id;
@@ -342,14 +342,15 @@ class Link extends LCPBase
         return json_encode($dict);
     }
 
-    function print_html() {
+    public function print_html()
+    {
         echo "Valid: " . $this->valid . "<br>\n";
         echo "Url: " . $this->url . "<br>\n";
         echo "Title: " . $this->url_title . "<br>\n";
         echo "encoding: " . $this->encoding . "<br>\n";
     }
 
-    function check_url($url, $check_ban = true, $first_level = false)
+    public function check_url($url, $check_ban = true, $first_level = false)
     {
         global $globals, $current_user;
 
@@ -391,7 +392,7 @@ class Link extends LCPBase
         return false;
     }
 
-    function get($url, $maxlen = 150000, $check_ban = true)
+    public function get($url, $maxlen = 150000, $check_ban = true)
     {
         global $globals, $current_user;
 
@@ -400,7 +401,7 @@ class Link extends LCPBase
 
         $this->noiframe = false;
 
-        if (($response = get_url($url)) ) {
+        if (($response = get_url($url))) {
             $this->content_type = preg_replace('#^(\w+).+#', '$1', $response['content_type']);
 
             // Check if it has pingbacks
@@ -459,7 +460,7 @@ class Link extends LCPBase
             $this->noiframe = true;
         }
 
-        if(preg_match('/charset=([a-zA-Z0-9-_]+)/i', $this->html, $matches)) {
+        if (preg_match('/charset=([a-zA-Z0-9-_]+)/i', $this->html, $matches)) {
             $this->encoding = trim($matches[1]);
 
             if (strcasecmp($this->encoding, 'utf-8') !== 0) {
@@ -507,7 +508,7 @@ class Link extends LCPBase
                 continue;
             }
 
-            if (!preg_match("/$second_level\.[^\.]+$/", $new_url_components['host']) ) {
+            if (!preg_match("/$second_level\.[^\.]+$/", $new_url_components['host'])) {
                 $check_counter++;
             }
 
@@ -521,7 +522,7 @@ class Link extends LCPBase
         // The URL has been checked
         $this->valid = true;
 
-        if(preg_match('/<title[^<>]*>([^<>]*)<\/title>/si', $this->html, $matches)) {
+        if (preg_match('/<title[^<>]*>([^<>]*)<\/title>/si', $this->html, $matches)) {
             $url_title = clean_text($matches[1]);
 
             if (mb_strlen($url_title) > 3) {
@@ -536,7 +537,7 @@ class Link extends LCPBase
         return true;
     }
 
-    function trackback()
+    public function trackback()
     {
         $trackback = '';
 
@@ -544,7 +545,6 @@ class Link extends LCPBase
         if (preg_match('/trackback:ping="([^"]+)"/i', $this->html, $matches) ||
             preg_match('/trackback:ping +rdf:resource="([^>]+)"/i', $this->html, $matches) ||
             preg_match('/<trackback:ping>([^<>]+)/i', $this->html, $matches)) {
-
             $trackback = trim($matches[1]);
         } elseif (preg_match('/<a[^>]+rel="trackback"[^>]*>/i', $this->html, $matches)) {
             if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
@@ -567,7 +567,7 @@ class Link extends LCPBase
         return true;
     }
 
-    function pingback()
+    public function pingback()
     {
         $trackback = '';
         $url_components = @parse_url($this->url);
@@ -592,7 +592,7 @@ class Link extends LCPBase
         return true;
     }
 
-    function enqueue()
+    public function enqueue()
     {
         global $db, $globals, $current_user;
         // Check this one was not already queued
@@ -634,18 +634,17 @@ class Link extends LCPBase
         fork("backend/send_pingbacks.php?id=$this->id");
     }
 
-    function has_rss()
+    public function has_rss()
     {
         return preg_match('/<link[^>]+(text\/xml|application\/rss\+xml|application\/atom\+xml)[^>]+>/i', $this->html);
     }
 
-    function create_blog_entry()
+    public function create_blog_entry()
     {
         $blog = new Blog();
         $blog->analyze_html($this->url, $this->html);
 
         if (!$blog->read('key') || ($blog->type !== 'noiframe' && $this->noiframe)) {
-
             if ($blog->type !== 'noiframe' && $this->noiframe) {
                 $blog->type = 'noiframe';
                 syslog(LOG_INFO, "Meneame, changed to noiframe ($blog->id, $blog->url)");
@@ -658,7 +657,7 @@ class Link extends LCPBase
         $this->type = $blog->type;
     }
 
-    function type()
+    public function type()
     {
         if ($this->type) {
             return $this->type;
@@ -678,7 +677,7 @@ class Link extends LCPBase
         return $this->type = $blog->type;
     }
 
-    function store()
+    public function store()
     {
         global $db, $current_user, $globals;
 
@@ -704,7 +703,7 @@ class Link extends LCPBase
         return $r;
     }
 
-    function store_basic($really_basic = false)
+    public function store_basic($really_basic = false)
     {
         global $db, $current_user, $globals;
 
@@ -760,7 +759,7 @@ class Link extends LCPBase
         return true;
     }
 
-    function update_votes()
+    public function update_votes()
     {
         global $db, $globals;
 
@@ -782,13 +781,13 @@ class Link extends LCPBase
         }
     }
 
-    function read_basic($key = 'id')
+    public function read_basic($key = 'id')
     {
         global $db, $current_user;
 
         SitesMgr::my_id(); // Force to read current sub_id
 
-        switch ($key)  {
+        switch ($key) {
             case 'uri':
                 $cond = "link_uri = '$this->uri'";
                 break;
@@ -813,13 +812,13 @@ class Link extends LCPBase
         return true;
     }
 
-    function read($key = 'id')
+    public function read($key = 'id')
     {
         global $db, $current_user;
 
         SitesMgr::my_id(); // Force to read current sub_id
 
-        switch ($key)  {
+        switch ($key) {
             case 'uri':
                 $cond = "link_uri = '$this->uri'";
                 break;
@@ -844,7 +843,7 @@ class Link extends LCPBase
         return true;
     }
 
-    function print_summary($type = 'full', $karma_best_comment = 0, $show_tags = true, $template = 'link_summary.html')
+    public function print_summary($type = 'full', $karma_best_comment = 0, $show_tags = true, $template = 'link_summary.html')
     {
         global $current_user, $current_user, $globals, $db;
 
@@ -912,7 +911,7 @@ class Link extends LCPBase
             $this->best_comment = false;
         }
 
-        if ($this->geo && $this->map_editable && $current_user->user_id == $this->author && $this->sent_date > $globals['now'] - 600 && !$this->latlng)  {
+        if ($this->geo && $this->map_editable && $current_user->user_id == $this->author && $this->sent_date > $globals['now'] - 600 && !$this->latlng) {
             $this->add_geo = true;
         } else {
             $this->add_geo = false;
@@ -940,7 +939,7 @@ class Link extends LCPBase
         return Haanga::Load($template, $vars);
     }
 
-    function get_best_comments($limit = 5)
+    public function get_best_comments($limit = 5)
     {
         global $db;
 
@@ -970,7 +969,7 @@ class Link extends LCPBase
         return $this->best_comments;
     }
 
-    function get_box_class()
+    public function get_box_class()
     {
         switch ($this->status) {
             case 'queued': // another color box for not-published
@@ -989,7 +988,7 @@ class Link extends LCPBase
         }
     }
 
-    function check_warn()
+    public function check_warn()
     {
         global $db, $globals;
 
@@ -1014,7 +1013,7 @@ class Link extends LCPBase
             $neg_percent = 0.1 / $coef;
         }
 
-        if ($this->negatives < 4  || $this->negatives < $this->votes * $neg_percent ) {
+        if ($this->negatives < 4  || $this->negatives < $this->votes * $neg_percent) {
             return $this->warned = false;
         }
 
@@ -1038,21 +1037,21 @@ class Link extends LCPBase
         return $this->warned = true;
     }
 
-    function vote_exists($user)
+    public function vote_exists($user)
     {
         $vote = new Vote('links', $this->id, $user);
 
         return $vote->exists(false);
     }
 
-    function votes($user)
+    public function votes($user)
     {
         $vote = new Vote('links', $this->id, $user);
 
         return $vote->count();
     }
 
-    function insert_vote($value)
+    public function insert_vote($value)
     {
         global $db, $current_user, $globals;
 
@@ -1138,7 +1137,7 @@ class Link extends LCPBase
         return $value;
     }
 
-    function publish()
+    public function publish()
     {
         global $globals;
 
@@ -1152,7 +1151,7 @@ class Link extends LCPBase
         $this->store_basic();
     }
 
-    function update_comments()
+    public function update_comments()
     {
         global $db;
 
@@ -1167,14 +1166,14 @@ class Link extends LCPBase
         $this->comments = $count;
     }
 
-    function is_discarded()
+    public function is_discarded()
     {
         $status = (empty($this->sub_status) ? $this->status : $this->sub_status);
 
         return ($status === 'discard') || ($status === 'abuse') ||  ($status === 'autodiscard');
     }
 
-    function is_editable()
+    public function is_editable()
     {
         global $current_user, $db, $globals;
 
@@ -1204,7 +1203,7 @@ class Link extends LCPBase
         );
     }
 
-    function is_map_editable()
+    public function is_map_editable()
     {
         global $current_user, $db, $globals;
 
@@ -1226,7 +1225,7 @@ class Link extends LCPBase
         );
     }
 
-    function is_votable()
+    public function is_votable()
     {
         global $globals;
 
@@ -1242,7 +1241,7 @@ class Link extends LCPBase
         );
     }
 
-    function is_sponsored()
+    public function is_sponsored()
     {
         global $globals;
 
@@ -1251,7 +1250,7 @@ class Link extends LCPBase
         }
     }
 
-    function negatives_allowed($extended = false)
+    public function negatives_allowed($extended = false)
     {
         global $globals, $current_user;
 
@@ -1281,7 +1280,7 @@ class Link extends LCPBase
         );
     }
 
-    function get_uri()
+    public function get_uri()
     {
         global $db, $globals, $routes;
 
@@ -1304,7 +1303,7 @@ class Link extends LCPBase
         $this->uri = $new_uri;
     }
 
-    function get_short_permalink()
+    public function get_short_permalink()
     {
         global $globals;
 
@@ -1319,7 +1318,7 @@ class Link extends LCPBase
         return 'http://'.$server_name.$id;
     }
 
-    function get_relative_permalink($strict = false)
+    public function get_relative_permalink($strict = false)
     {
         global $globals;
 
@@ -1340,7 +1339,7 @@ class Link extends LCPBase
         return $base.(empty($this->uri) ? $this->id : $this->uri);
     }
 
-    function get_permalink($strict = false, $relative = false)
+    public function get_permalink($strict = false, $relative = false)
     {
         global $globals;
 
@@ -1357,15 +1356,9 @@ class Link extends LCPBase
         return $globals['scheme'].'//'.$server_name.$relative;
     }
 
-    function get_canonical_permalink($page = false)
+    public function get_canonical_permalink($page = false)
     {
         global $globals;
-
-        if (!$page || $page == 1) {
-            $page = '';
-        } else {
-            $page = "/$page";
-        }
 
         if (empty($globals['canonical_server_name'])) {
             $server_name = $this->server_name;
@@ -1373,17 +1366,19 @@ class Link extends LCPBase
             $server_name = $globals['canonical_server_name'];
         }
 
+        $page = (!$page || $page == 1) ? '' : "/$page";
+
         return $globals['scheme'].'//'.$server_name.$this->get_relative_permalink(true).$page;
     }
 
-    function get_trackback()
+    public function get_trackback()
     {
         global $globals;
 
         return $globals['scheme'].'//'.get_server_name().$globals['base_url_general'].'trackback.php?id='.$this->id;
     }
 
-    function get_status_text($status = false)
+    public function get_status_text($status = false)
     {
         $status = $status ?: $this->status;
 
@@ -1403,14 +1398,14 @@ class Link extends LCPBase
         return $status;
     }
 
-    function get_latlng()
+    public function get_latlng()
     {
         require_once(mnminclude.'geo.php');
 
         return geo_latlng('link', $this->id);
     }
 
-    function print_content_type_buttons()
+    public function print_content_type_buttons()
     {
         $type = array();
 
@@ -1438,7 +1433,7 @@ class Link extends LCPBase
         echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="'._('¿es un vídeo?').'" title="'._('¿es un vídeo?').'" />';
     }
 
-    function read_content_type_buttons($type)
+    public function read_content_type_buttons($type)
     {
         switch ($type) {
             case 'image':
@@ -1456,7 +1451,7 @@ class Link extends LCPBase
     }
 
     // Calculate real karma of the link
-    function calculate_karma()
+    public function calculate_karma()
     {
         global $db, $globals;
 
@@ -1464,7 +1459,7 @@ class Link extends LCPBase
 
         $this->old_karma = round($this->karma);
 
-        if (!$globals['users_karma_avg'] ) {
+        if (!$globals['users_karma_avg']) {
             $globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
         }
 
@@ -1537,7 +1532,7 @@ class Link extends LCPBase
             $perc = intval($vlow / ($vlow + $vhigh) * 100);
 
             $this->low_karma_perc = $perc;
-            $this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($globals['users_karma_avg'],2).")<br/>";
+            $this->annotation .= $perc._('% de votos con karma menores que la media')." (".round($globals['users_karma_avg'], 2).")<br/>";
         }
 
         $karma_pos_user = (int)$karma_pos_user_high + (int)min(max($karma_pos_user_high * 1.15, 4), $karma_pos_user_low); // Allowed difference up to 15% of $karma_pos_user_high
@@ -1644,7 +1639,7 @@ class Link extends LCPBase
     }
 
     // Bonus for sources than are not frequently sent
-    function calculate_source_bonus()
+    public function calculate_source_bonus()
     {
         global $db, $globals;
 
@@ -1661,7 +1656,7 @@ class Link extends LCPBase
         return 0;
     }
 
-    function save_annotation($key, $site_name = false)
+    public function save_annotation($key, $site_name = false)
     {
         global $globals;
 
@@ -1701,7 +1696,7 @@ class Link extends LCPBase
         $this->annotation = '';
     }
 
-    function read_annotation($key)
+    public function read_annotation($key)
     {
         global $globals;
 
@@ -1714,7 +1709,7 @@ class Link extends LCPBase
         return ($array && is_array($array)) ? $array : array();
     }
 
-    function time_annotation($key)
+    public function time_annotation($key)
     {
         $log = Annotation::from_db($key."-$this->id");
 
@@ -1722,7 +1717,7 @@ class Link extends LCPBase
     }
 
     // Read affinity values using annotations
-    function subs_coef_get()
+    public function subs_coef_get()
     {
         global $globals;
 
@@ -1741,7 +1736,7 @@ class Link extends LCPBase
         return ($dict && is_array($dict)) ? $dict : false;
     }
 
-    function get_thumb($debug = false, $url = false)
+    public function get_thumb($debug = false, $url = false)
     {
         global $globals;
 
@@ -1805,7 +1800,7 @@ class Link extends LCPBase
         return $this->has_thumb();
     }
 
-    function store_thumb_status()
+    public function store_thumb_status()
     {
         global $db;
 
@@ -1814,7 +1809,7 @@ class Link extends LCPBase
         $db->query("update links set link_thumb_status = '$this->thumb_status' where link_id = $this->id");
     }
 
-    function delete_thumb($base = '')
+    public function delete_thumb($base = '')
     {
         global $globals;
 
@@ -1827,7 +1822,7 @@ class Link extends LCPBase
         $this->store_thumb_status();
     }
 
-    function has_thumb()
+    public function has_thumb()
     {
         global $globals;
 
@@ -1849,7 +1844,7 @@ class Link extends LCPBase
         return $this->thumb_url;
     }
 
-    function get_related($max = 10)
+    public function get_related($max = 10)
     {
         global $globals, $db;
 
@@ -1877,8 +1872,7 @@ class Link extends LCPBase
         // Filter title
         $a = preg_split(
             '/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
-            preg_replace('/[\[\(] *\w{1,6} *[\)\]] */', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang)
-            , -1, PREG_SPLIT_NO_EMPTY
+            preg_replace('/[\[\(] *\w{1,6} *[\)\]] */', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang), -1, PREG_SPLIT_NO_EMPTY
         );
         $i = 0;
         $n = count($a);
@@ -2080,7 +2074,7 @@ class Link extends LCPBase
         return $related;
     }
 
-    function get_clicks()
+    public function get_clicks()
     {
         global $db, $globals;
 
@@ -2091,12 +2085,12 @@ class Link extends LCPBase
         return $this->clicks;
     }
 
-    function user_clicked()
+    public function user_clicked()
     {
         return (isset($_COOKIE['v']) && preg_match('/(x|^)'.$this->id.'(x|$)/', $_COOKIE['v']));
     }
 
-    function calculate_common_votes()
+    public function calculate_common_votes()
     {
         global $db, $globals;
 
@@ -2175,7 +2169,7 @@ class Link extends LCPBase
         return $this->mean_common_votes;
     }
 
-    function get_current_sub_status_and_date()
+    public function get_current_sub_status_and_date()
     {
         if (self::$original_status) {
             $this->status = $this->sub_status_origen;
@@ -2186,14 +2180,14 @@ class Link extends LCPBase
     }
 
     /* TODO: Used in backend/sneaker2.php, could be avoided */
-    function get_a_status()
+    public function get_a_status()
     {
         $this->get_current_sub_status_and_date();
 
         return $this->status;
     }
 
-    function check_field_errors()
+    public function check_field_errors()
     {
         global $globals;
 
@@ -2257,27 +2251,27 @@ class Link extends LCPBase
         return $errors;
     }
 
-    function get_media($type = null)
+    public function get_media($type = null)
     {
         return parent::get_media('link');
     }
 
-    function store_image_from_form($field = 'image', $type = null)
+    public function store_image_from_form($field = 'image', $type = null)
     {
         return parent::store_image_from_form('link', $field);
     }
 
-    function store_image($file, $type = null)
+    public function store_image($file, $type = null)
     {
         return parent::store_image('link', $file);
     }
 
-    function move_tmp_image($file, $mime, $type = null)
+    public function move_tmp_image($file, $mime, $type = null)
     {
         return parent::move_tmp_image('link', $file, $mime);
     }
 
-    function delete_image($type = null)
+    public function delete_image($type = null)
     {
         return parent::delete_image('link');
     }

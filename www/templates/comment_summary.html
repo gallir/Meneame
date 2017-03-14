@@ -12,7 +12,7 @@
                 class="avatar tooltip u:{{ self.author }} lazy" alt="{{ self.username }}"
                 width="20" height="20" />
             {% else %}
-            <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-20.jpg" width="20" height="20" class="avatar" />
+            <img src="{{ globals.base_static }}img/mnm/no-gravatar-2-20.png" width="20" height="20" class="avatar" />
             {% endif %}
 
             {% if self.url %}
@@ -24,7 +24,7 @@
             {% endif %} {% endif %}
 
             {% if self.type != 'admin' %}
-            <a class="username" href="{%exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a>
+            <a class="username" href="{% exec get_user_uri self.username %}/commented" id="cauthor-{{ self.order }}">{{ self.username }}</a>
             {% else %}
             <strong>{% trans _('admin') %}</strong> {% if current_user.admin %}({{ self.username }}){% endif %}
             {% endif %}
@@ -38,7 +38,7 @@
             {% endif %}
         </div>
 
-        <div class="{{ self.css_class_text }}" id="cid-{{ self.prefix_id }}{{self.id}}">
+        <div class="{{ self.css_class_text }}" id="cid-{{ self.prefix_id }}{{ self.id }}">
             {% include 'comment_summary_text.html' %}
         </div>
     </div>
@@ -48,7 +48,7 @@
             {% if self.can_vote %}
                 {% if self.user_can_vote %}
 
-                <a href="javascript:void(0);" id="vc-p-{{ self.id }}" class="vote up" onclick="vote('comment', {{ current_user.user_id}}, {{ self.id }}, 1)" title="{% trans _('informativo, opinión razonada...') %}">
+                <a href="javascript:void(0);" id="vc-p-{{ self.id }}" class="vote up" onclick="vote('comment', {{ current_user.user_id }}, {{ self.id }}, 1)" title="{% trans _('informativo, opinión razonada...') %}">
                     <i class="fa fa-arrow-circle-up"></i>
                 </a>
 
@@ -58,7 +58,7 @@
 
                 <span class="separator-vertical"></span>
 
-                <a href="javascript:void(0);" id="vc-n-{{ self.id }}" class="vote down" onclick="vote('comment', {{ current_user.user_id}}, {{ self.id }}, -1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
+                <a href="javascript:void(0);" id="vc-n-{{ self.id }}" class="vote down" onclick="vote('comment', {{ current_user.user_id }}, {{ self.id }}, -1)" title="{% trans _('sólo para racismo, insultos, spam...') %}">
                     <i class="fa fa-arrow-circle-down"></i>
                 </a>
 
@@ -80,16 +80,16 @@
             {% else %}
                 {% include 'comment_summary_votes.html' %}
             {% endif %}
-        {% endif %}
 
-        <span class="separator-vertical"></span>
+            <span class="separator-vertical"></span>
+        {% endif %}
 
         <a href="{% exec self.get_relative_individual_permalink %}" title="{% trans _('Permalink') %}">
             <i class="fa fa-link"></i>
         </a>
 
         {% if self.can_report %}
-        <a href="javascript:void(0)" onclick="report_comment({{self.id}})" title="{% trans _('Reportar comentario') %}">
+        <a href="javascript:void(0)" onclick="report_comment({{ self.id }})" title="{% trans _('Reportar comentario') %}">
             <i class="fa fa-exclamation-triangle"></i>
         </a>
         {% endif %}
@@ -101,7 +101,7 @@
         {% endif %}
 
         {% if self.can_reply %}
-        <a href="javascript:void(0)" onclick="comment_reply({{self.id}}, '{{ self.prefix_id }}')" title="{% trans _('Responder') %}">
+        <a href="javascript:void(0)" onclick="comment_reply({{ self.id }}, '{{ self.prefix_id }}')" title="{% trans _('Responder') %}">
             <i class="fa fa-reply"></i>
         </a>
         {% endif %}

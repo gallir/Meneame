@@ -1,0 +1,15 @@
+<div id="singlewrap">
+    <div class="genericform" style="margin:0">
+        <div style="float:right;">
+            <form method="get" action="{{ globals.base_url }}admin/strikes.php">
+                <input type="hidden" name="tab" value="{{ selected_tab }}" />
+                <input type="text" name="s" value="{{ search }}" placeholder="{% trans _('buscar') %}..." />&nbsp;
+                <input style="padding:2px;" type="image" align="top" value="buscar" alt="buscar" src="{{ globals.base_static }}img/common/search-03.png" />
+            </form>
+        </div>
+
+        &nbsp; [ <a href="{{ globals.base_url }}admin/strikes.php?op=new">{% trans _('Nuevo strike') %}</a> ]
+
+        {% include 'admin/strikes/_table.html' %}
+    </div>
+</div>

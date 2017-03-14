@@ -404,6 +404,20 @@ function get_votes(program, type, container, page, id) {
     reportAjaxStats('html', program);
 }
 
+function user_relation(current_user_id, id, object)
+{
+    var $this = $(object),
+        $parent = $this.parent(),
+        url = base_url + 'backend/get_friend.php?id=' + id + '&value=' + $this.val() + '&key=' + base_key;
+
+    $.ajax(url, {
+        success: function(response) {
+            $parent.find('img').remove();
+            $parent.append(response);
+        }
+    });
+}
+
 function readStorage(key) {
     if (typeof Storage !== 'undefined') {
         return localStorage.getItem(key);
@@ -1290,8 +1304,8 @@ function show_report_dialog(comment_id) {
     if (is_mobile) {
         w = h = '100%';
     } else {
-        w = '400px';
-        h = '250px';
+        w = '500px';
+        h = '310px';
     }
 
     $.colorbox({
@@ -2971,6 +2985,70 @@ $(document).ready(function() {
                 dots: true
             }
         }]
+    });
+
+    var $widgetSubsSlider = $('.widget-official-subs-slider');
+
+    $widgetSubsSlider.slick({
+        rtl: true,
+        dots: true,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        prevArrow: $subsSlider.find('.slick-prev'),
+        nextArrow: $subsSlider.find('.slick-next'),
+        appendDots: $subsSlider.find('.dots'),
+        responsive: [{
+            breakpoint: 2000,
+            settings: {
+                rtl: true,
+                slidesToShow: 5,
+                slidesToScroll: 5,
+                infinite: false,
+                dots: true
+            }
+        }, {
+            breakpoint: 1280,
+            settings: {
+                rtl: true,
+                slidesToShow: 4,
+                slidesToScroll: 4,
+                infinite: true,
+                dots: false
+            }
+        },{
+            breakpoint: 1024,
+            settings: {
+                rtl: true,
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: false
+            }
+        }, {
+            breakpoint: 700,
+            settings: {
+                rtl: true,
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                dots: true
+            }
+        }, {
+            breakpoint: 480,
+            settings: {
+                rtl: true,
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                dots: true
+            }
+        }]
+    });
+
+
+    $widgetSubsSlider.on('setPosition', function(slick){
+        var $wrapper = $('.widget-official-subs-slider div.widget-title-wrapper');
+        $wrapper.css({height: $wrapper.parent().width()});
     });
 
     var $subsSlider = $('.recommended-subs-slider');

@@ -2,9 +2,9 @@
 
 class Haanga_Extension_Tag_Cycle
 {
-    public $is_block = FALSE;
+    public $is_block = false;
 
-    static function generator($cmp, $args, $declared)
+    public static function generator($cmp, $args, $declared)
     {
         static $cycle = 0;
         if (!isset($cmp->cycle)) {
@@ -14,15 +14,15 @@ class Haanga_Extension_Tag_Cycle
         $code = hcode();
 
         $index = 'index_'.$cycle;
-        $def   = 'def_cycle_'.$cycle; 
+        $def   = 'def_cycle_'.$cycle;
 
         if (count($args) == 1 && Haanga_AST::is_var($args[0]) && isset($cmp->cycle[$args[0]['var']])) {
             $id    = $cmp->cycle[$args[0]['var']];
             $index = 'index_'.$id;
-            $def   = 'def_cycle_'.$id; 
+            $def   = 'def_cycle_'.$id;
         } else {
             if (!$declared) {
-                $code->do_if(hexpr(hexec('isset', hvar($def)), '==', FALSE));
+                $code->do_if(hexpr(hexec('isset', hvar($def)), '==', false));
             }
             $code->decl($def, $args);
             if (!$declared) {
@@ -31,7 +31,7 @@ class Haanga_Extension_Tag_Cycle
         }
 
         /* isset($var) == FALSE */
-        $expr = hexpr(hexec('isset', hvar($index)), '==', FALSE);
+        $expr = hexpr(hexec('isset', hvar($index)), '==', false);
         $inc  = hexpr(hexpr(hexpr(hvar($index), '+', 1)), '%', hexec('count', hvar($def)));
         
 
@@ -52,6 +52,5 @@ class Haanga_Extension_Tag_Cycle
         $cycle++;
 
         return $code;
-
     }
 }

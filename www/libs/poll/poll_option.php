@@ -41,7 +41,7 @@ class PollOption
     {
         global $db;
 
-        $response = $db->query(str_replace("\n", ' ', '
+        $response = $db->query(DbHelper::queryPlain('
             INSERT INTO `polls_options`
             SET
                 `option` = "'.$db->escape($this->option).'",
@@ -61,7 +61,7 @@ class PollOption
     {
         global $db;
 
-        $response = $db->query(str_replace("\n", ' ', '
+        $response = $db->query(DbHelper::queryPlain('
             UPDATE `polls_options`
             SET `option` = "'.$db->escape($this->option).'"
             WHERE `id` = "'.(int)$this->id.'"
@@ -75,7 +75,7 @@ class PollOption
     {
         global $db;
 
-        $response = $db->query(str_replace("\n", ' ', '
+        $response = $db->query(DbHelper::queryPlain('
             DELETE FROM `polls_options`
             WHERE `id` = "'.(int)$this->id.'"
             LIMIT 1;
@@ -92,11 +92,13 @@ class PollOption
             return;
         }
 
+        $karma = (float)$current_user->user_karma;
+
         $query = '
             UPDATE `polls_options`
             SET
                 `votes` = `votes` + 1,
-                `karma` = `karma` + "'.(float)$current_user->user_karma.'"
+                `karma` = `karma` + '.$karma.'
             WHERE `id` = "'.$this->id.'"
             LIMIT 1;
         ';
@@ -106,7 +108,7 @@ class PollOption
         }
 
         $this->votes ++;
-        $this->karma += (float)$current_user->user_karma;
+        $this->karma += $karma;
         $this->voted = true;
 
         return true;

@@ -6,21 +6,22 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-class Comment extends LCPBase {
-    var $id = 0;
-    var $prefix_id = '';
-    var $randkey = 0;
-    var $author = 0;
-    var $link = 0;
-    var $date = false;
-    var $order = 0;
-    var $votes = 0;
-    var $voted = false;
-    var $karma = 0;
-    var $content = '';
-    var $read = false;
-    var $ip = '';
-    var $link_object = null;
+class Comment extends LCPBase
+{
+    public $id = 0;
+    public $prefix_id = '';
+    public $randkey = 0;
+    public $author = 0;
+    public $link = 0;
+    public $date = false;
+    public $order = 0;
+    public $votes = 0;
+    public $voted = false;
+    public $karma = 0;
+    public $content = '';
+    public $read = false;
+    public $ip = '';
+    public $link_object = null;
 
     const SQL = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, user_login as username, user_email as email, user_karma as user_karma, user_level as user_level, comment_randkey as randkey, comment_link_id as link, comment_order as `order`, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, user_avatar as avatar, comment_content as content, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, favorite_link_id as favorite, vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM comments
     INNER JOIN users on (user_id = comment_user_id)
@@ -31,18 +32,24 @@ class Comment extends LCPBase {
     const SQL_BASIC = " SQL_NO_CACHE comment_id as id, comment_type as type, comment_user_id as author, comment_randkey as randkey, comment_link_id as link, comment_order as `order`, comment_votes as votes, comment_karma as karma, comment_ip_int as ip_int, comment_ip as ip, UNIX_TIMESTAMP(comment_date) as date, UNIX_TIMESTAMP(comment_modified) as modified, 1 as `read` FROM comments ";
 
 
-    static function from_db($id) {
+    public static function from_db($id)
+    {
         global $db, $current_user;
         return $db->get_object("SELECT".Comment::SQL."WHERE comment_id = $id", 'Comment');
     }
 
-    static function update_read_conversation($time = false) {
+    public static function update_read_conversation($time = false)
+    {
         global $db, $globals, $current_user;
         $key = 'c_last_read';
 
-        if (! $current_user->user_id ) return false;
+        if (! $current_user->user_id) {
+            return false;
+        }
 
-        if (! $time) $time = $globals['now'];
+        if (! $time) {
+            $time = $globals['now'];
+        }
         $previous = (int) $db->get_var("select pref_value from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
         if ($time > $previous) {
             $r = $db->query("delete from prefs where pref_user_id = $current_user->user_id and pref_key = '$key'");
@@ -53,23 +60,26 @@ class Comment extends LCPBase {
         return User::reset_notification($current_user->user_id, 'comment');
     }
 
-    static function get_unread_conversations($user = 0) {
+    public static function get_unread_conversations($user = 0)
+    {
         global $db, $globals, $current_user;
 
         $n = User::get_notification($user, 'comment');
         if (is_null($n)) {
             $key = 'c_last_read';
-            if (!$user && $current_user->user_id > 0) $user = $current_user->user_id;
+            if (!$user && $current_user->user_id > 0) {
+                $user = $current_user->user_id;
+            }
             $last_read = intval($db->get_var("select pref_value from prefs where pref_user_id = $user and pref_key = '$key'"));
             $n = (int) $db->get_var("select count(*) from conversations where conversation_user_to = $user and conversation_type = 'comment' and conversation_time > FROM_UNIXTIME($last_read)");
             User::reset_notification($user, 'comment', $n);
         }
         return $n;
-
     }
 
     // Print the comments recursively, $tree is a CommentTree instance
-    static function print_tree($tree, $link = null, $length = 0, $sort_roots = null, $initial_level = 0) {
+    public static function print_tree($tree, $link = null, $length = 0, $sort_roots = null, $initial_level = 0)
+    {
         global $db;
 
         if (empty($tree->rootsIds)) {
@@ -131,15 +141,21 @@ class Comment extends LCPBase {
         }
     }
 
-    function store($full = true) {
+    public function store($full = true)
+    {
         global $db, $current_user, $globals;
 
-        if(!$this->date) $this->date=$globals['now'];
+        if (!$this->date) {
+            $this->date=$globals['now'];
+        }
         $comment_content = $db->escape($this->normalize_content());
-        if ($this->type == 'admin') $comment_type = 'admin';
-        else $comment_type = 'normal';
+        if ($this->type == 'admin') {
+            $comment_type = 'admin';
+        } else {
+            $comment_type = 'normal';
+        }
         $db->transaction();
-        if($this->id===0) {
+        if ($this->id===0) {
             $this->ip = $db->escape($globals['user_ip']);
             $this->ip_int = $db->escape($globals['user_ip_int']);
 
@@ -157,7 +173,9 @@ class Comment extends LCPBase {
             if ($r) {
                 $this->id = $new_id;
                 // Insert comment_new event into logs
-                if ($full) Log::insert('comment_new', $this->id, $current_user->user_id);
+                if ($full) {
+                    Log::insert('comment_new', $this->id, $current_user->user_id);
+                }
             }
         } else {
             $r = $db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
@@ -192,10 +210,13 @@ class Comment extends LCPBase {
         return true;
     }
 
-    function update_order() {
+    public function update_order()
+    {
         global $db;
 
-        if ($this->id == 0 || $this->link == 0) return false;
+        if ($this->id == 0 || $this->link == 0) {
+            return false;
+        }
 
         $order = intval($db->get_var("select count(*) from comments where comment_link_id=$this->link and comment_id <= $this->id FOR UPDATE"));
         if (! $order) {
@@ -213,37 +234,48 @@ class Comment extends LCPBase {
         return $this->order;
     }
 
-    function read() {
+    public function read()
+    {
         global $db, $current_user;
-        if(($result = $db->get_row("SELECT".Comment::SQL."WHERE comment_id = $this->id"))) {
-            foreach(get_object_vars($result) as $var => $value) $this->$var = $value;
+        if (($result = $db->get_row("SELECT".Comment::SQL."WHERE comment_id = $this->id"))) {
+            foreach (get_object_vars($result) as $var => $value) {
+                $this->$var = $value;
+            }
             return true;
         }
         $this->read = false;
         return false;
     }
 
-    function read_basic() {
+    public function read_basic()
+    {
         return $this->read();
     }
 
-    function check_visibility() {
+    public function check_visibility()
+    {
         global $globals, $current_user;
 
-        $this->ignored = ($current_user->user_id > 0 && $this->type != 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
+        $this->ignored = ($current_user->user_id > 0 && $this->type !== 'admin' && User::friend_exists($current_user->user_id, $this->author) < 0);
         $this->hidden = ($globals['comment_hidden_karma'] < 0 && $this->karma < $globals['comment_hidden_karma'])
-                        || ($this->user_level == 'disabled' && $this->type != 'admin');
+            || ($this->user_level === 'disabled' && $this->type !== 'admin');
         $this->hide_comment = ! isset($this->not_ignored) && ($this->ignored || ($this->hidden && ($current_user->user_comment_pref & 1) == 0));
     }
 
-    function prepare_summary_text($length = 0) {
+    public function prepare_summary_text($length = 0)
+    {
         global $globals, $current_user;
 
-        if ($this->single_link) $this->html_id = $this->order;
-        else $this->html_id = $this->id;
+        if ($this->single_link) {
+            $this->html_id = $this->order;
+        } else {
+            $this->html_id = $this->id;
+        }
 
-        $this->can_edit =  (! isset($this->basic_summary) || ! $this->basic_summary ) && ( ($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type == 'admin') && $current_user->user_level == 'god'));
-        if ($length > 0) $this->truncate($length);
+        $this->can_edit =  (! isset($this->basic_summary) || ! $this->basic_summary) && (($this->author == $current_user->user_id && $globals['now'] - $this->date < $globals['comment_edit_time'])  || (($this->author != $current_user->user_id || $this->type === 'admin') && $current_user->user_level == 'god'));
+        if ($length > 0) {
+            $this->truncate($length);
+        }
         $this->txt_content = $this->to_html($this->content);
 
         if ($this->media_size > 0) {
@@ -252,10 +284,13 @@ class Comment extends LCPBase {
         }
     }
 
-    function print_summary($length = 0, $single_link=true, $return_string = false) {
+    public function print_summary($length = 0, $single_link=true, $return_string = false)
+    {
         global $current_user, $globals;
 
-        if(!$this->read) return;
+        if (!$this->read) {
+            return;
+        }
 
         if ((! $this->link_object || $this->link_object->id != $this->link) && $this->link > 0) {
             $this->link_object = Link::from_db($this->link);
@@ -283,9 +318,14 @@ class Comment extends LCPBase {
         $this->css_class_text = 'comment-text';
         $this->css_class_footer = 'comment-footer';
 
-        if ($this->hidden || $this->ignored && !$link->is_sponsored())  {
+        if (($this->hidden || $this->ignored) && !$link->is_sponsored()) {
             $this->css_class_footer .= ' phantom';
             $this->css_class .= ' phantom';
+
+            if ($this->ignored && !$current_user->admin) {
+                $this->css_class_footer .= ' ignored';
+                $this->css_class .= ' ignored';
+            }
         } elseif ($this->type === 'admin') {
             $this->css_class .= ' admin';
         } else {
@@ -316,27 +356,33 @@ class Comment extends LCPBase {
         return Haanga::Load('comment_summary.html', array('self' => $this), $return_string);
     }
 
-    function vote_exists() {
+    public function vote_exists()
+    {
         global $current_user;
         $vote = new Vote('comments', $this->id, $current_user->user_id);
         $this->voted = $vote->exists(false);
-        if ($this->voted) return $this->voted;
+        if ($this->voted) {
+            return $this->voted;
+        }
     }
 
-    function insert_vote($value = 0) {
+    public function insert_vote($value = 0)
+    {
         global $current_user, $db;
 
-        if (!$value) $value = $current_user->user_karma;
+        if (!$value) {
+            $value = $current_user->user_karma;
+        }
 
         $vote = new Vote('comments', $this->id, $current_user->user_id);
 
         // Affinity
         if ($current_user->user_id != $this->author
-                && ($affinity = User::get_affinity($this->author, $current_user->user_id)) ) {
+                && ($affinity = User::get_affinity($this->author, $current_user->user_id))) {
             if ($value < -1 && $affinity < 0) {
-                    $value = round(min(-1, $value *  abs($affinity/100)));
+                $value = round(min(-1, $value *  abs($affinity/100)));
             } elseif ($value > 1 && $affinity > 0) {
-                    $value = round(max($value * $affinity/100, 1));
+                $value = round(max($value * $affinity/100, 1));
             }
         }
 
@@ -346,7 +392,7 @@ class Comment extends LCPBase {
 
         $vote->value = $value;
         $db->transaction();
-        if(($r = $vote->insert())) {
+        if (($r = $vote->insert())) {
             if ($current_user->user_id != $this->author) {
                 $r = $db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$value, comment_date=comment_date where comment_id=$this->id");
             }
@@ -360,7 +406,8 @@ class Comment extends LCPBase {
     }
 
 
-    function print_text($length = 0) {
+    public function print_text($length = 0)
+    {
         global $current_user, $globals;
 
         $this->prepare_summary_text($length);
@@ -369,7 +416,8 @@ class Comment extends LCPBase {
         return Haanga::Load('comment_summary_text.html', $vars);
     }
 
-    function username() {
+    public function username()
+    {
         global $db;
 //TODO
         $this->username = $db->get_var("SELECT SQL_CACHE user_login FROM users WHERE user_id = $this->author");
@@ -377,17 +425,20 @@ class Comment extends LCPBase {
     }
 
     // Add calls for tooltip javascript functions
-    function put_comment_tooltips(&$str) {
+    public function put_comment_tooltips(&$str)
+    {
         return preg_replace('/(^|[\(,;\.\s¿¡])#([1-9][0-9]*)/', "$1<a class='tooltip c:$this->link-$2' href=\"".$this->link_permalink."/c0$2#c-$2\" rel=\"nofollow\">#$2</a>", $str);
     }
 
-    function same_text_count($min=30) {
+    public function same_text_count($min=30)
+    {
         global $db;
         // WARNING: $db->escape(clean_lines($comment->content)) should be the sama as in libs/comment.php (unify both!)
         return (int) $db->get_var("select count(*) from comments where comment_user_id = $this->author  and comment_date > date_sub(now(), interval $min minute) and comment_content = '".$db->escape(clean_lines($this->content))."'");
     }
 
-    function get_links() {
+    public function get_links()
+    {
         global $current_user;
 
         $this->links = array();
@@ -405,13 +456,15 @@ class Comment extends LCPBase {
                 if ($link_ban) {
                     syslog(LOG_NOTICE, "Meneame: banned link in comment: $match ($current_user->user_login)");
                 }
-                if (array_search($components['host'], $this->links) === false)
+                if (array_search($components['host'], $this->links) === false) {
                     $this->links[] = $components['host'];
+                }
             }
         }
     }
 
-    function same_links_count($min=30) {
+    public function same_links_count($min=30)
+    {
         global $db, $current_user;
 
         if ($this->id > 0) {
@@ -423,9 +476,14 @@ class Comment extends LCPBase {
         $count = 0;
         $localdomain = preg_quote(get_server_name(), '/');
         foreach ($this->links as $host) {
-            if ($this->banned) $interval = $min * 2;
-            elseif (preg_match("/.*$localdomain$/", $host)) $interval = $min / 3; // For those pointing to dupes
-            else $interval = $min;
+            if ($this->banned) {
+                $interval = $min * 2;
+            } elseif (preg_match("/.*$localdomain$/", $host)) {
+                $interval = $min / 3;
+            } // For those pointing to dupes
+            else {
+                $interval = $min;
+            }
 
             $link = '://'.$host;
             $link=preg_replace('/([_%])/', "\$1", $link);
@@ -437,15 +495,18 @@ class Comment extends LCPBase {
     }
 
     // Static function to print comment form
-    static function print_form($link, $rows=5) {
+    public static function print_form($link, $rows=5)
+    {
         global $current_user, $globals;
 
-        if (!$link->votes > 0) return;
+        if (!$link->votes > 0) {
+            return;
+        }
 
         $comment = new Comment(); // Foo comment
-        $comment->randkey = rand(1000000,100000000);
+        $comment->randkey = rand(1000000, 100000000);
 
-        if($link->date < $globals['now']-$globals['time_enabled_comments'] || $link->comments >= $globals['max_comments']) {
+        if ($link->date < $globals['now']-$globals['time_enabled_comments'] || $link->comments >= $globals['max_comments']) {
             // Comments already closed
             echo '<div class="commentform warn">'."\n";
             echo _('comentarios cerrados')."\n";
@@ -473,7 +534,9 @@ class Comment extends LCPBase {
             echo "</div>\n";
         } else {
             // Not enough karma or anonymous user
-            if($tab_option == 1) do_comment_pages($link->comments, $current_page);
+            if ($tab_option == 1) {
+                do_comment_pages($link->comments, $current_page);
+            }
             if ($current_user->authenticated) {
                 if ($current_user->user_date >= $globals['now'] - $globals['min_time_for_comments']) {
                     $remaining = txt_time_diff($globals['now'], $current_user->user_date+$globals['min_time_for_comments']);
@@ -485,7 +548,7 @@ class Comment extends LCPBase {
                 echo '<div class="commentform warn">'."\n";
                 echo $msg . "\n";
                 echo '</div>'."\n";
-            } elseif (!$globals['bot']){
+            } elseif (!$globals['bot']) {
                 echo '<div class="commentform warn">'."\n";
                 echo '<a href="'.get_auth_link().'login.php?return='.urlencode($globals['uri']).'">'._('Autentifícate si deseas escribir').'</a> '._('comentarios').'. '._('O crea tu cuenta'). ' <a href="'.$globals['base_url'].'register.php">aquí.</a>'."\n";
                 echo '</div>'."\n";
@@ -496,16 +559,19 @@ class Comment extends LCPBase {
     }
 
 
-    static function save_from_post($link, $redirect = true) {
+    public static function save_from_post($link, $redirect = true)
+    {
         global $db, $current_user, $globals;
 
         require_once(mnminclude.'ban.php');
 
-        if(check_ban_proxy()) return _('dirección IP no permitida');
+        if (check_ban_proxy()) {
+            return _('dirección IP no permitida');
+        }
 
         // Check if is a POST of a comment
 
-        if( ! ($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments']*1.01 &&
+        if (! ($link->votes > 0 && $link->date > $globals['now']-$globals['time_enabled_comments']*1.01 &&
                 $link->comments < $globals['max_comments'] &&
                 intval($_POST['link_id']) == $link->id && $current_user->authenticated &&
                 intval($_POST['user_id']) == $current_user->user_id &&
@@ -526,8 +592,9 @@ class Comment extends LCPBase {
         $comment->author=intval($_POST['user_id']);
         $comment->karma=round($current_user->user_karma);
         $comment->content=clean_text_with_tags($_POST['comment_content'], 0, false, 10000);
+
         // Check if is an admin comment
-        if ($current_user->user_level == 'god' && $_POST['type'] == 'admin') {
+        if ($current_user->user_level === 'god' && $_POST['type'] === 'admin') {
             $comment->type = 'admin';
         }
 
@@ -535,7 +602,7 @@ class Comment extends LCPBase {
         $hours = intval($globals['user_comments_clon_interval']);
         if ($hours > 0) {
             $clones = $current_user->get_clones($hours+1);
-            if ( $clones) {
+            if ($clones) {
                 $l = implode(',', $clones);
                 $c = (int) $db->get_var("select count(*) from comments where comment_date > date_sub(now(), interval $hours hour) and comment_user_id in ($l)");
                 if ($c > 0) {
@@ -580,7 +647,9 @@ class Comment extends LCPBase {
             // Check the text is not the same
             $same_count = $comment->same_text_count();
             $same_links_count = $comment->same_links_count();
-            if ($comment->banned) $same_links_count *= 2;
+            if ($comment->banned) {
+                $same_links_count *= 2;
+            }
             $same_count += $same_links_count;
         } else {
             $comment_count  = $same_count = 0;
@@ -592,7 +661,7 @@ class Comment extends LCPBase {
             if ($comment_count > $comment_limit) {
                 $karma_penalty += ($comment_count-3) * 0.1;
             }
-            if($same_count > 1) {
+            if ($same_count > 1) {
                 $karma_penalty += $same_count * 0.25;
             }
         }
@@ -636,7 +705,7 @@ class Comment extends LCPBase {
 
             if ($redirect) {
                 // Comment stored, just redirect to it page
-                header ('HTTP/1.1 303 Load');
+                header('HTTP/1.1 303 Load');
                 header('Location: '.$link->get_permalink() . '/c0'.$comment->order.'#c-'.$comment->order);
                 die;
             } else {
@@ -648,7 +717,8 @@ class Comment extends LCPBase {
         //return $error;
     }
 
-    function update_conversation() {
+    public function update_conversation()
+    {
         global $db, $globals, $current_user;
 
         $previous_ids = $db->get_col("select distinct conversation_to from conversations where conversation_type='comment' and conversation_from=$this->id");
@@ -671,7 +741,9 @@ class Comment extends LCPBase {
                 $orders[$order] += 1;
             }
         }
-        if (!$this->date) $this->date = time();
+        if (!$this->date) {
+            $this->date = time();
+        }
 
         foreach ($orders as $order => $val) {
             if ($refs > 10) { // Limit the number of references to avoid abuses/spam
@@ -686,7 +758,9 @@ class Comment extends LCPBase {
             } else {
                 $to = $db->get_row("select comment_id as id, comment_user_id as user_id from comments where comment_link_id = $this->link and comment_order=$order and comment_type != 'admin'");
             }
-            if (! $to) continue;
+            if (! $to) {
+                continue;
+            }
 
             if (! in_array($to->id, $previous_ids) && ! in_array($to->id, $seen_ids)) {
                 if (User::friend_exists($to->user_id, $this->author) >= 0
@@ -699,8 +773,12 @@ class Comment extends LCPBase {
                 $db->query("insert into conversations (conversation_user_to, conversation_type, conversation_time, conversation_from, conversation_to) values ($to->user_id, 'comment', from_unixtime($this->date), $this->id, $to->id)");
             }
             $refs++;
-            if (! in_array($id, $seen_ids)) $seen_ids[] = $to->id;
-            if (! in_array($to, $seen_users)) $seen_users[] = $to->user_id;
+            if (! in_array($id, $seen_ids)) {
+                $seen_ids[] = $to->id;
+            }
+            if (! in_array($to, $seen_users)) {
+                $seen_users[] = $to->user_id;
+            }
         }
 
         $to_delete = array_diff($previous_ids, $seen_ids);
@@ -715,29 +793,35 @@ class Comment extends LCPBase {
         }
     }
 
-    function get_relative_individual_permalink() {
+    public function get_relative_individual_permalink()
+    {
         // Permalink of the "comment page"
         global $globals;
         return $globals['base_url'].'c/'.$this->id;
     }
 
-    function normalize_content() {
+    public function normalize_content()
+    {
         return $this->content = clean_lines(normalize_smileys($this->content));
     }
 
-    function store_image_from_form($field = 'image', $type = null) {
+    public function store_image_from_form($field = 'image', $type = null)
+    {
         return parent::store_image_from_form('comment', $field);
     }
 
-    function store_image($file, $type = null) {
+    public function store_image($file, $type = null)
+    {
         return parent::store_image('comment', $file);
     }
 
-    function move_tmp_image($file, $mime, $type = null) {
+    public function move_tmp_image($file, $mime, $type = null)
+    {
         return parent::move_tmp_image('comment', $file, $mime);
     }
 
-    function delete_image($type = null) {
+    public function delete_image($type = null)
+    {
         $media = new Upload('comment', $this->id, 0);
         $media->delete();
 

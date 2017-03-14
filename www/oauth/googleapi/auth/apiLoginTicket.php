@@ -20,8 +20,9 @@
  *
  * @author Brian Eaton <beaton@google.com>
  */
-class apiLoginTicket {
-  const USER_ATTR = "id";
+class apiLoginTicket
+{
+    const USER_ATTR = "id";
 
   // Information from id token envelope.
   private $envelope;
@@ -35,26 +36,29 @@ class apiLoginTicket {
    * envelope: header from a verified authentication token.
    * payload: information from a verified authentication token.
    */
-  public function __construct($envelope, $payload) {
-    $this->envelope = $envelope;
-    $this->payload = $payload;
+  public function __construct($envelope, $payload)
+  {
+      $this->envelope = $envelope;
+      $this->payload = $payload;
   }
 
   /**
    * Returns the numeric identifier for the user.
    */
-  public function getUserId() {
-    if (array_key_exists(self::USER_ATTR, $this->payload)) {
-      return $this->payload[self::USER_ATTR];
-    }
-    throw new apiAuthException("No user_id in token");
+  public function getUserId()
+  {
+      if (array_key_exists(self::USER_ATTR, $this->payload)) {
+          return $this->payload[self::USER_ATTR];
+      }
+      throw new apiAuthException("No user_id in token");
   }
 
   /**
    * Returns attributes from the login ticket.  This can contain
    * various information about the user session.
    */
-  public function getAttributes() {
-    return array("envelope" => $this->envelope, "payload" => $this->payload);
+  public function getAttributes()
+  {
+      return array("envelope" => $this->envelope, "payload" => $this->payload);
   }
 }

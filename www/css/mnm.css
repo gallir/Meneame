@@ -1485,7 +1485,6 @@ img.emoji {
 }
 
 .avatar, .news-submitted img {
-    border: 1px solid #ccc;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
@@ -1682,7 +1681,7 @@ td.count {
 
 .sidebox .warn {
     padding-left: 20px;
-    background: url({{globals.base_static}}img/common/error_s.png) no-repeat left center;
+    background: url({{ globals.base_static }}img/common/error_s.png) no-repeat left center;
     background-size: 16px 16px;
 }
 
@@ -2290,7 +2289,7 @@ select.options-comments {
     padding-left: 10px;
 }
 
-.comment.admin, .comment-body .comment-body.new {
+.comment.admin .comment-body, .comment-body .comment-body.new {
     background: #FFD5AD;
     color: #000;
 }
@@ -2320,6 +2319,17 @@ select.options-comments {
 
 .comment.high.author .comment-body {
     background-color: #CAD0E2;
+}
+
+.comment.ignored .avatar, .comment.ignored .comment-text, .comment.ignored .comment-footer {
+    display: none !important;
+}
+
+.comment.ignored.comment-avatar-large .comment-header,
+.comment.ignored.comment-avatar-large .comment-header * {
+    height: auto !important;
+    line-height: inherit !important;
+    font-size: 12px;
 }
 
 .comment.phantom .comment-body {
@@ -2419,7 +2429,6 @@ li .comment-header .comment-expand {
 }
 
 .comment-avatar-large .comment-header .avatar-link {
-    line-height: 40px;
     height: 40px;
 }
 
@@ -2531,6 +2540,8 @@ li .comment-header .comment-expand {
     font-weight: bold;
     color: #3c3c3c;
     font-size: 11px;
+    margin: 0;
+    padding: 0 7px;
 }
 
 .news-details, .news-details.main {
@@ -3296,10 +3307,28 @@ button.link.favorite {
     cursor: pointer;
 }
 
-#header-top #notifier:hover {}
+#header-top #notifier.nonzero .fa-bell {
+    -webkit-animation: blinker 2s linear 2 forwards;
+    -moz-animation: blinker 2s linear 2 forwards;
+    animation: blinker 2s linear 2 forwards;
+}
 
-#header-top #notifier.nonzero {
-    color: #fff;
+@keyframes blinker {
+    50% {
+        color: #e35614;
+    }
+}
+
+@-webkit-keyframes blinker {
+    50% {
+        color: #e35614;
+    }
+}
+
+@-moz-keyframes blinker {
+    50% {
+        color: #e35614;
+    }
 }
 
 #notifier_panel {
@@ -3567,8 +3596,9 @@ input.uploadFile {
 }
 
 .reportform {
-    padding: 40px;
+    padding: 15px;
     background-color: #FFF5ED;
+    height: 100%;
 }
 
 .reportform p {
