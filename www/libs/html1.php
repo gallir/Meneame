@@ -1240,3 +1240,53 @@ function print_follow_sub($id)
         'user' => $current_user
     ));
 }
+
+function get_data_widget_official_subs() {
+
+    global $globals;
+
+    if ($globals['memcache_host']) {
+        $memcache_widget_official_subs = 'widget_official_subs';
+    }
+
+    if (!$memcache_widget_official_subs || !$official_subs = unserialize(memcache_mget($memcache_widget_official_subs))) {
+        $official_subs = query_official_subs_for_widget();
+        if ($memcache_widget_official_subs) {
+            memcache_madd($memcache_widget_official_subs, serialize($official_subs), 1800);
+        }
+    }
+
+    return $official_subs;
+}
+
+function query_official_subs_for_widget() {
+
+    global $globals, $db;
+
+    if (!$globals['widget_official_subs']) return false;
+
+    $official_subs = [];
+
+    foreach (array_keys($globals['widget_official_subs']) as $sub_name) {
+        $sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
+        $sub->extra_info = $globals['widget_official_subs'][$sub_name];
+        $official_subs[] = $sub;
+    }
+
+    $ids_subs = array_map(function ($row) {
+        return (int)$row->id;
+    }, $official_subs);
+
+    $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN (' . implode(',', $ids_subs) . ') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+
+    foreach ($official_subs as $sub) {
+        foreach ($followers as $row) {
+            if ($sub->id == $row->id) {
+                $sub->followers = $row->c;
+                break;
+            }
+        }
+    }
+
+    return $official_subs;
+}
