@@ -82,39 +82,6 @@ switch ($globals['meta']) {
         $rows = Link::count('published');
         $where = "sub_statuses.id = " . SitesMgr::my_id() . " AND status='published' ";
 
-        $official_subs = array();
-
-        if ($globals['widget_official_subs']) {
-            foreach (array_keys($globals['widget_official_subs']) as $sub_name) {
-                $sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
-                $sub->extra_info = $globals['widget_official_subs'][$sub_name];
-                $official_subs[] = $sub;
-            }
-
-            $ids_subs = array_map(function ($row) {
-                return (int)$row->id;
-            }, $official_subs);
-
-            if ($globals['memcache_host']) {
-                $memcache_widget_subs_followers = 'widget_subs_followers';
-            }
-
-            if (!$memcache_widget_subs_followers || !$followers = unserialize(memcache_mget($memcache_widget_subs_followers))) {
-                $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN (' . implode(',', $ids_subs) . ') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
-                if ($memcache_widget_subs_followers) {
-                    memcache_madd($memcache_widget_subs_followers, serialize($followers), 1800);
-                }
-            }
-
-            foreach ($official_subs as $sub) {
-                foreach ($followers as $row) {
-                    if ($sub->id == $row->id) {
-                        $sub->followers = $row->c;
-                        break;
-                    }
-                }
-            }
-        }
 }
 
 do_header($pagetitle, _('portada'), false, $tab_option);
@@ -193,6 +160,8 @@ if ($links) {
 
     $pollCollection = new PollCollection;
     $pollCollection->loadSimpleFromRelatedIds('link_id', $all_ids);
+
+    $official_subs = get_data_widget_official_subs();
 
     $counter = 0;
 
