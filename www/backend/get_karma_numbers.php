@@ -11,7 +11,7 @@ if (!empty($_GET['id']) && $current_user->user_level === 'god') {
     $user = new User($current_user->user_id);
 }
 
-if (empty($user->karma_log)) {
+if (!$user->karma_log) {
     die(_('no hay registros para este usuario'));
 }
 
