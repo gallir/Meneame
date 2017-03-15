@@ -14,6 +14,7 @@ $globals['ads'] = false;
 $globals['favicon'] = 'img/common/konsole.png';
 
 $globals['extra_css'][] = 'es/telnet.css';
+
 init_sneak();
 
 $globals['site_id'] = SitesMgr::my_id();
@@ -23,6 +24,7 @@ do_header("telnet");
 Haanga::Load('sneak/telnet_base.html');
 
 $globals['sneak_telnet'] = true;
+
 Haanga::Load('sneak/form.html', compact('max_item'));
 
 do_footer();
