@@ -42,7 +42,6 @@ $routes = array(
     'backend'                => 'backend/dispatcher.php',
     'api'                    => 'api/dispatcher.php',
     'notame'                 => 'sneakme/dispatcher.php',
-    'mobile'                 => 'mobile/dispatcher.php',
     'captcha'                => 'captcha.php',
     'novedades-en-meneame'   => 'changelog.php'
 );
