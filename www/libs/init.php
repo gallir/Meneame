@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called 'COPYING'.
 
-include mnminclude.'utils.php';
+require_once mnmpath . '/../vendor/autoload.php';
 
 global $globals;
 
@@ -18,19 +18,6 @@ register_shutdown_function('shutdown');
 if (isset($globals['max_load']) && $globals['max_load'] > 0) {
     check_load($globals['max_load']);
 }
-
-// Basic initialization
-//mb_internal_encoding('UTF-8');
-/*
- * Use insteadi in your php.ini:
-
-default_charset = 'UTF-8'
-[mbstring]
-mbstring.internal_encoding = UTF-8
-mbstring.http_input = UTF-8
-mbstring.http_output = UTF-8
-
-*/
 
 // we don't force https if the server name is not the same as de requested host from the client
 if (!empty($globals['force_ssl']) && getenv('SERVER_NAME') !== getenv('HTTP_HOST')) {
@@ -76,8 +63,6 @@ if ($globals['cli']) {
 $globals['user_ip_int'] = inet_ptod($globals['user_ip']);
 $globals['cache-control'] = array();
 
-//echo '<!-- ' . $globals['uri'] . '-->\n';
-
 if (($globals['cli'] === false) && getenv('HTTP_HOST')) {
     // Check bots
     if (
@@ -96,12 +81,6 @@ if (($globals['cli'] === false) && getenv('HTTP_HOST')) {
         && !preg_match('/ipad|tablet/i', getenv('HTTP_USER_AGENT'))
     ) { // Don't treat iPad as mobiles
         $globals['mobile'] = 1;
-        /* Removed, with threads it doesn't make sense
-        // TODO: remove these lines if not used again.
-        // Reduce page size for mobiles
-        $globals['comments_page_size'] = intval($globals['comments_page_size']/2);
-        $globals['page_size'] = intval($globals['page_size']/2);
-        */
     } else {
         $globals['mobile'] = 0;
     }
@@ -135,65 +114,6 @@ $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'
 // Votes' tags
 $globals['negative_votes_values'] = array( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
 
-// autoloaded clasess
-// Should be defined after mnminclude
-// and before the database
-function __autoload($class)
-{
-    static $classfiles = array(
-        'SitesMgr' => 'sites.php',
-        'Annotation' => 'annotation.php',
-        'Log' => 'log.php',
-        'LogAdmin' => 'log_admin.php',
-        'Report' => 'report.php',
-		'Strike' => 'strike.php',
-        'db' => 'mysqli.php',
-        'RGDB' => 'rgdb.php',
-        'LCPBase' => 'LCPBase.php',
-        'Link' => 'link.php',
-        'Comment' => 'comment.php',
-        'Vote' => 'votes.php',
-        'Annotation' => 'annotation.php',
-        'Blog' => 'blog.php',
-        'Post' => 'post.php',
-        'PrivateMessage' => 'private.php',
-        'UserAuth' => 'login.php',
-        'User' => 'user.php',
-        'BasicThumb' => 'webimages.php',
-        'WebThumb' => 'webimages.php',
-        'HtmlImages' => 'webimages.php',
-        'Trackback' => 'trackback.php',
-        'Upload' => 'upload.php',
-        'Media' => 'media.php',
-        'S3' => 'S3.php',
-        'Tabs' => 'tabs.php',
-        'Poll' => 'poll/poll.php',
-        'PollCollection' => 'poll/poll_collection.php',
-        'PollOption' => 'poll/poll_option.php',
-        'DbHelper' => 'db_helper.php'
-    );
-
-    if (isset($classfiles[$class]) && is_file(mnminclude.$classfiles[$class])) {
-        require_once(mnminclude.$classfiles[$class]);
-        return;
-    }
-
-    // Build the include for 'standards' frameworks wich uses path1_path2_classnameclassName
-    $filePath = str_replace('_', DIRECTORY_SEPARATOR, $class).'.php';
-    $includePaths = explode(PATH_SEPARATOR, get_include_path());
-
-    foreach ($includePaths as $includePath) {
-        if (is_file($includePath.DIRECTORY_SEPARATOR.$filePath)) {
-            require_once($filePath);
-            return;
-        }
-    }
-
-    if (is_file($class.'.php')) {
-        include_once($class.'.php');
-    }
-}
-
 // Allows a script to define to use the alternate server
 if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_servers'][$globals['alternate_db_server']])) {
     $db = new RGDB($globals['db_user'], $globals['db_password'], $globals['db_name'], $globals['alternate_db_servers'][$globals['alternate_db_server']], true);
@@ -213,7 +133,7 @@ function haanga_bootstrap()
 /* Load template engine here */
 $config = array(
     'template_dir' => mnmpath.'/'.$globals['haanga_templates'],
-    'autoload'     => false, /* Don't use Haanga's autoloader */
+    'autoload'     => true,
     'bootstrap'    => 'haanga_bootstrap',
     'compiler' => array( /* opts for the tpl compiler */
         /* Avoid use if empty($var) */
@@ -236,8 +156,6 @@ if ($globals['haanga_cache'][0] === '/') {
 } else {
     $config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.getenv('SERVER_NAME');
 }
-
-require mnminclude.'Haanga.php';
 
 Haanga::configure($config);
 

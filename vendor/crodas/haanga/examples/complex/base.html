@@ -1,0 +1,62 @@
+<script>
+var i = 5 % 4; /* changed */
+function foo_bar  () {
+    cesar {$rodas}
+}
+</script>
+
+{# Testing Comment #}
+<table>
+{% for var in some_list %}
+
+    <tr class="{% cycle 'row1 \' cesar' 'row2' %}">
+        <td style="background-color: {% ifchanged var %}{%cycle 'red' '#c0c0c0' %}{% else %}{%cycle 'gray' 'white' %}{% endifchanged %}">
+            Foobar {{ var }}
+            {% filter lower|upper %}
+            {% ifchanged %}
+            cesar
+            {% ifchanged %}
+            Date {{ var }} foo 
+            dasdasdasdasdasldaksdhasd
+            asdlkasjdlkasjdlkasjdlkajdas
+                        dasa
+            {% endifchanged %}
+            {% endifchanged %}
+            out of ifchanged
+            {% endfilter %}
+        </td>
+        <td>
+            {{ forloop.counter0 }}
+        </td>
+        <td>
+        {% block test %}
+            test
+            {% block foo %}foo{% endblock foo %}
+        {% for var in some_list %}
+            {%upper%}
+            {# Define a custom filter (AKA call a PHP function) #}
+            i must be uppercase
+            {% endupper %}
+            {{ forloop.counter }}<br/>
+            {{ forloop.counter0 }}<br/>
+        {% endfor %}
+
+        {% endblock test %}
+        </td>
+        <td>
+        {% block td %} 
+            {% filter lower|upper %}
+                Testing block with filter {{ forloop.counter }} :-)
+            {% endfilter %}
+        {% endblock %}
+        </td>
+    </tr>
+{% empty %} 
+<tr> 
+    <td>
+        Dear {{user}} you found a bug ;-)
+    </td>
+</tr>
+{% endfor %}
+    </tr>
+</table>
