@@ -1,0 +1,17 @@
+{
+  "name": "meneame/meneame",
+  "description": "Source code for Meneame aggregator",
+  "license": "AFFERO GENERAL PUBLIC LICENSE",
+  "require": {
+    "bshaffer/oauth2-server-php": "~1.8",
+    "crodas/Haanga": "~1.0.7"
+  },
+  "autoload": {
+    "classmap": [
+      "www/libs/"
+    ],
+    "files": [
+      "www/libs/utils.php"
+    ]
+  }
+}
