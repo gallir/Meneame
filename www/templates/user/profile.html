@@ -68,10 +68,12 @@
                 {% inline 'user/avatar_upload.html' %}
             {% endif %}
 
+            {#
             {% if user.total_images %}
             <br/><br/>
             <button type="button" onclick="fancybox_gallery('all', {{ user.id }})">{% trans _('imágenes') %} [{{ user.total_images }}]</button>
             {% endif %}
+            #}
 
             {% if globals.do_geo %}
             <br/><br/>
