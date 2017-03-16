@@ -261,7 +261,7 @@ function do_ignored()
 {
     global $user, $current_user;
 
-    return Haanga::Load('/user/ignored.html', compact('user'));
+    return Haanga::Load('user/ignored.html', compact('user'));
 }
 
 function do_profile()

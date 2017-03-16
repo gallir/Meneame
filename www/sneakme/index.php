@@ -251,7 +251,7 @@ echo '</div>' . "\n";
 echo '<div id="newswrap">' . "\n";
 
 if ($user && $user->ignored()) {
-    Haanga::Load('user/ignored.html', array('user', 'current_user'));
+    Haanga::Load('user/ignored.html', compact('user', 'current_user'));
 } else {
     do_pages($rows, $page_size);
 
