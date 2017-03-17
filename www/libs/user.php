@@ -702,7 +702,7 @@ class User
         }
     }
 
-    public function ranking()
+    public function ranking($format = true)
     {
         global $db;
 
@@ -710,7 +710,13 @@ class User
             $this->read();
         }
 
-        return (int) $db->get_var("SELECT SQL_CACHE count(*) FROM users WHERE user_karma > $this->karma") + 1;
+        $value = (int)$db->get_var('
+            SELECT SQL_CACHE COUNT(*)
+            FROM users
+            WHERE user_karma > "'.(float)$this->karma.'";
+        ') + 1;
+
+        return $format ? get_human_number($value) : $value;
     }
 
     public function blogs()
@@ -898,24 +904,24 @@ class User
 
         if ($value == 0) {
             return $db->query("delete from prefs where pref_user_id = $id and pref_key = '$key'");
-        } else {
-            return $db->query("replace into prefs set pref_value = $value, pref_user_id = $id, pref_key = '$key'");
         }
+
+        return $db->query("replace into prefs set pref_value = $value, pref_user_id = $id, pref_key = '$key'");
     }
 
     public static function delete_pref($id, $key, $value = false)
     {
         global $db;
 
-        $key = $db->escape($key);
+        $extra = $value ? ('AND `pref_value` = "'.(int)$value.'"') : '';
 
-        if ($value) {
-            $value = intval($value);
-            $extra = "and pref_value=$value";
-        } else {
-            $extra = '';
-        }
-
-        return $db->query("delete from prefs where pref_user_id=$id and pref_key='$key' $extra");
+        return $db->query('
+            DELETE FROM `prefs`
+            WHERE (
+                `pref_user_id` = "'.(int)$id.'"
+                AND `pref_key` = "'.$db->escape($key).'"
+                '.$extra.'
+            );
+        ');
     }
 }

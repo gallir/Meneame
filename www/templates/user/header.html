@@ -1,0 +1,74 @@
+<section class="section section-large profile">
+    <div class="row">
+        <div class="col-md-1">
+            <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
+        </div>
+
+        <div class="col-md-4">
+            <h1>{{ user.username }}</h1>
+            <p class="info">{% exec text_to_html user.bio %}</p>
+            <p><strong>{% trans _('En menéame desde') %} {% exec get_human_date user.date "%B de %Y" %}</strong>
+        </div>
+
+        <div class="col-md-4">
+            <div class="points-table">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <strong>{% exec get_human_number user.karma %}</strong>
+                        <span>{% trans _('Karma') %}</span>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <strong>{% exec user.ranking "true" %}</strong>
+                        <span>{% trans _('Ranking') %}</span>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <strong>{% exec get_human_number user.total_links %}</strong>
+                        <span>{% trans _('Enviadas') %}</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4">
+                        <strong>{% exec get_human_number user.published_links %}</strong>
+                        <span>{% trans _('Publicadas') %}</span>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <strong>{% exec get_human_number user.total_comments %}</strong>
+                        <span>{% trans _('Comentarios') %}</span>
+                    </div>
+
+                    <div class="col-xs-4">
+                        <strong>{% exec get_human_number user.total_posts %}</strong>
+                        <span>{% trans _('Notas') %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+        </div>
+    </div>
+
+    <div class="contents-layout">
+        <div class="contents-menu">
+            <a href="{% exec get_user_uri user.username 'articles' %}">
+                <i class="fa fa-file-text-o"></i> <span>{% trans _('Artículos') %}</span>
+            </a>
+
+            <a href="{% exec get_user_uri user.username 'history' %}">
+                <i class="fa fa-newspaper-o"></i> <span>{% trans _('Historias') %}</span>
+            </a>
+
+            <a href="{% exec get_user_uri user.username 'commented' %}">
+                <i class="fa fa-comments-o"></i> <span>{% trans _('Comentarios') %}</span>
+            </a>
+
+            <a href="{% exec get_user_uri user.username 'friends' %}">
+                <i class="fa fa-users"></i> <span>{% trans _('Relaciones') %}</span>
+            </a>
+        </div>
+
+        <div class="contents-body">

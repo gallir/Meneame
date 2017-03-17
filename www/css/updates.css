@@ -1378,6 +1378,68 @@ ul.slick-dots li button {
     margin-top: 40px;
 }
 
+.points-table {
+    text-align: center;
+}
+
+.points-table strong, .points-table span {
+    display: block;
+}
+
+.points-table strong {
+    font-size: 26px;
+}
+
+.points-table span {
+    color: #AAA;
+}
+
+.contents-layout {
+    margin-top: 30px;
+    background-color: #f3f3f3;
+    padding: 20px;
+}
+
+.contents-layout:before, .contents-layout:after {
+    clear: both;
+    display: table;
+    content: " ";
+}
+
+.contents-layout .contents-menu {
+    float: left;
+    width: 15%;
+    text-align: center;
+}
+
+.contents-layout .contents-menu a {
+    display: block;
+    padding: 20px;
+    color: #4a4a4a;
+}
+
+.contents-layout .contents-menu a.selected,
+.contents-layout .contents-menu a:hover {
+    background: white;
+    text-decoration: none;
+}
+
+.contents-layout .contents-menu a i {
+    font-size: 24px;
+}
+
+.contents-layout .contents-menu a span {
+    display: block;
+    font-size: 16px;
+}
+
+.contents-layout .contents-body {
+    float: left;
+    width: 85%;
+    padding: 20px;
+    background: white;
+}
+
 .pagination-center {
     text-align: center;
     clear: both;
