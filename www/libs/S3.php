@@ -481,42 +481,32 @@ class S3
         if ($maxKeys == null && $nextMarker !== null && (string)$response->body->IsTruncated == 'true') {
             do {
                 $rest = new S3Request('GET', $bucket, '', self::$endpoint);
-                if ($prefix !== null && $prefix !== '') {
-                    $rest->setParameter('prefix', $prefix);
-                }
+                if ($prefix !== null && $prefix !== '') $rest->setParameter('prefix', $prefix);
                 $rest->setParameter('marker', $nextMarker);
-                if ($delimiter !== null && $delimiter !== '') {
-                    $rest->setParameter('delimiter', $delimiter);
-                }
+                if ($delimiter !== null && $delimiter !== '') $rest->setParameter('delimiter', $delimiter);
 
-                if (($response = $rest->getResponse()) == false || $response->code !== 200) {
-                    break;
-                }
+                if (($response = $rest->getResponse()) == false || $response->code !== 200) break;
 
-                if (isset($response->body, $response->body->Contents)) {
+                if (isset($response->body, $response->body->Contents))
                     foreach ($response->body->Contents as $c) {
                         $results[(string)$c->Key] = array(
-                    'name' => (string)$c->Key,
-                    'time' => strtotime((string)$c->LastModified),
-                    'size' => (int)$c->Size,
-                    'hash' => substr((string)$c->ETag, 1, -1)
-                );
+                            'name' => (string)$c->Key,
+                            'time' => strtotime((string)$c->LastModified),
+                            'size' => (int)$c->Size,
+                            'hash' => substr((string)$c->ETag, 1, -1)
+                        );
                         $nextMarker = (string)$c->Key;
                     }
-                }
 
-                if ($returnCommonPrefixes && isset($response->body, $response->body->CommonPrefixes)) {
-                    foreach ($response->body->CommonPrefixes as $c) {
+                if ($returnCommonPrefixes && isset($response->body, $response->body->CommonPrefixes))
+                    foreach ($response->body->CommonPrefixes as $c)
                         $results[(string)$c->Prefix] = array('prefix' => (string)$c->Prefix);
-                    }
-                }
 
-                if (isset($response->body, $response->body->NextMarker)) {
+                if (isset($response->body, $response->body->NextMarker))
                     $nextMarker = (string)$response->body->NextMarker;
-                }
-            }
+
+            } while ($response !== false && (string)$response->body->IsTruncated == 'true');
         }
-        while ($response !== false && (string)$response->body->IsTruncated == 'true');
 
         return $results;
     }
