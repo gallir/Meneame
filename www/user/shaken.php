@@ -2,14 +2,23 @@
 defined('mnminclude') or die();
 
 if ($globals['bot']) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
-$rows = -1; //$db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id=$user->id");
-$links = $db->get_results("SELECT vote_link_id as id, vote_value FROM votes WHERE vote_type='links' and vote_user_id=$user->id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+$rows = -1;
+$links = $db->get_results('
+    SELECT vote_link_id AS id, vote_value
+    FROM votes
+    WHERE (
+        vote_type = "links"
+        AND vote_user_id = "'.(int)$user->id.'"
+    )
+    ORDER BY vote_date DESC
+    LIMIT '.(int)$offset.', '.(int)$page_size.';
+');
 
 if (empty($links)) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
 foreach ($links as $linkdb) {

@@ -174,7 +174,7 @@
                 <div style="padding: 3px 0 2px 0;">
                     {% for vote in self.friend_votes %}
                     <a href="{{ vote.user_login | useruri }}" title="{{ vote.user_login }}: {% trans _('valor') %} {{ vote.vote_value }}">
-                        <img class="avatar" src="{% exec get_avatar_url vote.user_id vote.user_avatar 40 %}" width="40" height="40" alt="{{ vote.user_login }}"/>
+                        <img class="avatar" src="{% exec get_avatar_url vote.user_id vote.user_avatar 25 %}" width="25" height="25" alt="{{ vote.user_login }}"/>
                     </a>&nbsp;&nbsp;
                     {% endfor %}
                 </div>

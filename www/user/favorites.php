@@ -1,11 +1,33 @@
 <?php
 defined('mnminclude') or die();
 
-$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='link'");
-$links = $db->get_col("SELECT link_id FROM links, favorites WHERE favorite_user_id=$user->id AND favorite_type='link' AND favorite_link_id=link_id ORDER BY favorite_link_readed ASC, link_date DESC LIMIT $offset,$page_size");
+$rows = (int)$db->get_var('
+    SELECT COUNT(*)
+    FROM favorites
+    WHERE (
+        favorite_user_id = "'.(int)$user->id.'"
+        AND favorite_type = "link"
+    );
+');
+
+if ($rows === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
+$links = $db->get_col('
+    SELECT link_id
+    FROM links, favorites
+    WHERE (
+        favorite_user_id = "'.(int)$user->id.'"
+        AND favorite_type = "link"
+        AND favorite_link_id = link_id
+    )
+    ORDER BY favorite_link_readed ASC, link_date DESC
+    LIMIT '.(int)$offset.', '.(int)$page_size.';
+');
 
 if (empty($links)) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
 foreach ($links as $link_id) {

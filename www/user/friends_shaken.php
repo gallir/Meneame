@@ -5,17 +5,34 @@ if ($globals['bot']) {
     return;
 }
 
-$friends = $db->get_col("select friend_to from friends where friend_type = 'manual' and friend_from = $user->id and friend_value > 0");
-$links = array();
+$friends = $db->get_col('
+    SELECT friend_to
+    FROM friends
+    WHERE (
+        friend_type = "manual"
+        AND friend_from = "'.(int)$user->id.'"
+        AND friend_value > 0
+    );
+');
 
-if ($friends) {
-    $friends_list = implode(',', $friends);
-    $sql = "select distinct vote_link_id as link_id from votes where vote_type = 'links' and vote_user_id in ($friends_list) and vote_value > 0 order by vote_link_id desc";
-    $links = $db->get_results("$sql LIMIT $offset,$page_size");
+if (empty($friends)) {
+    return Haanga::Load('user/empty.html');
 }
 
+$links = $db->get_results('
+    SELECT DISTINCT vote_link_id AS link_id
+    FROM votes
+    WHERE (
+        vote_type = "links"
+        AND vote_user_id IN ('.implode(',', array_map('intval', $friends)).')
+        AND vote_value > 0
+    )
+    ORDER BY vote_link_id DESC
+    LIMIT '.(int)$offset.', '.(int)$page_size.';
+');
+
 if (empty($links)) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
 foreach ($links as $dblink) {

@@ -545,15 +545,13 @@ function check_form_auth_ip()
     return false;
 }
 
-function get_user_uri($user, $view = '')
+function get_user_uri($user, $view = '', $id = '')
 {
     global $globals;
 
     $uri = $globals['base_url_general'].'user/'.htmlspecialchars($user);
-
-    if ($view) {
-        $uri .= "/$view";
-    }
+    $uri .= $view ? ('/'.$view) : '';
+    $uri .= $id ? ('/'.$id) : '';
 
     return $uri;
 }
@@ -569,20 +567,14 @@ function get_user_uri_by_uid($user, $view = '')
         $uid = -1;
     }
 
-    return get_user_uri($user, $view)."/$uid";
+    return get_user_uri($user, $view).'/'.$uid;
 }
 
 function post_get_base_url($option = '', $give_base = true)
 {
     global $globals;
 
-    if ($give_base) {
-        $base = $globals['base_url_general'];
-    } else {
-        $base = '';
-    }
-
-    return $base.'notame/'.$option;
+    return ($give_base ? $globals['base_url_general'] : '').'notame/'.$option;
 }
 
 function get_avatar_url($user, $avatar, $size, $fullurl = true)
@@ -776,7 +768,7 @@ function guess_user_id($str)
 
     $str = $db->escape(mb_substr($str, 0, 64));
 
-    return intval($db->get_var("select user_id from users where user_login = '$str'"));
+    return (int)$db->get_var('SELECT user_id FROM users WHERE user_login = "'.$str.'" LIMIT 1;');
 }
 
 function put_smileys($str)

@@ -1433,11 +1433,45 @@ ul.slick-dots li button {
     font-size: 16px;
 }
 
+.contents-layout .contents-submenu {
+    text-align: center;
+    border-bottom: 1px solid #ffd3b7;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.contents-layout .contents-submenu a {
+    color: #ff6400;
+}
+
+.contents-layout .contents-submenu a.selected {
+    font-weight: bold;
+}
+
 .contents-layout .contents-body {
     float: left;
     width: 85%;
     padding: 20px;
     background: white;
+}
+
+.contents-layout .contents-body .news-body h2 {
+    font-size: 20px;
+}
+
+.contents-layout .contents-body h4 {
+    font-size: 20px;
+    font-weight: normal;
+    margin: 15px 0;
+}
+
+.contents-layout .contents-body h4 a {
+    color: #1F1F1F;
+}
+
+.contents-layout .contents-body .comments-list li {
+    margin-bottom: 15px;
 }
 
 .pagination-center {

@@ -1,9 +1,33 @@
 <?php
 defined('mnminclude') or die();
 
-$rows = -1;
-$db->get_var("SELECT count(*) FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id and comment_id = vote_link_id and comment_user_id != vote_user_id");
-$comments = $db->get_results("SELECT vote_link_id as id, vote_value as value FROM votes, comments WHERE vote_type='comments' and vote_user_id=$user->id  and comment_id = vote_link_id and comment_user_id != vote_user_id ORDER BY vote_date DESC LIMIT $offset,$page_size");
+$rows = (int)$db->get_var('
+    SELECT COUNT(*)
+    FROM votes, comments
+    WHERE (
+        vote_type = "comments"
+        AND vote_user_id = "'.(int)$user->id.'"
+        AND comment_id = vote_link_id
+        AND comment_user_id != vote_user_id
+    );
+');
+
+if ($rows === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
+$comments = $db->get_results('
+    SELECT vote_link_id AS id, vote_value AS value
+    FROM votes, comments
+    WHERE (
+        vote_type = "comments"
+        AND vote_user_id = "'.(int)$user->id.'"
+        AND comment_id = vote_link_id
+        AND comment_user_id != vote_user_id
+    )
+    ORDER BY vote_date DESC
+    LIMIT '.(int)$offset.', '.(int)$page_size.';
+');
 
 if (empty($comments)) {
     return;

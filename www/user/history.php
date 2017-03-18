@@ -4,19 +4,19 @@ defined('mnminclude') or die();
 $rows = $db->get_var('
     SELECT COUNT(*)
     FROM links
-    WHERE link_author = "'.$user->id.'";
+    WHERE link_author = "'.(int)$user->id.'";
 ');
 
 $links = $db->get_col('
     SELECT link_id
     FROM links
-    WHERE link_author = "'.$user->id.'"
+    WHERE link_author = "'.(int)$user->id.'"
     ORDER BY link_date DESC
     LIMIT '.$offset.', '.$page_size.';
 ');
 
 if (empty($links)) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
 Link::$original_status = true; // Show status in original sub

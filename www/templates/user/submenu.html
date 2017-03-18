@@ -1,0 +1,9 @@
+<nav class="contents-submenu">
+    <div class="row">
+        {% for key, value in options %}
+        <div class="col-sm-{{ cols }}">
+            <a href="{{ value.link }}" {% if key == view %} class="selected" {% endif %} >{{ value.title }}</a>
+        </div>
+        {% endfor %}
+    </div>
+</nav>

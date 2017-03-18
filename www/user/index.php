@@ -76,8 +76,6 @@ if (!$user->read()) {
     do_error(_('usuario inexistente'), 404);
 }
 
-$login = $user->username; // Just in case, we user the database username
-
 $globals['search_options'] = array('u' => $user->username);
 
 $view = clean_input_string($_REQUEST['view']) ?: 'history';
@@ -108,28 +106,35 @@ if ($globals['external_user_ads'] && !empty($user->adcode)) {
     }
 }
 
+$globals['noindex'] = true;
+
 // Check if it should be index AND if they are valids options, otherwise call do_error()
 switch ($view) {
     case 'history':
     case 'shaken':
-    case 'friends_shaken':
-    case 'friends':
-    case 'friends_new':
-    case 'friend_of':
-    case 'ignored':
     case 'favorites':
-        $globals['noindex'] = true;
+    case 'friends_shaken':
+        $menu = 'history';
+        break;
+
+    case 'friends':
+    case 'friend_of':
+    case 'friends_new':
+    case 'ignored':
+        $menu = 'relations';
         break;
 
     case 'commented':
     case 'conversation':
     case 'shaken_comments':
     case 'favorite_comments':
+        $menu = 'comments';
         $globals['search_options']['w'] = 'comments';
-        $globals['noindex'] = true;
         break;
 
     case 'subs':
+    case 'subs_follow':
+        $menu = 'subs';
         $globals['noindex'] = false;
         break;
 
@@ -141,10 +146,10 @@ switch ($view) {
 // Add canonical address
 $globals['extra_head'] = '<link rel="canonical" href="//' . get_server_name() . get_user_uri($user->username) . '" />' . "\n";
 
+$header_title = $user->username;
+
 if (!empty($user->names)) {
-    $header_title = "$login ($user->names)";
-} else {
-    $header_title = $login;
+    $header_title .= ' ('.$user->names.')';
 }
 
 // Used to show the user the number of unread answers to her comments
@@ -154,11 +159,30 @@ if ($current_user->user_id == $user->id) {
     $globals['extra_comment_conversation'] = '';
 }
 
-do_header($header_title, 'profile', User::get_menu_items($view, $login), array(
-    'view' => $view,
-    'login' => $login
-));
+do_header($header_title);
 
-require __DIR__.'/profile.php';
+$user->all_stats();
+$user->bio = $user->bio ?: '';
+
+if ($current_user->user_id == $user->id || $current_user->admin) {
+    $strike = (new Strike($user))->getUserCurrentStrike();
+} else {
+    $strike = null;
+}
+
+Haanga::Load('user/header.html', compact('user', 'menu', 'strike'));
+Haanga::Load('user/submenu.html', [
+    'options' => ($options = Tabs::optionsFromProfile($view)),
+    'cols' => (int)(12 / count($options)),
+    'view' => $view
+]);
+
+if ($user->ignored()) {
+    Haanga::Load('user/ignored.html');
+} else {
+    require __DIR__.'/'.$view.'.php';
+}
+
+Haanga::Load('user/footer.html');
 
 do_footer();

@@ -1,11 +1,20 @@
 <?php
 defined('mnminclude') or die();
 
-$rows = -1; // $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id=$user->id");
-$comments = $db->get_results("SELECT comment_id, link_id, comment_type FROM comments, links WHERE comment_user_id=$user->id and link_id=comment_link_id ORDER BY comment_date desc LIMIT $offset,$page_size");
+$rows = -1;
+$comments = $db->get_results('
+    SELECT comment_id, link_id, comment_type
+    FROM comments, links
+    WHERE (
+        comment_user_id = "'.(int)$user->id.'"
+        AND link_id = comment_link_id
+    )
+    ORDER BY comment_date DESC
+    LIMIT '.(int)$offset.', '.(int)$page_size.';
+');
 
 if (empty($comments)) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
 require __DIR__.'/libs-comments.php';

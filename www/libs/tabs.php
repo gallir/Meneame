@@ -2,7 +2,7 @@
 
 final class Tabs
 {
-    public static function renderForSection($section, $options, $tab_class)
+    public static function renderForSection($section, $options, $tab_class = null)
     {
         switch ($section) {
             case _('portada'):
@@ -25,10 +25,13 @@ final class Tabs
                 return self::renderForSneakmePrivates($options, $tab_class);
         }
 
-        if ($section !== _('profile')) {
-            return;
+        if ($section === _('profile')) {
+            return self::renderFromProfile($options, $tab_class);
         }
+    }
 
+    public static function renderFromProfile(array $options, $tab_class = null)
+    {
         switch ($options['view']) {
             case 'profile':
                 return self::renderForProfileProfile($options, $tab_class);
@@ -68,6 +71,56 @@ final class Tabs
 
             case 'favorite_comments':
                 return self::renderForProfileFavoriteComments($options, $tab_class);
+        }
+    }
+
+    public static function optionsFromProfile($view)
+    {
+        switch ($view) {
+            case 'profile':
+                return self::optionsForProfileProfile();
+
+            case 'friends':
+                return self::optionsForProfileFriends();
+
+            case 'friend_of':
+                return self::optionsForProfileFriendsOf();
+
+            case 'ignored':
+                return self::optionsForProfileIgnored();
+
+            case 'friends_new':
+                return self::optionsForProfileFriendsNew();
+
+            case 'history':
+                return self::optionsForProfileHistory();
+
+            case 'shaken':
+                return self::optionsForProfileShaken();
+
+            case 'favorites':
+                return self::optionsForProfileFavorites();
+
+            case 'friends_shaken':
+                return self::optionsForProfileFriendsShaken();
+
+            case 'commented':
+                return self::optionsForProfileCommented();
+
+            case 'conversation':
+                return self::optionsForProfileConversation();
+
+            case 'shaken_comments':
+                return self::optionsForProfileShakenComments();
+
+            case 'favorite_comments':
+                return self::optionsForProfileFavoriteComments();
+
+            case 'subs':
+                return self::optionsForProfileSubs();
+
+            case 'subs_follow':
+                return self::optionsForProfileSubsFollow();
         }
     }
 
@@ -116,7 +169,6 @@ final class Tabs
 
         return Haanga::Load('print_tabs.html', compact('items', 'option', 'feed', 'tab_class'), true);
     }
-
 
     public static function renderForShakeIt($option = -1, $tab_class)
     {
@@ -296,36 +348,6 @@ final class Tabs
         return $html;
     }
 
-    public static function renderForProfileProfile($params, $tab_class)
-    {
-        global $user, $current_user, $globals;
-
-        $options = array($user->username => get_user_uri($user->username));
-
-        if ($current_user->user_id == $user->id || $current_user->user_level === 'god') {
-            $options[_('modificar perfil')] = $globals['base_url'].'profile?login='.urlencode($params['login']);
-        }
-
-        return self::renderUserProfileSubheader($options, 0, 'rss?friends_of=' . $user->id, _('envíos de amigos en rss2'), $tab_class);
-    }
-
-    public static function renderForProfileFriends($params, $tab_class)
-    {
-        global $user, $current_user;
-
-        $options = array(
-            _('amigos') => get_user_uri($user->username, 'friends'),
-            _('elegido por') => get_user_uri($user->username, 'friend_of')
-        );
-
-        if ($user->id == $current_user->user_id) {
-            $options[_('ignorados')] = get_user_uri($user->username, 'ignored');
-            $options[_('nuevos')] = get_user_uri($user->username, 'friends_new');
-        }
-
-        return self::renderUserProfileSubheader($options, 0, 'rss?friends_of=' . $user->id, _('envíos de amigos en rss2'), $tab_class);
-    }
-
     public static function renderUserProfileSubheader($options, $selected = false, $rss = false, $rss_title = '', $tab_class)
     {
         global $user, $current_user;
@@ -341,150 +363,243 @@ final class Tabs
         ), true);
     }
 
-    public static function renderForProfileFriendsOf($params, $tab_class)
+    public static function renderForProfileProfile($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileProfile(), 0, 'rss?friends_of=' . $user->id, _('enví­os de amigos en rss2'), $tab_class);
+    }
+
+    public static function optionsForProfileProfile()
+    {
+        global $user, $current_user, $globals;
+
+        $options = array(
+            'profile' => array(
+                'title' => $user->username,
+                'link' => get_user_uri($user->username)
+            )
+        );
+
+        if ($current_user->user_id == $user->id || ($current_user->user_level === 'god')) {
+            $options['edit'] = array(
+                'title' => _('modificar perfil'),
+                'link' => $globals['base_url'].'profile?login='.urlencode($params['login'])
+            );
+        }
+
+        return $options;
+    }
+
+    public static function renderForProfileFriends($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileFriends(), 0, 'rss?friends_of=' . $user->id, _('enví­os de amigos en rss2'), $tab_class);
+    }
+
+    public static function optionsForProfileFriends()
     {
         global $user, $current_user;
 
         $options = array(
-            _('amigos') => get_user_uri($user->username, 'friends'),
-            _('elegido por') => get_user_uri($user->username, 'friend_of')
+            'friends' => array(
+                'title' => _('Amigos'),
+                'link' => get_user_uri($user->username, 'friends', $user->id),
+            ),
+            'friend_of' => array(
+                'title' => _('Elegido por'),
+                'link' => get_user_uri($user->username, 'friend_of', $user->id),
+            )
         );
 
         if ($user->id == $current_user->user_id) {
-            $options[_('ignorados')] = get_user_uri($user->username, 'ignored');
-            $options[_('nuevos')] = get_user_uri($user->username, 'friends_new');
+            $options['ignored'] = array(
+                'title' => _('Ignorados'),
+                'link' => get_user_uri($user->username, 'ignored', $user->id),
+            );
+
+            $options['friends_new'] = array(
+                'title' => _('Nuevos'),
+                'link' => get_user_uri($user->username, 'friends_new', $user->id)
+            );
         }
 
-        return self::renderUserProfileSubheader($options, 1, false, '', $tab_class);
+        return $options;
+    }
+
+    public static function renderForProfileFriendsOf($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileFriendsOf(), 1, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileFriendsOf()
+    {
+        return self::optionsForProfileFriends();
     }
 
     public static function renderForProfileIgnored($params, $tab_class)
     {
-        global $user, $current_user;
+        return self::renderUserProfileSubheader(self::optionsForProfileIgnored(), 2, false, '', $tab_class);
+    }
 
-        $options = array(
-            _('amigos') => get_user_uri($user->username, 'friends'),
-            _('elegido por') => get_user_uri($user->username, 'friend_of')
-        );
-
-        if ($user->id == $current_user->user_id) {
-            $options[_('ignorados')] = get_user_uri($user->username, 'ignored');
-            $options[_('nuevos')] = get_user_uri($user->username, 'friends_new');
-        }
-
-        return self::renderUserProfileSubheader($options, 2, false, '', $tab_class);
+    public static function optionsForProfileIgnored()
+    {
+        return self::optionsForProfileFriends();
     }
 
     public static function renderForProfileFriendsNew($params, $tab_class)
     {
-        global $user, $current_user;
+        return self::renderUserProfileSubheader(self::optionsForProfileFriendsNew(), 3, false, '', $tab_class);
+    }
 
-        $options = array(
-            _('amigos') => get_user_uri($user->username, 'friends'),
-            _('elegido por') => get_user_uri($user->username, 'friend_of')
-        );
-
-        if ($user->id == $current_user->user_id) {
-            $options[_('ignorados')] = get_user_uri($user->username, 'ignored');
-            $options[_('nuevos')] = get_user_uri($user->username, 'friends_new');
-        }
-
-        return self::renderUserProfileSubheader($options, 3, false, '', $tab_class);
+    public static function optionsForProfileFriendsNew()
+    {
+        return self::optionsForProfileFriends();
     }
 
     public static function renderForProfileHistory($params, $tab_class)
     {
+        return self::renderUserProfileSubheader(self::optionsForProfileHistory(), 0, 'rss?sent_by=' . $user->id, _('envíos en rss2'), $tab_class);
+    }
+
+    public static function optionsForProfileHistory()
+    {
         global $user;
 
-        return self::renderUserProfileSubheader(array(
-            _('envíos propios') => get_user_uri($user->username, 'history'),
-            _('votados') => get_user_uri($user->username, 'shaken'),
-            _('favoritos') => get_user_uri($user->username, 'favorites'),
-            _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')
-        ), 0, 'rss?sent_by=' . $user->id, _('envíos en rss2'), $tab_class);
+        return array(
+            'history' => array(
+                'title' => _('Envíos'),
+                'link' => get_user_uri($user->username, 'history', $user->id),
+            ),
+            'shaken' => array(
+                'title' => _('Votados'),
+                'link' => get_user_uri($user->username, 'shaken', $user->id),
+            ),
+            'favorites' => array(
+                'title' => _('Favoritos'),
+                'link' => get_user_uri($user->username, 'favorites', $user->id),
+            ),
+            'friends_shaken' => array(
+                'title' => _('Votados por amigos'),
+                'link' => get_user_uri($user->username, 'friends_shaken', $user->id)
+            ),
+        );
     }
 
     public static function renderForProfileShaken($params, $tab_class)
     {
-        global $user;
+        return self::renderUserProfileSubheader(self::optionsForProfileShaken(), 1, 'rss?voted_by=' . $user->id, _('votadas en rss2'), $tab_class);
+    }
 
-        return self::renderUserProfileSubheader(array(
-            _('envíos propios') => get_user_uri($user->username, 'history'),
-            _('votados') => get_user_uri($user->username, 'shaken'),
-            _('favoritos') => get_user_uri($user->username, 'favorites'),
-            _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')
-        ), 1, 'rss?voted_by=' . $user->id, _('votadas en rss2'), $tab_class);
+    public static function optionsForProfileShaken()
+    {
+        return self::optionsForProfileHistory();
     }
 
     public static function renderForProfileFavorites($params, $tab_class)
     {
-        global $user;
+        return self::renderUserProfileSubheader(self::optionsForProfileFavorites(), 2, 'rss?voted_by=' . $user->id, _('votadas en rss2'), $tab_class);
+    }
 
-        return self::renderUserProfileSubheader(array(
-            _('envíos propios') => get_user_uri($user->username, 'history'),
-            _('votados') => get_user_uri($user->username, 'shaken'),
-            _('favoritos') => get_user_uri($user->username, 'favorites'),
-            _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')
-        ), 2, 'rss?voted_by=' . $user->id, _('votadas en rss2'), $tab_class);
+    public static function optionsForProfileFavorites()
+    {
+        return self::optionsForProfileShaken();
     }
 
     public static function renderForProfileFriendsShaken($params, $tab_class)
     {
-        global $user;
+        return self::renderUserProfileSubheader(self::optionsForProfileFriendsShaken(), 3, false, '', $tab_class);
+    }
 
-        return self::renderUserProfileSubheader(array(
-            _('envíos propios') => get_user_uri($user->username, 'history'),
-            _('votados') => get_user_uri($user->username, 'shaken'),
-            _('favoritos') => get_user_uri($user->username, 'favorites'),
-            _('votados por amigos') => get_user_uri($user->username, 'friends_shaken')
-        ), 3, false, '', $tab_class);
+    public static function optionsForProfileFriendsShaken()
+    {
+        return self::optionsForProfileShaken();
     }
 
     public static function renderForProfileCommented($params, $tab_class)
     {
+        return self::renderUserProfileSubheader(self::optionsForProfileCommented(), 0, 'comments_rss?user_id=' . $user->id, _('comentarios en rss2'), $tab_class);
+    }
+
+    public static function optionsForProfileCommented()
+    {
         global $user, $globals;
 
-        return self::renderUserProfileSubheader(array(
-            $user->username => get_user_uri($user->username, 'commented'),
-            _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'),
-            _('votados') => get_user_uri($user->username, 'shaken_comments'),
-            _('favoritos') => get_user_uri($user->username, 'favorite_comments')
-        ), 0, 'comments_rss?user_id=' . $user->id, _('comentarios en rss2'), $tab_class);
+        return array(
+            'commented' => array(
+                'title' => $user->username,
+                'link' => get_user_uri($user->username, 'commented', $user->id),
+            ),
+            'conversation' => array(
+                'title' => _('Conversación').$globals['extra_comment_conversation'],
+                'link' => get_user_uri($user->username, 'conversation', $user->id),
+            ),
+            'shaken_comments' => array(
+                'title' => _('Votados'),
+                'link' => get_user_uri($user->username, 'shaken_comments', $user->id),
+            ),
+            'favorite_comments' => array(
+                'title' => _('Favoritos'),
+                'link' => get_user_uri($user->username, 'favorite_comments', $user->id)
+            ),
+        );
     }
 
     public static function renderForProfileConversation($params, $tab_class)
     {
-        global $user, $globals;
+        return self::renderUserProfileSubheader(self::optionsForProfileConversation(), 1, false, '', $tab_class);
+    }
 
-        return self::renderUserProfileSubheader(array(
-            $user->username => get_user_uri($user->username, 'commented'),
-            _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'),
-            _('votados') => get_user_uri($user->username, 'shaken_comments'),
-            _('favoritos') => get_user_uri($user->username, 'favorite_comments')
-        ), 1, false, '', $tab_class);
+    public static function optionsForProfileConversation()
+    {
+        return self::optionsForProfileCommented();
     }
 
     public static function renderForProfileShakenComments($params, $tab_class)
     {
-        global $user, $globals;
+        return self::renderUserProfileSubheader(self::optionsForProfileShakenComments(), 2, false, '', $tab_class);
+    }
 
-        return self::renderUserProfileSubheader(array(
-            $user->username => get_user_uri($user->username, 'commented'),
-            _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'),
-            _('votados') => get_user_uri($user->username, 'shaken_comments'),
-            _('favoritos') => get_user_uri($user->username, 'favorite_comments')
-        ), 2, false, '', $tab_class);
+    public static function optionsForProfileShakenComments()
+    {
+        return self::optionsForProfileCommented();
     }
 
     public static function renderForProfileFavoriteComments($params, $tab_class)
     {
+        return self::renderUserProfileSubheader(self::optionsForProfileFavoriteComments(), 3, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileFavoriteComments()
+    {
+        return self::optionsForProfileCommented();
+    }
+
+    public static function renderForProfileSubs($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileSubs(), 0, '', $tab_class);
+    }
+
+    public static function optionsForProfileSubs()
+    {
         global $user, $globals;
 
-        return self::renderUserProfileSubheader(array(
-            $user->username => get_user_uri($user->username, 'commented'),
-            _('conversación').$globals['extra_comment_conversation'] => get_user_uri($user->username, 'conversation'),
-            _('votados') => get_user_uri($user->username, 'shaken_comments'),
-            _('favoritos') => get_user_uri($user->username, 'favorite_comments')
-        ), 3, false, '', $tab_class);
+        return array(
+            'subs' => array(
+                'title' => _('Propietario'),
+                'link' => get_user_uri($user->username, 'subs', $user->id),
+            ),
+            'subs_follow' => array(
+                'title' => _('Siguiendo'),
+                'link' => get_user_uri($user->username, 'subs_follow', $user->id),
+            ),
+        );
+    }
+
+    public static function renderForProfileSubsFollow()
+    {
+        return self::optionsForProfileSubsFollow();
+    }
+
+    public static function optionsForProfileSubsFollow()
+    {
+        return self::optionsForProfileSubs();
     }
 }

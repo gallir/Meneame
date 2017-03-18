@@ -1,12 +1,33 @@
 <?php
 defined('mnminclude') or die();
 
-$comment = new Comment;
-$rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='comment'");
-$comments = $db->get_col("SELECT comment_id FROM comments, favorites WHERE favorite_user_id=$user->id AND favorite_type='comment' AND favorite_link_id=comment_id ORDER BY comment_id DESC LIMIT $offset,$page_size");
+$rows = (int)$db->get_var('
+    SELECT COUNT(*)
+    FROM favorites
+    WHERE (
+        favorite_user_id = "'.(int)$user->id.'"
+        AND favorite_type = "comment"
+    );
+');
+
+if ($rows === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
+$comments = $db->get_col('
+    SELECT comment_id
+    FROM comments, favorites
+    WHERE (
+        favorite_user_id = "'.(int)$user->id.'"
+        AND favorite_type = "comment"
+        AND favorite_link_id = comment_id
+    )
+    ORDER BY comment_id DESC
+    LIMIT '.(int)$offset.', '.(int)$page_size.';
+');
 
 if (empty($comments)) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
 echo '<ol class="comments-list">';

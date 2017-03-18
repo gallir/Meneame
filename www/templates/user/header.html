@@ -1,16 +1,16 @@
 <section class="section section-large profile">
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-sm-2 col-lg-1">
             <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
         </div>
 
-        <div class="col-md-4">
+        <div class="col-sm-4">
             <h1>{{ user.username }}</h1>
             <p class="info">{% exec text_to_html user.bio %}</p>
             <p><strong>{% trans _('En menéame desde') %} {% exec get_human_date user.date "%B de %Y" %}</strong>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-sm-4">
             <div class="points-table">
                 <div class="row">
                     <div class="col-xs-4">
@@ -48,27 +48,35 @@
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-sm-2 col-lg-3">
         </div>
     </div>
 
     <div class="contents-layout">
-        <div class="contents-menu">
-            <a href="{% exec get_user_uri user.username 'articles' %}">
+        <nav class="contents-menu">
+            <a href="{% exec get_user_uri user.username 'articles' %}" {% if menu == 'articles' %} class="selected" {% endif %}>
                 <i class="fa fa-file-text-o"></i> <span>{% trans _('Artículos') %}</span>
             </a>
 
-            <a href="{% exec get_user_uri user.username 'history' %}">
+            <a href="{% exec get_user_uri user.username 'history' %}" {% if menu == 'history' %} class="selected" {% endif %}>
                 <i class="fa fa-newspaper-o"></i> <span>{% trans _('Historias') %}</span>
             </a>
 
-            <a href="{% exec get_user_uri user.username 'commented' %}">
+            <a href="{% exec get_user_uri user.username 'subs' %}" {% if menu == 'subs' %} class="selected" {% endif %}>
+                <i class="fa fa-asterisk"></i> <span>{% trans _('Subs') %}</span>
+            </a>
+
+            <a href="{% exec get_user_uri user.username 'commented' %}" {% if menu == 'comments' %} class="selected" {% endif %}>
                 <i class="fa fa-comments-o"></i> <span>{% trans _('Comentarios') %}</span>
             </a>
 
-            <a href="{% exec get_user_uri user.username 'friends' %}">
+            <a href="{% exec post_get_base_url user.username %}" {% if menu == 'notame' %} class="selected" {% endif %}>
+                <i class="fa fa-sticky-note-o"></i> <span>{% trans _('Notas') %}</span>
+            </a>
+
+            <a href="{% exec get_user_uri user.username 'friends' %}" {% if menu == 'relations' %} class="selected" {% endif %}>
                 <i class="fa fa-users"></i> <span>{% trans _('Relaciones') %}</span>
             </a>
-        </div>
+        </nav>
 
         <div class="contents-body">
