@@ -1,63 +1,59 @@
 <section class="section section-large profile">
-    <div class="row">
-        <div class="col-sm-2 col-lg-1">
+    <div class="profile-header">
+        <div class="profile-header-avatar">
             <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
+            <a class="btn btn-mnm btn-white btn-xs btn-block" href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}">{% trans _('Editar') %}</a>
         </div>
 
-        <div class="col-sm-4">
+        <div class="profile-header-info">
             <h1>{{ user.username }}</h1>
             <p class="info">{% exec text_to_html user.bio %}</p>
             <p><strong>{% trans _('En menéame desde') %} {% exec get_human_date user.date "%B de %Y" %}</strong>
         </div>
 
-        <div class="col-sm-4">
-            <div class="points-table">
-                <div class="row">
-                    <div class="col-xs-4">
-                        <strong>{% exec get_human_number user.karma %}</strong>
-                        <span>{% trans _('Karma') %}</span>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <strong>{% exec user.ranking "true" %}</strong>
-                        <span>{% trans _('Ranking') %}</span>
-                    </div>
-
-                    <div class="col-xs-4">
-                        <strong>{% exec get_human_number user.total_links %}</strong>
-                        <span>{% trans _('Enviadas') %}</span>
-                    </div>
+        <div class="profile-header-stats">
+            <div class="row">
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.karma %}</strong>
+                    <span>{% trans _('Karma') %}</span>
                 </div>
 
-                <div class="row">
-                    <div class="col-xs-4">
-                        <strong>{% exec get_human_number user.published_links %}</strong>
-                        <span>{% trans _('Publicadas') %}</span>
-                    </div>
+                <div class="col-xs-4">
+                    <strong>{% exec user.ranking "true" %}</strong>
+                    <span>{% trans _('Ranking') %}</span>
+                </div>
 
-                    <div class="col-xs-4">
-                        <strong>{% exec get_human_number user.total_comments %}</strong>
-                        <span>{% trans _('Comentarios') %}</span>
-                    </div>
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.total_links %}</strong>
+                    <span>{% trans _('Enviadas') %}</span>
+                </div>
+            </div>
 
-                    <div class="col-xs-4">
-                        <strong>{% exec get_human_number user.total_posts %}</strong>
-                        <span>{% trans _('Notas') %}</span>
-                    </div>
+            <div class="row">
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.published_links %}</strong>
+                    <span>{% trans _('Publicadas') %}</span>
+                </div>
+
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.total_comments %}</strong>
+                    <span>{% trans _('Comentarios') %}</span>
+                </div>
+
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.total_posts %}</strong>
+                    <span>{% trans _('Notas') %}</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-2 col-lg-3">
+        <div class="profile-header-banner">
+            <img src="http://lorempixel.com/320/150/" class="img-responsive" />
         </div>
     </div>
 
     <div class="contents-layout">
         <nav class="contents-menu">
-            <a href="{% exec get_user_uri user.username 'articles' %}" {% if menu == 'articles' %} class="selected" {% endif %}>
-                <i class="fa fa-file-text-o"></i> <span>{% trans _('Artículos') %}</span>
-            </a>
-
             <a href="{% exec get_user_uri user.username 'history' %}" {% if menu == 'history' %} class="selected" {% endif %}>
                 <i class="fa fa-newspaper-o"></i> <span>{% trans _('Historias') %}</span>
             </a>

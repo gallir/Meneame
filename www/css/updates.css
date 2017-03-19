@@ -158,6 +158,19 @@
     margin: 0;
 }
 
+.btn.btn-mnm.btn-xs {
+    font-weight: bold;
+    padding: 2px 4px;
+    font-size: 12px;
+    margin: 0;
+}
+
+.btn.btn-mnm.btn-white {
+    background-color: #fff;
+    color: #e35614;
+    border: 1px solid #e35614;
+}
+
 .form .form-group {
     position: relative;
 }
@@ -1378,62 +1391,91 @@ ul.slick-dots li button {
     margin-top: 40px;
 }
 
-.points-table {
+.profile .profile-header {
+    display: flex;
+    padding: 0 40px;
+}
+
+.profile .profile-header-avatar {
+    width: 80px;
+}
+
+.profile .profile-header-avatar img {
+    margin-bottom: 10px;
+}
+
+.profile .profile-header-info {
+    width: 35%;
+    margin-left: 20px;
+}
+
+.profile .profile-header-stats {
+    width: 35%;
+    margin-left: 20px;
+}
+
+.profile .profile-header-stats {
     text-align: center;
 }
 
-.points-table strong, .points-table span {
+.profile .profile-header-stats strong,
+.profile .profile-header-stats span {
     display: block;
 }
 
-.points-table strong {
+.profile .profile-header-stats strong {
     font-size: 26px;
 }
 
-.points-table span {
+.profile .profile-header-stats span {
     color: #AAA;
 }
 
-.contents-layout {
+.profile .profile-header-banner {
+    width: 30%;
+    margin-left: 20px;
+}
+
+.profile .contents-layout {
     margin-top: 30px;
     background-color: #f3f3f3;
     padding: 20px;
 }
 
-.contents-layout:before, .contents-layout:after {
+.profile .contents-layout:before, .profile .contents-layout:after {
     clear: both;
     display: table;
     content: " ";
 }
 
-.contents-layout .contents-menu {
+.profile .contents-layout .contents-menu {
     float: left;
     width: 15%;
     text-align: center;
 }
 
-.contents-layout .contents-menu a {
+.profile .contents-layout .contents-menu a {
     display: block;
     padding: 20px;
     color: #4a4a4a;
 }
 
-.contents-layout .contents-menu a.selected,
-.contents-layout .contents-menu a:hover {
+.profile .contents-layout .contents-menu a.selected,
+.profile .contents-layout .contents-menu a:hover {
     background: white;
     text-decoration: none;
 }
 
-.contents-layout .contents-menu a i {
+.profile .contents-layout .contents-menu a i {
     font-size: 24px;
 }
 
-.contents-layout .contents-menu a span {
+.profile .contents-layout .contents-menu a span {
     display: block;
     font-size: 16px;
 }
 
-.contents-layout .contents-submenu {
+.profile .contents-layout .contents-submenu {
     text-align: center;
     border-bottom: 1px solid #ffd3b7;
     padding-bottom: 10px;
@@ -1441,36 +1483,36 @@ ul.slick-dots li button {
     font-size: 20px;
 }
 
-.contents-layout .contents-submenu a {
+.profile .contents-layout .contents-submenu a {
     color: #ff6400;
 }
 
-.contents-layout .contents-submenu a.selected {
+.profile .contents-layout .contents-submenu a.selected {
     font-weight: bold;
 }
 
-.contents-layout .contents-body {
+.profile .contents-layout .contents-body {
     float: left;
     width: 85%;
     padding: 20px;
     background: white;
 }
 
-.contents-layout .contents-body .news-body h2 {
+.profile .contents-layout .contents-body .news-body h2 {
     font-size: 20px;
 }
 
-.contents-layout .contents-body h4 {
+.profile .contents-layout .contents-body h4 {
     font-size: 20px;
     font-weight: normal;
     margin: 15px 0;
 }
 
-.contents-layout .contents-body h4 a {
+.profile .contents-layout .contents-body h4 a {
     color: #1F1F1F;
 }
 
-.contents-layout .contents-body .comments-list li {
+.profile .contents-layout .contents-body .comments-list li {
     margin-bottom: 15px;
 }
 
