@@ -2,7 +2,10 @@
     <div class="profile-header">
         <div class="profile-header-avatar">
             <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
+
+            {% if user.id == current_user.id OR current_user.admin %}
             <a class="btn btn-mnm btn-white btn-xs btn-block" href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}">{% trans _('Editar') %}</a>
+            {% endif %}
         </div>
 
         <div class="profile-header-info">
