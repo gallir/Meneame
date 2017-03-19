@@ -11,13 +11,13 @@ require_once mnminclude . 'html1.php';
 require_once mnminclude . 'geo.php';
 require_once mnminclude . 'favorites.php';
 
-$page_size = $globals['page_size'];
+$limit = (int)$globals['page_size'];
+$page = get_current_page();
+$offset = ($page - 1) * $limit;
 
-if ($globals['bot'] && get_current_page() > 2) {
+if ($globals['bot'] && $page > 2) {
     do_error('Pages exceeded', 404);
 }
-
-$offset = (get_current_page() - 1) * $page_size;
 
 if (!empty($_SERVER['PATH_INFO'])) {
     $url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);

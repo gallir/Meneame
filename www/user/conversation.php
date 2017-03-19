@@ -1,7 +1,19 @@
 <?php
 defined('mnminclude') or die();
 
-$rows = -1;
+$count = (int)$db->get_var('
+    SELECT COUNT(DISTINCT(conversation_from))
+    FROM conversations
+    WHERE (
+        conversation_user_to = "'.(int)$user->id.'"
+        AND conversation_type = "comment"
+    );
+');
+
+if ($count === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
 $comments = $db->get_results('
     SELECT comment_id, link_id, comment_type
     FROM comments
@@ -14,7 +26,7 @@ $comments = $db->get_results('
             AND conversation_type = "comment"
         )
         ORDER BY conversation_time DESC
-        LIMIT '.(int)$offset.', '.(int)$page_size.'
+        LIMIT '.(int)$offset.', '.(int)$limit.'
     ) AS convs ON convs.conversation_from = comments.comment_id;
 ');
 
@@ -25,6 +37,8 @@ if (empty($comments)) {
 require __DIR__.'/libs-comments.php';
 
 $last_read = print_comment_list($comments, $user);
+
+do_pages($count, $limit);
 
 if ($last_read > 0 && ($current_user->user_id == $user->id)) {
     Comment::update_read_conversation($timestamp_read);

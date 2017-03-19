@@ -2,7 +2,7 @@
 defined('mnminclude') or die();
 
 if ($globals['bot']) {
-    return;
+    return Haanga::Load('user/empty.html');
 }
 
 $friends = $db->get_col('
@@ -19,16 +19,26 @@ if (empty($friends)) {
     return Haanga::Load('user/empty.html');
 }
 
-$links = $db->get_results('
-    SELECT DISTINCT vote_link_id AS link_id
+$query = '
     FROM votes
     WHERE (
         vote_type = "links"
         AND vote_user_id IN ('.implode(',', array_map('intval', $friends)).')
         AND vote_value > 0
     )
+';
+
+$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+
+if ($count === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
+$links = $db->get_results('
+    SELECT DISTINCT vote_link_id AS link_id
+    '.$query.'
     ORDER BY vote_link_id DESC
-    LIMIT '.(int)$offset.', '.(int)$page_size.';
+    LIMIT '.(int)$offset.', '.(int)$limit.';
 ');
 
 if (empty($links)) {
@@ -40,3 +50,5 @@ foreach ($links as $dblink) {
     $link->do_inline_friend_votes = true;
     $link->print_summary();
 }
+
+do_pages($count, $limit);

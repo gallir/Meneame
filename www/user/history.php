@@ -1,18 +1,22 @@
 <?php
 defined('mnminclude') or die();
 
-$rows = $db->get_var('
-    SELECT COUNT(*)
+$query = '
     FROM links
-    WHERE link_author = "'.(int)$user->id.'";
-');
+    WHERE link_author = "'.(int)$user->id.'"
+';
+
+$count = $db->get_var('SELECT COUNT(*) '.$query.';');
+
+if ($count === 0) {
+    return Haanga::Load('user/empty.html');
+}
 
 $links = $db->get_col('
     SELECT link_id
-    FROM links
-    WHERE link_author = "'.(int)$user->id.'"
+    '.$query.'
     ORDER BY link_date DESC
-    LIMIT '.$offset.', '.$page_size.';
+    LIMIT '.$offset.', '.$limit.';
 ');
 
 if (empty($links)) {
@@ -28,3 +32,5 @@ foreach ($links as $link_id) {
         $link->print_summary('short');
     }
 }
+
+do_pages($count, $limit);

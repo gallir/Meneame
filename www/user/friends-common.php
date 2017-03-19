@@ -12,27 +12,57 @@ defined('mnminclude') or die();
 
 require_once __DIR__ . '/../backend/pager.php';
 
-if (empty($prefered_id) || empty($prefered_type)) {
+if (empty($prefered_id) || !is_int($prefered_id)) {
     return Haanga::Load('user/empty.html');
 }
 
-$prefered_page = empty($_GET['page']) ? 1 : (int) $_GET['page'];
+$page = empty($_GET['page']) ? 1 : (int) $_GET['page'];
 
 $dbusers = array();
-$prefered_page_size = 40;
-$prefered_offset = ($prefered_page - 1) * $prefered_page_size;
+$limit = 40;
+$offset = ($page - 1) * $limit;
 
 switch ($prefered_type) {
     case 'from':
-        $friend_value = 'AND friend_value > 0';
-        $prefered_total = $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id $friend_value");
-        $dbusers = $db->get_results("SELECT friend_to as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+        $query = '
+            FROM friends, users
+            WHERE (
+                friend_type = "manual"
+                AND friend_from = "'.$prefered_id.'"
+                AND user_id = friend_to
+                AND friend_value > 0
+            )
+        ';
+
+        $count = (int) $db->get_var('SELECT COUNT(*) '.$query.';');
+
+        $dbusers = $db->get_results('
+            SELECT friend_to AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+            '.$query.'
+            ORDER BY user_login ASC
+            LIMIT '.$offset.', '.$limit.';
+        ');
 
         break;
 
     case 'to':
-        $prefered_total = $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_to=$prefered_id AND friend_from != 0 and friend_value > 0");
-        $dbusers = $db->get_results("SELECT friend_from as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and user_id = friend_from and friend_value > 0 order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+        $query = '
+            FROM friends, users
+            WHERE (
+                friend_type = "manual"
+                AND friend_to = "'.$prefered_id.'"
+                AND user_id = friend_from
+                AND friend_value > 0
+            )
+        ';
+        $count = (int) $db->get_var('SELECT COUNT(*) '.$query.';');
+
+        $dbusers = $db->get_results('
+            SELECT friend_from AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+            '.$query.'
+            ORDER BY user_login ASC
+            LIMIT '.$offset.', '.$limit.';
+        ');
 
         break;
 
@@ -42,11 +72,21 @@ switch ($prefered_type) {
         }
 
         $new_friends = User::get_new_friends($prefered_id);
-        $prefered_total = count($new_friends);
+        $count = count($new_friends);
 
-        if ($prefered_total > 0) {
-            $friends = implode(',', $new_friends);
-            $dbusers = $db->get_results("SELECT friend_from as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_to=$prefered_id and friend_from in ($friends) and user_id = friend_from order by friend_date desc LIMIT $prefered_offset,$prefered_page_size");
+        if ($count) {
+            $dbusers = $db->get_results('
+                SELECT friend_from AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+                FROM friends, users
+                WHERE (
+                    friend_type = "manual"
+                    AND friend_to = "'.$prefered_id.'"
+                    AND friend_from in ('.implode(',', $new_friends).')
+                    AND user_id = friend_from
+                )
+                ORDER BY friend_date DESC
+                LIMIT '.$offset.', '.$limit.';
+            ');
         }
 
         break;
@@ -56,11 +96,29 @@ switch ($prefered_type) {
             return Haanga::Load('user/empty.html');
         }
 
-        $friend_value = 'AND friend_value < 0';
-        $prefered_total = $db->get_var("SELECT count(*) FROM friends WHERE friend_type='manual' AND friend_from=$prefered_id $friend_value");
-        $dbusers = $db->get_results("SELECT friend_to as who, unix_timestamp(friend_date) as date FROM friends, users WHERE friend_type='manual' AND friend_from=$prefered_id and user_id = friend_to $friend_value order by user_login asc LIMIT $prefered_offset,$prefered_page_size");
+        $query = '
+            FROM friends, users
+            WHERE (
+                friend_type = "manual"
+                AND friend_from = "'.$prefered_id.'"
+                AND user_id = friend_to
+                AND friend_value < 0
+            )
+        ';
+
+        $count = (int) $db->get_var('SELECT COUNT(*) '.$query.';');
+
+        $dbusers = $db->get_results('
+            SELECT friend_to AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+            '.$query.'
+            ORDER BY user_login ASC
+            LIMIT '.$offset.', '.$limit.';
+        ');
 
         break;
+
+    default:
+        return Haanga::Load('user/empty.html');
 }
 
 if (empty($dbusers)) {
@@ -92,4 +150,4 @@ foreach ($dbusers as $dbuser) {
     echo '</div>';
 }
 
-do_pages($prefered_total, $prefered_page_size);
+do_pages($count, $limit);

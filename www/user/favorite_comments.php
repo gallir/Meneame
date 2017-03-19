@@ -1,29 +1,26 @@
 <?php
 defined('mnminclude') or die();
 
-$rows = (int)$db->get_var('
-    SELECT COUNT(*)
-    FROM favorites
-    WHERE (
-        favorite_user_id = "'.(int)$user->id.'"
-        AND favorite_type = "comment"
-    );
-');
-
-if ($rows === 0) {
-    return Haanga::Load('user/empty.html');
-}
-
-$comments = $db->get_col('
-    SELECT comment_id
+$query = '
     FROM comments, favorites
     WHERE (
         favorite_user_id = "'.(int)$user->id.'"
         AND favorite_type = "comment"
         AND favorite_link_id = comment_id
     )
+';
+
+$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+
+if ($count === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
+$comments = $db->get_col('
+    SELECT comment_id
+    '.$query.'
     ORDER BY comment_id DESC
-    LIMIT '.(int)$offset.', '.(int)$page_size.';
+    LIMIT '.(int)$offset.', '.(int)$limit.';
 ');
 
 if (empty($comments)) {
@@ -39,3 +36,5 @@ foreach ($comments as $comment_id) {
 }
 
 echo "</ol>\n";
+
+do_pages($count, $limit);

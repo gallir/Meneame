@@ -1298,39 +1298,3 @@ function query_official_subs_for_widget()
 
     return array_values($subs);
 }
-
-function get_human_number($number)
-{
-    if ($number < 100) {
-        if (strstr($number, '.')) {
-            return number_format($number, 2, ',', '.');
-        }
-
-        return $number;
-    }
-
-    $number = round($number);
-
-    if ($number < 1000) {
-        return $number;
-    }
-
-    if ($number < 10000) {
-        return number_format($number, 0, ',', '.');
-    }
-
-    return number_format(round($number / 1000), 0, ',', '.').'K';
-}
-
-function get_human_date($date, $format, $locale = 'es_ES.UTF-8')
-{
-    $old = setlocale(LC_TIME, 0);
-
-    setlocale(LC_TIME, $locale);
-
-    $date = strftime($format, is_numeric($date) ? $date : strtotime($date));
-
-    setlocale(LC_TIME, $old);
-
-    return $date;
-}

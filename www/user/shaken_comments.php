@@ -1,23 +1,7 @@
 <?php
 defined('mnminclude') or die();
 
-$rows = (int)$db->get_var('
-    SELECT COUNT(*)
-    FROM votes, comments
-    WHERE (
-        vote_type = "comments"
-        AND vote_user_id = "'.(int)$user->id.'"
-        AND comment_id = vote_link_id
-        AND comment_user_id != vote_user_id
-    );
-');
-
-if ($rows === 0) {
-    return Haanga::Load('user/empty.html');
-}
-
-$comments = $db->get_results('
-    SELECT vote_link_id AS id, vote_value AS value
+$query = '
     FROM votes, comments
     WHERE (
         vote_type = "comments"
@@ -25,8 +9,19 @@ $comments = $db->get_results('
         AND comment_id = vote_link_id
         AND comment_user_id != vote_user_id
     )
+';
+
+$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+
+if ($count === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
+$comments = $db->get_results('
+    SELECT vote_link_id AS id, vote_value AS value
+    '.$query.'
     ORDER BY vote_date DESC
-    LIMIT '.(int)$offset.', '.(int)$page_size.';
+    LIMIT '.(int)$offset.', '.(int)$limit.';
 ');
 
 if (empty($comments)) {
@@ -53,3 +48,5 @@ foreach ($comments as $c) {
 }
 
 echo "</ol>\n";
+
+do_pages($count, $limit);

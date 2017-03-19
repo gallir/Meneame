@@ -5,16 +5,25 @@ if ($globals['bot']) {
     return Haanga::Load('user/empty.html');
 }
 
-$rows = -1;
-$links = $db->get_results('
-    SELECT vote_link_id AS id, vote_value
+$query = '
     FROM votes
     WHERE (
         vote_type = "links"
         AND vote_user_id = "'.(int)$user->id.'"
     )
+';
+
+$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+
+if ($count === 0) {
+    return Haanga::Load('user/empty.html');
+}
+
+$links = $db->get_results('
+    SELECT vote_link_id AS id, vote_value
+    '.$query.'
     ORDER BY vote_date DESC
-    LIMIT '.(int)$offset.', '.(int)$page_size.';
+    LIMIT '.(int)$offset.', '.(int)$limit.';
 ');
 
 if (empty($links)) {
@@ -40,5 +49,7 @@ foreach ($links as $linkdb) {
 
     echo "</div>\n";
 }
+
+do_pages($count, $limit);
 
 echo '<br/><span style="color: #FF6400;"><strong>' . _('Nota') . '</strong>: ' . _('sólo se visualizan los votos de los últimos meses') . '</span><br />';
