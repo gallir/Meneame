@@ -168,8 +168,8 @@
         {% if type == 'short' && globals.submnm|subid != self.sub_id %}
         <span class="tool sub-name">
             <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
-               {% if self.sub_owner > 0 %}
                 class="subname"
+               {% if self.sub_owner > 0 %}
                 style="
                     {% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
                     {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
@@ -226,8 +226,8 @@
                     {% if globals.submnm|subid != self.sub_id %}
                     <span class="tool sub-name">
                         <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
-                           {% if self.sub_owner > 0 %}
                             class="subname"
+                           {% if self.sub_owner > 0 %}
                             style="
                                 {% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
                                 {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}

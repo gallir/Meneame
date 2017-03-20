@@ -705,6 +705,10 @@ class User
 
     private function getMedalPublished()
     {
+        if (empty($this->published_links)) {
+            return;
+        }
+
         $ratio = round($this->published_links / $this->total_links, 2);
 
         if ($this->published_links > 50) {

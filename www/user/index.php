@@ -8,7 +8,6 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 require_once __DIR__ . '/../config.php';
 require_once mnminclude . 'html1.php';
-require_once mnminclude . 'geo.php';
 require_once mnminclude . 'favorites.php';
 
 $limit = (int)$globals['page_size'];
@@ -19,7 +18,14 @@ if ($globals['bot'] && $page > 2) {
     do_error('Pages exceeded', 404);
 }
 
-if (!empty($_SERVER['PATH_INFO'])) {
+if (empty($_SERVER['PATH_INFO'])) {
+    $_REQUEST['login'] = clean_input_string($_REQUEST['login']);
+    $_REQUEST['uid'] = intval($_REQUEST['uid']);
+
+    if (!empty($_REQUEST['login'])) {
+        die(header('Location: ' . html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])))));
+    }
+} else {
     $url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
 
     array_shift($url_args);
@@ -32,13 +38,6 @@ if (!empty($_SERVER['PATH_INFO'])) {
         // This is a empty view but an user_id, change it
         $_REQUEST['uid'] = intval($_REQUEST['view']);
         $_REQUEST['view'] = '';
-    }
-} else {
-    $_REQUEST['login'] = clean_input_string($_REQUEST['login']);
-    $_REQUEST['uid'] = intval($_REQUEST['uid']);
-
-    if (!empty($_REQUEST['login'])) {
-        die(header('Location: ' . html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])))));
     }
 }
 

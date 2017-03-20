@@ -1402,8 +1402,8 @@ ul.slick-dots li button {
     flex-basis: 80px;
 }
 
-.profile .profile-header-avatar img {
-    margin-bottom: 10px;
+.profile .profile-header-avatar .btn {
+    margin-top: 10px;
 }
 
 .profile .profile-header-info {
@@ -1411,6 +1411,10 @@ ul.slick-dots li button {
     flex: 1;
     padding-left: 20px;
     overflow-x: hidden;
+}
+
+.profile .profile-header-info .info {
+    margin: 15px 0;
 }
 
 .profile .profile-header-stats {

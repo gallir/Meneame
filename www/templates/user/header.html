@@ -4,7 +4,11 @@
             <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
 
             {% if user.id == current_user.user_id OR current_user.user_level == "god" %}
-            <a class="btn btn-mnm btn-white btn-xs btn-block" href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}">{% trans _('Editar') %}</a>
+            <a href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}" class="btn btn-mnm btn-white btn-xs btn-block">{% trans _('Editar') %}</a>
+            {% endif %}
+
+            {% if user.id == current_user.user_id %}
+             <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{% trans _('cerrar sesión') %}" class="btn btn-mnm btn-white btn-xs btn-block">{% trans _('Desconectar') %}</a>
             {% endif %}
         </div>
 
@@ -53,7 +57,7 @@
             <div class="row">
                 <div class="profile-header-medals">
                     {% for medal in medals %}
-                    <img src="{{ globals.base_static }}img/common/medal_{{ medal.type }}_large.png" width="43" height="42" title="{{ medal.title }}" />
+                    <img src="{{ globals.base_static }}img/common/medal_{{ medal.type }}_large.png" width="41" height="42" title="{{ medal.title }}" />
                     {% endfor %}
                 </div>
             </div>

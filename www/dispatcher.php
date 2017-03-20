@@ -47,16 +47,15 @@ $routes = array(
 );
 
 $globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
-$script = $routes[$path[0]];
 
-if (empty($script) || !is_file(__DIR__.'/'.$script)) {
-    include_once 'config.php';
+if (!isset($path[0]) || !isset($routes[$path[0]]) || !is_file(__DIR__.'/'.$routes[$path[0]])) {
+    include_once __DIR__.'/config.php';
     do_error('not found', 404, true);
 }
 
-$globals['script'] = $script;
+$globals['script'] = $script = $routes[$path[0]];
 
 if ((include __DIR__.'/'.$script) === false) {
-    include_once 'config.php';
+    include_once __DIR__.'/config.php';
     do_error('bad request '.$script, 400, true);
 }
