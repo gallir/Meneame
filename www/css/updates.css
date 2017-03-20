@@ -1738,6 +1738,7 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     .profile .profile-header-info {
         flex: 1 0 calc(100% - 80px);
         align-self: flex-start;
+        margin-bottom: 20px;
     }
 
     .profile .profile-header-stats {

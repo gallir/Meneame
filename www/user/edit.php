@@ -6,9 +6,9 @@
 //              http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
-include(mnminclude.'html1.php');
-include(mnminclude.'avatars.php');
+include __DIR__ . '/../config.php';
+include mnminclude . 'html1.php';
+include mnminclude . 'avatars.php';
 
 $globals['ads'] = false;
 
@@ -32,30 +32,38 @@ if (!empty($_GET['login']) && !empty($_GET['t']) && !empty($_GET['k'])) {
 
     if ($user->read()) {
         $now = time();
-        $key2 = md5($user->id.$user->pass.$time.$site_key.get_server_name());
+        $key2 = md5($user->id . $user->pass . $time . $site_key . get_server_name());
 
-        //echo "$now, $time; $key == $key2\n";
         if ($time > $now - 900 && $time < $now && $key == $key2) {
-            $db->query("update users set user_validated_date = now() where user_id = $user->id and user_validated_date is null");
+            $db->query('
+                UPDATE users
+                SET user_validated_date = NOW()
+                WHERE (
+                    user_id = "'.$user->id.'"
+                    AND user_validated_date IS NULL
+                )
+                LIMIT 1;
+            ');
+
             $current_user->Authenticate($user->username, false);
 
-            die(header('Location: '.get_user_uri($user->username)));
+            die(header('Location: ' . get_user_uri($user->username)));
         }
     }
 }
 //// End recovery
 
 // Check user, admin and authenticated user
-if ($current_user->user_id > 0 && (empty($_REQUEST['login']) || $_REQUEST['login'] == $current_user->user_login)) {
+if ($current_user->user_id > 0 && (empty($_REQUEST['login']) || $_REQUEST['login'] === $current_user->user_login)) {
     $login = $current_user->user_login;
-} elseif (!empty($_REQUEST['login']) && $current_user->user_level === 'god') {
+} elseif (!empty($_REQUEST['login']) && ($current_user->user_level === 'god')) {
     $login = $db->escape($_REQUEST['login']);
     $admin_mode = true;
 } else {
     if ($current_user->user_id > 0) {
         $fallback = get_user_uri($current_user->user_login);
     } else {
-        $fallback = $globals['base_url'].'login';
+        $fallback = $globals['base_url'] . 'login';
     }
 
     die(header("Location: $fallback"));
@@ -78,7 +86,7 @@ if ($current_user->user_id) {
 if ($current_user->user_id == $user->id && $globals['external_user_ads'] && !empty($user->adcode)) {
     $globals['user_adcode'] = $user->adcode;
     $globals['user_adchannel'] = $user->adchannel;
-    $globals['do_user_ad']  = 100;
+    $globals['do_user_ad'] = 100;
 }
 
 if (isset($_POST['process'])) {
@@ -90,14 +98,10 @@ if (isset($_POST['process'])) {
     $messages = array();
 }
 
-do_header(_('edición del perfil del usuario'). ': ' . $user->username, 'profile', User::get_menu_items('profile', $login));
-
-
-//echo $save_messages; // We do it later because teh profile could change header's info
-//show_profile();
+do_header(_('Edición del perfil del usuario') . ': ' . $user->username);
 
 $form = new stdClass;
-$form->hash = md5($site_key.$user->id.$current_user->user_id);
+$form->hash = md5($site_key . $user->id . $current_user->user_id);
 $form->admin_mode = $admin_mode;
 $form->auth_link = get_auth_link();
 $form->user_levels = $user_levels;
@@ -113,11 +117,11 @@ function save_profile()
 {
     global $db, $user, $current_user, $globals, $admin_mode, $site_key, $bio_max;
 
-    $errors = 0; // benjami: control added (2005-12-22)
+    $errors = 0;
     $new_pass = false;
     $messages = array();
 
-    $form_hash = md5($site_key.$user->id.$current_user->user_id);
+    $form_hash = md5($site_key . $user->id . $current_user->user_id);
 
     if (isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id) {
         $old_user_login = $user->username;
@@ -137,26 +141,26 @@ function save_profile()
     }
 
     if (empty($_POST['form_hash']) || $_POST['form_hash'] != $form_hash) {
-        array_push($messages, _('Falta la clave de control'));
+        $messages[] = _('Falta la clave de control');
         $errors++;
     }
 
     if (!empty($_POST['username']) && trim($_POST['username']) != $user->username) {
         $newname = trim($_POST['username']);
 
-        if (strlen($newname)<3) {
-            array_push($messages, _('nombre demasiado corto'));
+        if (strlen($newname) < 3) {
+            $messages[] = _('nombre demasiado corto');
             $errors++;
         }
 
         if (!check_username($newname)) {
-            array_push($messages, _('nombre de usuario erróneo, caracteres no admitidos'));
+            $messages[] = _('nombre de usuario erróneo, caracteres no admitidos');
             $errors++;
         } elseif (user_exists($newname, $user->id)) {
-            array_push($messages, _('el usuario ya existe'));
+            $messages[] = _('el usuario ya existe');
             $errors++;
         } else {
-            $user->username=$newname;
+            $user->username = $newname;
         }
     }
 
@@ -169,25 +173,25 @@ function save_profile()
     }
 
     if ($user->email != trim($_POST['email']) && !check_email(trim($_POST['email']))) {
-        array_push($messages, _('el correo electrónico no es correcto'));
+        $messages[] = _('el correo electrónico no es correcto');
         $errors++;
     } elseif (!$admin_mode && trim($_POST['email']) != $current_user->user_email && email_exists(trim($_POST['email']), false)) {
-        array_push($messages, _('ya existe otro usuario con esa dirección de correo'));
+        $messages[] = _('ya existe otro usuario con esa dirección de correo');
         $errors++;
     } else {
-        $user->email=trim($_POST['email']);
+        $user->email = trim($_POST['email']);
     }
 
     $user->url = htmlspecialchars(clean_input_url($_POST['url']));
 
     // Check IM address
     if (!empty($_POST['public_info'])) {
-        $_POST['public_info']  = htmlspecialchars(clean_input_url($_POST['public_info']));
+        $_POST['public_info'] = htmlspecialchars(clean_input_url($_POST['public_info']));
         $public = $db->escape($_POST['public_info']);
         $im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_public_info='$public'"));
 
         if ($im_count > 0) {
-            array_push($messages, _('ya hay otro usuario con la misma dirección de MI, no se ha grabado'));
+            $messages[] = _('ya hay otro usuario con la misma dirección de MI, no se ha grabado');
 
             $_POST['public_info'] = '';
             $errors++;
@@ -195,14 +199,14 @@ function save_profile()
     }
 
     $user->phone = $_POST['phone'];
-    $user->public_info=htmlspecialchars(clean_input_url($_POST['public_info']));
+    $user->public_info = htmlspecialchars(clean_input_url($_POST['public_info']));
     // End check IM address
 
     if ($user->id == $current_user->user_id) {
         // Check phone number
         if (!empty($_POST['phone'])) {
             if (!preg_match('/^\+[0-9]{9,16}$/', $_POST['phone'])) {
-                array_push($messages, _('número telefónico erróneo, no se ha grabado'));
+                $messages[] = _('número telefónico erróneo, no se ha grabado');
 
                 $_POST['phone'] = '';
                 $errors++;
@@ -211,7 +215,7 @@ function save_profile()
                 $phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_phone='$phone'"));
 
                 if ($phone_count > 0) {
-                    array_push($messages, _('ya hay otro usuario con el mismo número, no se ha grabado'));
+                    $messages[] = _('ya hay otro usuario con el mismo número, no se ha grabado');
 
                     $_POST['phone'] = '';
                     $errors++;
@@ -230,15 +234,15 @@ function save_profile()
 
         if (!empty($_POST['adcode']) && $user->adcode != $_POST['adcode']) {
             if (!preg_match('/pub-[0-9]{16}$/', $_POST['adcode'])) {
-                array_push($messages, _('código AdSense incorrecto, no se ha grabado'));
+                $messages[] = _('código AdSense incorrecto, no se ha grabado');
 
                 $_POST['adcode'] = '';
                 $errors++;
             } else {
-                $adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_adcode='".$_POST['adcode']."'"));
+                $adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_adcode='" . $_POST['adcode'] . "'"));
 
                 if ($adcode_count > 0) {
-                    array_push($messages, _('ya hay otro usuario con la misma cuenta, no se ha grabado'));
+                    $messages[] = _('ya hay otro usuario con la misma cuenta, no se ha grabado');
 
                     $_POST['adcode'] = '';
                     $errors++;
@@ -248,7 +252,7 @@ function save_profile()
 
         if (!empty($_POST['adcode']) && !empty($_POST['adchannel']) && $user->adchannel != $_POST['adchannel']) {
             if (!preg_match('/^[0-9]{10,12}$/', $_POST['adchannel'])) {
-                array_push($messages, _('canal AdSense incorrecto, no se ha grabado'));
+                $messages[] = _('canal AdSense incorrecto, no se ha grabado');
 
                 $_POST['adchannel'] = '';
                 $errors++;
@@ -263,22 +267,22 @@ function save_profile()
 
     if (!empty($_POST['password']) || !empty($_POST['password2'])) {
         if (!check_password($_POST["password"])) {
-            array_push($messages, _('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números'));
+            $messages[] = _('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números');
             $errors = 1;
         } elseif (trim($_POST['password']) !== trim($_POST['password2'])) {
-            array_push($messages, _('las claves no son iguales, no se ha modificado'));
+            $messages[] = _('las claves no son iguales, no se ha modificado');
             $errors = 1;
         } else {
             $new_pass = trim($_POST['password']);
             $user->pass = UserAuth::hash($new_pass);
 
-            array_push($messages, _('La clave se ha cambiado'));
+            $messages[] = _('La clave se ha cambiado');
 
             $pass_changed = true;
         }
     }
 
-    $user->comment_pref=intval($_POST['comment_pref']) + (intval($_POST['show_friends']) & 1) * 2 + (intval($_POST['show_2cols']) & 1) * 4;
+    $user->comment_pref = intval($_POST['comment_pref']) + (intval($_POST['show_friends']) & 1) * 2 + (intval($_POST['show_2cols']) & 1) * 4;
 
     // Manage avatars upload
     if (!empty($_FILES['image']['tmp_name'])) {
@@ -286,7 +290,7 @@ function save_profile()
             $avatar_mtime = avatars_manage_upload($user->id, 'image');
 
             if (!$avatar_mtime) {
-                array_push($messages, _('error guardando la imagen'));
+                $messages[] = _('error guardando la imagen');
 
                 $errors = 1;
                 $user->avatar = 0;
@@ -294,7 +298,7 @@ function save_profile()
                 $user->avatar = $avatar_mtime;
             }
         } else {
-            array_push($messages, _('el tamaño de la imagen excede el límite'));
+            $messages[] = _('el tamaño de la imagen excede el límite');
 
             $errors = 1;
             $user->avatar = 0;
@@ -330,7 +334,7 @@ function save_profile()
             LogAdmin::insert('change_karma', $user->id, $current_user->user_id, $user->karma, $_POST['karma']);
         }
 
-        $user->karma=$_POST['karma'];
+        $user->karma = $_POST['karma'];
     }
 
     $user->store();
@@ -340,7 +344,7 @@ function save_profile()
         $current_user->Authenticate($user->username, $new_pass);
     }
 
-    array_push($messages, _('datos actualizados'));
+    $messages[] = _('datos actualizados');
 
     return $messages;
 }
