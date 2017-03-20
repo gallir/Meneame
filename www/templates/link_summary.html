@@ -193,13 +193,13 @@
                         "
                         {% endif %}
                     >{{ self.sub_name | lower }}</a>
-                </span> |
+                </span>
                 {% else %}
                 <br />
                 {% endif %}
 
                 {% if self.show_tags AND self.tags %}
-                <span class="news-tags">
+                | <span class="news-tags">
                     <strong>{% trans _('etiquetas') %}</strong>:
 
                     {% exec explode "," self.tags as tags_array %}

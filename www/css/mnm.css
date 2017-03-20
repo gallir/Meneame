@@ -1696,6 +1696,14 @@ td.count {
     color: white;
 }
 
+.vote-negative-alert {
+    background: red;
+    padding: 2px 5px;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
 .error {
     font-size: 120%;
     margin: 0 0 10px 0;
