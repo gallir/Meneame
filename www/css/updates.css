@@ -1842,6 +1842,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     .profile .contents-layout .contents-menu a i {
         font-size: 18px;
     }
+
+    .profile .contents-layout .contents-body {
+        padding: 5px;
+    }
 }
 
 @media (max-width: 388px) {
