@@ -170,7 +170,9 @@ if ($current_user->user_id == $user->id || $current_user->admin) {
     $strike = null;
 }
 
-Haanga::Load('user/header.html', compact('user', 'menu', 'strike'));
+$medals = $user->getMedals();
+
+Haanga::Load('user/header.html', compact('user', 'medals', 'menu', 'strike'));
 Haanga::Load('user/submenu.html', [
     'options' => ($options = Tabs::optionsFromProfile($view)),
     'cols' => (int)(12 / count($options)),

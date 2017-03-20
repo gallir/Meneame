@@ -48,6 +48,16 @@
                     <span>{% trans _('Notas') %}</span>
                 </div>
             </div>
+
+            {% if medals %}
+            <div class="row">
+                <div class="profile-header-medals">
+                    {% for medal in medals %}
+                    <img src="{{ globals.base_static }}img/common/medal_{{ medal.type }}_large.png" width="43" height="42" title="{{ medal.title }}" />
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         <div class="profile-header-banner">

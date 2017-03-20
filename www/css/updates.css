@@ -1416,10 +1416,7 @@ ul.slick-dots li button {
 .profile .profile-header-stats {
     -ms-flexbox: 1;
     flex: 1;
-    padding-left: 20px;
-}
-
-.profile .profile-header-stats {
+    padding: 0 20px;
     text-align: center;
 }
 
@@ -1434,6 +1431,11 @@ ul.slick-dots li button {
 
 .profile .profile-header-stats span {
     color: #AAA;
+}
+
+.profile .profile-header-medals {
+    margin-top: 15px;
+    border-top: 1px solid #ffd3b7;
 }
 
 .profile .profile-header-banner {

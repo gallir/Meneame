@@ -243,7 +243,15 @@ Haanga::configure($config);
 
 function __($text)
 {
-    return htmlentities($text, ENT_QUOTES, 'UTF-8', false);
+    $text = htmlentities($text, ENT_QUOTES, 'UTF-8', false);
+
+    if (func_num_args() === 1) {
+        return $text;
+    }
+
+    $args = array_slice(func_get_args(), 1);
+
+    return is_array($args[0]) ? strtr($text, $args[0]) : vsprintf($text, $args);
 }
 
 function _e($text)
