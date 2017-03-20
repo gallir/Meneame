@@ -1503,6 +1503,7 @@ ul.slick-dots li button {
     flex: 1;
     padding: 20px;
     background: white;
+    overflow: hidden;
 }
 
 .profile .contents-layout .contents-body .news-body h2 {
