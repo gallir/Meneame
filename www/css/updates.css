@@ -1834,6 +1834,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 }
 
 @media (max-width: 568px) {
+    .profile .contents-layout {
+        padding: 0;
+    }
+
     .profile .contents-layout .contents-menu a i {
         font-size: 18px;
     }
