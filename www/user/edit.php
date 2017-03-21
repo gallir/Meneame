@@ -109,7 +109,9 @@ $form->avatars_enabled = is_avatars_enabled();
 $form->bio_max = $bio_max;
 $form->bio_left = $form->bio_max - mb_strlen(html_entity_decode($user->bio, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-Haanga::Load('user/edit.html', compact('user', 'form', 'messages'));
+$prefs = $user->get_prefs();
+
+Haanga::Load('user/edit.html', compact('user', 'form', 'prefs', 'messages'));
 
 do_footer();
 
@@ -335,6 +337,12 @@ function save_profile()
         }
 
         $user->karma = $_POST['karma'];
+    }
+
+    $prefs = empty($_POST['prefs']) ? array() : (array)$_POST['prefs'];
+
+    foreach (array('subs_default', 'com_order', 'last_com_first', 'use_bar') as $pref) {
+        User::set_pref($user->id, $pref, in_array($pref, $prefs));
     }
 
     $user->store();

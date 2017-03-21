@@ -17,6 +17,9 @@ body {
     background-color: #fff;
     margin: 0px;
     padding: 0px;
+    text-rendering: optimizespeed;
+    font-variant-ligatures: no-common-ligatures;
+    font-feature-settings: 'liga' 0, 'clig' 0;
 }
 
 .header-top-wrapper.fixed {
@@ -3072,11 +3075,9 @@ button.link.favorite {
     float: left;
     display: block;
     overflow: hidden;
-    height: 25px;
     white-space: nowrap;
-    height: 30px;
     font-size: 85%;
-    white-space: nowrap;
+    padding: 10px;
 }
 
 .friends-item img, .voters-list img {

@@ -1,7 +1,7 @@
 <section class="section section-medium">
     <div class="container">
         <h1>
-            {% trans _('Edición de Perfil de %s') user.username %}
+            {% trans _('Edición de Perfil') %} &laquo;<a href="{{ user.get_uri }}">{{ user.username }}</a>&raquo;
         </h1>
 
         <form class="form form-edit" method="post" autocomplete="off" enctype="multipart/form-data">
@@ -143,7 +143,7 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input name="subs_default" id="subs_default" type="checkbox" value="subs_default" {% if prefs.subs_default %} checked {% endif %} /></td>
+                        <input type="checkbox" name="prefs[]" id="subs_default" value="subs_default" {% if prefs.subs_default %} checked {% endif %} /></td>
                         {% trans _('Mostrar suscripciones por defecto en la portada') %}
                     </label>
                 </div>
@@ -152,7 +152,7 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input name="com_order" id="com_order" type="checkbox" value="com_order" {% if prefs.com_order %} checked {% endif %} /></td>
+                        <input type="checkbox" name="prefs[]" id="com_order" value="com_order" {% if prefs.com_order %} checked {% endif %} /></td>
                         {% trans _('Comentarios siempre por orden cronológico') %}
                     </label>
                 </div>
@@ -161,7 +161,7 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input name="last_com_first" id="last_com_first" type="checkbox" value="last_com_first" {% if prefs.last_com_first %} checked {% endif %} /></td>
+                        <input type="checkbox" name="prefs[]" id="last_com_first" value="last_com_first" {% if prefs.last_com_first %} checked {% endif %} /></td>
                         {% trans _('Mostrar por defecto la última página de comentarios') %}
                     </label>
                 </div>
@@ -170,7 +170,7 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input name="use_bar" id="use_bar" type="checkbox" value="use_bar" {% if prefs.use_bar %} checked {% endif %} /></td>
+                        <input type="checkbox" name="prefs[]" id="use_bar" value="use_bar" {% if prefs.use_bar %} checked {% endif %} /></td>
                         {% trans _('Abrir enlaces con barra superior') %}
                     </label>
                 </div>
@@ -210,6 +210,7 @@
 
             <footer class="footer">
                 <button type="submit" name="save_profile" class="btn btn-mnm">{% trans _('Actualizar perfil') %}</button>
+                <a href="{{ user.get_uri }}" class="btn btn-mnm btn-white pull-right">{% trans _('Cancelar edición') %}</a>
             </footer>
         </form>
 

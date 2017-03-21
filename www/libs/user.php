@@ -810,6 +810,17 @@ class User
         return geo_latlng('user', $this->id);
     }
 
+    public function get_uri($view = '')
+    {
+        global $globals;
+
+        $uri = $globals['base_url_general'].'user/'.htmlspecialchars($this->username);
+        $uri .= $view ? ('/'.$view) : '';
+        $uri .= '/'.$this->id;
+
+        return $uri;
+    }
+
     public function add_karma($inc, $log = false)
     {
         global $globals;
@@ -976,14 +987,12 @@ class User
     {
         global $db;
 
-        $extra = $value ? ('AND `pref_value` = "'.(int)$value.'"') : '';
-
         return $db->query('
             DELETE FROM `prefs`
             WHERE (
                 `pref_user_id` = "'.(int)$id.'"
                 AND `pref_key` = "'.$db->escape($key).'"
-                '.$extra.'
+                '.($value ? ('AND `pref_value` = "'.(int)$value.'"') : '').'
             );
         ');
     }
