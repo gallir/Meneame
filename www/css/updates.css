@@ -1390,6 +1390,11 @@ ul.slick-dots li button {
     margin-top: 40px;
 }
 
+.section.profile {
+    padding-right: 0;
+    padding-left: 0;
+}
+
 .profile .profile-header {
     display: -ms-flexbox;
     display: flex;
@@ -1453,7 +1458,7 @@ ul.slick-dots li button {
 .profile .contents-layout {
     margin-top: 30px;
     background-color: #f3f3f3;
-    padding: 20px;
+    padding: 40px;
     display: -ms-flexbox;
     display: flex;
 
