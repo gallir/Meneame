@@ -1434,7 +1434,10 @@ ul.slick-dots li button {
 }
 
 .profile .profile-header-stats span {
-    color: #AAA;
+    color: #c3c3c3;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .profile .profile-header-medals {
