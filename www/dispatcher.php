@@ -46,7 +46,7 @@ $routes = array(
     'novedades-en-meneame'   => 'changelog.php'
 );
 
-$globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
+$globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY) ?: array('');
 
 if (!isset($path[0]) || !isset($routes[$path[0]]) || !is_file(__DIR__.'/'.$routes[$path[0]])) {
     include_once __DIR__.'/config.php';
