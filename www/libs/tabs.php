@@ -524,7 +524,7 @@ final class Tabs
 
         return array(
             'commented' => array(
-                'title' => $user->username,
+                'title' => _('Realizados'),
                 'link' => get_user_uri($user->username, 'commented', $user->id),
             ),
             'conversation' => array(

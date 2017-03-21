@@ -37,13 +37,13 @@ foreach ($comments as $c) {
         continue;
     }
 
-    $color = ($c->value > 0) ? '#00d' : '#f00';
+    $color = ($c->value > 0) ? 'green' : 'red';
 
     echo '<li>';
 
     $comment->print_summary(1000, false);
 
-    echo '<div class="box" style="margin:0 0 -16px 0;background:' . $color . ';position:relative;top:-34px;left:30px;width:30px;height:16px;border-color:' . $color . ';opacity: 0.5"></div>';
+    echo '<div class="box" style="background: ' . $color . '; position: relative; top: -30px; left: 300px; width: 29px; height: 19px; opacity: 0.5"></div>';
     echo '</li>';
 }
 

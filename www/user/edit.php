@@ -109,7 +109,7 @@ $form->avatars_enabled = is_avatars_enabled();
 $form->bio_max = $bio_max;
 $form->bio_left = $form->bio_max - mb_strlen(html_entity_decode($user->bio, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-Haanga::Load('profile.html', compact('user', 'form', 'messages'));
+Haanga::Load('user/edit.html', compact('user', 'form', 'messages'));
 
 do_footer();
 

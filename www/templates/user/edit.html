@@ -1,0 +1,242 @@
+<section class="section section-medium">
+    <div class="container">
+        <h1>
+            {% trans _('Edición de Perfil de %s') user.username %}
+        </h1>
+
+        <form class="form form-edit" method="post" autocomplete="off" enctype="multipart/form-data">
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <input type="hidden" name="process" value="1" />
+            <input type="hidden" name="user_id" value="{{ user.id }}" />
+            <input type="hidden" name="form_hash" value="{{ form.hash }}" />
+
+            {% exec get_form_auth_ip as dummy %}
+
+            {% if form.admin_mode %}
+            <input type="hidden" name="login" value="{{ user.username }}" />
+            {% endif %}
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="username" class="title">{% trans _('Usuario') %}</label>
+
+                        <input type="text" id="username" name="username" value="{{ user.username }}" class="form-control" onkeyup="enablebutton(this.form.checkbutton1, null, this)" required />
+
+                        <span id="checkit">
+                            <input type="button" class="button" id="checkbutton1" value="{% trans _('verificar') %}" onclick="checkfield('username', this.form, this.form.username)" disabled />
+                        </span>
+
+                        <span id="usernamecheckitvalue"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="names" class="title">{% trans _('Nombre real') %}</label>
+                        <input type="text" id="names" name="names" value="{{ user.names }}" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="email" class="title">{% trans _('Correo electrónico') %}</label>
+                        <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control" onkeyup="enablebutton(this.form.checkbutton2, null, this)" required />
+                        <input type="button" class="button" id="checkbutton2" value="{% trans _('verificar') %}" onclick="checkfield('email', this.form, this.form.email)" disabled />
+                        <span id="emailcheckitvalue"></span>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="url" class="title">{% trans _('Página web') %}</label>
+                        <input type="text" id="url" name="url" value="{{ user.url }}" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bio" class="title">{% trans _('Bío') %}</label>
+
+                <textarea maxlength="{{ form.bio_max }}" name="bio" id="bio" class="form-control block">{{ user.bio }}</textarea>
+                <span class="note">{% trans _('Límite %s caracteres') form.bio_max %}</span>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    {% if form.avatars_enabled %}
+                    <input type="hidden" name="MAX_FILE_SIZE" value="400000" />
+
+                    <div class="form-group">
+                        <label for="image" class="title">{% trans _('Avatar') %}</label>
+                        <p class="note">{% trans _('imagen cuadrada de no más de 400 KB, sin transparencias') %}</p>
+                        <input type="file" id="image" name="image" value="{{ user.adchannel }}" class="form-control" />
+
+                        {% if user.avatar > 0 %}
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="avatar_delete" value="1" />
+                                {% trans _('Eliminar avatar') %}
+                            </label>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="public_info" class="title">{% trans _('Mensajero instantáneo, invisible para los demás') %}</label>
+                        <p class="note">{% trans _('Necesario si te conectarás vía Jabber/Google Talk') %}</p>
+                        <input type="text" id="public_info" name="public_info" value="{{ user.public_info }}" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+            {# {% if globals.external_user_ads %} #}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="adcode" class="title">{% trans _('Código AdSense') %}</label>
+                        <p class="note">{% trans _('Tu código de usuario de AdSense, del tipo ca-pub-123456789') %}</p>
+                        <input type="text" id="adcode" name="adcode" value="{{ user.adcode }}" maxlength="24" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="adchannel" class="title">{% trans _('ID del anuncio') %}</label>
+                        <p class="note">{% trans _('Del tipo 1234567890, de 468x60') %}</p>
+                        <input type="text" id="adchannel" name="adchannel" value="{{ user.adchannel }}" maxlength="12" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            {# {% endif %} #}
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="password" class="title">{% trans _('Contraseña') %}</label>
+                        <p class="note">{% trans _('No se cambiará si la dejas en blanco') %}</p>
+                        <input type="text" id="password" name="password" value="{{ user.adcode }}" class="form-control" onkeyup="return securePasswordCheck(this);" />
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="verify" class="title">{% trans _('Repite la contraseña') %}</label>
+                        <p class="note">{% trans _('No se cambiará si la dejas en blanco') %}</p>
+                        <input type="text" id="verify" name="password2" value="{{ user.adchannel }}" class="form-control" onkeyup="checkEqualFields(this.form.password2, this.form.password)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-20">
+                <label class="title">{% trans _('Opciones de visualización') %}</label>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input name="subs_default" id="subs_default" type="checkbox" value="subs_default" {% if prefs.subs_default %} checked {% endif %} /></td>
+                        {% trans _('Mostrar suscripciones por defecto en la portada') %}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input name="com_order" id="com_order" type="checkbox" value="com_order" {% if prefs.com_order %} checked {% endif %} /></td>
+                        {% trans _('Comentarios siempre por orden cronológico') %}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input name="last_com_first" id="last_com_first" type="checkbox" value="last_com_first" {% if prefs.last_com_first %} checked {% endif %} /></td>
+                        {% trans _('Mostrar por defecto la última página de comentarios') %}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input name="use_bar" id="use_bar" type="checkbox" value="use_bar" {% if prefs.use_bar %} checked {% endif %} /></td>
+                        {% trans _('Abrir enlaces con barra superior') %}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="comment_pref" value="1"  {% if (user.comment_pref) %} checked {% endif %} />
+                        {% trans _('Mostrar todos los comentarios') %}
+                    </label>
+                </div>
+            </div>
+
+            {% if form.admin_mode %}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="user_level" class="title">{% trans _('Estado') %}</label>
+
+                        <select id="user_level" name="user_level" class="form-control">
+                            {% for level in form.user_levels %}
+                            <option value="{{ level }}" {% if user.level == level %} selected {% endif %}>{{ level }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="karma" class="title">{% trans _('Karma') %}</label>
+                        <input type="number" id="karma" name="karma" value="{{ user.karma }}" class="form-control" step="any" />
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <footer class="footer">
+                <button type="submit" name="save_profile" class="btn btn-mnm">{% trans _('Actualizar perfil') %}</button>
+            </footer>
+        </form>
+
+        {% if user.id == current_user.user_id %}
+        <form class="form form-edit" method="post" autocomplete="off">
+            <div class="alert alert-danger mt-20">
+                <div class="form-group mb-20">
+                    <label class="title">{% trans _('Deshabilitar la cuenta') %}</label>
+                </div>
+
+                <p>{% trans _('¡Atención! Si se deshabilita la cuenta se eliminarán automáticamente los datos personales.') %}</p>
+                <p>{% trans _('Las notas serán eliminadas, los envíos y comentarios NO se borrarán.') %}</p>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="disable" value="1" required />
+                            {% trans _('Sí, quiero deshabilitarla') %}
+                        </label>
+                    </div>
+                </div>
+
+                <p>
+                    <input type="submit" name="disabledme" value="{% trans _('Deshabilitar cuenta') %}" class="button" />
+                </p>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+</section>
