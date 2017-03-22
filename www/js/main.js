@@ -190,51 +190,60 @@ function parseLinkAnswer(id, link) {
 }
 
 function securePasswordCheck(field) {
+    var color = '#F56874';
+
     if (field.value.length > 5 && field.value.match("^(?=.{6,})(?=(.*[a-z].*))(?=(.*[A-Z0-9].*)).*$", "g")) {
         if (field.value.match("^(?=.{8,})(?=(.*[a-z].*))(?=(.*[A-Z].*))(?=(.*[0-9].*)).*$", "g")) {
-            field.style.backgroundColor = "#8FFF00";
+            color = "#8FFF00";
         } else {
-            field.style.backgroundColor = "#F2ED54";
+            color = "#F2ED54";
         }
-    } else {
-        field.style.backgroundColor = "#F56874";
     }
+
+    field.style.backgroundColor = color;
 
     return false;
 }
 
 function checkEqualFields(field, against) {
-    if (field.value == against.value) {
-        field.style.backgroundColor = '#8FFF00';
-    } else {
-        field.style.backgroundColor = "#F56874";
-    }
+    field.style.backgroundColor = (field.value == against.value) ? '#8FFF00' : '#F56874';
 
     return false;
 }
 
-function enablebutton(button, button2, target) {
-    if (button2) {
-        button2.disabled = false;
-    }
+function checkInput($input) {
+    var $button = $('#check-' + $input.attr('id'));
 
-    button.disabled = target.value.length ? false : true;
+    $button.on('click', function() {
+        checkField($input, $button);
+    });
 }
 
-function checkfield(type, form, field) {
-    var url = base_url + 'backend/checkfield?type=' + type + '&name=' + encodeURIComponent(field.value);
+function checkField($input, $button) {
+    var name = $input.attr('id'),
+        value = $input.val(),
+        url = base_url + 'backend/checkfield?name=' + name + '&value=' + encodeURIComponent(value);
 
     $.get(url, function(html) {
-        if (html === 'OK') {
-            $('#' + type + 'checkitvalue').html('<span style="color:black">"' + encodeURI(field.value) + '": ' + html + '</span>');
-            form.submit.disabled = '';
-        } else {
-            $('#' + type + 'checkitvalue').html('<span style="color:red">"' + encodeURI(field.value) + '": ' + html + '</span>');
-            form.submit.disabled = 'disabled';
-        }
-    });
+        var success = (html === 'OK'),
+            resultId = 'check-result-' + name;
+            $result = $('#' + resultId);
 
-    return false;
+        if (!$result.length) {
+            $result = $('<div id="' + resultId + '" class="alert"></div>');
+            $input.parent().append($result);
+        }
+
+        $result.html(html);
+
+        if (success) {
+            $result.removeClass('alert-danger').addClass('alert-success');
+        } else {
+            $result.removeClass('alert-success').addClass('alert-danger');
+        }
+
+        $input.closest('form').find('button[type="submit"]').prop('disabled', !success);
+    });
 }
 
 function check_checkfield(fieldname, mess) {

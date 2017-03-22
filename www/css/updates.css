@@ -1637,6 +1637,13 @@ dl.list dd {
     margin-bottom: 5px;
 }
 
+.form-group .btn {
+    margin: 0;
+    padding: 0 10px;
+    height: 30px;
+    vertical-align: top;
+}
+
 .form-control, textarea.form-control, input[type="text"].form-control,
 input[type="password"].form-control, input[type="datetime"].form-control,
 input[type="email"].form-control, input[type="url"].form-control, input[type="search"].form-control {

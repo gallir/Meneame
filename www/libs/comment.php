@@ -359,11 +359,10 @@ class Comment extends LCPBase
     public function vote_exists()
     {
         global $current_user;
+
         $vote = new Vote('comments', $this->id, $current_user->user_id);
-        $this->voted = $vote->exists(false);
-        if ($this->voted) {
-            return $this->voted;
-        }
+
+        return $this->voted = $vote->exists(false);
     }
 
     public function insert_vote($value = 0)
@@ -377,8 +376,7 @@ class Comment extends LCPBase
         $vote = new Vote('comments', $this->id, $current_user->user_id);
 
         // Affinity
-        if ($current_user->user_id != $this->author
-                && ($affinity = User::get_affinity($this->author, $current_user->user_id))) {
+        if ($current_user->user_id != $this->author && ($affinity = User::get_affinity($this->author, $current_user->user_id))) {
             if ($value < -1 && $affinity < 0) {
                 $value = round(min(-1, $value *  abs($affinity/100)));
             } elseif ($value > 1 && $affinity > 0) {
@@ -392,16 +390,17 @@ class Comment extends LCPBase
 
         $vote->value = $value;
         $db->transaction();
-        if (($r = $vote->insert())) {
-            if ($current_user->user_id != $this->author) {
-                $r = $db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$value, comment_date=comment_date where comment_id=$this->id");
-            }
+
+        if (($r = $vote->insert()) && ($current_user->user_id != $this->author)) {
+            $r = $db->query("update comments set comment_votes=comment_votes+1, comment_karma=comment_karma+$value, comment_date=comment_date where comment_id=$this->id");
         }
 
         if ($r && $db->commit()) {
             return $vote->value;
         }
+
         syslog(LOG_INFO, "failed insert comment vote for $this->id");
+
         return false;
     }
 
@@ -412,8 +411,7 @@ class Comment extends LCPBase
 
         $this->prepare_summary_text($length);
 
-        $vars = array('self' => $this);
-        return Haanga::Load('comment_summary_text.html', $vars);
+        return Haanga::Load('comment_summary_text.html', array('self' => $this));
     }
 
     public function username()

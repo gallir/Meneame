@@ -4,12 +4,8 @@ var base_key="{{globals.security_key}}",
     base_url_sub="{{ globals.base_url }}",
     user_login='{{ current_user.user_login }}';
 
-    {#
-    mnm_start_time=(new Date()).getTime());
-    #}
-
 var onDocumentLoad = [], postJavascript = [];
+
 function addPostCode(code) {
     onDocumentLoad.push(code);
 }
-

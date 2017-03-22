@@ -23,14 +23,17 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="username" class="title">{% trans _('Usuario') %}</label>
+                        <input type="text" id="username" name="username" value="{{ user.username }}" class="form-control" required />
 
-                        <input type="text" id="username" name="username" value="{{ user.username }}" class="form-control" onkeyup="enablebutton(this.form.checkbutton1, null, this)" required />
+                        <button type="button" id="check-username" class="btn btn-default">
+                            {% trans _('Comprobar') %}
+                        </button>
 
-                        <span id="checkit">
-                            <input type="button" class="button" id="checkbutton1" value="{% trans _('verificar') %}" onclick="checkfield('username', this.form, this.form.username)" disabled />
-                        </span>
-
-                        <span id="usernamecheckitvalue"></span>
+                        <script>
+                        addPostCode(function() {
+                            checkInput($('#username'));
+                        });
+                        </script>
                     </div>
                 </div>
 
@@ -46,9 +49,17 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="email" class="title">{% trans _('Correo electrónico') %}</label>
-                        <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control" onkeyup="enablebutton(this.form.checkbutton2, null, this)" required />
-                        <input type="button" class="button" id="checkbutton2" value="{% trans _('verificar') %}" onclick="checkfield('email', this.form, this.form.email)" disabled />
-                        <span id="emailcheckitvalue"></span>
+                        <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control" required />
+
+                        <button type="button" id="check-email" class="btn btn-default">
+                            {% trans _('Comprobar') %}
+                        </button>
+
+                        <script>
+                        addPostCode(function() {
+                            checkInput($('#email'));
+                        });
+                        </script>
                     </div>
                 </div>
 
