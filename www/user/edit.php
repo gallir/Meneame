@@ -89,13 +89,12 @@ if ($current_user->user_id == $user->id && $globals['external_user_ads'] && !emp
     $globals['do_user_ad'] = 100;
 }
 
-if (isset($_POST['process'])) {
-    $messages = save_profile();
-} else {
-    //$globals['secure_page'] = False;
-    // This allows to send the user back to the original cross domain authentication and ssl_server
-    //setcookie('return_site', get_server_name(), 0, $globals['base_url'], UserAuth::domain());
-    $messages = array();
+$error = $success = null;
+
+try {
+    $success = save_profile();
+} catch (Exception $e) {
+    $error = $e->getMessage();
 }
 
 do_header(_('Edición del perfil del usuario') . ': ' . $user->username);
@@ -107,11 +106,10 @@ $form->auth_link = get_auth_link();
 $form->user_levels = $user_levels;
 $form->avatars_enabled = is_avatars_enabled();
 $form->bio_max = $bio_max;
-$form->bio_left = $form->bio_max - mb_strlen(html_entity_decode($user->bio, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
 $prefs = $user->get_prefs();
 
-Haanga::Load('user/edit.html', compact('user', 'form', 'prefs', 'messages'));
+Haanga::Load('user/edit.html', compact('user', 'success', 'error', 'form', 'prefs'));
 
 do_footer();
 
@@ -119,51 +117,45 @@ function save_profile()
 {
     global $db, $user, $current_user, $globals, $admin_mode, $site_key, $bio_max;
 
-    $errors = 0;
-    $new_pass = false;
-    $messages = array();
-
     $form_hash = md5($site_key . $user->id . $current_user->user_id);
 
-    if (isset($_POST['disabledme']) && intval($_POST['disable']) == 1 && $_POST['form_hash'] == $form_hash && $_POST['user_id'] == $current_user->user_id) {
+    if (!empty($_POST['disabledme']) && !empty($_POST['confirm']) && ($_POST['form_hash'] === $form_hash) && ($_POST['user_id'] == $current_user->user_id)) {
         $old_user_login = $user->username;
         $old_user_id = $user->id;
+
         $user->disable(true);
 
         Log::insert('user_delete', $old_user_id, $old_user_id);
+
         syslog(LOG_NOTICE, "Meneame, disabling $old_user_id ($old_user_login) by $current_user->user_login -> $user->username ");
 
         $current_user->Logout(get_user_uri($user->username));
-
-        die;
     }
 
-    if (!isset($_POST['save_profile']) || !isset($_POST['process']) || ($_POST['user_id'] != $current_user->user_id && !$admin_mode)) {
+    if (empty($_POST['save_profile']) || empty($_POST['process']) || ($_POST['user_id'] != $current_user->user_id && !$admin_mode)) {
         return;
     }
 
     if (empty($_POST['form_hash']) || $_POST['form_hash'] != $form_hash) {
-        $messages[] = _('Falta la clave de control');
-        $errors++;
+        throw new Exception(_('Falta la clave de control'));
     }
 
     if (!empty($_POST['username']) && trim($_POST['username']) != $user->username) {
         $newname = trim($_POST['username']);
 
         if (strlen($newname) < 3) {
-            $messages[] = _('nombre demasiado corto');
-            $errors++;
+            throw new Exception(_('Nombre demasiado corto'));
         }
 
         if (!check_username($newname)) {
-            $messages[] = _('nombre de usuario erróneo, caracteres no admitidos');
-            $errors++;
-        } elseif (user_exists($newname, $user->id)) {
-            $messages[] = _('el usuario ya existe');
-            $errors++;
-        } else {
-            $user->username = $newname;
+            throw new Exception(_('Nombre de usuario erróneo, caracteres no admitidos'));
         }
+
+        if (user_exists($newname, $user->id)) {
+            throw new Exception(_('El usuario ya existe'));
+        }
+
+        $user->username = $newname;
     }
 
     if (!empty($_POST['bio']) || $user->bio) {
@@ -175,58 +167,46 @@ function save_profile()
     }
 
     if ($user->email != trim($_POST['email']) && !check_email(trim($_POST['email']))) {
-        $messages[] = _('el correo electrónico no es correcto');
-        $errors++;
-    } elseif (!$admin_mode && trim($_POST['email']) != $current_user->user_email && email_exists(trim($_POST['email']), false)) {
-        $messages[] = _('ya existe otro usuario con esa dirección de correo');
-        $errors++;
-    } else {
-        $user->email = trim($_POST['email']);
+        throw new Exception(_('El correo electrónico no es correcto'));
     }
 
+    if (!$admin_mode && trim($_POST['email']) != $current_user->user_email && email_exists(trim($_POST['email']), false)) {
+        throw new Exception(_('Ya existe otro usuario con esa dirección de correo'));
+    }
+
+    $user->email = trim($_POST['email']);
     $user->url = htmlspecialchars(clean_input_url($_POST['url']));
 
     // Check IM address
     if (!empty($_POST['public_info'])) {
         $_POST['public_info'] = htmlspecialchars(clean_input_url($_POST['public_info']));
+
         $public = $db->escape($_POST['public_info']);
         $im_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_public_info='$public'"));
 
-        if ($im_count > 0) {
-            $messages[] = _('ya hay otro usuario con la misma dirección de MI, no se ha grabado');
-
-            $_POST['public_info'] = '';
-            $errors++;
+        if ($im_count) {
+            throw new Exception(_('Ya hay otro usuario con la misma dirección de MI'));
         }
     }
 
     $user->phone = $_POST['phone'];
     $user->public_info = htmlspecialchars(clean_input_url($_POST['public_info']));
-    // End check IM address
 
     if ($user->id == $current_user->user_id) {
-        // Check phone number
         if (!empty($_POST['phone'])) {
             if (!preg_match('/^\+[0-9]{9,16}$/', $_POST['phone'])) {
-                $messages[] = _('número telefónico erróneo, no se ha grabado');
+                throw new Exception(_('Número telefónico erróneo'));
+            }
 
-                $_POST['phone'] = '';
-                $errors++;
-            } else {
-                $phone = $db->escape($_POST['phone']);
-                $phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_phone='$phone'"));
+            $phone = $db->escape($_POST['phone']);
+            $phone_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_phone='$phone'"));
 
-                if ($phone_count > 0) {
-                    $messages[] = _('ya hay otro usuario con el mismo número, no se ha grabado');
-
-                    $_POST['phone'] = '';
-                    $errors++;
-                }
+            if ($phone_count) {
+                throw new Exception(_('Ya hay otro usuario con el mismo número'));
             }
         }
 
         $user->phone = $_POST['phone'];
-        // End check phone number
     }
 
     // Verifies adsense code
@@ -235,29 +215,20 @@ function save_profile()
         $_POST['adchannel'] = trim($_POST['adchannel']);
 
         if (!empty($_POST['adcode']) && $user->adcode != $_POST['adcode']) {
-            if (!preg_match('/pub-[0-9]{16}$/', $_POST['adcode'])) {
-                $messages[] = _('código AdSense incorrecto, no se ha grabado');
+            if (!preg_match('/pub\-[0-9]{16}$/', $_POST['adcode'])) {
+                throw new Exception(_('Código AdSense incorrecto'));
+            }
 
-                $_POST['adcode'] = '';
-                $errors++;
-            } else {
-                $adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_adcode='" . $_POST['adcode'] . "'"));
+            $adcode_count = intval($db->get_var("select count(*) from users where user_id != $user->id and user_level != 'disabled' and user_level != 'autodisabled' and user_adcode='" . $_POST['adcode'] . "'"));
 
-                if ($adcode_count > 0) {
-                    $messages[] = _('ya hay otro usuario con la misma cuenta, no se ha grabado');
-
-                    $_POST['adcode'] = '';
-                    $errors++;
-                }
+            if ($adcode_count) {
+                throw new Exception(_('Ya hay otro usuario con la misma cuenta'));
             }
         }
 
         if (!empty($_POST['adcode']) && !empty($_POST['adchannel']) && $user->adchannel != $_POST['adchannel']) {
             if (!preg_match('/^[0-9]{10,12}$/', $_POST['adchannel'])) {
-                $messages[] = _('canal AdSense incorrecto, no se ha grabado');
-
-                $_POST['adchannel'] = '';
-                $errors++;
+                throw new Exception(_('Canal AdSense incorrecto'));
             }
         }
 
@@ -269,42 +240,34 @@ function save_profile()
 
     if (!empty($_POST['password']) || !empty($_POST['password2'])) {
         if (!check_password($_POST["password"])) {
-            $messages[] = _('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números');
-            $errors = 1;
-        } elseif (trim($_POST['password']) !== trim($_POST['password2'])) {
-            $messages[] = _('las claves no son iguales, no se ha modificado');
-            $errors = 1;
-        } else {
-            $new_pass = trim($_POST['password']);
-            $user->pass = UserAuth::hash($new_pass);
-
-            $messages[] = _('La clave se ha cambiado');
-
-            $pass_changed = true;
+            throw new Exception(_('Clave demasiado corta, debe ser de 6 o más caracteres e incluir mayúsculas, minúsculas y números'));
         }
+
+        if (trim($_POST['password']) !== trim($_POST['password2'])) {
+            throw new Exception(_('Las claves no son iguales'));
+        }
+
+        $new_pass = trim($_POST['password']);
+        $user->pass = UserAuth::hash($new_pass);
+    } else {
+        $new_pass = false;
     }
 
     $user->comment_pref = intval($_POST['comment_pref']) + (intval($_POST['show_friends']) & 1) * 2 + (intval($_POST['show_2cols']) & 1) * 4;
 
     // Manage avatars upload
     if (!empty($_FILES['image']['tmp_name'])) {
-        if (avatars_check_upload_size('image')) {
-            $avatar_mtime = avatars_manage_upload($user->id, 'image');
-
-            if (!$avatar_mtime) {
-                $messages[] = _('error guardando la imagen');
-
-                $errors = 1;
-                $user->avatar = 0;
-            } else {
-                $user->avatar = $avatar_mtime;
-            }
-        } else {
-            $messages[] = _('el tamaño de la imagen excede el límite');
-
-            $errors = 1;
-            $user->avatar = 0;
+        if (!avatars_check_upload_size('image')) {
+            throw new Exception(_('El tamaño de la imagen excede el límite'));
         }
+
+        $avatar_mtime = avatars_manage_upload($user->id, 'image');
+
+        if (!$avatar_mtime) {
+            throw new Exception(_('Error guardando la imagen'));
+        }
+
+        $user->avatar = $avatar_mtime;
     } elseif ($_POST['avatar_delete']) {
         $user->avatar = 0;
         avatars_remove($user->id);
@@ -313,10 +276,6 @@ function save_profile()
     // Reset avatar for the logged user
     if ($current_user->user_id == $user->id) {
         $current_user->user_avatar = $user->avatar;
-    }
-
-    if ($errors) {
-        return $messages;
     }
 
     if (empty($user->ip)) {
@@ -352,7 +311,5 @@ function save_profile()
         $current_user->Authenticate($user->username, $new_pass);
     }
 
-    $messages[] = _('datos actualizados');
-
-    return $messages;
+    return true;
 }

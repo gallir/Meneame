@@ -706,9 +706,14 @@ a.action-link span {
     padding: 0;
 }
 
-.form.form-edit input.form-control, .form.form-edit select.form-control {
+.form.form-edit input.form-control,
+.form.form-edit select.form-control {
     padding: 0 10px;
     height: 30px;
+}
+
+.form.form-edit textarea.form-control {
+    padding: 5px 10px;
 }
 
 .form.form-edit .help {

@@ -7,11 +7,14 @@
         <form class="form form-edit" method="post" autocomplete="off" enctype="multipart/form-data">
             {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
+            {% else %} {% if success %}
+            <div class="alert alert-success">{% trans _('El perfil se ha editado correctamente') %}</div>
+            {% endif %} {% endif %}
 
             <input type="hidden" name="process" value="1" />
             <input type="hidden" name="user_id" value="{{ user.id }}" />
             <input type="hidden" name="form_hash" value="{{ form.hash }}" />
+            <input type="hidden" name="save_profile" value="1" />
 
             {% exec get_form_auth_ip as dummy %}
 
@@ -220,13 +223,17 @@
             {% endif %}
 
             <footer class="footer">
-                <button type="submit" name="save_profile" class="btn btn-mnm">{% trans _('Actualizar perfil') %}</button>
+                <button type="submit" class="btn btn-mnm">{% trans _('Actualizar perfil') %}</button>
                 <a href="{{ user.get_uri }}" class="btn btn-mnm btn-white pull-right">{% trans _('Cancelar edición') %}</a>
             </footer>
         </form>
 
         {% if user.id == current_user.user_id %}
         <form class="form form-edit" method="post" autocomplete="off">
+            <input type="hidden" name="user_id" value="{{ user.id }}" />
+            <input type="hidden" name="form_hash" value="{{ form.hash }}" />
+            <input type="hidden" name="disabledme" value="1" />
+
             <div class="alert alert-danger mt-20">
                 <div class="form-group mb-20">
                     <label class="title">{% trans _('Deshabilitar la cuenta') %}</label>
@@ -238,14 +245,14 @@
                 <div class="form-group">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="disable" value="1" required />
+                            <input type="checkbox" name="confirm" value="1" required />
                             {% trans _('Sí, quiero deshabilitarla') %}
                         </label>
                     </div>
                 </div>
 
                 <p>
-                    <input type="submit" name="disabledme" value="{% trans _('Deshabilitar cuenta') %}" class="button" />
+                    <input type="submit" value="{% trans _('Deshabilitar cuenta') %}" class="button" />
                 </p>
             </div>
         </form>
