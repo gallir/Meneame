@@ -311,7 +311,7 @@ function showPoll() {
                 callback = setStatus;
             }
 
-            $.get(base_url + 'backend/checkfield', {type: $input.attr('name'), name: value}, function(response) {
+            $.get(base_url + 'backend/checkfield', {name: $input.attr('name'), value: value}, function(response) {
                 callback($input, response);
             });
 
