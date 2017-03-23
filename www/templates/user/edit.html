@@ -193,8 +193,17 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="comment_pref" value="1"  {% if (user.comment_pref) %} checked {% endif %} />
+                        <input type="checkbox" name="comment_pref" value="1" {% if (user.comment_pref) %} checked {% endif %} />
                         {% trans _('Mostrar todos los comentarios') %}
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="prefs[]" id="notify_priv" value="notify_priv" {% if prefs.notify_priv %} checked {% endif %} /></td>
+                        {% trans _('Recibir avisos de privados por email') %}
                     </label>
                 </div>
             </div>

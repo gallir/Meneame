@@ -300,7 +300,7 @@ function save_profile()
 
     $prefs = empty($_POST['prefs']) ? array() : (array)$_POST['prefs'];
 
-    foreach (array('subs_default', 'com_order', 'last_com_first', 'use_bar') as $pref) {
+    foreach (array('subs_default', 'com_order', 'last_com_first', 'use_bar', 'notify_priv') as $pref) {
         User::set_pref($user->id, $pref, in_array($pref, $prefs));
     }
 

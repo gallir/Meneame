@@ -30,7 +30,7 @@ if (empty($id)) {
 switch ($_GET['what']) {
     /* From notifier */
     case 'privates':
-        do_redirection(post_get_base_url('_priv'));
+        do_redirection($current_user->get_uri('notes_privates'));
 
     case 'posts':
         do_redirection($current_user->get_uri('notes_conversation'));

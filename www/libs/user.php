@@ -284,6 +284,7 @@ class User
 
         switch ($view) {
             case 'subs':
+            case 'subs_follow':
                 $id = _('subs');
                 break;
 
@@ -313,18 +314,35 @@ class User
                 $id = _('perfil');
                 break;
 
+            case 'notes':
+            case 'notes_friends':
+            case 'notes_favorites':
+            case 'notes_conversation':
+            case 'notes_votes':
+                $id = _('notas');
+                break;
+
+            case 'notes_privates':
+                $id = _('privados');
+                break;
+
             default:
                 do_error(_('opción inexistente'), 404);
                 break;
         }
 
-        $items = array();
-        $items[] = new MenuOption(_('perfil'), get_user_uri($user), $id, _('información de usuario'));
-        $items[] = new MenuOption(_('relaciones'), get_user_uri($user, 'friends'), $id, _('amigos e ignorados'));
-        $items[] = new MenuOption(_('subs'), get_user_uri($user, 'subs'), $id, _('sub menéames'));
-        $items[] = new MenuOption(_('historias'), get_user_uri($user, 'history'), $id, _('información de envíos'));
-        $items[] = new MenuOption(_('comentarios'), get_user_uri($user, 'commented'), $id, _('información de comentarios'));
-        $items[] = new MenuOption(_('notas'), post_get_base_url($user), $id, _('página de notas'));
+        $items = array(
+            new MenuOption(_('perfil'), $user->get_uri(), $id, _('Información de usuario')),
+            new MenuOption(_('historias'), $user->get_uri('history'), $id, _('Información de envíos')),
+            new MenuOption(_('subs'), $user->get_uri('subs'), $id, _('Sub menéames')),
+            new MenuOption(_('comentarios'), $user->get_uri('commented'), $id, _('Información de comentarios')),
+            new MenuOption(_('notas'), $user->get_uri('notes'), $id, _('Página de notas')),
+            new MenuOption(_('relaciones'), $user->get_uri('friends'), $id, _('Amigos e ignorados')),
+        );
+
+        if ($user->id == $current_user->user_id) {
+            $items[] = new MenuOption(_('privados'), $user->get_uri('notes_privates'), $id, _('Notas privadas'));
+        }
 
         return $items;
     }

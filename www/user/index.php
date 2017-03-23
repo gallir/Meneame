@@ -135,6 +135,7 @@ switch ($view) {
     case 'notes_favorites':
     case 'notes_conversation':
     case 'notes_votes':
+    case 'notes_privates':
         $menu = 'notes';
         break;
 
@@ -151,7 +152,7 @@ switch ($view) {
 }
 
 // Add canonical address
-$globals['extra_head'] = '<link rel="canonical" href="//' . get_server_name() . get_user_uri($user->username) . '" />' . "\n";
+$globals['extra_head'] = '<link rel="canonical" href="//' . get_server_name() . $user->get_uri() . '" />' . "\n";
 
 $header_title = $user->username;
 
@@ -166,7 +167,7 @@ if ($current_user->user_id == $user->id) {
     $globals['extra_comment_conversation'] = '';
 }
 
-do_header($header_title);
+do_header($header_title, 'profile', User::get_menu_items($view, $user));
 
 $user->all_stats();
 $user->bio = $user->bio ?: '';

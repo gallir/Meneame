@@ -42,7 +42,7 @@ function do_redirect($type)
 
     switch ($type) {
         case 'privates':
-            $url = post_get_base_url('_priv');
+            $url = $current_user->get_uri('notes_privates');
             break;
 
         case 'posts':

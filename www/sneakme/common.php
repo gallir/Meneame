@@ -49,11 +49,11 @@ function get_posts_menu($tab_selected, $username)
     }
 
     if (!empty($username)) {
-        $items[] = new MenuOption($username, post_get_base_url($username), $id, $username, 'username');
+        $items[] = new MenuOption($username, get_user_uri($username, 'notes'), $id, $username, 'username');
     }
 
     if ($current_user->user_id > 0) {
-        $items[] = new MenuOption(_('privados'), post_get_base_url('_priv'), $id, _('mensajes privados'));
+        $items[] = new MenuOption(_('privados'), get_user_uri($username, 'notes_privates'), $id, _('mensajes privados'));
     }
 
     $items[] = new MenuOption(_('encuestas'), post_get_base_url('_poll'), $id, _('notas con encuestas'));

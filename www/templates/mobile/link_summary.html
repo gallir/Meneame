@@ -71,21 +71,19 @@
 
         {% exec htmlspecialchars self.url as url %}
 
-        {% if globals.link %}<h1>{% else %}<h2>{% endif %}
+        <h2>
+            <a href="{{ url }}" class="l:{{ self.id }}"
+               {% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
+            </a>
 
-        <a href="{{ url }}" class="l:{{ self.id }}"
-           {% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
-        </a>
+            {% if self.content_type == 'image' %}
+            &nbsp;<i class="fa fa-camera" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}"></i>
+            {% else %} {% if self.content_type == 'video' %}
+            &nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i>
+            {% endif %}
 
-        {% if self.content_type == 'image' %}
-        &nbsp;<i class="fa fa-camera" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}"></i>
-        {% else %} {% if self.content_type == 'video' %}
-        &nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i>
-        {% endif %}
-
-        {% endif %}
-
-        {% if globals.link %}</h1>{% else %}</h2>{% endif %}
+            {% endif %}
+        </h2>
 
         {% else %}
 

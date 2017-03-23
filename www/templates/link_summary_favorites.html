@@ -71,7 +71,7 @@
 
         {% if self.url %}
         {% exec htmlspecialchars self.url as url %}
-        {% if globals.link %}<h1>{% else %}<h2>{% endif %}
+        <h2>
         <a href="{{ url }}" class="l:{{ self.id }}"
            {% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
         </a>
@@ -81,9 +81,9 @@
         <span class="wideonly">&nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i></span>
         {% endif %}
         {% endif %}
-        {% if globals.link %}</h1>{% else %}</h2>{% endif %}
+        </h2>
         {% else %}
-        <h1><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h1>
+        <h2><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title }}</a></h2>
         {% endif %}
 
         {% if ! globals.bot %}

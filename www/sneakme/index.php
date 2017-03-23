@@ -10,16 +10,18 @@
 //      Must add printing the threads with CommentTree and split the
 //      page with only one post.
 
-include_once '../config.php';
-include 'common.php';
+include_once __DIR__.'/../config.php';
+include __DIR__.'/common.php';
 
 $argv = $globals['path'];
 $argv[0] = clean_input_string($argv[0]);
 
 if ($argv[0] === '_priv') {
-    // Load priv.php
-    include 'priv.php';
-    die;
+    if (!$current_user->user_id) {
+        do_error(_('debe autentificarse'), 401);
+    }
+
+    die(header('Location: '.$current_user->get_uri('notes_privates')));
 }
 
 include mnminclude . 'html1.php';
@@ -166,13 +168,13 @@ if ($tab_option == 4) {
     }
 
     $options = array(
-        $whose => post_get_base_url($user->username),
-        _('amigos') => post_get_base_url("$user->username/_friends"),
-        _('favoritos') => post_get_base_url("$user->username/_favorites"),
-        _('conversación') . $conversation_extra => post_get_base_url("$user->username/_conversation"),
-        _('votos') => post_get_base_url("$user->username/_votes"),
+        $whose => $user->get_uri('notes'),
+        _('amigos') => $user->get_uri('notes_friends'),
+        _('favoritos') => $user->get_uri('notes_favorites'),
+        _('conversación') . $conversation_extra => $user->get_uri('notes_conversation'),
+        _('votos') => $user->get_uri('notes_votes'),
         sprintf(_('debates con %s'), $user->username) => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login&amp;u2=$user->username",
-        sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
+        sprintf(_('perfil de %s'), $user->username) => $user->get_uri(),
 
     );
 } elseif ($tab_option == 1 && $current_user->user_id > 0) {
@@ -181,11 +183,10 @@ if ($tab_option == 4) {
 
     $options = array(
         _('todas') => post_get_base_url(''),
-        _('amigos') => post_get_base_url("$current_user->user_login/_friends"),
-        _('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
-        _('conversación') . $conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),
-        _('votos') => post_get_base_url("$current_user->user_login/_votes"),
-//        _('últimas imágenes') => "javascript:fancybox_gallery('post');",
+        _('amigos') => $current_user->get_uri('notes_friends'),
+        _('favoritos') => $current_user->get_uri('notes_favorites'),
+        _('conversación') . $conversation_extra => $current_user->get_uri('notes_conversation'),
+        _('votos') => $current_user->get_uri('notes_votes'),
         _('debates') . '&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
     );
 } else {

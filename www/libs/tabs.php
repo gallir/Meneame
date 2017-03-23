@@ -20,13 +20,6 @@ final class Tabs
 
             case _('nótame'):
                 return self::renderForSneakme($options, $tab_class);
-
-            case _('privados'):
-                return self::renderForSneakmePrivates($options, $tab_class);
-        }
-
-        if ($section === _('profile')) {
-            return self::renderFromProfile($options, $tab_class);
         }
     }
 
@@ -136,6 +129,9 @@ final class Tabs
 
             case 'notes_votes':
                 return self::optionsForProfileNotesVotes();
+
+            case 'notes_privates':
+                return self::optionsForProfileNotesPrivates();
         }
 
         return array();
@@ -338,39 +334,12 @@ final class Tabs
         return $html;
     }
 
-    public static function renderForSneakmePrivates($options, $tab_class)
-    {
-        list($content, $selected) = $options;
-
-        $html = '<ul class="' . $tab_class . '">' . "\n";
-
-        if (is_array($content)) {
-            $n = 0;
-
-            foreach ($content as $text => $url) {
-                $class_b = ($selected === $n) ? ' class = "selected"' : '';
-
-                $html .= '<li' . $class_b . '>' . "\n";
-                $html .= '<a href="' . $url . '">' . $text . "</a>\n";
-                $html .= '</li>' . "\n";
-
-                $n++;
-            }
-        } elseif (!empty($content)) {
-            $html .= '<li>' . $content . '</li>';
-        }
-
-        $html .= '</ul>' . "\n";
-
-        return $html;
-    }
-
     public static function renderUserProfileSubheader($options, $selected = false, $rss = false, $rss_title = '', $tab_class)
     {
         global $user, $current_user;
 
         if ($current_user->user_id > 0 && $user->id != $current_user->user_id) { // Add link to discussion among them
-            $between = "type=comments&amp;u1=$user->username&amp;u2=$current_user->user_login";
+            $between = 'type=comments&amp;u1='.$user->username.'&amp;u2='.$current_user->user_login;
         } else {
             $between = false;
         }
@@ -392,7 +361,7 @@ final class Tabs
         $options = array(
             'profile' => array(
                 'title' => $user->username,
-                'link' => get_user_uri($user->username)
+                'link' => $user->get_uri()
             )
         );
 
@@ -418,23 +387,23 @@ final class Tabs
         $options = array(
             'friends' => array(
                 'title' => _('Amigos'),
-                'link' => get_user_uri($user->username, 'friends', $user->id),
+                'link' => $user->get_uri('friends'),
             ),
             'friend_of' => array(
                 'title' => _('Elegido por'),
-                'link' => get_user_uri($user->username, 'friend_of', $user->id),
+                'link' => $user->get_uri('friend_of'),
             )
         );
 
         if ($user->id == $current_user->user_id) {
             $options['ignored'] = array(
                 'title' => _('Ignorados'),
-                'link' => get_user_uri($user->username, 'ignored', $user->id),
+                'link' => $user->get_uri('ignored'),
             );
 
             $options['friends_new'] = array(
                 'title' => _('Nuevos'),
-                'link' => get_user_uri($user->username, 'friends_new', $user->id)
+                'link' => $user->get_uri('friends_new'),
             );
         }
 
@@ -483,19 +452,19 @@ final class Tabs
         return array(
             'history' => array(
                 'title' => _('Envíos'),
-                'link' => get_user_uri($user->username, 'history', $user->id),
+                'link' => $user->get_uri('history'),
             ),
             'shaken' => array(
-                'title' => _('Votados'),
-                'link' => get_user_uri($user->username, 'shaken', $user->id),
+                'title' => _('Votadas'),
+                'link' => $user->get_uri('shaken'),
             ),
             'favorites' => array(
-                'title' => _('Favoritos'),
-                'link' => get_user_uri($user->username, 'favorites', $user->id),
+                'title' => _('Favoritas'),
+                'link' => $user->get_uri('favorites'),
             ),
             'friends_shaken' => array(
-                'title' => _('Votados por amigos'),
-                'link' => get_user_uri($user->username, 'friends_shaken', $user->id)
+                'title' => _('Votadas por amigos'),
+                'link' => $user->get_uri('friends_shaken'),
             ),
         );
     }
@@ -542,19 +511,19 @@ final class Tabs
         return array(
             'commented' => array(
                 'title' => _('Realizados'),
-                'link' => get_user_uri($user->username, 'commented', $user->id),
+                'link' => $user->get_uri('commented'),
             ),
             'conversation' => array(
                 'title' => _('Conversación').$globals['extra_comment_conversation'],
-                'link' => get_user_uri($user->username, 'conversation', $user->id),
+                'link' => $user->get_uri('conversation'),
             ),
             'shaken_comments' => array(
                 'title' => _('Votados'),
-                'link' => get_user_uri($user->username, 'shaken_comments', $user->id),
+                'link' => $user->get_uri('shaken_comments'),
             ),
             'favorite_comments' => array(
                 'title' => _('Favoritos'),
-                'link' => get_user_uri($user->username, 'favorite_comments', $user->id)
+                'link' => $user->get_uri('favorite_comments'),
             ),
         );
     }
@@ -601,11 +570,11 @@ final class Tabs
         return array(
             'subs' => array(
                 'title' => _('Propietario'),
-                'link' => get_user_uri($user->username, 'subs', $user->id),
+                'link' => $user->get_uri('subs'),
             ),
             'subs_follow' => array(
                 'title' => _('Siguiendo'),
-                'link' => get_user_uri($user->username, 'subs_follow', $user->id),
+                'link' => $user->get_uri('subs_follow'),
             ),
         );
     }
@@ -629,32 +598,41 @@ final class Tabs
     {
         global $current_user, $user, $globals;
 
-        return array(
+        $options = array(
             'notes' => array(
                 'title' => _('Enviadas'),
-                'link' => get_user_uri($user->username, 'notes', $user->id),
+                'link' => $user->get_uri('notes'),
             ),
 
             'notes_friends' => array(
                 'title' => _('Amigos'),
-                'link' => get_user_uri($user->username, 'notes_friends', $user->id),
+                'link' => $user->get_uri('notes_friends'),
             ),
 
             'notes_favorites' => array(
                 'title' => _('Favoritas'),
-                'link' => get_user_uri($user->username, 'notes_favorites', $user->id),
+                'link' => $user->get_uri('notes_favorites'),
             ),
 
             'notes_conversation' => array(
                 'title' => _('Conversación'),
-                'link' => get_user_uri($user->username, 'notes_conversation', $user->id),
+                'link' => $user->get_uri('notes_conversation'),
             ),
 
             'notes_votes' => array(
                 'title' => _('Votadas'),
-                'link' => get_user_uri($user->username, 'notes_votes', $user->id),
+                'link' => $user->get_uri('notes_votes'),
             )
         );
+
+        if ($user->id == $current_user->user_id) {
+            $options['notes_privates'] = array(
+                'title' => _('Privados'),
+                'link' => $user->get_uri('notes_privates'),
+            );
+        }
+
+        return $options;
     }
 
     public static function optionsForProfileNotesFriends()
@@ -673,6 +651,11 @@ final class Tabs
     }
 
     public static function optionsForProfileNotesVotes()
+    {
+        return self::optionsForProfileNotes();
+    }
+
+    public static function optionsForProfileNotesPrivates()
     {
         return self::optionsForProfileNotes();
     }
