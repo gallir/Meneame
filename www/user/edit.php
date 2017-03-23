@@ -97,7 +97,7 @@ try {
     $error = $e->getMessage();
 }
 
-do_header(_('Edición del perfil del usuario') . ': ' . $user->username);
+do_header(_('Edición del perfil del usuario') . ': ' . $user->username, 'profile', User::get_menu_items('profile', $user));
 
 $form = new stdClass;
 $form->hash = md5($site_key . $user->id . $current_user->user_id);
