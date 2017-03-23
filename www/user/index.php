@@ -146,6 +146,10 @@ switch ($view) {
         $menu = 'relations';
         break;
 
+    case 'profile':
+        $menu = 'profile';
+        break;
+
     default:
         do_error(_('opción inexistente'), 404);
         break;

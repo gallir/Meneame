@@ -90,6 +90,11 @@
             <a href="{% exec user.get_uri 'friends' %}" {% if menu == 'relations' %} class="selected" {% endif %}>
                 <i class="fa fa-users"></i> <span>{% trans _('Relaciones') %}</span>
             </a>
+
+            <a href="{% exec user.get_uri 'profile' %}" {% if menu == 'profile' %} class="selected" {% endif %}>
+                <img src="{{ globals.base_static }}img/mnm/h9_eli.svg" alt="{% trans _('Perfil') %}" width="39" height="35" />
+                <span>{% trans _('Perfil') %}</span>
+            </a>
         </nav>
 
         <div class="contents-body">

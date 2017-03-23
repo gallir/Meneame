@@ -70,9 +70,6 @@ final class Tabs
     public static function optionsFromProfile($view)
     {
         switch ($view) {
-            case 'profile':
-                return self::optionsForProfileProfile();
-
             case 'friends':
                 return self::optionsForProfileFriends();
 

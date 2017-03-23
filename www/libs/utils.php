@@ -1485,12 +1485,12 @@ function print_oauth_icons($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('twitter')) {
-                $title = _('asociar la cuenta a Twitter, podrás autentificarte también con tu cuenta en Twitter');
-                $text = _('asociar a Twitter');
+                $title = _('Asociar la cuenta a Twitter, podrás autenticarte también con tu cuenta en Twitter');
+                $text = _('Asociar a Twitter');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Twitter');
-            $text = _('login con Twitter');
+            $title = _('Crea una cuenta o autentifícate desde Twitter');
+            $text = _('Login con Twitter');
         }
 
         if ($title) {
@@ -1505,12 +1505,12 @@ function print_oauth_icons($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('facebook')) {
-                $title = _('asociar la cuenta a Facebook, podrás autentificarte también con tu cuenta en Facebook');
-                $text = _('asociar a Facebook');
+                $title = _('Asociar la cuenta a Facebook, podrás autenticarte también con tu cuenta en Facebook');
+                $text = _('Asociar a Facebook');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Facebook');
-            $text = _('login con Facebook');
+            $title = _('Crea una cuenta o autentifícate desde Facebook');
+            $text = _('Login con Facebook');
         }
 
         if ($title) {
@@ -1525,12 +1525,12 @@ function print_oauth_icons($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('gplus')) {
-                $title = _('asociar la cuenta a Google+, podrás autentificarte también con tu cuenta en Google+');
-                $text = _('asociar a Google+');
+                $title = _('Asociar la cuenta a Google+, podrás autenticarte también con tu cuenta en Google+');
+                $text = _('Asociar a Google+');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Google+');
-            $text = _('login con Google+');
+            $title = _('Crea una cuenta o autentifícate desde Google+');
+            $text = _('Login con Google+');
         }
 
         if ($title) {
@@ -1556,12 +1556,12 @@ function print_oauth_icons_large($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('twitter')) {
-                $title = _('asociar la cuenta a Twitter, podrás autentificarte también con tu cuenta en Twitter');
-                $text = _('asociar a Twitter');
+                $title = _('Asociar la cuenta a Twitter, podrás autenticarte también con tu cuenta en Twitter');
+                $text = _('Asociar a Twitter');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Twitter');
-            $text = _('login con Twitter');
+            $title = _('Crea una cuenta o autentifícate desde Twitter');
+            $text = _('Login con Twitter');
         }
 
         if ($title) {
@@ -1580,12 +1580,12 @@ function print_oauth_icons_large($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('facebook')) {
-                $title = _('asociar la cuenta a Facebook, podrás autentificarte también con tu cuenta en Facebook');
-                $text = _('asociar a Facebook');
+                $title = _('Asociar la cuenta a Facebook, podrás autenticarte también con tu cuenta en Facebook');
+                $text = _('Asociar a Facebook');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Facebook');
-            $text = _('login con Facebook');
+            $title = _('Crea una cuenta o autentifícate desde Facebook');
+            $text = _('Login con Facebook');
         }
 
         if ($title) {
@@ -1604,12 +1604,12 @@ function print_oauth_icons_large($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('gplus')) {
-                $title = _('asociar la cuenta a Google+, podrás autentificarte también con tu cuenta en Google+');
-                $text = _('asociar a Google+');
+                $title = _('Asociar la cuenta a Google+, podrás autenticarte también con tu cuenta en Google+');
+                $text = _('Asociar a Google+');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Google+');
-            $text = _('login con Google+');
+            $title = _('Crea una cuenta o autentifícate desde Google+');
+            $text = _('Login con Google+');
         }
 
         if ($title) {

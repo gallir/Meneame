@@ -1,0 +1,186 @@
+{% if (strike && (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin')) %}
+<div class="alert alert-danger">
+    <h3 class="mb-20">{% trans _('Actualmente dispones de un %s aplicado') strike.type %}:</h3>
+
+    <p><strong>{% trans _('Motivo') %}:</strong> {{ strike.reason_message }}</p>
+    <p><strong>{% trans _('Karma anterior') %}:</strong> {{ strike.karma_old }}</p>
+    <p><strong>{% trans _('Karma actual') %}:</strong> {{ strike.karma_new }}</p>
+    <p><strong>{% trans _('Karma final') %}:</strong> {{ strike.karma_restore }}</p>
+    <p><strong>{% trans _('Finaliza') %}:</strong> +-{{ strike.expires_at }}</p>
+</div>
+{% endif %}
+
+<table class="table table-condensed">
+    {% if user.username %}
+
+    <tr>
+        <th class="nowrap">{% trans _('Usuario') %}</th>
+        <td>{{ user.username }}</td>
+    </tr>
+
+    {% if url %}
+    <tr>
+        <th class="nowrap">{% trans _('Sitio web') %}</th>
+        <td><a href="{{ url }}" {{ nofollow }}>{{ url }}</a></td>
+    </tr>
+    {% endif %}
+
+    {% if current_user.admin %}
+
+    <tr>
+        <th class="nowrap">{% trans _('Registro') %}</th>
+        <td>{{ user.username_register }}</td>
+    </tr>
+
+    {% if nclones %}
+    <tr>
+        <th class="nowrap">{% trans _('Clones') %}</th>
+        <td><a class="fancybox" href="{{ globals.base_url }}backend/ip_clones.php?id={{ user.id }}" title="{% trans _('Clones') %}">{{ nclones }}</a></td>
+    </tr>
+    {% endif %}
+
+    {% endif %}
+
+    {% if user.id == current_user.user_id OR current_user.admin %}
+
+    <tr>
+        <th class="nowrap">{% trans _('ID y Nivel') %}</th>
+        <td>{{ user.id }} / {{ user.level }}</td>
+    </tr>
+
+    {% endif %}
+
+    {% if user.names %}
+    <tr>
+        <th class="nowrap">{% trans _('Nombre') %}:</th>
+        <td>{{ user.names }}</td>
+    </tr>
+    {% endif %}
+
+    {% endif %}
+
+    {% if show_email %}
+    <tr>
+        <th class="nowrap">{% trans _('IM/Email') %}:</th>
+        <td> {{ user.public_info }}</td>
+    </tr>
+    {% endif %}
+
+    <tr>
+        <th class="nowrap">{% trans _('Desde') %}:</th>
+        <td>{% exec get_date_time user.date %}</td>
+    </tr>
+
+    {% if current_user.user_id == user.id OR current_user.user_level == 'god' %}
+    <tr>
+        <th class="nowrap">{% trans _('Email') %}:</th>
+        <td>
+            {{ user.email }}
+
+            {% if current_user.user_level == 'god' %}
+            (<em>{{ user->email_register }}</em>)
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+
+    {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
+    <tr>
+        <th class="nowrap">{% trans _('Clave API') %}:</th>
+        <td>
+            <a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{ user.id }}">{% trans _('Ver clave API') %}</a>
+            ({% trans _('no la divulgues') %})
+        </td>
+    </tr>
+
+    {% if user.adcode %}
+    <tr>
+        <th class="nowrap">{% trans _('Código AdSense') %}:</th>
+        <td>{{ user.adcode }}</td>
+    </tr>
+
+    <tr>
+        <th class="nowrap">{% trans _('Canal AdSense') %}:</th>
+        <td>{{ user.adchannel }}</td>
+    </tr>
+    {% endif %}
+
+    {% endif %}
+
+    <tr>
+        <th class="nowrap">{% trans _('Karma') %}:</th>
+        <td>
+            {{ user.karma }}
+
+            {% if (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin') && user.karma_log %}
+            (<a class="fancybox" href="{{ globals.base_url }}backend/get_karma_numbers.php?id={{ user.id }}">{% trans _('detalle del cálculo') %}</a>)
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <th class="nowrap">{% trans _('Ranking') %}:</th>
+        <td>#{% exec user.ranking %}</td>
+    </tr>
+
+    {% if user.stats %}
+
+    <tr>
+        <th class="nowrap">{% trans _('Noticias enviadas') %}:</th>
+        <td>{{ user.total_links }}</td>
+    </tr>
+
+    {% if entropy %}
+    <tr>
+        <th class="nowrap"><em>{% trans _('Entropí­a') %}</em>:</th>
+        <td>{{ entropy }}%</td>
+    </tr>
+    {% endif %}
+
+    <tr>
+        <th class="nowrap">{% trans _('Noticias publicadas') %}:</th>
+        <td>{{ user.published_links }} ({{ percent }}%)</td>
+    </tr>
+
+    <tr>
+        <th class="nowrap">{% trans _('Comentarios') %}:</th>
+        <td>{{ user.total_comments }}</td>
+    </tr>
+
+    <tr>
+        <th class="nowrap">{% trans _('Notas') %}:</th>
+        <td>{{ user.total_posts }}</td>
+    </tr>
+
+    <tr>
+        <th class="nowrap">{% trans _('Número de votos') %}:</th>
+        <td>{{ user.total_votes }}</td>
+    </tr>
+
+    {% endif %}
+
+    {% if user.id == current_user.user_id %}
+    <tr>
+        <th class="nowrap">{% trans _('IP actual') %}:</th>
+        <td><span class="label label-default">{{ globals.user_ip }}</span></td>
+    </tr>
+    {% endif %}
+
+    {% if addresses %}
+    <tr>
+        <th class="nowrap">{% trans _('Últimas direcciones IP') %}</th>
+
+        <td>
+            {% for address in addresses %}
+            <span class="label label-default">{{ address }}</span>&nbsp;
+            {% endfor %}
+        </td>
+    </tr>
+    {% endif %}
+</table>
+
+{% if user.id == current_user.user_id %}
+<div class="text-center">
+    {% exec print_oauth_icons _REQUEST.return as foo %}
+</div>
+{% endif %}

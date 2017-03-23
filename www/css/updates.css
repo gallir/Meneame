@@ -1619,6 +1619,10 @@ dl.list dd {
     padding: 0 0 0.5em 0;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 /** FIXES **/
 
 .news-body .box {
@@ -1861,6 +1865,11 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 
     .profile .contents-layout .contents-menu a span {
         display: none;
+    }
+
+    .profile .contents-layout .contents-menu a img {
+        width: 18px;
+        height: 16px;
     }
 }
 
