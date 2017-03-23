@@ -121,7 +121,24 @@ final class Tabs
 
             case 'subs_follow':
                 return self::optionsForProfileSubsFollow();
+
+            case 'notes':
+                return self::optionsForProfileNotes();
+
+            case 'notes_friends':
+                return self::optionsForProfileNotesFriends();
+
+            case 'notes_favorites':
+                return self::optionsForProfileNotesFavorites();
+
+            case 'notes_conversation':
+                return self::optionsForProfileNotesConversation();
+
+            case 'notes_votes':
+                return self::optionsForProfileNotesVotes();
         }
+
+        return array();
     }
 
     public static function renderForIndex($option, $tab_class)
@@ -601,5 +618,62 @@ final class Tabs
     public static function optionsForProfileSubsFollow()
     {
         return self::optionsForProfileSubs();
+    }
+
+    public static function renderForProfileNotes($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileNotes(), 0, '', $tab_class);
+    }
+
+    public static function optionsForProfileNotes()
+    {
+        global $current_user, $user, $globals;
+
+        return array(
+            'notes' => array(
+                'title' => _('Enviadas'),
+                'link' => get_user_uri($user->username, 'notes', $user->id),
+            ),
+
+            'notes_friends' => array(
+                'title' => _('Amigos'),
+                'link' => get_user_uri($user->username, 'notes_friends', $user->id),
+            ),
+
+            'notes_favorites' => array(
+                'title' => _('Favoritas'),
+                'link' => get_user_uri($user->username, 'notes_favorites', $user->id),
+            ),
+
+            'notes_conversation' => array(
+                'title' => _('Conversación'),
+                'link' => get_user_uri($user->username, 'notes_conversation', $user->id),
+            ),
+
+            'notes_votes' => array(
+                'title' => _('Votadas'),
+                'link' => get_user_uri($user->username, 'notes_votes', $user->id),
+            )
+        );
+    }
+
+    public static function optionsForProfileNotesFriends()
+    {
+        return self::optionsForProfileNotes();
+    }
+
+    public static function optionsForProfileNotesFavorites()
+    {
+        return self::optionsForProfileNotes();
+    }
+
+    public static function optionsForProfileNotesConversation()
+    {
+        return self::optionsForProfileNotes();
+    }
+
+    public static function optionsForProfileNotesVotes()
+    {
+        return self::optionsForProfileNotes();
     }
 }

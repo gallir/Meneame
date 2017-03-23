@@ -33,13 +33,13 @@ switch ($_GET['what']) {
         do_redirection(post_get_base_url('_priv'));
 
     case 'posts':
-        do_redirection(post_get_base_url($current_user->user_login).'/_conversation');
+        do_redirection($current_user->get_uri('notes_conversation'));
 
     case 'comments':
-        do_redirection(get_user_uri($current_user->user_login, 'conversation'));
+        do_redirection($current_user->get_uri('conversation'));
 
     case 'friends':
-        do_redirection(get_user_uri($current_user->user_login, 'friends_new'));
+        do_redirection($current_user->get_uri('friends_new'));
 
     case 'post':
         do_redirection($globals['scheme'].'//'.get_server_name().post_get_base_url($id));
@@ -51,7 +51,7 @@ switch ($_GET['what']) {
         do_redirection($globals['scheme'].'//'.get_server_name().$c->get_relative_individual_permalink());
 
     case 'favorites':
-        do_redirection(get_user_uri($current_user->user_login, 'favorites'));
+        do_redirection($current_user->get_uri('conversation'));
 }
 
 $l = Link::from_db($id, null, false);

@@ -116,11 +116,10 @@ switch ($view) {
         $menu = 'history';
         break;
 
-    case 'friends':
-    case 'friend_of':
-    case 'friends_new':
-    case 'ignored':
-        $menu = 'relations';
+    case 'subs':
+    case 'subs_follow':
+        $menu = 'subs';
+        $globals['noindex'] = false;
         break;
 
     case 'commented':
@@ -131,10 +130,19 @@ switch ($view) {
         $globals['search_options']['w'] = 'comments';
         break;
 
-    case 'subs':
-    case 'subs_follow':
-        $menu = 'subs';
-        $globals['noindex'] = false;
+    case 'notes':
+    case 'notes_friends':
+    case 'notes_favorites':
+    case 'notes_conversation':
+    case 'notes_votes':
+        $menu = 'notes';
+        break;
+
+    case 'friends':
+    case 'friend_of':
+    case 'friends_new':
+    case 'ignored':
+        $menu = 'relations';
         break;
 
     default:
@@ -174,7 +182,6 @@ $medals = $user->getMedals();
 Haanga::Load('user/header.html', compact('user', 'medals', 'menu', 'strike'));
 Haanga::Load('user/submenu.html', [
     'options' => ($options = Tabs::optionsFromProfile($view)),
-    'cols' => (int)(12 / count($options)),
     'view' => $view
 ]);
 

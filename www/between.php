@@ -76,7 +76,7 @@ if ($id1 > 0 && $id2 > 0) {
     $sorted = array();
     $rows = 0;
 
-    if (isset($_GET['id']) && !empty($_GET['id'])) {
+    if (!empty($_GET['id'])) {
         $sorted = explode(',', @gzuncompress(@base64_decode($_GET['id'])));
         $show_thread = true;
     } else {
@@ -133,6 +133,7 @@ if ($id1 > 0 && $id2 > 0) {
             case 'posts':
                 $obj = Post::from_db($id);
                 break;
+
             case 'comments':
                 $obj = Comment::from_db($id);
                 break;
@@ -149,7 +150,9 @@ if ($id1 > 0 && $id2 > 0) {
         }
 
         $obj->print_summary();
+
         echo "</div>\n";
+
         $thread[] = $id;
 
         if ($show_thread) {

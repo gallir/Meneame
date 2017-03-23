@@ -1093,7 +1093,7 @@ function post_reply(id, user) {
     var others = '';
     var regex = /get_post_url(?:\.php){0,1}\?id=([a-z0-9%_\.\-]+(\,\d+){0,1})/ig; /* TODO: delete later (?:\.php)*/
     var text = $('#pid-' + id).html();
-    var textarea = $('.notes .post-edit [name="post"]').last();
+    var textarea = $('.post-edit [name="post"]').last();
     var startSelection, endSelection;
 
     var myself = new RegExp('^' + user_login + '([\s,]|$)', 'i');

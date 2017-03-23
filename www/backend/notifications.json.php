@@ -46,15 +46,19 @@ function do_redirect($type)
             break;
 
         case 'posts':
-            $url = post_get_base_url($current_user->user_login).'/_conversation';
+            $url = $current_user->get_uri('notes_conversation');
             break;
 
         case 'comments':
-            $url = get_user_uri($current_user->user_login, 'conversation');
+            $url = $current_user->get_uri('conversation');
             break;
 
         case 'friends':
-            $url = get_user_uri($current_user->user_login, 'friends_new');
+            $url = $current_user->get_uri('friends_new');
+            break;
+
+        case 'favorites':
+            $url = $current_user->get_uri('favorites');
             break;
 
         default:

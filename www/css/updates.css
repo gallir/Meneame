@@ -1503,6 +1503,8 @@ ul.slick-dots li button {
 }
 
 .profile .contents-layout .contents-submenu {
+    display: flex;
+    justify-content: space-around;
     text-align: center;
     border-bottom: 1px solid #ffd3b7;
     padding-bottom: 10px;
@@ -1838,6 +1840,7 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 
     .profile .contents-layout {
         flex-flow: row wrap;
+        padding: 0;
     }
 
     .profile .contents-layout .contents-menu {
@@ -1862,12 +1865,13 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 }
 
 @media (max-width: 568px) {
-    .profile .contents-layout {
-        padding: 0;
-    }
-
     .profile .contents-layout .contents-menu a i {
         font-size: 18px;
+    }
+
+    .profile .contents-layout .contents-submenu,
+    .profile .contents-layout .contents-submenu a {
+        display: block;
     }
 
     .profile .contents-layout .contents-body {
