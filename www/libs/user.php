@@ -332,7 +332,7 @@ class User
         }
 
         $items = array(
-            new MenuOption(_('perfil'), $user->get_uri(), $id, _('Información de usuario')),
+            new MenuOption(_('perfil'), $user->get_uri('profile'), $id, _('Información de usuario')),
             new MenuOption(_('historias'), $user->get_uri('history'), $id, _('Información de envíos')),
             new MenuOption(_('subs'), $user->get_uri('subs'), $id, _('Sub menéames')),
             new MenuOption(_('comentarios'), $user->get_uri('commented'), $id, _('Información de comentarios')),
