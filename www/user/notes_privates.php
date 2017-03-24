@@ -10,7 +10,7 @@ $globals['extra_js'][] = 'jquery.user_autocomplete.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';
 
 echo '<div class="clearfix mb-20">';
-echo '<a href="javascript:priv_new(0);" class="btn btn-default pull-right">+ '._('Nuevo privado').'</a>';
+echo '<a href="javascript:priv_new(0);" class="btn btn-mnm btn-inverted pull-right">+ '._('Nuevo privado').'</a>';
 echo '</div>';
 
 $count = $db->get_var('

@@ -28,7 +28,7 @@
                         <label for="username" class="title">{% trans _('Usuario') %}</label>
                         <input type="text" id="username" name="username" value="{{ user.username }}" class="form-control" required />
 
-                        <button type="button" id="check-username" class="btn btn-default">
+                        <button type="button" id="check-username" class="btn btn-default btn-inline">
                             {% trans _('Comprobar') %}
                         </button>
 
@@ -54,7 +54,7 @@
                         <label for="email" class="title">{% trans _('Correo electrónico') %}</label>
                         <input type="text" name="email" id="email" value="{{ user.email }}" class="form-control" required />
 
-                        <button type="button" id="check-email" class="btn btn-default">
+                        <button type="button" id="check-email" class="btn btn-default btn-inline">
                             {% trans _('Comprobar') %}
                         </button>
 
@@ -231,14 +231,14 @@
             </div>
             {% endif %}
 
-            <footer class="footer">
+            <footer class="clearfix footer">
                 <button type="submit" class="btn btn-mnm">{% trans _('Actualizar perfil') %}</button>
-                <a href="{{ user.get_uri }}" class="btn btn-mnm btn-white pull-right">{% trans _('Cancelar edición') %}</a>
+                <a href="{{ user.get_uri }}" class="btn btn-mnm btn-inverted pull-right">{% trans _('Cancelar edición') %}</a>
             </footer>
         </form>
 
         {% if user.id == current_user.user_id %}
-        <form class="form form-edit" method="post" autocomplete="off">
+        <form class="form form-edit mt-20" method="post" autocomplete="off">
             <input type="hidden" name="user_id" value="{{ user.id }}" />
             <input type="hidden" name="form_hash" value="{{ form.hash }}" />
             <input type="hidden" name="disabledme" value="1" />

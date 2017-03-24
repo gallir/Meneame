@@ -2,20 +2,22 @@
     <div class="profile-header">
         <div class="profile-header-avatar">
             <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
-
-            {% if user.id == current_user.user_id OR current_user.user_level == "god" %}
-            <a href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}" class="btn btn-mnm btn-white btn-xs btn-block">{% trans _('Editar') %}</a>
-            {% endif %}
-
-            {% if user.id == current_user.user_id %}
-             <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{% trans _('cerrar sesión') %}" class="btn btn-mnm btn-white btn-xs btn-block">{% trans _('Desconectar') %}</a>
-            {% endif %}
         </div>
 
         <div class="profile-header-info">
             <h1>{{ user.username }}</h1>
             <p class="info">{% exec text_to_html user.bio %}</p>
             <p><strong>{% trans _('En menéame desde') %} {% exec get_human_date user.date "%B de %Y" %}</strong>
+
+            {% if user.id == current_user.user_id %}
+            <div class="mt-20">
+                {% if user.id == current_user.user_id OR current_user.user_level == "god" %}
+                <a href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}" class="btn btn-mnm btn-inverted">{% trans _('Editar y configurar') %}</a>
+                {% endif %}
+
+                <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{% trans _('Cerrar sesión') %}" class="btn btn-mnm btn-inverted">{% trans _('Desconectar') %}</a>
+            </div>
+            {% endif %}
         </div>
 
         <div class="profile-header-stats">
@@ -54,12 +56,10 @@
             </div>
 
             {% if medals %}
-            <div class="row">
-                <div class="profile-header-medals">
-                    {% for medal in medals %}
-                    <img src="{{ globals.base_static }}img/common/medal_{{ medal.type }}_large.png" width="41" height="42" title="{{ medal.title }}" />
-                    {% endfor %}
-                </div>
+            <div class="profile-header-medals">
+                {% for medal in medals %}
+                <img src="{{ globals.base_static }}img/common/medal_{{ medal.type }}_large.png" width="41" height="42" title="{{ medal.title }}" />
+                {% endfor %}
             </div>
             {% endif %}
         </div>

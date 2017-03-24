@@ -17,9 +17,6 @@ body {
     background-color: #fff;
     margin: 0px;
     padding: 0px;
-    text-rendering: optimizespeed;
-    font-variant-ligatures: no-common-ligatures;
-    font-feature-settings: 'liga' 0, 'clig' 0;
 }
 
 .header-top-wrapper.fixed {

@@ -174,13 +174,18 @@
 
             {% if link.poll %}
 
+            {% set poll = link.poll %}
+
+            {% if !poll.id OR !poll.votes %}
+
             <div class="pull-right">
                 <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
                     <i class="fa fa-bar-chart"></i>
                 </button>
             </div>
 
-            {% set poll = link.poll %}
+            {% endif %}
+
             {% include 'poll_form.html' %}
 
             {% endif %}
