@@ -138,13 +138,13 @@
                     </td>
                     {#
                     <td class="text-center">
-                        <a target="_blank" href="{{ globals.base_url }}user/{{ report.author_user_login }}/{{ report.author_id }}" class="tooltip u:{{ report.author_id }}" style="overflow: hidden;white-space: nowrap;">
+                        <a target="_blank" href="{{ globals.base_url }}user/{{ report.author_user_login }}" class="tooltip u:{{ report.author_id }}" style="overflow: hidden;white-space: nowrap;">
                             {{ report.author_user_login }}
                         </a>
                     </td>
                     #}
                     <td class="text-center" rowspan="{{ row.num_lines }}">
-                        <a target="_blank" href="{{ globals.base_url }}user/{{ report.author_user_login }}/{{ report.author_id }}" class="tooltip u:{{ report.author_id }}" style="overflow: hidden;white-space: nowrap;">
+                        <a target="_blank" href="{{ globals.base_url }}user/{{ report.author_user_login }}" class="tooltip u:{{ report.author_id }}" style="overflow: hidden;white-space: nowrap;">
                             {{ report.author_user_login }}
                         </a>
                     </td>

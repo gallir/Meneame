@@ -63,7 +63,7 @@
                 <tr>
                     <td>
                         {% if log.user_login %}
-                        <a href="{{ globals.base_url }}user/{{ log.user_login }}/{{ log.user_id }}" class="tooltip u:{{ log.user_id }}" style="overflow: hidden; white-space: nowrap;" target="_blank">
+                        <a href="{{ globals.base_url }}user/{{ log.user_login }}" class="tooltip u:{{ log.user_id }}" style="overflow: hidden; white-space: nowrap;" target="_blank">
                             {{ log.user_login }}
                         </a>
                         {% endif %}
