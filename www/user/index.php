@@ -32,11 +32,11 @@ $url = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
 
 array_shift($url);
 
-$_REQUEST['login'] = $login = clean_input_string($url[0]);
-$_REQUEST['view'] = empty($url[1]) ? 'history' : $url[1];
+$_REQUEST['login'] = clean_input_string(array_shift($url));
+$_REQUEST['view'] = array_shift($url) ?: 'history';
 
 $user = new User();
-$user->username = $login;
+$user->username = $_REQUEST['login'];
 
 if (!$user->read()) {
     do_error(_('usuario inexistente'), 404);

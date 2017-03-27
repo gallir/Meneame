@@ -35,7 +35,7 @@ if ($current_user->user_id == $user->id || ($current_user->user_level === 'god' 
             $ip_pattern = preg_replace('/[\.\:][0-9a-f]+$/i', '', inet_dtop($dbaddress->ip));
 
             if (!in_array($ip_pattern, $addresses)) {
-                $addresses[] = $ip_pattern;
+                $addresses[] = $ip_pattern.'.XXX';
             }
         }
     }
