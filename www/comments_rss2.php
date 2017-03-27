@@ -9,9 +9,9 @@
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
-include('config.php');
+require_once __DIR__.'/config.php';
 
-include_once(mnminclude.'ban.php');
+require_once mnminclude.'ban.php';
 if (check_ban_proxy()) {
     die;
 }
@@ -45,7 +45,7 @@ if ($site_info->sub && $site_info->owner > 0) {
 
 $individual_user = false;
 if ($_REQUEST['q']) {
-    include(mnminclude.'search.php');
+    require_once mnminclude.'search.php';
     if ($if_modified) {
         $_REQUEST['t'] = $if_modified;
     }

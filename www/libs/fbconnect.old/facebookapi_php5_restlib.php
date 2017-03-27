@@ -32,7 +32,7 @@
 // +---------------------------------------------------------------------------+
 //
 
-include_once 'jsonwrapper/jsonwrapper.php';
+require_once 'jsonwrapper/jsonwrapper.php';
 
 class FacebookRestClient
 {

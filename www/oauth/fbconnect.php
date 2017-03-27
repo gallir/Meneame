@@ -25,7 +25,7 @@ $base = dirname(dirname($_SERVER["SCRIPT_FILENAME"])); // Get parent dir that wo
 include("$base/config.php");
 
 include('base.php');
-include_once(mnminclude.'facebook/facebook.php');
+require_once mnminclude.'facebook/facebook.php';
 
 
 class FBConnect extends OAuthBase
@@ -47,7 +47,7 @@ class FBConnect extends OAuthBase
                     'secret' => $globals['facebook_secret'],
                     ));
         $this->user = $this->facebook->getUser();
-        
+
         parent::__construct();
     }
 

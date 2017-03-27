@@ -20,8 +20,8 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include_once('config.php');
-include(mnminclude.'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 
 $globals['cache-control'][] = 'max-age=3';
 
@@ -631,7 +631,7 @@ function print_votes_raw($link)
 /* Get a list of the answers and their questions */
 function get_qanda($link)
 {
-    include_once(mnminclude.'commenttree.php');
+    require_once mnminclude.'commenttree.php';
 
     global $db;
 

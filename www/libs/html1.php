@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 if (is_file(mnminclude . 'ads-credits-functions.php')) {
-    include_once mnminclude . 'ads-credits-functions.php';
+    require_once mnminclude . 'ads-credits-functions.php';
 }
 
 // Warning, it redirects to the content of the variable

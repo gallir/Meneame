@@ -9,7 +9,7 @@
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
-include('config.php');
+require_once __DIR__.'/config.php';
 
 if (!empty($_REQUEST['rows'])) {
     $rows = intval($_REQUEST['rows']);
@@ -19,7 +19,7 @@ if (!empty($_REQUEST['rows'])) {
 } else {
     $rows = 100;
 }
-    
+
 $if_modified = get_if_modified();
 
 // All comments

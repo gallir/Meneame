@@ -7,7 +7,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 if (! defined('mnmpath')) {
-    include('../config.php');
+    require_once __DIR__.'/../config.php';
 }
 
 //$globals['allowed_gsm_clients'] must be defined;

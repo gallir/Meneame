@@ -20,8 +20,8 @@
 //	  http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include_once('config.php');
-include(mnminclude.'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 
 $page_size = $globals['page_size'] * 2;
 

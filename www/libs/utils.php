@@ -880,7 +880,7 @@ function normalize_smileys($str)
 {
     global $globals;
 
-    include_once(mnminclude.'twemojis.php');
+    require_once mnminclude.'twemojis.php';
 
     $str = Twemojis::normalize($str);
 

@@ -10,7 +10,7 @@ if (empty($_GET['url'])) {
     die;
 }
 
-include('../config.php');
+require_once __DIR__.'/../config.php';
 
 $mnm_image = $globals['base_static']."img/mnm/api/mnm-over-01.png";
 header('Content-Type: text/html; charset=UTF-8');

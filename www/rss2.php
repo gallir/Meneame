@@ -9,11 +9,11 @@
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
-include('config.php');
+require_once __DIR__.'/config.php';
 
-include(mnminclude.'geo.php');
+require_once mnminclude.'geo.php';
 
-include_once(mnminclude.'ban.php');
+require_once mnminclude.'ban.php';
 if (check_ban_proxy()) {
 	die;
 }
@@ -120,7 +120,7 @@ if(!empty($_REQUEST['time'])) {
 		// By default it searches on all
 		if($_REQUEST['q']) {
 			$status = 'all';
-			include(mnminclude.'search.php');
+			require_once mnminclude.'search.php';
 			$search_ids = do_search(true);
 			if ($search_ids['ids']) {
 				$search = ' link_id in (' . implode(',', $search_ids['ids']) . ')';

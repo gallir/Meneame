@@ -6,8 +6,8 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
-include(mnminclude.'avatars.php');
+require_once __DIR__.'/../config.php';
+require_once mnminclude.'avatars.php';
 
 //header('Content-Type: application/json; charset=UTF-8');
 header('Content-Type: text/plain; charset=UTF-8'); // It's being read in a iframe son can't be a json to avoid problems

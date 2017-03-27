@@ -2,7 +2,7 @@
 $path = $globals['path'];
 $globals['submnm'] = preg_replace('/[^\p{L}\d_]/u', ':', $path[1]);
 
-include_once 'config.php';
+require_once __DIR__.'/config.php';
 
 $forbidden_routes = array('m', 'user', 'legal', 'notame', 'mobile', 'register', 'login', 'trends');
 
@@ -24,7 +24,7 @@ $globals['path'] = array_slice($path, 2);
 $globals['base_url'] .= $path[0] . '/' . $path[1] . '/';
 
 if (empty($routes[$path[2]])) {
-    include './story.php';
+    require_once __DIR__.'/story.php';
     return;
 }
 

@@ -190,7 +190,7 @@ function __autoload($class)
     }
 
     if (is_file($class.'.php')) {
-        include_once($class.'.php');
+        require_once($class.'.php');
     }
 }
 

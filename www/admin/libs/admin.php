@@ -11,8 +11,7 @@ $globals['extra_js'][] = '../admin/js/admin.js';
 $globals['ads'] = false;
 
 if (!$current_user->admin) {
-    Haanga::Load('admin/no_access.html');
-    die(do_footer());
+    die(Haanga::Load('admin/no_access.html'));
 }
 
 function do_admin_tabs($tab_selected = false)

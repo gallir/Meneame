@@ -6,9 +6,9 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
-include(mnminclude.'html1.php');
-include(mnminclude.'geo.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
+require_once mnminclude.'geo.php';
 
 geo_init('onLoad', false, 2);
 array_push($globals['extra_js'], 'markermanager.js');

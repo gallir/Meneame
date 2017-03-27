@@ -10,7 +10,7 @@
 //      Must add printing the threads with CommentTree and split the
 //      page with only one post.
 
-include_once __DIR__.'/../config.php';
+require_once __DIR__.'/../config.php';
 include __DIR__.'/common.php';
 
 $argv = $globals['path'];

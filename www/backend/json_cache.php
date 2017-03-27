@@ -1,5 +1,5 @@
 <?php
-include_once('../config.php');
+require_once __DIR__ . '/../config.php';
 
 // Designed originally to download and cache Twitter oembed
 

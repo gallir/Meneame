@@ -7,7 +7,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 // The code below was made by Beldar <beldar at gmail dot com>
-include_once('../config.php');
+require_once __DIR__ . '/../config.php';
 header('Content-Type: text/html; charset=utf-8');
 
 if (empty($_GET['id'])) {

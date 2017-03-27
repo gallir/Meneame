@@ -8,9 +8,9 @@
 
 $globals['skip_check_ip_noaccess'] = true;
 
-include('../config.php');
-include(mnminclude.'html1.php');
-include('libs/admin.php');
+require_once __DIR__.'/../config.php';
+require_once mnminclude.'html1.php';
+require_once __DIR__.'/libs/admin.php';
 
 if (!empty($_REQUEST['tab'])) {
     $selected_tab = clean_input_string($_REQUEST['tab']);

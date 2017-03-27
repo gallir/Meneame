@@ -5,7 +5,7 @@
 // You can get copies of the licenses here:
 //		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-include_once('../config.php');
+require_once __DIR__ . '/../config.php';
 
 $type = $db->escape($_GET['type']);
 $id = intval($_GET['id']);
