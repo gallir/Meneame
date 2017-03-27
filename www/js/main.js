@@ -2134,7 +2134,7 @@ var fancyBox = new function() {
         }
 
         if (current_user_admin) {
-            $e.append('<div class="admin"><a href=' + base_url + 'admin/bans.php>Administración</a></div>');
+            $e.append('<div class="admin"><a href=' + base_url + 'admin/logs.php>Administración</a></div>');
         }
 
         $e.show().css({
