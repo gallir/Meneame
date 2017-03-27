@@ -834,7 +834,6 @@ class User
 
         $uri = $globals['base_url_general'].'user/'.htmlspecialchars($this->username);
         $uri .= $view ? ('/'.$view) : '';
-        $uri .= '/'.$this->id;
 
         return $uri;
     }

@@ -340,7 +340,6 @@ class UserAuth
 
         $uri = $globals['base_url_general'].'user/'.htmlspecialchars($this->user_login);
         $uri .= $view ? ('/'.$view) : '';
-        $uri .= '/'.$this->user_id;
 
         return $uri;
     }

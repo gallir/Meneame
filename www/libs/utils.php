@@ -581,29 +581,19 @@ function check_form_auth_ip()
     return false;
 }
 
-function get_user_uri($user, $view = '', $id = '')
+function get_user_uri($user, $view = '')
 {
     global $globals;
 
     $uri = $globals['base_url_general'].'user/'.htmlspecialchars($user);
     $uri .= $view ? ('/'.$view) : '';
-    $uri .= $id ? ('/'.$id) : '';
 
     return $uri;
 }
 
 function get_user_uri_by_uid($user, $view = '')
 {
-    global $globals;
-
-    $uid = guess_user_id($user);
-
-    // User does not exist, ensure it will give error later
-    if ($uid == 0) {
-        $uid = -1;
-    }
-
-    return get_user_uri($user, $view).'/'.$uid;
+    return get_user_uri($user, $view);
 }
 
 function post_get_base_url($option = '', $give_base = true)

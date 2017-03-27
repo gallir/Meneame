@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called 'COPYING'.
 
-include mnminclude.'utils.php';
+require_once mnminclude.'utils.php';
 
 global $globals;
 
