@@ -2,7 +2,7 @@
 $routes = array(
     ''                       => 'index.php',
     'story'                  => 'story.php',
-    'submit'                 => 'submit.php',
+    'submit'                 => 'submit/index.php',
     'subedit'                => 'subedit.php',
     'subs'                   => 'subs.php',
     'editlink'               => 'editlink.php',

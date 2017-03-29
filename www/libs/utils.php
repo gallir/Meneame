@@ -695,7 +695,7 @@ function check_security_key($key)
         return false;
     }
 
-    return $key == get_security_key($time_key[0]);
+    return ($key === get_security_key($time_key[0]));
 }
 
 function do_error($mess = false, $error = false, $send_status = 'Error')

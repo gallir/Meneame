@@ -1,10 +1,10 @@
-<section class="section section-large profile">
-    <div class="profile-header">
-        <div class="profile-header-avatar">
+<section class="section section-large section-profile">
+    <div class="section-profile-header">
+        <div class="section-profile-header-avatar">
             <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
         </div>
 
-        <div class="profile-header-info">
+        <div class="section-profile-header-info">
             <h1>{{ user.username }}</h1>
             <p class="info">{% exec text_to_html user.bio %}</p>
             <p><strong>{% trans _('En menéame desde') %} {% exec get_human_date user.date "%B de %Y" %}</strong>
@@ -20,7 +20,7 @@
             {% endif %}
         </div>
 
-        <div class="profile-header-stats">
+        <div class="section-profile-header-stats">
             <div class="row">
                 <div class="col-xs-4">
                     <strong>{% exec get_human_number user.karma %}</strong>
@@ -56,7 +56,7 @@
             </div>
 
             {% if medals %}
-            <div class="profile-header-medals">
+            <div class="section-profile-header-medals">
                 {% for medal in medals %}
                 <img src="{{ globals.base_static }}img/common/medal_{{ medal.type }}_large.png" width="41" height="42" title="{{ medal.title }}" />
                 {% endfor %}
@@ -64,7 +64,7 @@
             {% endif %}
         </div>
 
-        <div class="profile-header-banner">
+        <div class="section-profile-header-banner">
             <img src="http://lorempixel.com/300/250/" width="300" height="250" class="img-responsive" />
         </div>
     </div>

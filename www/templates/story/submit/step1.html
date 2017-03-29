@@ -1,0 +1,34 @@
+<section class="section section-medium section-story-submit">
+    <div class="section-story-submit-step1-layout">
+        <div class="section-story-submit-step1-link">
+            <form action="{{ globals.base_url }}submit/step2.php" method="post" class="form">
+                <input type="hidden" name="key" value="{{ key }}" />
+                <input type="hidden" name="randkey" value="{{ randkey }}" />
+
+                <h1>{% trans _('Comparte un artículo') %}</h1>
+                <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
+
+                <div class="form-group form-group-highlight mt-20">
+                    <input type="url" name="url" class="form-control" placeholder="{% trans _('Pega aquí la URL del artículo que quieres compartir') %}">
+                </div>
+
+                <div class="form-group mt-20">
+                    <button type="submit" class="btn btn-mnm btn-lg">{% trans _('Enviar') %}</button>
+                </div>
+            </form>
+        </div>
+
+        {% if !site_properties.no_link %}
+        <div class="section-story-submit-step1-separator"><span>0</span></div>
+
+        <div class="section-story-submit-step1-article">
+            <h1>{% trans _('Escribe tu artículo') %}</h1>
+            <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
+
+            <a href="{{ globals.base_url }}submit/article.php" class="btn btn-mnm btn-lg btn-inverted mt-20">
+                {% trans _('Empezar a escribir') %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
