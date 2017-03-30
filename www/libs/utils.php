@@ -457,10 +457,10 @@ function get_date_time($time)
 
     if (abs($globals['now'] - $time) < 72000) {
         // Difference is less than 20 hours
-        return date(' H:i T', $time);
+        return date('H:i T', $time);
     }
 
-    return date(' d-m-Y H:i T', $time);
+    return date('d-m-Y H:i T', $time);
 }
 
 function get_human_number($number)

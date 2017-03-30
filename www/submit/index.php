@@ -6,15 +6,26 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/../config.php';
+require_once mnminclude . 'html1.php';
 
-do_header(_('Enviar historia') . ' 1/3', _('Enviar historia'));
+$globals['ads'] = false;
 
-Haanga::Load('story/submit/step1.html', array(
-    'randkey' => rand(10000, 10000000),
-    'key' => get_security_key(),
-    'url' => (!empty($_GET['url']) ? clean_input_url($_GET['url']) : null),
-    'site_properties' => $site_properties
-));
+force_authentication();
+
+if (!SitesMgr::can_send()) {
+    die(header('Location: '.$globals['base_url']));
+}
+
+$site = SitesMgr::get_info();
+$site_properties = SitesMgr::get_extended_properties();
+
+require __DIR__ . '/helpers.php';
+
+$warning = $error = array();
+$link = new Link;
+$validator = new LinkValidator($link);
+
+require __DIR__.'/step-'.getStep().'.php';
 
 do_footer();

@@ -1,19 +1,13 @@
-<section class="section section-large text-center">
-    <h1>{{ title }}</h1>
+{% if error %}
+<div class="alert alert-danger mt-20">
+    <p><strong>{{ error.title }}</strong></p>
+    <p>{{ error.info }}</p>
+</div>
+{% endif %}
 
-    <div class="container container-small">
-        <hr />
-
-        <div class="row">
-            <div class="col-xs-3">
-                <i class="result-final-icon result-final-icon-error fa fa-times"></i>
-            </div>
-
-            <div class="col-xs-9 text-left">
-                <p class="text-large">{{ info }}</p>
-            </div>
-        </div>
-
-        <a href="{{ globals.base_url }}submit" class="btn btn-mnm btn-lg btn-block">{% trans _('Volver al formulario') %}</a>
-    </div>
-</section>
+{% if warning %}
+<div class="alert alert-warning mt-20">
+    <p><strong>{{ warning.title }}</strong></p>
+    <p>{{ warning.info }}</p>
+</div>
+{% endif %}

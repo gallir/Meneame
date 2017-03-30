@@ -151,6 +151,7 @@ function __autoload($class)
         'RGDB' => 'rgdb.php',
         'LCPBase' => 'LCPBase.php',
         'Link' => 'link.php',
+        'LinkValidator' => 'link_validator.php',
         'Comment' => 'comment.php',
         'Vote' => 'votes.php',
         'Annotation' => 'annotation.php',
@@ -243,8 +244,6 @@ Haanga::configure($config);
 
 function __($text)
 {
-    $text = htmlentities($text, ENT_QUOTES, 'UTF-8', false);
-
     if (func_num_args() === 1) {
         return $text;
     }

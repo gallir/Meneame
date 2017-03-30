@@ -1,15 +1,18 @@
 <section class="section section-medium section-story-submit">
     <div class="section-story-submit-step1-layout">
         <div class="section-story-submit-step1-link">
-            <form action="{{ globals.base_url }}submit/step2.php" method="post" class="form">
-                <input type="hidden" name="key" value="{{ key }}" />
-                <input type="hidden" name="randkey" value="{{ randkey }}" />
+            <form method="post" class="form">
+                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+                <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+                <input type="hidden" name="step" value="1" />
 
                 <h1>{% trans _('Comparte un artículo') %}</h1>
                 <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
 
+                {% include 'story/submit/error.html' %}
+
                 <div class="form-group form-group-highlight mt-20">
-                    <input type="url" name="url" class="form-control" placeholder="{% trans _('Pega aquí la URL del artículo que quieres compartir') %}">
+                    <input type="url" name="url" value="{{ link.url }}" class="form-control" placeholder="{% trans _('Pega aquí la URL del artículo que quieres compartir') %}" required />
                 </div>
 
                 <div class="form-group mt-20">

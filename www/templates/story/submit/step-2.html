@@ -1,61 +1,45 @@
-{% if link.is_new %}
-
 <div class="genericform">
-    <form action="submit" method="post" id="thisform" name="thisform">
-        <input type="hidden" name="url" id="url" value="{{ link.url | escape }}" />
-        <input type="hidden" name="phase" value="2" />
-
-        {% if link.url %}
-        <fieldset>
-            <legend><span class="sign">{% trans _('información del enlace') %}</span></legend>
-
-            <p class="genericformtxt">
-                <strong>{{ link.url_title }}</strong><br/>
-                {{ link.url | escape }}
-            </p>
-        </fieldset>
-        {% endif %}
-
-{% else %}
-
-<h2>{% trans _('editar noticia') %}</h2>
-
-<div class="genericform">
-    <form action="{% get_url 'submit?step=2&amp;id=' link.id '&amp;user=' current_user.user_id %}" method="post" id="thisform" name="thisform">
-        <input type="hidden" name="phase" value="1" />
-
-{% endif %}
-
-        <input type="hidden" name="key" value="{{ link.key }}" />
+    <form method="post" id="thisform" name="thisform">
+        <input type="hidden" name="key" value="{% exec get_security_key %}" />
         <input type="hidden" name="randkey" value="{{ link.randkey }}" />
         <input type="hidden" name="timestamp" value="{{ globals.now }}" />
         <input type="hidden" name="id" value="{{ link.id }}" />
+        <input type="hidden" name="step" value="2" />
 
         <fieldset>
-            <legend><span class="sign">{% trans _('detalles de la noticia') %}</span></legend>
+            <legend><span class="sign">{% trans _('Información del enlace') %}</span></legend>
 
-            {% if not link.is_new && link.url && (current_user.admin OR current_user.user_level == "blogger") %}
-            <label for="url" accesskey="1">{% trans _('url de la noticia') %}:</label>
+            <p class="genericformtxt">
+                <strong>{{ link.url_title }}</strong>
+                <br/>{{ link.url | escape }}
+            </p>
+        </fieldset>
+
+        {% include 'story/submit/error.html' %}
+
+        <fieldset>
+            <legend><span class="sign">{% trans _('Detalles de la noticia') %}</span></legend>
+
+            {% if link.change_url %}
+            <label for="url" accesskey="1">{% trans _('URL de la noticia') %}:</label>
 
             <p>
-                <span class="note">{% trans _('url de la noticia') %}</span>
-                <br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" style="width:100%"/>
+                <span class="note">{% trans _('URL de la noticia') %}</span>
+                <br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" class="form-control" required />
             </p>
             {% endif %}
 
-            <label for="title" accesskey="2">{% trans _('título de la noticia') %}:</label>
+            <label for="title" accesskey="2">{% trans _('Título de la noticia') %}:</label>
 
             <p>
-                <span class="note">{% trans _('título de la noticia. máximo: 120 caracteres') %}</span>
+                <span class="note">{% trans _('Máximo: 120 caracteres') %}</span>
 
                 {% if link.url %}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {% include 'link/content_type_buttons.html' %}
                 {% endif %}
 
-                {% if not link.is_new
-                    && (link.votes > 0 && (link.status != 'published' OR current_user.user_level == 'god' OR link.is_sub_owner)
-                    && (( not link.discarded && current_user.user_id == link.author) OR current_user.admin OR link.is_sub_owner)) %}
+                {% if link.change_status %}
 
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <select name="status">
@@ -98,10 +82,10 @@
                 <input type="text" id="title" name="title" value="{{ link.title }}" maxlength="120" class="form-control" required />
             </p>
 
-            <label for="tags" accesskey="3">{% trans _('etiquetas') %}:</label>
+            <label for="tags" accesskey="3">{% trans _('Etiquetas') %}:</label>
 
             <p>
-                <span class="note"><strong>{% trans _('pocas palabras, separadas por «,»') %}</strong></span>
+                <span class="note"><strong>{% trans _('Pocas palabras, separadas por «,»') %}</strong></span>
                 <br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" class="form-control" maxlength="70" required />
             </p>
 
@@ -110,10 +94,10 @@
             {% include 'simpleformat_buttons.html' %}
 
             <p>
-                <label for="bodytext" accesskey="4">{% trans _('descripción de la noticia') %}:</label><br />
+                <label for="bodytext" accesskey="4">{% trans _('Descripción de la noticia') %}:</label><br />
 
                 <span class="note">
-                    <strong>{% trans _('describe con fidelidad el contenido del enlace') %}</strong>
+                    <strong>{% trans _('Describe con fidelidad el contenido del enlace') %}</strong>
                     ({{ site_properties.intro_min_len }} - {{ site_properties.intro_max_len }})
                 </span>
 
@@ -146,7 +130,7 @@
 
             {% if link.trackback %}
             <p>
-                <label for="trackback">{% trans _('trackback') %}:</label><br />
+                <label for="trackback">{% trans _('Trackback') %}:</label><br />
                 <span class="note">{{ link.trackback }}</span>
                 <input type="hidden" name="trackback" id="trackback" value="{{ link.trackback }}"/>
             </p>
@@ -156,45 +140,27 @@
 
             {% if link.thumb_url OR link.media_size > 0 %}
 
-            <label>{% trans _('eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
+            <label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
 
             {% else %}
 
             {% if link.url %}
-            <label>{% trans _('obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
+            <label>{% trans _('Obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
             {% endif %}
 
             <label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:60%" /></label><br/>
 
             {% endif %}
 
-            <label>{% trans _('actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
-
-            {% endif %}
-
-            {% if link.poll %}
-
-            {% set poll = link.poll %}
-
-            {% if !poll.id OR !poll.votes %}
-
-            <div class="pull-right">
-                <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
-                    <i class="fa fa-bar-chart"></i>
-                </button>
-            </div>
-
-            {% endif %}
-
-            {% include 'poll_form.html' %}
+            <label>{% trans _('Actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
 
             {% endif %}
 
             {% if link.is_new %}
-            <input class="button" type="button" onclick="window.history.go(-1)" value="&#171; {% trans _('retroceder') %}" />&nbsp;&nbsp;
-            <input class="button" type="submit" value="{% trans _('continuar') %} &#187;" />
+            <input class="button" type="button" onclick="window.location = '{{ globals.base_url }}';" value="{% trans _('Cancelar') %}" />&nbsp;&nbsp;
+            <input class="button" type="submit" value="{% trans _('Continuar') %} &#187;" />
             {% else %}
-            <input class="button" type="submit" value="{% trans _('guardar') %} &#187;" />
+            <input class="button" type="submit" value="{% trans _('Guardar') %} &#187;" />
             {% endif %}
 
             {% if site_properties.allow_images %}
@@ -212,7 +178,7 @@
             <script type="text/javascript">
             addPostCode( function () {
                 $('#thisform').droparea({maxsize: {{ globals.media_max_size }} });
-                $("#fileInput").nicefileinput({ title: 'agregar imagen' });
+                $("#fileInput").nicefileinput({ title: 'Agregar imagen' });
             });
             </script>
 

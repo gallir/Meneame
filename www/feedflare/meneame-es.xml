@@ -5,6 +5,6 @@
 	</Catalog>
 	<FeedFlare>
 		<Text>enviar a meneame.net</Text>
-		<Link href="http://meneame.net/submit.php?url=${link}"/>
+		<Link href="http://meneame.net/submit?url=${link}"/>
 	</FeedFlare>
 </FeedFlareUnit>
