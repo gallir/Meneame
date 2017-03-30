@@ -78,15 +78,6 @@ class LinkValidator
         return $this;
     }
 
-    public function checkDiscard()
-    {
-        if ($this->link->status !== 'discard') {
-            $this->setError(__('El envío ya está en cola (%s).', $this->link->status));
-        }
-
-        return $this;
-    }
-
     public function checkBasicData()
     {
         if (empty($this->link->title)) {

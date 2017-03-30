@@ -26,6 +26,17 @@ $warning = $error = array();
 $link = new Link;
 $validator = new LinkValidator($link);
 
-require __DIR__.'/step-'.getStep().'.php';
+if (!empty($_REQUEST['id'])) {
+    $link = getLinkByRequestId($link, $_REQUEST);
+}
+
+$step = getStep();
+$type = empty($_POST['type']) ? $link->content_type : $_POST['type'];
+
+if ($type === 'article') {
+    require __DIR__.'/article-'.$step.'.php';
+} else {
+    require __DIR__.'/link-'.$step.'.php';
+}
 
 do_footer();

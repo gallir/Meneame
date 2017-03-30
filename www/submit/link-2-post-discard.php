@@ -8,16 +8,6 @@
 
 defined('mnminclude') or die();
 
-try {
-    $validator->checkKey();
-} catch (Exception $e) {
-    return addFormError($validator->error);
-}
-
-if (!empty($_POST['url']) && ($_POST['url'] !== $link->url) && !validateLinkUrl($link, $validator)) {
-    return;
-}
-
 $link->read_content_type_buttons($_POST['type']);
 
 // Check if the title contains [IMG], [IMGs], (IMG)... and mark it as image
@@ -29,28 +19,21 @@ if (preg_match('/[\(\[](IMG|PICT*)s*[\)\]]/i', $_POST['title'])) {
     $link->content_type = 'video';
 }
 
-require_once mnminclude . 'tags.php';
-
 $link->sub_id = intval($_POST['sub_id']);
 $link->title = $_POST['title'];  // It also deletes punctuaction signs at the end
 $link->tags = tags_normalize_string($_POST['tags']);
 $link->site_properties = $site_properties;
 $link->content = $_POST['bodytext']; // Warn, has to call $link->check_field_errors later
 
-try {
-    $validator->checkSiteSend();
-    $validator->checkDiscard();
-} catch (Exception $e) {
-    return addFormError($validator->error);
-}
-
-// TODO: simplify this, return just $errors as array()
-// as in editlink
 if ($error = $link->check_field_errors()) {
     return addFormError($error);
 }
 
-$link->store();
+try {
+    $validator->checkSiteSend();
+} catch (Exception $e) {
+    return addFormError($validator->error);
+}
 
 // Check image upload or delete
 if ($_POST['image_delete']) {
@@ -58,5 +41,7 @@ if ($_POST['image_delete']) {
 } else {
     $link->store_image_from_form('image');
 }
+
+$link->store();
 
 die(header('Location: '.$globals['base_url'].'submit?step=3&id=' . $link->id));

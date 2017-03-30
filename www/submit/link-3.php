@@ -8,21 +8,21 @@
 
 defined('mnminclude') or die();
 
-$link = getLinkByRequestId($link, $_REQUEST);
+if (empty($link->id)) {
+    returnToStep(1);
+}
 
-try {
-    $validator->checkBasicData();
-} catch (Exception $e) {
+if ($link->check_field_errors()) {
     returnToStep(2, $link->id);
 }
 
 if ($_POST) {
-    require __DIR__.'/step-3-post.php';
+    require __DIR__.'/link-3-post.php';
 }
 
 do_header(_('Enviar historia') . ' 3/3', _('Enviar historia'));
 
-Haanga::Load('story/submit/step-3.html', array(
+Haanga::Load('story/submit/link-3.html', array(
     'site_properties' => $site_properties,
     'link' => $link,
     'error' => $error,

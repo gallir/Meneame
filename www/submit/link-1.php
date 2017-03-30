@@ -12,12 +12,12 @@ $link->randkey = rand(10000, 10000000);
 $link->url = empty($_REQUEST['url']) ? '' : clean_input_url($_REQUEST['url']);
 
 if ($_POST) {
-    require __DIR__.'/step-1-post.php';
+    require __DIR__.'/link-1-post.php';
 }
 
 do_header(_('Enviar historia') . ' 1/3', _('Enviar historia'));
 
-Haanga::Load('story/submit/step-1.html', array(
+Haanga::Load('story/submit/link-1.html', array(
     'site_properties' => $site_properties,
     'link' => $link,
     'error' => $error,

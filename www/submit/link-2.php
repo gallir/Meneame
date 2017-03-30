@@ -8,10 +8,12 @@
 
 defined('mnminclude') or die();
 
-$link = getLinkByRequestId($link, $_REQUEST);
+if (empty($link->id)) {
+    returnToStep(1);
+}
 
 if ($_POST) {
-    require __DIR__.'/step-2-post.php';
+    require __DIR__.'/link-2-post.php';
 }
 
 do_header(_('Enviar historia') . ' 2/3', _('Enviar historia'));
@@ -24,11 +26,6 @@ $link->status_text = $link->get_status_text();
 $link->is_sub_owner = SitesMgr::is_owner();
 
 $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-
-if (empty($link->url)) {
-    $link->poll = new Poll;
-    $link->poll->read('link_id', $link->id);
-}
 
 $link->change_url = !$link->is_new && $link->url && ($current_user->admin || $current_user->user_level === 'blogger');
 $link->change_status = !$link->is_new
@@ -46,7 +43,7 @@ $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_de
 
 $link->has_thumb();
 
-Haanga::Load('story/submit/step-2.html', array(
+Haanga::Load('story/submit/link-2.html', array(
     'site_properties' => $site_properties,
     'link' => $link,
     'error' => $error,

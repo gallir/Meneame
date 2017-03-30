@@ -5,8 +5,9 @@
                 <input type="hidden" name="key" value="{% exec get_security_key %}" />
                 <input type="hidden" name="randkey" value="{{ link.randkey }}" />
                 <input type="hidden" name="step" value="1" />
+                <input type="hidden" name="type" value="link" />
 
-                <h1>{% trans _('Comparte un artículo') %}</h1>
+                <h1>{% trans _('Comparte un enlace') %}</h1>
                 <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
 
                 {% include 'story/submit/error.html' %}
@@ -25,12 +26,19 @@
         <div class="section-story-submit-step1-separator"><span>0</span></div>
 
         <div class="section-story-submit-step1-article">
-            <h1>{% trans _('Escribe tu artículo') %}</h1>
-            <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
+            <form method="post" class="form">
+                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+                <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+                <input type="hidden" name="step" value="1" />
+                <input type="hidden" name="type" value="article" />
 
-            <a href="{{ globals.base_url }}submit/article.php" class="btn btn-mnm btn-lg btn-inverted mt-20">
-                {% trans _('Empezar a escribir') %}
-            </a>
+                <h1>{% trans _('Escribe tu artículo') %}</h1>
+                <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
+
+                <button type="submit" name="type" value="article" class="btn btn-mnm btn-inverted btn-lg mt-20">
+                    {% trans _('Empezar a escribir') %}
+                </button>
+            </form>
         </div>
         {% endif %}
     </div>
