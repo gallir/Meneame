@@ -16,10 +16,6 @@
     margin-top: 40px;
 }
 
-.section .row:before, .section .row:after {
-    clear: both;
-}
-
 .section h1 {
     font-family: 'Open Sans', sans-serif;
     font-style: normal;
@@ -1210,15 +1206,6 @@ ul.slick-dots li button {
     font-family: 'Open Sans';
 }
 
-.story-blog .row, .story-blog-comments .row {
-    margin: 0;
-}
-
-.story-blog .row:before, .story-blog .row:after,
-.story-blog-comments .row:before, .story-blog-comments .row:after {
-    clear: both;
-}
-
 .story-blog .main-content h1,
 .section.section-article-submit .input-title {
     font-weight: 300;
@@ -1993,6 +1980,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 }
 
 @media (max-width: 568px) {
+    .row {
+        margin: 0;
+    }
+
     .section-profile-header {
         display: block;
         padding: 0 10px;
