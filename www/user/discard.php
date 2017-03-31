@@ -6,6 +6,7 @@ $query = '
     WHERE (
         link_author = "'.(int)$user->id.'"
         AND link_status = "discard"
+        AND link_votes = 0
     )
 ';
 
