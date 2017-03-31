@@ -11,7 +11,11 @@
 
             <p class="genericformtxt">
                 <strong>{{ link.url_title }}</strong>
-                <br/>{{ link.url | escape }}
+                <br />
+                <a href="{{ link.url }}" target="_blank">
+                    {{ link.url | escape }}
+                    <i class="fa fa-external-link fm-sm"></i>
+                </a>
             </p>
         </fieldset>
 
