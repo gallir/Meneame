@@ -42,6 +42,9 @@ if ($_POST['image_delete']) {
     $link->store_image_from_form('image');
 }
 
+$link->title = $link->get_title_fixed();
+$link->content = $link->get_content_fixed();
+
 $link->store();
 
 die(header('Location: '.$globals['base_url'].'submit?step=3&id=' . $link->id));

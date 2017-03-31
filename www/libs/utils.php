@@ -394,7 +394,7 @@ function html_remove_headers($html)
     return preg_replace('#<(?:!DOCTYPE|/?(?:\?xml|html|head|body))[^>]*>\s*#i', '', $html);
 }
 
-function form_to_article($string)
+function clean_html_with_tags($string)
 {
     $string = html_fix(strip_tags($string, '<p><strong><b><i><u><a><h2><h3><blockquote>'));
 

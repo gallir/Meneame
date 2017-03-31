@@ -8,25 +8,16 @@
 
 defined('mnminclude') or die();
 
-$link->sub_id = intval($_POST['sub_id'] ?: $site->id);
-$link->title = $_POST['title'];
-$link->site_properties = $site_properties;
-$link->content = $_POST['bodytext'];
-$link->tags = tags_normalize_string(_('Artículo'));
-
-if ($error = $link->check_field_errors()) {
-    return addFormError($error);
-}
-
 try {
+    $validator->checkKey();
     $validator->checkSiteSend();
 } catch (Exception $e) {
     return;
 }
 
-$link->title = $link->get_title_fixed();
-$link->content = $link->get_content_fixed();
+// Check this one was not already queued
+if ($link->votes == 0 && ($link->status !== 'queued')) {
+    $link->enqueue();
+}
 
-$link->store();
-
-die(header('Location: '.$globals['base_url'].'submit?step=3&id=' . $link->id));
+die(header('Location: '. $link->get_permalink()));

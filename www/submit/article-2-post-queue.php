@@ -53,6 +53,9 @@ if (
     $link->status = $_POST['status'];
 }
 
+$link->title = $link->get_title_fixed();
+$link->content = $link->get_content_fixed();
+
 $db->transaction();
 
 $link->store();

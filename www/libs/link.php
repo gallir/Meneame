@@ -2248,25 +2248,26 @@ class Link extends LCPBase
             return _('En este SUB es obligatorio enviar contenidos mediante enlace');
         }
 
-        // It also deletes punctuaction marks at the end
-        $replace_nl = $properties['allow_paragraphs'] ? false : true;
+        $title = $this->get_title_fixed();
+        $content = $this->get_content_fixed();
 
-        $this->title = clean_text(preg_replace('/(\w) *[.,] *$/', "$1", $this->title), 50, true, 120);
-        $this->content = clean_text_with_tags($this->content, 0, $replace_nl, $properties['intro_max_len']);
-
-        if (mb_strlen($this->title) < 8) {
-            return __('El título es demasiado corto, debe ser almenos de %s caracteres', 8);
+        if (mb_strlen($title) < 8) {
+            return __('El título es demasiado corto, debe ser al menos de %s caracteres', 8);
         }
 
-        if (get_uppercase_ratio($this->title) > 0.5) {
+        if (mb_strlen($title) > 100) {
+            return __('El título es demasiado largo, debe ser como máximo %s caracteres', 100);
+        }
+
+        if (get_uppercase_ratio($title) > 0.5) {
             return _('Hay demasiadas mayúsculas en el título');
         }
 
-        if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen($this->content) < $properties['intro_min_len']) {
+        if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen($content) < $properties['intro_min_len']) {
             return __('El texto es demasiado corto, debe ser al menos de %s caracteres', $properties['intro_min_len']);
         }
 
-        if (get_uppercase_ratio($this->content) > 0.3) {
+        if (get_uppercase_ratio($content) > 0.3) {
             return _('Hay demasiadas mayúsculas en el texto');
         }
 
@@ -2274,9 +2275,26 @@ class Link extends LCPBase
             return _('No has puesto etiquetas');
         }
 
-        if (preg_match('/.*http:\//', $this->title)) {
+        if (preg_match('/.*http:\//', $title)) {
             return _('No puedes añadir enlaces en el título');
         }
+    }
+
+    public function get_title_fixed()
+    {
+        return clean_text(preg_replace('/(\w) *[.,] *$/', "$1", $this->title), 50, true, 120);
+    }
+
+    public function get_content_fixed()
+    {
+        $properties = SitesMgr::get_extended_properties($this->sub_id);
+        $replace_nl = $properties['allow_paragraphs'] ? false : true;
+
+        if ($this->content_type === 'article') {
+            return clean_html_with_tags($this->content, 0, $replace_nl, $properties['intro_max_len']);
+        }
+
+        return clean_text_with_tags($this->content, 0, $replace_nl, $properties['intro_max_len']);
     }
 
     public function get_media($type = null)

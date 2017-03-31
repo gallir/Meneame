@@ -88,6 +88,9 @@ if ($blog_id > 0 && $blog_id != $link->blog) {
     $link->blog = $blog_id;
 }
 
+$link->title = $link->get_title_fixed();
+$link->content = $link->get_content_fixed();
+
 $db->transaction();
 
 $link->store();

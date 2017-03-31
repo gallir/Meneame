@@ -1628,6 +1628,7 @@ ul.slick-dots li button {
 
 .section.section-article-submit .input-title {
     margin-bottom: 30px;
+    resize: none;
 }
 
 .section.section-article-submit .input-group-editable {

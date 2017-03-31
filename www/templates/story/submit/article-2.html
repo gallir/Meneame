@@ -9,19 +9,21 @@
         {% include 'story/submit/error.html' %}
 
         <div class="form-group">
-            <input type="text" name="title" value="{{ link.title|escape }}" class="form-control input-title" required />
+            <textarea name="title" row="1" class="form-control input-title" maxlength="100" required>{{
+                link.title
+            }}</textarea>
         </div>
 
         <div class="form-group input-group-editable">
-            <textarea name="bodytext" class="form-control input-editable" required>
-                {{ link.content }}
-            </textarea>
+            <textarea name="bodytext" class="form-control input-editable" minlength="{{ site_properties.intro_min_len }}" maxlength="{{ site_properties.intro_max_len }}" required>{{
+                link.content
+            }}</textarea>
         </div>
 
         <div class="mt-20 text-center">
-            <button type="button" class="btn btn-mnm btn-inverted">
+            <a href="javascript:void(0);" onclick="window.location = '{{ globals.base_url }}';" class="btn btn-mnm btn-inverted">
                 {% trans _('Salir sin guardar') %}
-            </button>
+            </a>
 
             <button type="submit" class="btn btn-mnm btn-lg">
                 {% trans _('Guardar') %}
@@ -30,6 +32,8 @@
 
         <script type="text/javascript">
         addPostCode(function () {
+            $('.form textarea[name="title"]').autosize();
+
             new MediumEditor('.input-editable', {
                 placeholder: {
                     text: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
