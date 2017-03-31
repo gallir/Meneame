@@ -224,21 +224,21 @@ function txt_time_diff($from, $now=0)
     $txt = '';
 
     if ($days > 1) {
-        $txt .= " $days "._('días');
+        $txt .= ' '.$days.' '._('días');
     } elseif ($days === 1) {
-        $txt .= " $days "._('día');
+        $txt .= ' '.$days.' '._('día');
     }
 
     if ($hours > 1) {
-        $txt .= " $hours "._('horas');
+        $txt .= ' '.$hours.' '._('horas');
     } elseif ($hours === 1) {
-        $txt .= " $hours "._('hora');
+        $txt .= ' '.$hours.' '._('hora');
     }
 
     if ($minutes > 1) {
-        $txt .= " $minutes "._('minutos');
+        $txt .= ' '.$minutes.' '._('minutos');
     } elseif ($minutes === 1) {
-        $txt .= " $minutes "._('minuto');
+        $txt .= ' '.$minutes.' '._('minuto');
     }
 
     if ($txt) {
@@ -249,7 +249,7 @@ function txt_time_diff($from, $now=0)
         return ' '._('nada');
     }
 
-    return " $secs ". _('segundos');
+    return ' '.$secs.' '. _('segundos');
 }
 
 function txt_shorter($string, $len = 70)
@@ -352,6 +352,53 @@ function close_tags(&$string)
 function clean_lines($string)
 {
     return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
+}
+
+function html_fix($html)
+{
+    libxml_use_internal_errors(true);
+
+    $DOM = new DOMDocument;
+    $DOM->recover = true;
+    $DOM->preserveWhiteSpace = false;
+    $DOM->substituteEntities = false;
+    $DOM->loadHtml('<?xml encoding="UTF-8">'.$html, LIBXML_NOBLANKS | LIBXML_ERR_NONE);
+
+    libxml_use_internal_errors(false);
+
+    return html_remove_headers($DOM->saveHTML());
+}
+
+function html_remove_attributes($html, $allow = array('src', 'href'))
+{
+    $DOM = new DOMDocument;
+    $DOM->loadHTML($html);
+
+    $xpath = new DOMXPath($DOM);
+
+    $query = '//@*';
+
+    if ($allow) {
+        $query .= '[local-name() != "'.implode('" and local-name() != "', $allow).'"]';
+    }
+
+    foreach ($xpath->query($query) as $node) {
+        $node->parentNode->removeAttribute($node->nodeName);
+    }
+
+    return html_remove_headers($DOM->saveHTML());
+}
+
+function html_remove_headers($html)
+{
+    return preg_replace('#<(?:!DOCTYPE|/?(?:\?xml|html|head|body))[^>]*>\s*#i', '', $html);
+}
+
+function form_to_article($string)
+{
+    $string = html_fix(strip_tags($string, '<p><strong><b><i><u><a><h2><h3><blockquote>'));
+
+    return html_remove_attributes($string);
 }
 
 function text_to_summary($string, $length = 50)

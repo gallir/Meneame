@@ -8,17 +8,16 @@
 
 defined('mnminclude') or die();
 
-$link->randkey = rand(10000, 10000000);
-
-if ($_POST) {
-    require __DIR__.'/article-1-post.php';
+try {
+    $validator->checkKey();
+} catch (Exception $e) {
+    return;
 }
 
-do_header(_('Enviar un artículo') . ' 1/3', _('Enviar un artículo'));
+require_once mnminclude . 'tags.php';
 
-Haanga::Load('story/submit/link-1.html', array(
-    'site_properties' => $site_properties,
-    'link' => $link,
-    'error' => $error,
-    'warning' => $warning
-));
+if ($link->status === 'discard') {
+    require __DIR__.'/article-2-post-discard.php';
+} else {
+    require __DIR__.'/article-2-post-queue.php';
+}

@@ -2239,13 +2239,13 @@ class Link extends LCPBase
         global $globals;
 
         if (!$this->sub_id) {
-            return _('Sub no seleccionado');
+            return _('No has seleccionado ningún SUB');
         }
 
         $properties = SitesMgr::get_extended_properties($this->sub_id);
 
         if (empty($this->url) && empty($properties['no_link'])) {
-            return _('Falta url enlace');
+            return _('En este SUB es obligatorio enviar contenidos mediante enlace');
         }
 
         // It also deletes punctuaction marks at the end
@@ -2255,19 +2255,19 @@ class Link extends LCPBase
         $this->content = clean_text_with_tags($this->content, 0, $replace_nl, $properties['intro_max_len']);
 
         if (mb_strlen($this->title) < 8) {
-            return _('Título incompleto');
+            return __('El título es demasiado corto, debe ser almenos de %s caracteres', 8);
         }
 
         if (get_uppercase_ratio($this->title) > 0.5) {
-            return _('Demasiadas mayúsculas en el título');
+            return _('Hay demasiadas mayúsculas en el título');
         }
 
         if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen($this->content) < $properties['intro_min_len']) {
-            return _('Texto incompleto');
+            return __('El texto es demasiado corto, debe ser al menos de %s caracteres', $properties['intro_min_len']);
         }
 
         if (get_uppercase_ratio($this->content) > 0.3) {
-            return _('Demasiadas mayúsculas en el texto');
+            return _('Hay demasiadas mayúsculas en el texto');
         }
 
         if (strlen($this->tags) < 3) {
@@ -2275,7 +2275,7 @@ class Link extends LCPBase
         }
 
         if (preg_match('/.*http:\//', $this->title)) {
-            return _('No pongas URLs en el título, no ofrece información');
+            return _('No puedes añadir enlaces en el título');
         }
     }
 

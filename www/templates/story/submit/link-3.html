@@ -20,15 +20,15 @@
                 <div class="genericformtxt text-center m-20">
                     <label>
                         {% if error %}
-                        {% trans _('ERROR: no es posible el envío al existir errores que deben ser resueltos') %}
+                        {% trans _('ERROR: No es posible el envío al existir errores que deben ser resueltos') %}
                         {% else %}
-                        {% trans _('ATENCIÓN: esto es sólo una muestra. Puedes retroceder o enviar a la cola y finalizar') %}
+                        {% trans _('ATENCIÓN: Esto es sólo una muestra. Puedes retroceder o enviar a la cola y finalizar') %}
                         {% endif %}
                     </label>
                 </div>
 
                 <div class="text-center m-20">
-                    <input type="button" class="button" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';" value="&#171; {% trans _('Retroceder') %}"/>
+                    <input type="button" class="button" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';" value="&#171; {% trans _('Volver a la edición') %}"/>
 
                     {% if !error %}
                     &nbsp;&nbsp;

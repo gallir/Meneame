@@ -19,38 +19,14 @@ $link_old->tags = $link->tags;
 $link_old->status = $link->status;
 $link_old->sub_id = $link->sub_id;
 
-$link->read_content_type_buttons($_POST['type']);
-
-$link->sub_id = intval($_POST['sub_id']);
+$link->sub_id = intval($_POST['sub_id'] ?: $site->id);
 
 if ($link->sub_id != $link_old->sub_id) {
     $link->sub_changed = true; // To force to delete old statuses with another origin
 }
 
-if ($current_user->admin || $current_user->user_level === 'blogger' || SitesMgr::is_owner()) {
-    if (!empty($_POST['url'])) {
-        $link->url = clean_input_url($_POST['url']);
-    }
-
-    if ($_POST['thumb_delete']) {
-        $link->delete_thumb();
-    }
-
-    if ($_POST['uri_update']) {
-        $link->get_uri();
-    }
-
-    if ($_POST['thumb_get']) {
-        $link->get_thumb();
-    } elseif (!empty($_POST['thumb_url'])) {
-        $url = clean_input_url($_POST['thumb_url']);
-        $link->get_thumb(false, $url);
-    }
-}
-
 $link->title = $_POST['title'];
 $link->content = $_POST['bodytext'];
-$link->tags = tags_normalize_string($_POST['tags']);
 
 if ($error = $link->check_field_errors()) {
     return addFormError($error);
@@ -77,17 +53,6 @@ if (
     $link->status = $_POST['status'];
 }
 
-if (empty($link->uri)) {
-    $link->get_uri();
-}
-
-// Check the blog_id
-$blog_id = Blog::find_blog($link->url, $link->id);
-
-if ($blog_id > 0 && $blog_id != $link->blog) {
-    $link->blog = $blog_id;
-}
-
 $db->transaction();
 
 $link->store();
@@ -108,10 +73,5 @@ if ($globals['now'] - $link->date < 86400 * 15) {
 }
 
 $db->commit();
-
-if ($link->store_image_from_form('image')) {
-    $link->thumb_status = 'local';
-    $link->store_thumb_status();
-}
 
 die(header('Location: '.$link->get_permalink()));

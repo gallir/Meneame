@@ -13,22 +13,20 @@ if (empty($link->id)) {
 }
 
 if ($_POST) {
-    require __DIR__.'/link-2-article.php';
+    require __DIR__.'/article-2-post.php';
 }
 
 $globals['extra_vendor_js'][] = 'medium-editor/js/medium-editor.min.js';
 $globals['extra_vendor_css'][] = 'medium-editor/css/medium-editor.min.css';
 $globals['extra_vendor_css'][] = 'medium-editor/css/themes/default.min.css';
 
-do_header(_('Enviar historia') . ' 2/3', _('Enviar historia'));
+do_header(_('Enviar un artículo') . ' 2/3', _('Enviar un artículo'));
 
 $link->is_new = $link->status === 'discard';
 
 $link->discarded = $link->is_discarded();
 $link->status_text = $link->get_status_text();
 $link->is_sub_owner = SitesMgr::is_owner();
-
-$link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
 $link->change_status = !$link->is_new
     && ($link->votes > 0 && ($link->status !== 'published' || $current_user->user_level === 'god' || $link->is_sub_owner)
@@ -39,9 +37,6 @@ if (mb_strlen($link->url_description) > 40) {
 }
 
 $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
-
-$link->poll = new Poll;
-$link->poll->read('link_id', $link->id);
 
 Haanga::Load('story/submit/article-2.html', array(
     'site_properties' => $site_properties,
