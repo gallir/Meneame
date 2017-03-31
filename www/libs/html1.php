@@ -23,6 +23,9 @@ if (PHP_SAPI !== 'cli' && !empty($globals['force_ssl']) && !$globals['https'] &&
 $globals['extra_js'] = array();
 $globals['extra_css'] = array();
 
+$globals['extra_vendor_js'] = array();
+$globals['extra_vendor_css'] = array();
+
 if (!$globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT']))) {
     if (!$globals['mobile']) {
         $globals['ads'] = false;

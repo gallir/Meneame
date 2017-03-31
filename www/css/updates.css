@@ -1219,7 +1219,8 @@ ul.slick-dots li button {
     clear: both;
 }
 
-.story-blog .main-content h1 {
+.story-blog .main-content h1,
+.section.section-article-submit .input-title {
     font-weight: 300;
     font-size: 50px;
     line-height: 55px;
@@ -1236,7 +1237,8 @@ ul.slick-dots li button {
     text-decoration: none;
 }
 
-.story-blog .main-content .text {
+.story-blog .main-content .text,
+.section.section-article-submit .input-editable {
     font-family: 'PT Serif', serif;
     font-size: 21px;
     letter-spacing: 0;
@@ -1244,7 +1246,8 @@ ul.slick-dots li button {
     color: #4A4A4A;
 }
 
-.story-blog .main-content .text p {
+.story-blog .main-content .text p,
+.section.section-article-submit .input-editable p {
     margin-bottom: 25px;
 }
 
@@ -1611,6 +1614,41 @@ ul.slick-dots li button {
     padding-top: 20px;
 }
 
+.section.section-article-submit {
+    width: 75%;
+    margin: 0 auto;
+}
+
+.section.section-article-submit .input-title,
+.section.section-article-submit .input-editable {
+    border: none;
+    padding: 5px 10px;
+    height: auto;
+}
+
+.section.section-article-submit .input-title {
+    margin-bottom: 30px;
+}
+
+.section.section-article-submit .input-group-editable {
+    margin: 30px 0 50px 0;
+}
+
+.section.section-article-submit .input-title:focus,
+.section.section-article-submit .input-editable:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2px rgba(165, 165, 165, 0.6)
+}
+
+.medium-editor-placeholder::after {
+  color: #CCC;
+}
+
+.medium-editor-toolbar li button {
+    height: auto;
+    min-width: auto;
+    padding: 10px;
+}
+
 .pagination-center {
     text-align: center;
     clear: both;
@@ -1812,7 +1850,8 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 }
 
 @media (max-width: 991px) {
-    .story-blog .main-content h1 {
+    .story-blog .main-content h1,
+    .section.section-article-submit .input-title {
         margin-top: 10px;
     }
 
@@ -1905,13 +1944,15 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
         margin: 0 3px;
     }
 
-    .story-blog .main-content h1 {
+    .story-blog .main-content h1,
+    .section.section-article-submit .input-title {
         font-size: 30px;
         line-height: 34px;
         margin-bottom: 25px;
     }
 
-    .story-blog .main-content .text {
+    .story-blog .main-content .text,
+    .section.section-article-submit .input-editable {
         font-size: 18px;
         line-height: 1.4em;
     }

@@ -16,6 +16,10 @@ if ($_POST) {
     require __DIR__.'/link-2-article.php';
 }
 
+$globals['extra_vendor_js'][] = 'medium-editor/js/medium-editor.min.js';
+$globals['extra_vendor_css'][] = 'medium-editor/css/medium-editor.min.css';
+$globals['extra_vendor_css'][] = 'medium-editor/css/themes/default.min.css';
+
 do_header(_('Enviar historia') . ' 2/3', _('Enviar historia'));
 
 $link->is_new = $link->status === 'discard';

@@ -68,13 +68,17 @@
         <link href="{{ globals.base_static }}css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" />
         {% endif %}
 
-        {% if globals.css_main %}
-        <link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{ globals.css_main }}" rel="stylesheet" type="text/css" media="all" />
-        {% endif %}
-
         {% for css in globals.extra_css %}
         <link href="{{ globals.base_static }}css/{{ css }}" rel="stylesheet" type="text/css" media="all" />
         {% endfor %}
+
+        {% for css in globals.extra_vendor_css %}
+        <link href="{{ globals.base_static }}vendor/{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% endfor %}
+
+        {% if globals.css_main %}
+        <link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{ globals.css_main }}" rel="stylesheet" type="text/css" media="all" />
+        {% endif %}
 
         {# <meta name="mobile-web-app-capable" content="yes"> #}
 
