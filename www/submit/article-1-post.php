@@ -11,7 +11,7 @@ defined('mnminclude') or die();
 try {
     $validator->checkKey();
 } catch (Exception $e) {
-    return addFormError($validator->error);
+    return;
 }
 
 $anti_spam = empty($site_properties['no_anti_spam']);
@@ -31,7 +31,7 @@ try {
         $validator->checkUserNegatives();
     }
 } catch (Exception $e) {
-    return addFormError($validator->error);
+    return;
 }
 
 $link->title = __('Borrador %s', date('H:i j/n/Y'));

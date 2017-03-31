@@ -292,6 +292,7 @@ class User
             case 'shaken':
             case 'friends_shaken':
             case 'favorites':
+            case 'discard':
                 $id = _('historias');
                 break;
 

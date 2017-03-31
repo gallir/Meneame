@@ -32,7 +32,7 @@ if ($error = $link->check_field_errors()) {
 try {
     $validator->checkSiteSend();
 } catch (Exception $e) {
-    return addFormError($validator->error);
+    return;
 }
 
 // Check image upload or delete

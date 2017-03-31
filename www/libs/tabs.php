@@ -94,6 +94,9 @@ final class Tabs
             case 'friends_shaken':
                 return self::optionsForProfileFriendsShaken();
 
+            case 'discard':
+                return self::optionsForProfileDiscard();
+
             case 'commented':
                 return self::optionsForProfileCommented();
 
@@ -463,6 +466,10 @@ final class Tabs
                 'title' => _('Votadas por amigos'),
                 'link' => $user->get_uri('friends_shaken'),
             ),
+            'discard' => array(
+                'title' => _('Borradores'),
+                'link' => $user->get_uri('discard'),
+            ),
         );
     }
 
@@ -483,7 +490,7 @@ final class Tabs
 
     public static function optionsForProfileFavorites()
     {
-        return self::optionsForProfileShaken();
+        return self::optionsForProfileHistory();
     }
 
     public static function renderForProfileFriendsShaken($params, $tab_class)
@@ -493,7 +500,17 @@ final class Tabs
 
     public static function optionsForProfileFriendsShaken()
     {
-        return self::optionsForProfileShaken();
+        return self::optionsForProfileHistory();
+    }
+
+    public static function renderForProfileDiscard($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileDiscard(), 3, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileDiscard()
+    {
+        return self::optionsForProfileHistory();
     }
 
     public static function renderForProfileCommented($params, $tab_class)

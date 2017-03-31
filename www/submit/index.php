@@ -23,20 +23,24 @@ $site_properties = SitesMgr::get_extended_properties();
 require __DIR__ . '/helpers.php';
 
 $warning = $error = array();
+
 $link = new Link;
+
 $validator = new LinkValidator($link);
+
+$validator->setErrorCallback('addFormError');
+$validator->setWarningCallback('addFormWarning');
 
 if (!empty($_REQUEST['id'])) {
     $link = getLinkByRequestId($link, $_REQUEST);
 }
 
-$step = getStep();
 $type = empty($_POST['type']) ? $link->content_type : $_POST['type'];
 
 if ($type === 'article') {
-    require __DIR__.'/article-'.$step.'.php';
+    require __DIR__.'/article-'.getStep().'.php';
 } else {
-    require __DIR__.'/link-'.$step.'.php';
+    require __DIR__.'/link-'.getStep().'.php';
 }
 
 do_footer();

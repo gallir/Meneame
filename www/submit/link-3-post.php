@@ -11,10 +11,9 @@ defined('mnminclude') or die();
 try {
     $validator->checkKey();
     $validator->checkSiteSend();
-    $validator->checkDiscard();
     $validator->checkDuplicates();
 } catch (Exception $e) {
-    return addFormError($validator->error);
+    return;
 }
 
 // Check this one was not already queued

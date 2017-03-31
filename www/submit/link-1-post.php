@@ -11,7 +11,7 @@ defined('mnminclude') or die();
 try {
     $validator->checkKey();
 } catch (Exception $e) {
-    return addFormError($validator->error);
+    return;
 }
 
 if (!validateLinkUrl($link, $validator)) {
@@ -35,11 +35,12 @@ try {
         $validator->checkUserNegatives();
     }
 } catch (Exception $e) {
-    return addFormError($validator->error);
+    return;
 }
 
 $link->status = 'discard';
 $link->author = $current_user->user_id;
+$link->title = $link->url_title;
 
 if (!empty($site_properties['rules']) && $site_properties['no_link'] == 2) {
     $link->rules = LCPBase::html($site_properties['rules']);

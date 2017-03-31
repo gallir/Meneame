@@ -11,11 +11,15 @@ defined('mnminclude') or die();
 try {
     $validator->checkKey();
 } catch (Exception $e) {
-    return addFormError($validator->error);
+    return;
 }
 
-if (!empty($_POST['url']) && ($_POST['url'] !== $link->url) && !validateLinkUrl($link, $validator)) {
-    return;
+if (!empty($_POST['url']) && ($_POST['url'] !== $link->url)) {
+    $link->url = clean_input_url($_POST['url']);
+
+    if (!validateLinkUrl($link, $validator)) {
+        return;
+    }
 }
 
 require_once mnminclude . 'tags.php';

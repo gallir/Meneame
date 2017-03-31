@@ -156,12 +156,14 @@
 
             {% endif %}
 
-            {% if link.is_new %}
-            <input class="button" type="button" onclick="window.location = '{{ globals.base_url }}';" value="{% trans _('Cancelar') %}" />&nbsp;&nbsp;
-            <input class="button" type="submit" value="{% trans _('Continuar') %} &#187;" />
-            {% else %}
-            <input class="button" type="submit" value="{% trans _('Guardar') %} &#187;" />
-            {% endif %}
+            <div class="mt-20">
+                {% if link.is_new %}
+                <input type="button" class="button" onclick="window.location = '{{ globals.base_url }}';" value="{% trans _('Cancelar') %}" />&nbsp;&nbsp;
+                <input type="submit" class="button" value="{% trans _('Continuar') %} &#187;" />
+                {% else %}
+                <input type="submit" class="button" value="{% trans _('Guardar y Finalizar') %} &#187;" />
+                {% endif %}
+            </div>
 
             {% if site_properties.allow_images %}
 

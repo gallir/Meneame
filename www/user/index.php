@@ -80,6 +80,7 @@ switch ($view) {
     case 'shaken':
     case 'favorites':
     case 'friends_shaken':
+    case 'discard':
         $menu = 'history';
         break;
 

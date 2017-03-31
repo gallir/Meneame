@@ -11,6 +11,11 @@ require_once mnminclude . 'favorites.php';
 class LinkValidator
 {
     public $link;
+    public $user;
+
+    public $errorCallback;
+    public $warningCallback;
+
     public $error;
     public $warning;
 
@@ -23,7 +28,10 @@ class LinkValidator
 
     public function __construct(Link $link)
     {
+        global $current_user;
+
         $this->link = $link;
+        $this->user = $current_user;
     }
 
     public function fixUrl()
@@ -115,7 +123,7 @@ class LinkValidator
 
     public function checkRemote($anti_spam)
     {
-        global $current_user, $site;
+        global $site;
 
         if (!$this->link->get($this->link->url, null, $anti_spam)) {
             $this->setError(_('Enlace erróneo o no permitido'));
@@ -127,7 +135,7 @@ class LinkValidator
 
         $e = _('Error leyendo la URL') . ': ' . htmlspecialchars($this->link->url);
 
-        if ($current_user->user_karma < 7 && $current_user->user_level === 'normal' && !$site->owner) {
+        if ($this->user->user_karma < 7 && $this->user->user_level === 'normal' && !$site->owner) {
             $this->setError($e, _('URL inválida, incompleta o no permitida. Está fuera de línea, o tiene mecanismos antibots.'));
         }
 
@@ -208,7 +216,7 @@ class LinkValidator
 
     public function checkDrafts()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         // Check the user does not have too many drafts
         if ($this->getUserDrafts() > $globals['draft_limit']) {
@@ -222,7 +230,7 @@ class LinkValidator
         $db->query('
             DELETE FROM links
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 30 MINUTE)
                 AND link_date < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
                 AND link_status = "discard"
@@ -235,9 +243,9 @@ class LinkValidator
 
     public function checkKarmaMin()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
-        if ($globals['min_karma_for_links'] > 0 && $current_user->user_karma < $globals['min_karma_for_links']) {
+        if ($globals['min_karma_for_links'] > 0 && $this->user->user_karma < $globals['min_karma_for_links']) {
             $this->setError(_('No tienes el mínimo de karma para enviar una nueva historia'));
         }
 
@@ -246,11 +254,11 @@ class LinkValidator
 
     public function checkVotesMin()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $total = $this->getUserSent();
 
-        if (($total === 0) || !$globals['min_user_votes'] || $current_user->user_karma >= $globals['new_user_karma']) {
+        if (($total === 0) || !$globals['min_user_votes'] || $this->user->user_karma >= $globals['new_user_karma']) {
             return $this;
         }
 
@@ -262,7 +270,7 @@ class LinkValidator
             $min_votes = min(4, intval($this->getLinksQueded() / 20)) * $this->getUserLinks();
         }
 
-        if ($current_user->admin || $user_votes >= $min_votes) {
+        if ($this->user->admin || $user_votes >= $min_votes) {
             return $this;
         }
 
@@ -277,10 +285,10 @@ class LinkValidator
 
     public function checkClones()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $hours = intval($globals['user_links_clon_interval']);
-        $clones = $current_user->get_clones($hours + 1);
+        $clones = $this->user->get_clones($hours + 1);
 
         if ($hours <= 0 || !$clones) {
             return $this;
@@ -309,7 +317,7 @@ class LinkValidator
 
     public function checkUserNotPulished($hours, $limit)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if (empty($limit)) {
             return $this;
@@ -321,7 +329,7 @@ class LinkValidator
             WHERE (
                 status != "published"
                 AND `date` > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
                 AND sub_statuses.link = link_id
                 AND subs.id = sub_statuses.id
                 AND sub_statuses.origen = sub_statuses.id
@@ -343,11 +351,11 @@ class LinkValidator
 
     public function checkUserQueued($minutes)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $limit = $globals['limit_3_minutes'];
 
-        if ($current_user->user_karma > $globals['limit_3_minutes_karma']) {
+        if ($this->user->user_karma > $globals['limit_3_minutes_karma']) {
             $limit *= 1.5;
         }
 
@@ -358,7 +366,7 @@ class LinkValidator
             WHERE (
                 link_status = "queued"
                 AND link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $minutes . ' MINUTE)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
             );
         ');
 
@@ -375,7 +383,7 @@ class LinkValidator
 
     public function checkUserSame()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         list($limit, $interval) = $this->getUserLimitInterval();
 
@@ -384,7 +392,7 @@ class LinkValidator
             FROM links
             WHERE (
                 link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
             );
         ') - $this->getUserDrafts();
 
@@ -397,7 +405,7 @@ class LinkValidator
 
     public function checkUserIP()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         list($limit, $interval) = $this->getUserLimitInterval();
 
@@ -419,7 +427,7 @@ class LinkValidator
 
     public function checkUserNegatives()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         list($limit, $interval) = $this->getUserLimitInterval();
 
@@ -428,11 +436,11 @@ class LinkValidator
             FROM links
             WHERE (
                 link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
             );
         ') - $this->getUserDrafts();
 
-        if ($count <= 1 || $current_user->user_karma >= $globals['karma_propaganda']) {
+        if ($count <= 1 || $this->user->user_karma >= $globals['karma_propaganda']) {
             return $this;
         }
 
@@ -441,7 +449,7 @@ class LinkValidator
             FROM links
             WHERE (
                 link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
             );
         ');
 
@@ -450,7 +458,7 @@ class LinkValidator
             FROM links
             WHERE (
                 link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
             );
         ');
 
@@ -463,7 +471,7 @@ class LinkValidator
 
     public function checkRatio($blog)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $sents = $this->getUserSent();
 
@@ -475,7 +483,7 @@ class LinkValidator
             SELECT COUNT(DISTINCT link_blog) / COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
             );
         ');
@@ -490,7 +498,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
                 AND link_blog = "' . $blog->id . '"
             );
@@ -509,7 +517,7 @@ class LinkValidator
 
     public function checkMedia()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $sents = $this->getUserSent();
 
@@ -521,7 +529,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links, subs, sub_statuses
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
                 AND link_content_type IN ("image", "video")
                 AND sub_statuses.link = link_id
@@ -545,7 +553,7 @@ class LinkValidator
 
     public function checkMediaOverflow($hours)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if ($this->link->content_type !== 'image' && $this->link->content_type !== 'video') {
             return $this;
@@ -592,14 +600,14 @@ class LinkValidator
 
     public function checkBlogSame($blog, $hours)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $count = (int) $db->get_var('
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
                 link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
                 AND link_blog = "' . $blog->id . '"
                 AND link_votes > 0
             );
@@ -618,20 +626,20 @@ class LinkValidator
 
     public function checkBlogFast($blog, $minutes)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $count = (int) $db->get_var('
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
                 link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $minutes . ' MINUTE)
-                AND link_author = "' . $current_user->user_id . '"
+                AND link_author = "' . $this->user_id . '"
                 AND link_blog = "' . $blog->id . '"
                 AND link_votes > 0
             );
         ');
 
-        if ($count && $current_user->user_karma < 12) {
+        if ($count && $this->user->user_karma < 12) {
             $this->setError(
                 _('Ya has enviado un enlace al mismo sitio hace poco tiempo'),
                 __('Debes esperar %s minutos entre envíos al mismo sitio.', $minutes),
@@ -644,7 +652,7 @@ class LinkValidator
 
     public function checkBlogHistory($blog, $days)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         $sents = $this->getUserSent();
 
@@ -656,7 +664,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $days . ' DAY)
                 AND link_blog = "' . $blog->id . '"
             );
@@ -689,7 +697,7 @@ class LinkValidator
 
     public function checkBlogOverflow($blog, $hours)
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         // check there is no an 'overflow' FROM the same site
         $site = (int) $db->get_var('
@@ -738,6 +746,8 @@ class LinkValidator
 
     public function getUserLimitInterval()
     {
+        global $globals;
+
         if ($this->getUserSent()) {
             $limit = $globals['user_links_limit'];
             $interval = $globals['user_links_interval'];
@@ -751,7 +761,7 @@ class LinkValidator
 
     public function getUserDrafts()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if ($this->userDrafts !== null) {
             return $this->userDrafts;
@@ -763,7 +773,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL ' . $minutes . ' MINUTE)
                 AND link_status = "discard"
                 AND link_votes = 0
@@ -773,7 +783,7 @@ class LinkValidator
 
     public function getUserVotes()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if ($this->userVotes !== null) {
             return $this->userVotes;
@@ -785,14 +795,14 @@ class LinkValidator
             WHERE (
                 vote_type = "links"
                 AND vote_date > DATE_SUB(NOW(), INTERVAL 72 HOUR)
-                AND vote_user_id = "' . $current_user->user_id . '"
+                AND vote_user_id = "' . $this->user_id . '"
             );
         ');
     }
 
     public function getUserLinks()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if ($this->userLinks !== null) {
             return $this->userLinks;
@@ -802,7 +812,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                 AND link_status != "discard"
             );
@@ -811,7 +821,7 @@ class LinkValidator
 
     public function getUserSent()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if ($this->userSent !== null) {
             return $this->userSent;
@@ -820,13 +830,13 @@ class LinkValidator
         return $this->userSent = (int) $db->get_var('
             SELECT SQL_CACHE COUNT(*)
             FROM links
-            WHERE link_author = "' . $current_user->user_id . '";
+            WHERE link_author = "' . $this->user_id . '";
         ') - $this->getUserDrafts();
     }
 
     public function getUserSentRecent()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if ($this->userSentRecent !== null) {
             return $this->userSentRecent;
@@ -836,7 +846,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $current_user->user_id . '"
+                link_author = "' . $this->user_id . '"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
             );
         ') - $this->getUserDrafts();
@@ -844,7 +854,7 @@ class LinkValidator
 
     public function getLinksQueded()
     {
-        global $globals, $db, $current_user;
+        global $globals, $db;
 
         if ($this->linksQueded !== null) {
             return $this->linksQueded;
@@ -860,6 +870,20 @@ class LinkValidator
         ');
     }
 
+    public function setErrorCallback($callback)
+    {
+        if (is_callable($callback)) {
+            $this->errorCallback = $callback;
+        }
+    }
+
+    public function setWarningCallback($callback)
+    {
+        if (is_callable($callback)) {
+            $this->warningCallback = $callback;
+        }
+    }
+
     private function setError($title, $info = null, $syslog = '')
     {
         $this->error = [
@@ -867,6 +891,10 @@ class LinkValidator
             'info' => $info,
             'syslog' => $syslog
         ];
+
+        if ($this->errorCallback) {
+            call_user_func($this->errorCallback, $this->error);
+        }
 
         throw new Exception($title);
     }
@@ -878,5 +906,9 @@ class LinkValidator
             'info' => $info,
             'syslog' => $syslog
         ];
+
+        if ($this->warningCallback) {
+            call_user_func($this->warningCallback, $this->warning);
+        }
     }
 }

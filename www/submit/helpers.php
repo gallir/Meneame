@@ -51,7 +51,7 @@ function addFormWarning($title, $info = '', $syslog = '')
 
 function addFormMessage($type, $title, $info = '', $syslog = '')
 {
-    global $current_user, ${$type};
+    global $current_user, $$type;
 
     if (is_array($title)) {
         $data = $title;
@@ -67,7 +67,7 @@ function addFormMessage($type, $title, $info = '', $syslog = '')
         syslog(LOG_NOTICE, 'MENEAME ['.$current_user->user_login.'] '.$data['syslog']);
     }
 
-    ${$type} = array(
+    $$type = array(
         'title' => $data['title'],
         'info' => $data['info'],
     );
@@ -90,7 +90,7 @@ function validateLinkUrl($link, $validator)
         $validator->checkDuplicates();
         $validator->checkRemote($anti_spam);
     } catch (Exception $e) {
-        return addFormError($validator->error);
+        return;
     }
 
     if (!$link->pingback()) {
@@ -118,7 +118,7 @@ function validateLinkUrl($link, $validator)
         $validator->checkBlogFast($blog, 30);
         $validator->checkBlogHistory($blog, 60);
     } catch (Exception $e) {
-        return addFormError($validator->error);
+        return;
     }
 
     if ($site->owner) {
@@ -130,7 +130,7 @@ function validateLinkUrl($link, $validator)
         $validator->checkMediaOverflow(12);
         $validator->checkBanPunished();
     } catch (Exception $e) {
-        return addFormError($validator->error);
+        return;
     }
 
     return true;
