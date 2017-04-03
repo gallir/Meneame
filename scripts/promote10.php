@@ -14,7 +14,7 @@ define(MAX, 1.15);
 define (MIN, 1.0);
 define (PUB_MIN, 1);
 define (PUB_MAX, 75);
-define (PUB_PERC, 0.15);
+define (PUB_PERC, 0.19);
 
 $sites = SitesMgr::get_active_sites();
 
