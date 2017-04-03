@@ -1608,9 +1608,11 @@ ul.slick-dots li button {
 
 .section.section-article-submit .input-title,
 .section.section-article-submit .input-editable {
-    border: none;
+    border: 0;
     padding: 5px 10px;
     height: auto;
+    box-shadow: none;
+    background: transparent;
 }
 
 .section.section-article-submit .input-title {
@@ -1628,7 +1630,7 @@ ul.slick-dots li button {
 }
 
 .medium-editor-placeholder::after {
-  color: #CCC;
+    color: #CCC;
 }
 
 .medium-editor-toolbar li button {
