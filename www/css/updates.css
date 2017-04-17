@@ -1238,12 +1238,14 @@ ul.slick-dots li button {
     margin-bottom: 25px;
 }
 
+.section.section-article-submit .story-blog-aside,
 .story-blog .story-blog-aside {
     position: relative;
     overflow: hidden;
     margin-top: 48px;
 }
 
+.section.section-article-submit .story-blog-aside.sticky,
 .story-blog .story-blog-aside.sticky {
     position: fixed;
     top: 0;
@@ -1607,11 +1609,6 @@ ul.slick-dots li button {
     padding-top: 20px;
 }
 
-.section.section-article-submit {
-    width: 75%;
-    margin: 0 auto;
-}
-
 .section.section-article-submit .input-title,
 .section.section-article-submit .input-editable {
     border: 0;
@@ -1622,6 +1619,7 @@ ul.slick-dots li button {
 }
 
 .section.section-article-submit .input-title {
+    margin-top: 0;
     margin-bottom: 30px;
     resize: none;
 }
@@ -1633,6 +1631,20 @@ ul.slick-dots li button {
 .section.section-article-submit .input-title:focus,
 .section.section-article-submit .input-editable:focus {
     box-shadow: none;
+}
+
+.section.section-article-submit .btn-gray {
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 3px;
+    color: #e35614;
+    margin-top: -6px;
+    font-size: 12px;
+    font-weight: 400;
+    background-color: #F1F1F1;
+    border: 1px solid #D7D7D7;
+    box-shadow: 0 1px 0 0 #FFFFFF;
+    font-weight: bold;
 }
 
 .medium-editor-placeholder::after {
@@ -1784,6 +1796,39 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
 
 .btn {
     border-radius: 5px;
+}
+
+.modal-mnm .modal-header,
+.modal-mnm .modal-footer {
+    border: 0;
+}
+
+.modal-mnm .modal-title {
+    text-align: center;
+    font-weight: 300;
+    color: #e35614;
+    font-size: 24px;
+}
+
+.modal-mnm .modal-body {
+    padding: 20px 40px;
+}
+
+.modal-mnm .modal-footer {
+    padding: 0;
+}
+
+.modal-mnm .modal-footer .btn {
+    margin: 0;
+    display: block;
+    width: 100%;
+    background: #e35614;
+    color: white;
+    border: 0;
+    border-radius: 0 0 3px 3px;
+    padding: 10px;
+    font-size: 24px;
+    text-transform: uppercase;
 }
 
 @media (max-width: 1024px) {
