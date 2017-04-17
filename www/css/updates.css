@@ -1798,9 +1798,31 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     border-radius: 5px;
 }
 
+.modal.modal-mnm {
+    text-align: center;
+}
+
+.modal.modal-mnm::before {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    margin-right: -4px;
+    vertical-align: middle;
+}
+
+.modal.modal-mnm .modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
 .modal-mnm .modal-header,
 .modal-mnm .modal-footer {
     border: 0;
+}
+
+.modal-mnm .modal-header .close:hover {
+    background: none;
 }
 
 .modal-mnm .modal-title {
