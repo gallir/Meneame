@@ -419,7 +419,7 @@ class LinkValidator
         ') - $this->getUserDrafts();
 
         if ($count > $limit) {
-            $this->setError(_('Debes esperar, ya se enviaron varias desde esta misma IP'));
+            //$this->setError(_('Debes esperar, ya se enviaron varias desde esta misma IP'));
         }
 
         return $this;

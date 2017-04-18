@@ -38,7 +38,28 @@ if (mb_strlen($link->url_description) > 40) {
 
 $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
+if ($link->is_new) {
+    $subs_main = get_subs_main();
+    $subs_subscriptions = get_subs_subscriptions($subs_main);
+
+    $subs_main = array_filter($subs_main, function ($value) {
+        $properties = SitesMgr::get_extended_properties($value->id);
+
+        return !empty($properties['no_link']);
+    });
+
+    $subs_subscriptions = array_filter($subs_subscriptions, function ($value) {
+        $properties = SitesMgr::get_extended_properties($value->id);
+
+        return !empty($properties['no_link']);
+    });
+} else {
+    $subs_main = $subs_subscriptions = array();
+}
+
 Haanga::Load('story/submit/article-2.html', array(
+    'subs_main' => $subs_main,
+    'subs_subscriptions' => $subs_subscriptions,
     'site_properties' => $site_properties,
     'link' => $link,
     'error' => $error,

@@ -19,7 +19,9 @@ if (preg_match('/[\(\[](IMG|PICT*)s*[\)\]]/i', $_POST['title'])) {
     $link->content_type = 'video';
 }
 
-$link->sub_id = intval($_POST['sub_id']);
+$old_sub_id = (int)$link->sub_id;
+
+$link->sub_id = (int)$_POST['sub_id'];
 $link->title = $_POST['title'];  // It also deletes punctuaction signs at the end
 $link->tags = tags_normalize_string($_POST['tags']);
 $link->site_properties = $site_properties;
@@ -40,6 +42,10 @@ if ($_POST['image_delete']) {
     $link->delete_image();
 } else {
     $link->store_image_from_form('image');
+}
+
+if ($old_sub_id && ($old_sub_id != $link->sub_id)) {
+    $link->sub_changed = true;
 }
 
 $link->title = $link->get_title_fixed();

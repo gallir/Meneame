@@ -1836,6 +1836,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     padding: 20px 40px;
 }
 
+.modal-mnm optgroup {
+    padding: 10px;
+}
+
 .modal-mnm .modal-footer {
     padding: 0;
 }

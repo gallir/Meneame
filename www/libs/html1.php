@@ -436,45 +436,55 @@ function do_pages($total, $page_size = 25, $margin = true)
     echo '</div>';
 }
 
+function get_subs_main()
+{
+    global $globals;
+
+    if (!empty($globals['submnm'])) {
+        return array();
+    }
+
+    return SitesMgr::get_sub_subs();
+}
+
+function get_subs_subscriptions(array $main = array())
+{
+    global $globals, $current_user;
+
+    $ids = array_map(function($value) {
+        return $value->id;
+    }, $main);
+
+    $subs = array();
+
+    foreach (SitesMgr::get_subscriptions($current_user->user_id) as $sub) {
+        if (!in_array($sub->id, $ids) && SitesMgr::can_send($sub->id)) {
+            $subs[] = $sub;
+        }
+    }
+
+    return $subs;
+}
+
+function get_sub_selected($selected)
+{
+    global $globals;
+
+    $selected = $selected ?: SitesMgr::my_id();
+
+    if (SitesMgr::can_send($selected) && ($sub = SitesMgr::get_info($selected))) {
+        return $sub;
+    }
+}
+
 //Used in editlink.php and submit.php
 function print_subs_form($selected = false)
 {
-    global $db, $globals, $current_user;
+    $subs = get_subs_main();
+    $subscriptions = get_subs_subscriptions($subs);
 
-    function id($s)
-    {
-        return $s->id;
-    }
-
-    if (!empty($globals['submnm'])) {
-        $subs = false;
-    } else {
-        $subs = SitesMgr::get_sub_subs();
-        $ids = array_map('id', $subs);
-
-        // A link in a sub is edited from another sub, or from the main site
-        // Add its selected sub.
-        if ($selected && !in_array($selected, $ids) && SitesMgr::can_send($selected)) {
-            $e = SitesMgr::get_info($selected);
-
-            if ($e) {
-                array_unshift($subs, $e); // Add to the form
-                array_unshift($ids, $selected); // Avoid to show it again if subscribed to
-            }
-        }
-
-        $extras = SitesMgr::get_subscriptions($current_user->user_id);
-        $subscriptions = array();
-
-        foreach ($extras as $s) {
-            if (!in_array($s->id, $ids) && SitesMgr::can_send($s->id)) {
-                $subscriptions[] = $s;
-            }
-        }
-    }
-
-    if ($selected == false) {
-        $selected = SitesMgr::my_id();
+    if ($selected = get_sub_selected($selected)) {
+        $selected = $selected->id;
     }
 
     return Haanga::Load('form_subs.html', compact('selected', 'subs', 'subscriptions'));

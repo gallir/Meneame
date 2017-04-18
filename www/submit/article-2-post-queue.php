@@ -19,7 +19,7 @@ $link_old->tags = $link->tags;
 $link_old->status = $link->status;
 $link_old->sub_id = $link->sub_id;
 
-$link->sub_id = intval($_POST['sub_id'] ?: $site->id);
+$link->sub_id = (int)$_POST['sub_id'] ?: $site->id;
 
 if ($link->sub_id != $link_old->sub_id) {
     $link->sub_changed = true; // To force to delete old statuses with another origin

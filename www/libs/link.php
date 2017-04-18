@@ -684,6 +684,13 @@ class Link extends LCPBase
     {
         global $db, $current_user, $globals;
 
+        $db->transaction();
+
+        if (!$this->store_basic()) {
+            $db->rollback();
+            return false;
+        }
+
         $link_url = $db->escape($this->url);
         $link_uri = $db->escape($this->uri);
         $link_url_title = $db->escape($this->url_title);
@@ -691,13 +698,6 @@ class Link extends LCPBase
         $link_tags = $db->escape($this->tags);
         $link_content = $db->escape($this->content);
         $link_thumb_status = $db->escape($this->thumb_status);
-
-        $db->transaction();
-
-        if (!$this->store_basic()) {
-            $db->rollback();
-            return false;
-        }
 
         $r = $db->query('
             UPDATE links
@@ -2238,14 +2238,16 @@ class Link extends LCPBase
     {
         global $globals;
 
-        if (!$this->sub_id) {
+        if (!$this->sub_id && ($this->content_type !== 'article')) {
             return _('No has seleccionado ningún SUB');
         }
 
-        $properties = SitesMgr::get_extended_properties($this->sub_id);
+        if ($this->sub_id) {
+            $properties = SitesMgr::get_extended_properties($this->sub_id);
 
-        if (empty($this->url) && empty($properties['no_link'])) {
-            return _('En este SUB es obligatorio enviar contenidos mediante enlace');
+            if (empty($this->url) && empty($properties['no_link'])) {
+                return _('En este SUB es obligatorio enviar contenidos mediante enlace');
+            }
         }
 
         $title = $this->get_title_fixed();

@@ -370,11 +370,17 @@ class SitesMgr
     {
         global $globals, $db;
 
-        if ($id == false) {
-            $id = self::my_id();
-        }
+        $id = (int)$id ?: self::my_id();
 
-        return $db->get_results("select subs.* from subs, subs_copy where dst = $id and id = src");
+        return $db->get_results('
+            SELECT subs.*
+            FROM subs, subs_copy
+            WHERE (
+                dst = "'.$id.'"
+                AND id = src
+            )
+            ORDER BY subs.name ASC;
+        ');
     }
 
     public static function get_sub_subs_ids($id = false)
@@ -519,12 +525,9 @@ class SitesMgr
         $key = self::PREFERENCES_KEY.$id;
         $a = new Annotation($key);
 
-        if ($a->read() && !empty($a->text)) {
-            $res = json_decode($a->text, true); // We use associative array
-            if ($res) {
-                foreach ($res as $k => $v) {
-                    $properties[$k] = $v;
-                }
+        if ($a->read() && !empty($a->text) && ($res = json_decode($a->text, true))) {
+            foreach ($res as $k => $v) {
+                $properties[$k] = $v;
             }
         }
 

@@ -33,7 +33,7 @@ if (empty($links)) {
 foreach ($links as $linkdb) {
     $link = Link::from_db($linkdb->id);
 
-    if ($link->author == $user->id) {
+    if (!$link || ($link->author == $user->id)) {
         continue;
     }
 
