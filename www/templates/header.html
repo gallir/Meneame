@@ -69,7 +69,13 @@
         {% endif %}
 
         {% for css in globals.extra_css %}
+
+        {% if css|substr:"0, 4" == 'http' OR css|substr:"0, 2" == '//' %}
+        <link href="{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% else %}
         <link href="{{ globals.base_static }}css/{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% endif %}
+
         {% endfor %}
 
         {% for css in globals.extra_vendor_css %}

@@ -16,13 +16,16 @@ if ($_POST) {
     require __DIR__.'/article-2-post.php';
 }
 
+$globals['extra_js'][] = '//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.min.js';
+$globals['extra_css'][] = '//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css';
+
 $globals['extra_vendor_js'][] = 'medium-editor/js/medium-editor.min.js';
 $globals['extra_vendor_css'][] = 'medium-editor/css/medium-editor.min.css';
 $globals['extra_vendor_css'][] = 'medium-editor/css/themes/default.min.css';
 
-do_header(_('Enviar un artículo') . ' 2/3', _('Enviar un artículo'));
+https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap2.min.css
 
-$link->is_new = $link->status === 'discard';
+do_header(_('Enviar un artículo') . ' 2/3', _('Enviar un artículo'));
 
 $link->discarded = $link->is_discarded();
 $link->status_text = $link->get_status_text();

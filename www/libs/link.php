@@ -615,10 +615,14 @@ class Link extends LCPBase
             return false;
         }
 
+        $db->commit();
+
         $this->insert_vote($current_user->user_karma);
 
         // Add the new link log/event
         Log::conditional_insert('link_new', $this->id, $this->author);
+
+        $db->transaction();
 
         $db->query("delete from links where link_author = $this->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
 
@@ -1111,29 +1115,6 @@ class Link extends LCPBase
         $status = !empty($this->sub_status) ? $this->sub_status : $this->status;
         $vote_value = ($value > 0 ? $value : -$current_user->user_karma);
         $karma_value = round($vote_value);
-
-        /*
-         * Simplified, it doesn't make much sense with subs
-        if ($status !== 'published') {
-        if($value < 0 && $current_user->user_id > 0) {
-        if ($globals['karma_user_affinity'] && $current_user->user_id != $this->author &&
-        ($affinity = User::get_affinity($this->author, $current_user->user_id)) <  0 ) {
-        $karma_value = round(min(-5, $current_user->user_karma *  $affinity/100));
-        } else {
-        $karma_value = round($vote_value);
-        }
-        } else {
-        if ($globals['karma_user_affinity'] && $current_user->user_id  > 0 && $current_user->user_id != $this->author &&
-        ($affinity = User::get_affinity($this->author, $current_user->user_id)) > 0 ) {
-        $karma_value = $value = round(max($current_user->user_karma * $affinity/100, 5));
-        } else {
-        $karma_value=round($vote_value);
-        }
-        }
-        } else {
-        $karma_value = round($vote_value);
-        }
-         */
 
         $vote->value = $value;
 

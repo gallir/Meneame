@@ -16,7 +16,7 @@ try {
 
 require_once mnminclude . 'tags.php';
 
-if ($link->status === 'discard') {
+if ($link->is_new) {
     require __DIR__.'/article-2-post-discard.php';
 } else {
     require __DIR__.'/article-2-post-queue.php';

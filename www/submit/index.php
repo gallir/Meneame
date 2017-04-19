@@ -33,6 +33,7 @@ $validator->setWarningCallback('addFormWarning');
 
 if (!empty($_REQUEST['id'])) {
     $link = getLinkByRequestId($link, $_REQUEST);
+    $link->is_new = $link->status === 'discard';
 }
 
 $type = empty($_POST['type']) ? $link->content_type : $_POST['type'];

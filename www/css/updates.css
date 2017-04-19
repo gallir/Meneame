@@ -1241,7 +1241,6 @@ ul.slick-dots li button {
 .section.section-article-submit .story-blog-aside,
 .story-blog .story-blog-aside {
     position: relative;
-    overflow: hidden;
     margin-top: 48px;
 }
 
@@ -1645,6 +1644,22 @@ ul.slick-dots li button {
     border: 1px solid #D7D7D7;
     box-shadow: 0 1px 0 0 #FFFFFF;
     font-weight: bold;
+}
+
+.section.section-article-submit .story-blog-aside .dropdown-menu {
+    padding: 0;
+}
+
+.section.section-article-submit .story-blog-aside .dropdown-menu button {
+    display: block;
+    width: 100%;
+    border: 0;
+    margin: 0;
+    padding: 5px;
+    border-bottom: 1px solid #D7D7D7;
+    background-color: #F1F1F1;
+    color: #e35614;
+    font-weight: normal;
 }
 
 .medium-editor-placeholder::after {

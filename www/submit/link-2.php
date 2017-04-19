@@ -18,8 +18,6 @@ if ($_POST) {
 
 do_header(_('Enviar historia') . ' 2/3', _('Enviar historia'));
 
-$link->is_new = $link->status === 'discard';
-
 $link->status = $link->sub_status;
 $link->discarded = $link->is_discarded();
 $link->status_text = $link->get_status_text();

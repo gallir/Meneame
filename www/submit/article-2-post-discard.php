@@ -42,10 +42,11 @@ $link->content = $link->get_content_fixed();
 
 $link->store();
 
-if (!$link->votes && ($link->status !== 'queued') && empty($_POST['discard'])) {
-    $link->enqueue();
+if ($link->votes || ($link->status === 'queued') || empty($_POST['publish'])) {
+    die(header('Location: '.getenv('REQUEST_URI')));
 }
 
+$link->enqueue();
 $link->read();
 
 die(header('Location: '. $link->get_permalink()));
