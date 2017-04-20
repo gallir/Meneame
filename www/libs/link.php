@@ -615,14 +615,10 @@ class Link extends LCPBase
             return false;
         }
 
-        $db->commit();
-
         $this->insert_vote($current_user->user_karma);
 
         // Add the new link log/event
         Log::conditional_insert('link_new', $this->id, $this->author);
-
-        $db->transaction();
 
         $db->query("delete from links where link_author = $this->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
 
