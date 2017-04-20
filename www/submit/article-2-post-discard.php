@@ -8,33 +8,37 @@
 
 defined('mnminclude') or die();
 
-$old_sub_id = (int)$link->sub_id;
+$sub_id = (int)$_POST['sub_id'];
 
-$link->sub_id = (int)$_POST['sub_id'];
+$link->sub_changed = $link->sub_id != $sub_id;
+$link->sub_id = $sub_id;
 
 if ($link->sub_id === -1) {
     $link->sub_id = 0;
-} elseif ($link->sub_id === 0) {
-    $link->sub_id = (int)$site->id;
 }
 
 $link->title = $_POST['title'];
 $link->site_properties = $site_properties;
 $link->content = $_POST['bodytext'];
+$link->nsfw = !empty($_POST['nsfw']);
 $link->tags = tags_normalize_string(_('Artículo'));
 
 if ($error = $link->check_field_errors()) {
+    if ($globals['is_ajax']) {
+        responseJson($error, false);
+    }
+
     return addFormError($error);
 }
 
 try {
     $validator->checkSiteSend();
 } catch (Exception $e) {
-    return;
-}
+    if ($globals['is_ajax']) {
+        responseJson($e->getMessage(), false);
+    }
 
-if ($old_sub_id !== $link->sub_id) {
-    $link->sub_changed = true;
+    return;
 }
 
 $link->title = $link->get_title_fixed();
@@ -42,11 +46,20 @@ $link->content = $link->get_content_fixed();
 
 $link->store();
 
-if ($link->votes || ($link->status === 'queued') || empty($_POST['publish'])) {
+if (!$link->is_new || empty($_POST['publish'])) {
+    if ($globals['is_ajax']) {
+        responseJson(_('Guardado!'));
+    }
+
     die(header('Location: '.getenv('REQUEST_URI')));
 }
 
-$link->enqueue();
+if ($link->sub_id) {
+    $link->enqueue();
+} else {
+    $link->enqueuePrivate();
+}
+
 $link->read();
 
 die(header('Location: '. $link->get_permalink()));

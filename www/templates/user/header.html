@@ -71,6 +71,10 @@
 
     <div class="contents-layout">
         <nav class="contents-menu">
+            <a href="{% exec user.get_uri "articles" %}" {% if menu == 'articles' %} class="selected" {% endif %}>
+                <i class="fa fa-file-text-o"></i> <span>{% trans _('Artículos') %}</span>
+            </a>
+
             <a href="{% exec user.get_uri "history" %}" {% if menu == 'history' %} class="selected" {% endif %}>
                 <i class="fa fa-newspaper-o"></i> <span>{% trans _('Historias') %}</span>
             </a>

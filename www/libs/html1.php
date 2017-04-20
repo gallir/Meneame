@@ -1307,3 +1307,24 @@ function query_official_subs_for_widget()
 
     return array_values($subs);
 }
+
+function responseJson($data, $success = true)
+{
+    if (is_integer($data)) {
+        die((string)$data);
+    }
+
+    $response = array(
+        'success' => $success,
+        'data' => null,
+        'message' => null
+    );
+
+    if (is_string($data)) {
+        $response['message'] = $data;
+    } else {
+        $response['data'] = $data;
+    }
+
+    die(json_encode($response));
+}

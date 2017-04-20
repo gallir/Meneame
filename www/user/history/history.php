@@ -3,7 +3,10 @@ defined('mnminclude') or die();
 
 $query = '
     FROM links
-    WHERE link_author = "'.(int)$user->id.'"
+    WHERE (
+        link_author = "'.(int)$user->id.'"
+        AND link_status != "private"
+    )
 ';
 
 $count = $db->get_var('SELECT COUNT(*) '.$query.';');

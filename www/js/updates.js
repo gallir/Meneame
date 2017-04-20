@@ -572,10 +572,10 @@ function showPoll() {
         showPoll();
     };
 
-    INIT.stickyBlogColumn = function() {
-        var $aside = $('.story-blog-aside');
+    INIT.sticky = function() {
+        var $sticky = $('.apply-sticky');
 
-        if (is_mobile || !$aside.length) {
+        if (is_mobile || !$sticky.length) {
             return;
         }
 
@@ -583,22 +583,67 @@ function showPoll() {
             var scrollTop = $(window).scrollTop();
 
             if (!stuck && ((initOffsetTop - scrollTop) < 0)) {
-                $aside.toggleClass('sticky');
+                $sticky.toggleClass('sticky');
                 stuck = true;
             } else if (stuck && (scrollTop <= initOffsetTop)) {
-                $aside.toggleClass('sticky');
+                $sticky.toggleClass('sticky');
                 stuck = false;
             }
         }
 
-        $aside.css('width', $aside.width());
+        $sticky.css('width', $sticky.width());
 
         var stuck = false;
-        var initOffsetTop = $aside.offset().top - $('#header-top').height() - 40;
+        var initOffsetTop = $sticky.offset().top - $('#header-top').height() - 40;
 
         window.onscroll = sticky;
 
         sticky();
+    };
+
+    INIT.articleEdit = function() {
+        if (!$('.section-article-submit').length) {
+            return;
+        }
+
+        $('.form textarea[name="title"]').autosize();
+        $('#sub_id').selectize();
+
+        new MediumEditor('.input-editable', {
+            placeholder: {
+                text: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
+                hideOnClick: true
+            }
+        });
+
+        $('button[name="discard"]').on('click', function(e) {
+            e.preventDefault();
+
+            var $this = $(this),
+                data = $this.closest('form').serializeArray();
+
+            data.push({name: this.name, value: this.value});
+
+            $.post(null, data, function(data) {
+                if (!data) {
+                    return;
+                }
+
+                var $alert = $('<div class="alert">' + data.message + '</div>');
+
+                if (data.success) {
+                    $alert.addClass('alert-success');
+                } else {
+                    $alert.addClass('alert-danger');
+                }
+
+                $this.closest('.story-blog-aside').append($alert);
+
+                setTimeout(function() {
+                    $alert.fadeOut();
+                }, 3000);
+            }, 'json');
+        });
     };
 
     INIT.formRegister();
@@ -608,5 +653,9 @@ function showPoll() {
     INIT.showPoll();
     INIT.formPollVote();
     INIT.commentCollapse();
-    INIT.stickyBlogColumn();
+    INIT.sticky();
+
+    addPostCode(function () {
+        INIT.articleEdit();
+    });
 })(jQuery);

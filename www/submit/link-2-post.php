@@ -24,7 +24,7 @@ if (!empty($_POST['url']) && ($_POST['url'] !== $link->url)) {
 
 require_once mnminclude . 'tags.php';
 
-if ($link->status === 'discard') {
+if ($link->is_new) {
     require __DIR__.'/link-2-post-discard.php';
 } else {
     require __DIR__.'/link-2-post-queue.php';

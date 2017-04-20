@@ -10,7 +10,7 @@ defined('mnminclude') or die();
 
 $link->randkey = rand(10000, 10000000);
 
-if ($_POST) {
+if ($_POST || !empty($_GET['write'])) {
     require __DIR__.'/article-1-post.php';
 }
 

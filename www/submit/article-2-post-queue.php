@@ -8,8 +8,6 @@
 
 defined('mnminclude') or die();
 
-$link->status = $link->sub_status;
-
 // Store previous value for the log
 $link_old = new stdClass;
 $link_old->url = $link->url;
@@ -19,7 +17,11 @@ $link_old->tags = $link->tags;
 $link_old->status = $link->status;
 $link_old->sub_id = $link->sub_id;
 
-$link->sub_id = (int)$_POST['sub_id'] ?: $site->id;
+if ($link->status === 'private') {
+    $link->sub_id = 0;
+} elseif ((int)$_POST['sub_id']) {
+    $link->sub_id = (int)$_POST['sub_id'];
+}
 
 if ($link->sub_id != $link_old->sub_id) {
     $link->sub_changed = true; // To force to delete old statuses with another origin

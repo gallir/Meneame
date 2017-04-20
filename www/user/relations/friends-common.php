@@ -10,7 +10,7 @@
 
 defined('mnminclude') or die();
 
-require_once __DIR__ . '/../backend/pager.php';
+require_once mnmpath . '/backend/pager.php';
 
 if (empty($prefered_id) || !is_int($prefered_id)) {
     return Haanga::Load('user/empty.html');

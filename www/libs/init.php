@@ -68,7 +68,8 @@ if ($globals['cli']) {
         $globals['proxy_ip'] = false;
     }
 
-    $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode(getenv('REQUEST_URI'))); // clean it for future use
+    $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode(getenv('REQUEST_URI')));
+    $globals['is_ajax'] = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
 }
 
 // Use proxy and load balancer detection

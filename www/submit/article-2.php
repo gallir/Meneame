@@ -23,8 +23,6 @@ $globals['extra_vendor_js'][] = 'medium-editor/js/medium-editor.min.js';
 $globals['extra_vendor_css'][] = 'medium-editor/css/medium-editor.min.css';
 $globals['extra_vendor_css'][] = 'medium-editor/css/themes/default.min.css';
 
-https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap2.min.css
-
 do_header(_('Enviar un artículo') . ' 2/3', _('Enviar un artículo'));
 
 $link->discarded = $link->is_discarded();

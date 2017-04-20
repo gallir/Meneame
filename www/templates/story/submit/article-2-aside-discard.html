@@ -1,26 +1,26 @@
-<div class="btn-group">
-    <button type="button" type="submit" class="btn btn-gray" data-toggle="modal" data-target="#modal-save">
-        <i class="fa fa-cloud-upload"></i>
-        {% trans _('Publicar') %}
-    </button>
+<div class="story-blog-aside apply-sticky">
+    <br class="clearfix" />
 
-    <button type="button" class="btn btn-gray dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-ellipsis-h"></i>
-    </button>
+    <div class="btn-group">
+        <button type="button" type="submit" class="btn btn-gray" data-toggle="modal" data-target="#modal-save">
+            <i class="fa fa-cloud-upload"></i>
+            {% trans _('Publicar') %}
+        </button>
 
-    <ul class="dropdown-menu">
-        <li>
-            <button type="submit" name="discard" value="1">
-                {% trans _('Guardar borrador') %}
-            </button>
-        </li>
+        <button type="button" class="btn btn-gray dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-h"></i>
+        </button>
 
-        <li>
-            <button type="button" data-toggle="modal" data-target="#modal-delete">
-                {% trans _('Eliminar borrador') %}
-            </button>
-        </li>
-    </ul>
+        <ul class="dropdown-menu">
+            <li>
+                <button type="submit" name="discard" value="1">
+                    {% trans _('Guardar borrador') %}
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <p class="clearfix"><br /></p>
 </div>
 
 <div class="modal modal-mnm fade" id="modal-save" tabindex="-1" role="dialog">
@@ -103,18 +103,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-addPostCode(function () {
-    $('.form textarea[name="title"]').autosize();
-
-    new MediumEditor('.input-editable', {
-        placeholder: {
-            text: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
-            hideOnClick: true
-        }
-    });
-
-    $('#sub_id').selectize();
-});
-</script>

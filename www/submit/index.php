@@ -33,10 +33,16 @@ $validator->setWarningCallback('addFormWarning');
 
 if (!empty($_REQUEST['id'])) {
     $link = getLinkByRequestId($link, $_REQUEST);
-    $link->is_new = $link->status === 'discard';
+    $link->is_new = !$link->votes && ($link->status === 'discard');
 }
 
-$type = empty($_POST['type']) ? $link->content_type : $_POST['type'];
+if (!empty($_POST['type'])) {
+    $type = $_POST['type'];
+} elseif (!empty($_GET['type'])) {
+    $type = $_GET['type'];
+} else {
+    $type = $link->content_type;
+}
 
 if ($type === 'article') {
     require __DIR__.'/article-'.getStep().'.php';

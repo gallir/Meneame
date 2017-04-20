@@ -617,10 +617,17 @@ class Link extends LCPBase
 
         $this->insert_vote($current_user->user_karma);
 
-        // Add the new link log/event
         Log::conditional_insert('link_new', $this->id, $this->author);
 
-        $db->query("delete from links where link_author = $this->author and link_date > date_sub(now(), interval 30 minute) and link_status='discard' and link_votes=0");
+        $db->query('
+            DELETE FROM links
+            WHERE (
+                link_author = "'.$this->author.'"
+                AND link_date > DATE_SUB(NOW(), INTERVAL 2 HOUR)
+                AND link_status = "discard"
+                AND link_votes = 0
+            )
+        ');
 
         if (!empty($_POST['trackback'])) {
             $trackres = new Trackback;
@@ -635,6 +642,41 @@ class Link extends LCPBase
         $db->commit();
 
         fork("backend/send_pingbacks.php?id=$this->id");
+    }
+
+    public function enqueuePrivate()
+    {
+        global $db, $globals, $current_user;
+
+        if ($this->votes || $this->author != $current_user->user_id || $this->status === 'private') {
+            return;
+        }
+
+        $this->status = 'private';
+        $this->sent_date = $this->date = time();
+        $this->get_uri();
+
+        $db->transaction();
+
+        if (!$this->store()) {
+            return $db->rollback();
+        }
+
+        $this->insert_vote($current_user->user_karma);
+
+        Log::conditional_insert('link_new', $this->id, $this->author);
+
+        $db->query('
+            DELETE FROM links
+            WHERE (
+                link_author = "'.$this->author.'"
+                AND link_date > DATE_SUB(NOW(), INTERVAL 2 HOUR)
+                AND link_status = "discard"
+                AND link_votes = 0
+            )
+        ');
+
+        $db->commit();
     }
 
     public function has_rss()
@@ -698,6 +740,7 @@ class Link extends LCPBase
         $link_tags = $db->escape($this->tags);
         $link_content = $db->escape($this->content);
         $link_thumb_status = $db->escape($this->thumb_status);
+        $link_nsfw = $this->nsfw ? 1 : 0;
 
         $r = $db->query('
             UPDATE links
@@ -708,7 +751,8 @@ class Link extends LCPBase
                 link_title = "' . $link_title . '",
                 link_content = "' . $link_content . '",
                 link_tags = "' . $link_tags . '",
-                link_thumb_status = "' . $link_thumb_status . '"
+                link_thumb_status = "' . $link_thumb_status . '",
+                link_nsfw = "' . $link_nsfw . '"
             WHERE link_id = "' . $this->id . '"
             LIMIT 1;
         ');
@@ -1355,6 +1399,8 @@ class Link extends LCPBase
             } else {
                 $base = $this->base_url . 'm/' . $this->sub_name . '/';
             }
+        } elseif ($this->status === 'private') {
+            $base = $this->base_url . 'my-story/'. $this->username .'/';
         } else {
             $base = $this->base_url . 'story/';
         }

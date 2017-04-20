@@ -11,6 +11,10 @@ defined('mnminclude') or die();
 try {
     $validator->checkKey();
 } catch (Exception $e) {
+    if ($globals['is_ajax']) {
+        responseJson($e->getMessage(), false);
+    }
+
     return;
 }
 

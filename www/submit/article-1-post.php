@@ -8,10 +8,12 @@
 
 defined('mnminclude') or die();
 
-try {
-    $validator->checkKey();
-} catch (Exception $e) {
-    return;
+if (empty($_GET['write'])) {
+    try {
+        $validator->checkKey();
+    } catch (Exception $e) {
+        return;
+    }
 }
 
 $anti_spam = empty($site_properties['no_anti_spam']);

@@ -371,6 +371,10 @@ function html_fix($html)
 
 function html_remove_attributes($html, $allow = array('src', 'href'))
 {
+    if (empty($html)) {
+        return '';
+    }
+
     $DOM = new DOMDocument;
     $DOM->loadHTML($html);
 

@@ -22,31 +22,14 @@
                         link.content
                     }}</textarea>
                 </div>
-
-                <script type="text/javascript">
-                addPostCode(function () {
-                    $('.form textarea[name="title"]').autosize();
-
-                    new MediumEditor('.input-editable', {
-                        placeholder: {
-                            text: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
-                            hideOnClick: true
-                        }
-                    });
-                });
-                </script>
             </div>
 
             <div class="col-md-2 col-md-offset-1 text-center">
-                <div class="story-blog-aside">
-                    <br class="clearfix" />
-
-                    {% if link.is_new %}
-                        {% include 'story/submit/article-2-aside-discard.html' %}
-                    {% else %}
-                        {% include 'story/submit/article-2-aside.html' %}
-                    {% endif %}
-                </div>
+                {% if link.is_new %}
+                    {% include 'story/submit/article-2-aside-discard.html' %}
+                {% else %}
+                    {% include 'story/submit/article-2-aside.html' %}
+                {% endif %}
             </div>
         </div>
     </form>

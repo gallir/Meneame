@@ -168,6 +168,10 @@ class SitesMgr
             self::__init();
         }
 
+        if ($link->status === 'private') {
+            return $db->query('DELETE FROM sub_statuses WHERE link = "'.(int)$link->id.'"');
+        }
+
         $delete_others = false;
 
         $me = self::get_status(self::$id, $link);
@@ -183,43 +187,55 @@ class SitesMgr
 
         if ($me->origen != $link->sub_id || ! empty($link->sub_changed)) {
             $do_changed_id = true;  // Force to save all statuses
-            if ($me->status == 'new') {
+            $do_all = true;
+
+            $me->origen = $origen = self::get_real_origen($current, $link);
+
+            if ($me->status === 'new') {
                 $me->status = $link->status;
             }
-            $do_all = true;
-            $me->origen = $origen = self::get_real_origen($current, $link);
         } else { // If origen has changed, don't do the rest
             $me->date = $link->date;
+
             if ($me->status != $link->status) {
                 $status_changed = true;
+
                 switch ($link->status) {
                     case 'discard':
                     case 'autodiscard':
                     case 'abuse':
-                        $me->date = $link->sent_date;
                         $do_all = true;
+
+                        $me->date = $link->sent_date;
+
                         break;
+
                     case 'queued':
                         $me->date = $link->sent_date;
-                        switch ($me->status) {
-                            case 'published':
-                                $do_current = true;
-                                break;
-                            default:
-                                $do_all = true;
+
+                        if ($me->status === 'published') {
+                            $do_current = true;
+                        } else {
+                            $do_all = true;
                         }
+
                         break;
+
                     case 'published':
                     case 'metapublished':
                         $do_current = true;
+                        $copy_link_karma = true;
+
                         $me->karma = $link->karma;
                         $me->date = $link->date;
-                        $copy_link_karma = true;
+
                         break;
+
                     default:
                         $do_current = true;
                         syslog(LOG_INFO, "Menéame, status unknown in link $link->id");
                 }
+
                 $me->status = $link->status;
             }
         }
@@ -247,21 +263,27 @@ class SitesMgr
         if ($receivers) {
             foreach ($receivers as $r) {
                 $new = $db->get_row("select * from sub_statuses where id = $r and link = $link->id");
+
                 if (! $new) {
                     $new = $me;
                     $new->karma = 0;
                 }
+
                 $new->date = $me->date;
                 $new->origen = $me->origen;
+
                 if (! $do_changed_id) {  // Origen has changed, don't modify the status
                     $new->status = $me->status;
                 }
+
                 if ($do_current &&  // changed status to published or from published to queued
                         ($copy_link_karma || round($new->karma) == 0 || $link->karma < $new->karma)) {
                     // If karma was never updated (new published) or the link karma is negative/smaller
                     $new->karma = $link->karma;
                 }
+
                 $r = $db->query("replace into sub_statuses (id, status, date, link, origen, karma) values ($r, '$new->status', from_unixtime($new->date), $new->link, $new->origen, $new->karma)");
+
                 if (! $r) {
                     $db->rollback();
                     syslog(LOG_INFO, "Failed transaction replace sub_statuses: ".$link->get_permalink());
@@ -288,8 +310,6 @@ class SitesMgr
     // TODO: transient, for migration, edit/modify later
     public static function get_real_origen($id, $link)
     {
-        global $db;
-
         return ($link->sub_id > 0) ? $link->sub_id : $id;
     }
 
@@ -302,9 +322,7 @@ class SitesMgr
             $id = self::my_id();
         }
 
-        $receivers = array();
-
-        return array_merge($receivers, $db->get_col("select dst from subs_copy where src=$id"));
+        return $db->get_col('SELECT dst FROM subs_copy WHERE src = "'.(int)$id.'"');
     }
 
     public static function get_senders($id = false)
@@ -315,9 +333,7 @@ class SitesMgr
             $id = self::my_id();
         }
 
-        $senders = array();
-
-        return array_merge($senders, $db->get_col("select src from subs_copy where dst=$id"));
+        return $db->get_col('SELECT src FROM subs_copy WHERE dst = "'.(int)$id.'"');
     }
 
     private static function get_status($id, $link)
@@ -419,7 +435,7 @@ class SitesMgr
 
         $n = $db->get_var("select count(*) from subs where owner = $current_user->user_id");
 
-        return $n < 10 && time() - $current_user->user_date > 86400*10;
+        return $n < 10 && time() - $current_user->user_date > 86400 * 10;
     }
 
     public static function my_parent()
@@ -453,10 +469,13 @@ class SitesMgr
 
         if (!$memcache_followers || false === $followers = memcache_mget($memcache_followers)) {
             // Not in memcache
-
-            $sql = 'SELECT SQL_CACHE COUNT(pref_user_id) FROM prefs WHERE (pref_key = "sub_follow" AND pref_value = "'.self::my_id().'")';
-
-            $followers = $db->get_var($sql);
+            $followers = $db->get_var('
+                SELECT SQL_CACHE COUNT(pref_user_id)
+                FROM prefs WHERE (
+                    pref_key = "sub_follow"
+                    AND pref_value = "'.self::my_id().'"
+                )
+            ');
 
             if ($memcache_followers) {
                 memcache_madd($memcache_followers, $followers, 1800);
@@ -476,35 +495,39 @@ class SitesMgr
         $defaults = array_merge(self::$extended_properties, self::$extra_extended_properties);
 
         foreach ($prefs as $k => $v) {
-            if ($v !== '' && isset($defaults[$k]) && $defaults[$k] != $v) {
-                switch ($k) {
-                    case 'rules':
-                    case 'message':
-                        $dict[$k] = clean_text_with_tags($v, 0, false, 3000);
-                        break;
-                    case 'post_html': // TODO: validate the HTML
-                        $dict[$k] = $v;
-                        break;
-                    default:
-                        if (isset($defaults[$k]) && is_int($defaults[$k])) {
-                            $dict[$k] = intval($v);
-                        } else {
-                            $dict[$k] = mb_substr(clean_input_string($v), 0, 140);
-                        }
-                }
+            if (empty($v) || empty($defaults[$k]) || $defaults[$k] == $v) {
+                continue;
+            }
+
+            switch ($k) {
+                case 'rules':
+                case 'message':
+                    $dict[$k] = clean_text_with_tags($v, 0, false, 3000);
+                    break;
+
+                case 'post_html': // TODO: validate the HTML
+                    $dict[$k] = $v;
+                    break;
+
+                default:
+                    if (isset($defaults[$k]) && is_int($defaults[$k])) {
+                        $dict[$k] = intval($v);
+                    } else {
+                        $dict[$k] = mb_substr(clean_input_string($v), 0, 140);
+                    }
             }
         }
 
         $key = self::PREFERENCES_KEY.$id;
         $a = new Annotation($key);
 
-        if (!empty($dict)) {
-            $json = json_encode($dict);
-            $a->text = $json;
-            return $a->store();
+        if (empty($dict)) {
+            return $a->delete();
         }
 
-        return $a->delete();
+        $a->text = json_encode($dict);
+
+        return $a->store();
     }
 
     public static function get_extended_properties($id = false)

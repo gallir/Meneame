@@ -283,6 +283,10 @@ class User
         global $globals, $current_user;
 
         switch ($view) {
+            case 'articles':
+                $id = _('Artículos');
+                break;
+
             case 'subs':
             case 'subs_follow':
                 $id = _('subs');
@@ -332,14 +336,18 @@ class User
                 break;
         }
 
-        $items = array(
-            new MenuOption(_('perfil'), $user->get_uri('profile'), $id, _('Información de usuario')),
-            new MenuOption(_('historias'), $user->get_uri('history'), $id, _('Información de envíos')),
-            new MenuOption(_('subs'), $user->get_uri('subs'), $id, _('Sub menéames')),
-            new MenuOption(_('comentarios'), $user->get_uri('commented'), $id, _('Información de comentarios')),
-            new MenuOption(_('notas'), $user->get_uri('notes'), $id, _('Página de notas')),
-            new MenuOption(_('relaciones'), $user->get_uri('friends'), $id, _('Amigos e ignorados')),
-        );
+        $items = array();
+
+        if ($user->id == $current_user->user_id) {
+            $items[] = new MenuOption(_('Crear artículo'), $globals['base_url'] . 'submit?type=article&write=true', $id, _('enviar nueva historia'), 'submit_new_post');
+        }
+
+        $items[] = new MenuOption(_('perfil'), $user->get_uri('profile'), $id, _('Información de usuario'));
+        $items[] = new MenuOption(_('historias'), $user->get_uri('history'), $id, _('Información de envíos'));
+        $items[] = new MenuOption(_('subs'), $user->get_uri('subs'), $id, _('Sub menéames'));
+        $items[] = new MenuOption(_('comentarios'), $user->get_uri('commented'), $id, _('Información de comentarios'));
+        $items[] = new MenuOption(_('notas'), $user->get_uri('notes'), $id, _('Página de notas'));
+        $items[] = new MenuOption(_('relaciones'), $user->get_uri('friends'), $id, _('Amigos e ignorados'));
 
         if ($user->id == $current_user->user_id) {
             $items[] = new MenuOption(_('privados'), $user->get_uri('notes_privates'), $id, _('Notas privadas'));

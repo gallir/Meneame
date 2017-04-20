@@ -104,7 +104,7 @@ class RGDB extends mysqli
     {
         $this->in_transaction++;
 
-        if ($this->in_transaction === 1) {
+        if ($this->in_transaction == 1) {
             $this->query('START TRANSACTION');
         } elseif (!$this->query('SAVEPOINT ' . $this->savepoint_name())) {
             syslog(LOG_INFO, 'Error SAVEPOINT ' . $this->savepoint_name() . ' ' . $_SERVER['SCRIPT_NAME']);

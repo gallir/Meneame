@@ -97,7 +97,7 @@ if (($argc = count($url_args)) > 1) {
 
         unset($url_args[1]);
     } elseif ((int)$url_args[$argc - 1] > 0) {
-        $current_page = intval($url_args[$argc-1]);
+        $current_page = intval($url_args[$argc - 1]);
 
         if ($current_page > $total_pages) {
             do_error(_('página inexistente'), 404);

@@ -76,6 +76,10 @@ $globals['noindex'] = true;
 
 // Check if it should be index AND if they are valids options, otherwise call do_error()
 switch ($view) {
+    case 'articles':
+        $menu = 'articles';
+        break;
+
     case 'history':
     case 'shaken':
     case 'favorites':
@@ -161,7 +165,7 @@ Haanga::Load('user/submenu.html', [
 if ($user->ignored()) {
     Haanga::Load('user/ignored.html');
 } else {
-    require __DIR__.'/'.$view.'.php';
+    require __DIR__.'/'.$menu.'/'.$view.'.php';
 }
 
 Haanga::Load('user/footer.html');
