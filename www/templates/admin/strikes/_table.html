@@ -69,7 +69,7 @@
         <td class="text-center">{{ strike.comment|txt_shorter:50|clean_text }}</td>
         <td class="text-center">
             {% if strike.report_id %}
-            <a href="{{ globals.base_url }}admin/reports.php?s={{ strike.report_id }}&amp;report_status=all">
+            <a href="{{ globals.base_url }}admin/reports.php?s=id:{{ strike.report_id }}&amp;report_status=all">
                 {{ strike.report_id }}
             </a>
             {% else %}
