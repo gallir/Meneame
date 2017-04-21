@@ -82,12 +82,31 @@
         <td class="text-center">{{ strike.date }}</td>
         <td class="text-center">{{ strike.expires_at }}</td>
         <td class="text-center">{{ strike.admin_login }}</td>
+
+        {% if user %}
+        <td class="text-center">
+            <a href="?tab=strikes&amp;op=delete&amp;id={{ strike.id }}&amp;strike_user={{ strike.user_login }}" title="Borrar Strike" class="btn btn-default btn-xs" data-delete="true">
+                <i class="fa fa-trash"></i>
+            </a>
+        </td>
+        {% else %}
         <td class="text-center">
             <a href="?tab=strikes&amp;op=new&amp;strike_user={{ strike.user_login }}" title="Información" class="btn btn-default btn-xs">
                 <i class="fa fa-info"></i>
             </a>
         </td>
+        {% endif %}
     </tr>
 
     {% endfor %}
 </table>
+
+{% if user %}
+<script>
+addPostCode(function() {
+    $('[data-delete]').on('click', function(e) {
+        return confirm('¿Deseas realmente eliminar este strike? Si aceptas, el karma recuperará su estado previo.');
+    })
+});
+</script>
+{% endif %}

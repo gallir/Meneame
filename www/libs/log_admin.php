@@ -12,8 +12,16 @@ class LogAdmin
     {
         global $db, $globals;
 
-        $ip = $globals['user_ip'];
-        $res = $db->query("insert into admin_logs (log_date, log_type, log_ref_id, log_user_id, log_old_value, log_new_value, log_ip) values (now(), '$type', $ref_id, $user_id, '$old_value', '$new_value', '$ip')");
-        return $res;
+        return $db->query('
+            INSERT INTO `admin_logs`
+            SET
+                `log_date` = NOW(),
+                `log_type` = "'.$type.'",
+                `log_ref_id` = "'.(int)$ref_id.'",
+                `log_user_id` = "'.(int)$user_id.'",
+                `log_old_value` = "'.$old_value.'",
+                `log_new_value` = "'.$new_value.'",
+                `log_ip` = "'.$globals['user_ip'].'";
+        ');
     }
 }

@@ -28,11 +28,15 @@ switch ($_REQUEST['op'] ?: 'list') {
     case 'new':
         do_header(_('nuevo strike'));
         do_admin_tabs($selected_tab);
-        do_new_strike($selected_tab);
+        do_strike_new($selected_tab);
         break;
 
     case 'save';
-        do_save_strike();
+        do_strike_save();
+        break;
+
+    case 'delete';
+        do_strike_delete();
         break;
 }
 
@@ -70,7 +74,7 @@ function do_strike_list($selected_tab)
     do_pages($rows, $page_size, false);
 }
 
-function do_new_strike($selected_tab)
+function do_strike_new($selected_tab)
 {
     global $db;
 
@@ -112,7 +116,7 @@ function do_new_strike($selected_tab)
     ));
 }
 
-function do_save_strike()
+function do_strike_save()
 {
     global $db, $globals, $current_user;
 
@@ -143,4 +147,15 @@ function do_save_strike()
     // TODO: Do ban to user and save in admin_log with type strike.
 
     die(header('Location: '.$_SERVER['REQUEST_URI']));
+}
+
+function do_strike_delete()
+{
+    $back = str_replace('op=delete', 'op=new', $_SERVER['REQUEST_URI']);
+
+    if ($strike = Strike::getById((int)$_REQUEST['id'])) {
+        Strike::delete($strike);
+    }
+
+    die(header('Location: '.$back));
 }
