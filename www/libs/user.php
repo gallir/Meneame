@@ -284,6 +284,10 @@ class User
 
         switch ($view) {
             case 'articles':
+            case 'articles_private':
+            case 'articles_shaken':
+            case 'articles_favorites':
+            case 'articles_discard':
                 $id = _('Artículos');
                 break;
 

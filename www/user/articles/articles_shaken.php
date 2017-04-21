@@ -11,7 +11,7 @@ $query = '
         vote_type = "links"
         AND vote_user_id = "'.(int)$user->id.'"
         AND vote_value > 0
-        AND link_content_type != "article"
+        AND link_content_type = "article"
         AND link_id = vote_link_id
         AND link_author != "'.(int)$user->id.'"
     )

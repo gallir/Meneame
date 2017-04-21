@@ -77,6 +77,10 @@ $globals['noindex'] = true;
 // Check if it should be index AND if they are valids options, otherwise call do_error()
 switch ($view) {
     case 'articles':
+    case 'articles_private':
+    case 'articles_shaken':
+    case 'articles_favorites':
+    case 'articles_discard':
         $menu = 'articles';
         break;
 

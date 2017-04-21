@@ -6,7 +6,7 @@ $query = '
     WHERE (
         favorite_user_id = "'.(int)$user->id.'"
         AND favorite_type = "link"
-        AND link_content_type != "article"
+        AND link_content_type = "article"
         AND favorite_link_id = link_id
     )
 ';

@@ -5,8 +5,9 @@ $query = '
     FROM links
     WHERE (
         link_author = "'.(int)$user->id.'"
+        AND link_status = "discard"
         AND link_content_type = "article"
-        AND link_status != "private"
+        AND link_votes = 0
     )
 ';
 
@@ -30,9 +31,7 @@ if (empty($links)) {
 Link::$original_status = true; // Show status in original sub
 
 foreach ($links as $link_id) {
-    $link = Link::from_db($link_id);
-
-    if ($link && $link->votes > 0) {
+    if ($link = Link::from_db($link_id)) {
         $link->print_summary('short');
     }
 }

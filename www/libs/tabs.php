@@ -26,6 +26,12 @@ final class Tabs
     public static function renderFromProfile(array $options, $tab_class = null)
     {
         switch ($options['view']) {
+            case 'articles':
+                return self::renderForProfileArticles($options, $tab_class);
+
+            case 'articles_private':
+                return self::renderForProfileArticlesPrivate($options, $tab_class);
+
             case 'profile':
                 return self::renderForProfileProfile($options, $tab_class);
 
@@ -70,6 +76,21 @@ final class Tabs
     public static function optionsFromProfile($view)
     {
         switch ($view) {
+            case 'articles':
+                return self::optionsForProfileArticles();
+
+            case 'articles_private':
+                return self::optionsForProfileArticlesPrivate();
+
+            case 'articles_shaken':
+                return self::optionsForProfileArticlesShaken();
+
+            case 'articles_favorites':
+                return self::optionsForProfileArticlesFavorites();
+
+            case 'articles_discard':
+                return self::optionsForProfileArticlesDiscard();
+
             case 'friends':
                 return self::optionsForProfileFriends();
 
@@ -373,6 +394,79 @@ final class Tabs
         }
 
         return $options;
+    }
+
+    public static function renderForProfileArticles($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileArticles(), 0, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileArticles()
+    {
+        global $user;
+
+        return array(
+            'articles' => array(
+                'title' => _('Públicos'),
+                'link' => $user->get_uri('articles'),
+            ),
+            'articles_private' => array(
+                'title' => _('Privados'),
+                'link' => $user->get_uri('articles_private'),
+            ),
+            'articles_shaken' => array(
+                'title' => _('Votados'),
+                'link' => $user->get_uri('articles_shaken'),
+            ),
+            'articles_favorites' => array(
+                'title' => _('Favoritos'),
+                'link' => $user->get_uri('articles_favorites'),
+            ),
+            'articles_discard' => array(
+                'title' => _('Borradores'),
+                'link' => $user->get_uri('articles_discard'),
+            ),
+        );
+    }
+
+    public static function renderForProfileArticlesPrivate($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileArticlesPrivate(), 1, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileArticlesPrivate()
+    {
+        return self::optionsForProfileArticles();
+    }
+
+    public static function renderForProfileArticlesShaken($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileArticlesShaken(), 2, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileArticlesShaken()
+    {
+        return self::optionsForProfileArticles();
+    }
+
+    public static function renderForProfileArticlesFavorites($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileArticlesFavorites(), 3, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileArticlesFavorites()
+    {
+        return self::optionsForProfileArticles();
+    }
+
+    public static function renderForProfileArticlesDiscard($params, $tab_class)
+    {
+        return self::renderUserProfileSubheader(self::optionsForProfileArticlesDiscard(), 4, false, '', $tab_class);
+    }
+
+    public static function optionsForProfileArticlesDiscard()
+    {
+        return self::optionsForProfileArticles();
     }
 
     public static function renderForProfileFriends($params, $tab_class)

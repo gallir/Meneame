@@ -5,7 +5,7 @@ $query = '
     FROM links
     WHERE (
         link_author = "'.(int)$user->id.'"
-        AND link_status != "private"
+        AND link_content_type != "article"
     )
 ';
 

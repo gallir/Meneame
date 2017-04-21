@@ -20,24 +20,26 @@ if (empty($friends)) {
 }
 
 $query = '
-    FROM votes
+    FROM links, votes
     WHERE (
         vote_type = "links"
         AND vote_user_id IN ('.implode(',', array_map('intval', $friends)).')
         AND vote_value > 0
+        AND link_content_type != "article"
+        AND link_id = vote_link_id
     )
 ';
 
-$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+$count = (int)$db->get_var('SELECT COUNT(DISTINCT link_id) '.$query.';');
 
 if ($count === 0) {
     return Haanga::Load('user/empty.html');
 }
 
 $links = $db->get_results('
-    SELECT DISTINCT vote_link_id AS link_id
+    SELECT DISTINCT link_id
     '.$query.'
-    ORDER BY vote_link_id DESC
+    ORDER BY link_id DESC
     LIMIT '.(int)$offset.', '.(int)$limit.';
 ');
 
@@ -47,6 +49,7 @@ if (empty($links)) {
 
 foreach ($links as $dblink) {
     $link = Link::from_db($dblink->link_id);
+
     $link->do_inline_friend_votes = true;
     $link->print_summary();
 }
