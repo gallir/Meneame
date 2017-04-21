@@ -149,7 +149,7 @@ class LinkValidator
         $components = parse_url($this->link->url);
         $quoted = preg_quote(get_server_name(), '/');
 
-        if (preg_match('/^' . $quoted . '$/', $components['host'])) {
+        if (preg_match('/^' . $quoted . '$/', $components['host']) && !strstr($this->link->url, '/my-story/')) {
             $this->setError(_('El servidor es local'), '', 'Server name is local name: ' . $this->link->url);
         }
 
