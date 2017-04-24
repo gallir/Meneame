@@ -948,7 +948,12 @@ class Link extends LCPBase
             $this->truncate($this->max_len);
         }
 
-        $this->content = $this->to_html($this->content);
+        if ($this->content_type === 'article') {
+            $this->content = text_to_summary($this->content, strlen($this->content));
+        } else {
+            $this->content = $this->to_html($this->content);
+        }
+
         $this->show_tags = $show_tags;
         $this->relative_permalink = $this->get_relative_permalink();
         $this->permalink = $this->get_permalink(false, $this->relative_permalink); // To avoid double verification
