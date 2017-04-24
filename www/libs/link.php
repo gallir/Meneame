@@ -946,13 +946,13 @@ class Link extends LCPBase
 
         if (!empty($this->max_len) && $this->max_len > 0) {
             $this->truncate($this->max_len);
+
+            if ($this->content_type === 'article') {
+                $this->content = text_to_summary($this->content, $this->max_len);
+            }
         }
 
-        if ($this->content_type === 'article') {
-            $this->content = text_to_summary($this->content, $this->max_len ?: 600);
-        } else {
-            $this->content = $this->to_html($this->content);
-        }
+        $this->content = $this->to_html($this->content);
 
         $this->show_tags = $show_tags;
         $this->relative_permalink = $this->get_relative_permalink();

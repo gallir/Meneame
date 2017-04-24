@@ -29,6 +29,7 @@ if ($current_user->user_id > 0) {
 
 // Start html
 $globals['extra_css'][] = 'es/sneak.css';
+
 if (!empty($_REQUEST['friends'])) {
     do_header(_('amigos en la fisgona'), _('fisgona'), sneak_menu_items($option));
 } elseif ($current_user->user_id > 0 && !empty($_REQUEST['admin']) && $current_user->admin) {
@@ -38,11 +39,11 @@ if (!empty($_REQUEST['friends'])) {
 }
 
 $globals['site_id'] = SitesMgr::my_id();
+
 Haanga::Load('sneak/base.html');
 
-
-
 $globals['sneak_telnet'] = false;
+
 Haanga::Load('sneak/form.html', compact('max_items'));
 
 do_footer();
@@ -54,9 +55,11 @@ function sneak_menu_items($id)
     $items = array();
     $items[] = new MenuOption(_('todos'), $globals['base_url'].'sneak', $id, _('todos'));
     $items[] = new MenuOption(_('amigos'), $globals['base_url'].'sneak?friends=1', $id, _('amigos'));
+
     if ($current_user->admin) {
         $items[] = new MenuOption(_('admin'), $globals['base_url'].'sneak?admin=1', $id, _('admin'));
     }
+
     $items[] = new MenuOption(_('consola'), $globals['base_url'].'telnet', $id, _('consola'));
 
     return $items;
