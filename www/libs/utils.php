@@ -407,7 +407,8 @@ function clean_html_with_tags($string)
 
 function text_to_summary($string, $length = 50)
 {
-    $string = strip_tags($string);
+    $string = strip_tags(str_replace('<p>', ' <p>', $string));
+
     // Remove references to comments and number in notes referemces
     $string = preg_replace('/(?:#\d+|[\r\n\t]+|,\d+|http\S+|{.+?})\s/u', ' ', $string);
     $len = mb_strlen($string);
