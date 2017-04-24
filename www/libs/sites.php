@@ -495,7 +495,7 @@ class SitesMgr
         $defaults = array_merge(self::$extended_properties, self::$extra_extended_properties);
 
         foreach ($prefs as $k => $v) {
-            if (empty($v) || empty($defaults[$k]) || $defaults[$k] == $v) {
+            if (is_array($v) || !isset($defaults[$k]) || $defaults[$k] == $v) {
                 continue;
             }
 
@@ -518,8 +518,7 @@ class SitesMgr
             }
         }
 
-        $key = self::PREFERENCES_KEY.$id;
-        $a = new Annotation($key);
+        $a = new Annotation(self::PREFERENCES_KEY.$id);
 
         if (empty($dict)) {
             return $a->delete();
