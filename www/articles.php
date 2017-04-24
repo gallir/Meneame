@@ -94,8 +94,9 @@ echo '<div id="newswrap">'."\n";
 
             $link->poll = $pollCollection->get($link->id);
             $link->max_len = 600;
+            $link->content = text_to_summary($link->content, 500);
 
-            $link->print_summary('full', ($offset < 1000) ? 16 : null);
+            $link->print_summary('full', ($offset < 1000) ? 16 : null, false);
         }
     }
 

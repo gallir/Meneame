@@ -974,7 +974,19 @@ class Link extends LCPBase
 
         if (($this->status === 'abuse') || $this->has_warning) {
             $this->negative_text = false;
-            $negatives = $db->get_row("select SQL_CACHE vote_value, count(vote_value) as count from votes where vote_type='links' and vote_link_id=$this->id and vote_value < 0 group by vote_value order by count desc limit 1");
+
+            $negatives = $db->get_row('
+                SELECT SQL_CACHE vote_value, COUNT(vote_value) AS `count`
+                FROM votes
+                WHERE (
+                    vote_type = "links"
+                    AND vote_link_id = "'.$this->id.'"
+                    AND vote_value < 0
+                )
+                GROUP BY vote_value
+                ORDER BY `count` DESC
+                LIMIT 1
+            ');
 
             if ($negatives->count > 2 && $negatives->count >= $this->negatives / 2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
                 $this->negative_text = get_negative_vote($negatives->vote_value);
@@ -1009,7 +1021,25 @@ class Link extends LCPBase
         $this->get_box_class();
 
         if ($this->do_inline_friend_votes) {
-            $this->friend_votes = $db->get_results("SELECT vote_user_id as user_id, vote_value, user_avatar, user_login, UNIX_TIMESTAMP(vote_date) as ts,inet_ntoa(vote_ip_int) as ip FROM votes, users, friends WHERE vote_type='links' and vote_link_id=$this->id AND vote_user_id=friend_to AND vote_user_id > 0 AND user_id = vote_user_id AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_value > 0 AND vote_value > 0 AND vote_user_id != $this->author ORDER BY vote_date DESC");
+            $this->friend_votes = $db->get_results('
+                SELECT vote_user_id AS user_id, vote_value, user_avatar,
+                    user_login, UNIX_TIMESTAMP(vote_date) AS ts,
+                    INET_NTOA(vote_ip_int) AS ip
+                FROM votes, users, friends
+                WHERE (
+                    vote_type = "links"
+                    AND vote_link_id = "'.$this->id.'"
+                    AND vote_user_id = friend_to
+                    AND vote_user_id > 0
+                    AND user_id = vote_user_id
+                    AND friend_type = "manual"
+                    AND friend_from = "'.$current_user->user_id.'"
+                    AND friend_value > 0
+                    AND vote_value > 0
+                    AND vote_user_id != "'.$this->author.'"
+                )
+                ORDER BY vote_date DESC
+            ');
         }
 
         if ($this->poll === true) {
