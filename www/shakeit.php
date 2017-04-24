@@ -30,8 +30,8 @@ meta_get_current();
 $page = get_current_page();
 $offset = ($page-1)*$page_size;
 $rows = -1; // Don't show page numbers by default
-
 $from = '';
+
 switch ($globals['meta']) {
     case '_subs':
         if ($current_user->user_id && $current_user->has_subs) {

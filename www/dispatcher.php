@@ -15,6 +15,7 @@ $routes = array(
     'promote'                => 'promote.php',
     'values'                 => 'values.php',
     'queue'                  => 'shakeit.php',
+    'articles'               => 'articles.php',
     'legal'                  => 'legal.php',
     'go'                     => 'go.php',
     'b'                      => 'bar.php',
