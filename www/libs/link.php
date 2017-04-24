@@ -641,7 +641,9 @@ class Link extends LCPBase
 
         $db->commit();
 
-        fork("backend/send_pingbacks.php?id=$this->id");
+        if (!empty($_POST['trackback'])) {
+            fork("backend/send_pingbacks.php?id=$this->id");
+        }
     }
 
     public function enqueuePrivate()

@@ -46,7 +46,7 @@ $link->content = $link->get_content_fixed();
 
 $link->store();
 
-if (!$link->is_new || empty($_POST['publish'])) {
+if (empty($_POST['publish'])) {
     if ($globals['is_ajax']) {
         responseJson(_('Guardado!'));
     }
