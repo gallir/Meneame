@@ -949,7 +949,7 @@ class Link extends LCPBase
         }
 
         if ($this->content_type === 'article') {
-            $this->content = text_to_summary($this->content, $this->max_len?: 600);
+            $this->content = text_to_summary($this->content, $this->max_len ?: 600);
         } else {
             $this->content = $this->to_html($this->content);
         }
