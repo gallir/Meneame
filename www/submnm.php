@@ -28,7 +28,7 @@ if (empty($routes[$path[2]])) {
     return;
 }
 
-$file = './'.$routes[$path[2]];
+$file = __DIR__.'/'.$routes[$path[2]];
 
 if (!is_file($file)) {
     not_found($path[1]);

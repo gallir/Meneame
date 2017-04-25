@@ -43,62 +43,66 @@ do_header($pagetitle, _('artículos'), false);
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
-    do_sub_message_right();
-    do_banner_right();
 
-    if ($globals['show_popular_queued']) {
-        do_best_queued();
-    }
+do_sub_message_right();
+do_banner_right();
 
-    do_last_subs('queued', 15, 'link_karma');
-    //do_last_blogs();
-    //do_best_comments();
-    //do_categories_cloud('queued', 24);
-    do_vertical_tags('queued');
+if ($globals['show_popular_queued']) {
+    do_best_queued();
+}
+
+do_last_subs('queued', 15, 'link_karma');
+do_vertical_tags('queued');
+
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
 
 echo '<div id="newswrap">'."\n";
-    $sql = '
-        SELECT '.Link::SQL.' INNER JOIN (
-            SELECT link
-            FROM sub_statuses, subs, links
-            WHERE (
-                link_content_type = "article"
-                AND sub_statuses.link = link_id
-                AND sub_statuses.status = "queued"
-                AND sub_statuses.id = sub_statuses.origen
-                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
-                AND sub_statuses.origen = subs.id
-                AND subs.owner > 0
-            )
-            ORDER BY sub_statuses.date DESC
-            LIMIT '.$offset.', '.$page_size.'
-        ) AS ids ON (ids.link = link_id)
-    ';
 
-    $links = $db->get_results($sql, 'Link');
+$site = SitesMgr::get_info();
 
-    if ($links) {
-        $all_ids = array_map(function ($value) {
-            return $value->id;
-        }, $links);
+$sql = '
+    SELECT '.Link::SQL.' INNER JOIN (
+        SELECT link
+        FROM sub_statuses, subs, links
+        WHERE (
+            link_content_type = "article"
+            AND sub_statuses.link = link_id
+            AND sub_statuses.status = "queued"
+            AND sub_statuses.id = sub_statuses.origen
+            AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
+            AND sub_statuses.origen = subs.id
+            AND subs.owner > 0
+            '.($site->sub ? ('AND subs.id = "'.$site->id.'"') : '').'
+        )
+        ORDER BY sub_statuses.date DESC
+        LIMIT '.$offset.', '.$page_size.'
+    ) AS ids ON (ids.link = link_id)
+';
 
-        $pollCollection = new PollCollection;
-        $pollCollection->loadSimpleFromRelatedIds('link_id', $all_ids);
+$links = $db->get_results($sql, 'Link');
 
-        foreach ($links as $link) {
-            if ($link->votes == 0 && $link->author != $current_user->user_id) {
-                continue;
-            }
+if ($links) {
+    $all_ids = array_map(function ($value) {
+        return $value->id;
+    }, $links);
 
-            $link->poll = $pollCollection->get($link->id);
-            $link->max_len = 600;
-            $link->print_summary('full', ($offset < 1000) ? 16 : null, false);
+    $pollCollection = new PollCollection;
+    $pollCollection->loadSimpleFromRelatedIds('link_id', $all_ids);
+
+    foreach ($links as $link) {
+        if ($link->votes == 0 && $link->author != $current_user->user_id) {
+            continue;
         }
-    }
 
-    do_pages($rows, $page_size);
+        $link->poll = $pollCollection->get($link->id);
+        $link->max_len = 600;
+        $link->print_summary('full', ($offset < 1000) ? 16 : null, false);
+    }
+}
+
+do_pages($rows, $page_size);
+
 echo '</div>'."\n";
 
 do_footer_menu();
