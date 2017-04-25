@@ -67,8 +67,8 @@ $sql = '
         FROM sub_statuses, subs, links
         WHERE (
             link_content_type = "article"
+            AND link_status IN ("queued", "published")
             AND sub_statuses.link = link_id
-            AND sub_statuses.status = "queued"
             AND sub_statuses.id = sub_statuses.origen
             AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
             AND sub_statuses.origen = subs.id
