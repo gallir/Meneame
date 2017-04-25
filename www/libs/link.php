@@ -625,6 +625,7 @@ class Link extends LCPBase
                 link_author = "'.$this->author.'"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 2 HOUR)
                 AND link_status = "discard"
+                AND link_content_type != "article"
                 AND link_votes = 0
             )
         ');
@@ -674,6 +675,7 @@ class Link extends LCPBase
                 link_author = "'.$this->author.'"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 2 HOUR)
                 AND link_status = "discard"
+                AND link_content_type != "article"
                 AND link_votes = 0
             )
         ');
