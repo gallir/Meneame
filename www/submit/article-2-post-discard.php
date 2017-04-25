@@ -44,9 +44,9 @@ try {
 $link->title = $link->get_title_fixed();
 $link->content = $link->get_content_fixed();
 
-$link->store();
-
 if (empty($_POST['publish'])) {
+    $link->store();
+
     if ($globals['is_ajax']) {
         responseJson(_('Guardado!'));
     }
