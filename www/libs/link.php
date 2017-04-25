@@ -1064,6 +1064,11 @@ class Link extends LCPBase
         // For karma calculation
         $status = !empty($this->sub_status) ? $this->sub_status : $this->status;
         $vote_value = ($value > 0 ? $value : -$current_user->user_karma);
+
+        if ($value < 0 and isset($globals['negative_vote_karma_weights'])) {
+            $vote_value *= $globals['negative_vote_karma_weights'][$value];
+        }
+
         $karma_value = round($vote_value);
 
         /*
