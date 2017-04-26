@@ -160,6 +160,13 @@ class SitesMgr
         return $db->get_var("select id from subs where name = '".$db->escape($name)."'");
     }
 
+    public static function delete($link)
+    {
+        global $db;
+
+        return $db->query('DELETE FROM sub_statuses WHERE link = "'.(int)$link->id.'"');
+    }
+
     public static function deploy($link)
     {
         global $db;
@@ -169,10 +176,8 @@ class SitesMgr
         }
 
         if ($link->status === 'private') {
-            return $db->query('DELETE FROM sub_statuses WHERE link = "'.(int)$link->id.'"');
+            return self::delete($link);
         }
-
-        $delete_others = false;
 
         $me = self::get_status(self::$id, $link);
 

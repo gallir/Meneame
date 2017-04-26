@@ -555,7 +555,7 @@ function get_server_name()
 {
     global $globals;
 
-    return !empty($globals['server_name']) ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
+    return empty($globals['server_name']) ? $_SERVER['SERVER_NAME'] : $globals['server_name'];
 }
 
 function get_static_server_name()

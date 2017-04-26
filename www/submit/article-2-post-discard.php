@@ -41,6 +41,10 @@ try {
     return;
 }
 
+if ($link->sub_id) {
+    SitesMgr::__init($link->sub_id);
+}
+
 $link->title = $link->get_title_fixed();
 $link->content = $link->get_content_fixed();
 
@@ -56,6 +60,9 @@ if (empty($_POST['publish'])) {
 
 if ($link->sub_id) {
     $link->enqueue();
+
+    SitesMgr::delete($link);
+    SitesMgr::deploy($link);
 } else {
     $link->enqueuePrivate();
 }

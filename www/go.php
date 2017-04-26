@@ -6,7 +6,7 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once('./config.php');
+require_once __DIR__.'/config.php';
 
 function do_redirection($url, $code = 301)
 {

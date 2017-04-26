@@ -788,7 +788,7 @@ class Link extends LCPBase
 
         $db->transaction();
 
-        if ($this->id === 0) {
+        if (empty($this->id)) {
             $this->ip = $globals['user_ip'];
             $this->ip_int = $globals['user_ip_int'];
 
