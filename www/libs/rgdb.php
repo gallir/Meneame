@@ -355,6 +355,19 @@ class RGDB extends mysqli
 
     public function get_enum_values($table, $column)
     {
+        
+        if ($table == 'links' and $column == 'link_status') {
+            return [
+                'discard' => 1,
+                'queued' => 2,
+                'published' => 3,
+                'abuse' => 4,
+                'duplicated' => 5,
+                'autodiscard' => 6,
+                'metapublished' => 7
+            ];
+        }
+
         // Retrieve available status values
         $row = $this->get_row('SHOW COLUMNS FROM `'.$table.'` LIKE "'.$column.'"');
 
