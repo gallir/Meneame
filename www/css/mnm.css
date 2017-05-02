@@ -3414,11 +3414,12 @@ button.link.favorite {
 
 .ads-interlinks {
     height: 90px;
-    max-width: 823px;
-    padding: 0 0 0 95px;
+    max-width: 980px;
+    padding: 0;
     margin: 10px 0;
     white-space: nowrap;
     overflow: hidden;
+    text-align: center;
 }
 
 .auth-buttons {
