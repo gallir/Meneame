@@ -20,8 +20,8 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include_once('config.php');
-include(mnminclude.'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 
 $globals['cache-control'][] = 'max-age=3';
 
@@ -97,7 +97,7 @@ if (($argc = count($url_args)) > 1) {
 
         unset($url_args[1]);
     } elseif ((int)$url_args[$argc - 1] > 0) {
-        $current_page = intval($url_args[$argc-1]);
+        $current_page = intval($url_args[$argc - 1]);
 
         if ($current_page > $total_pages) {
             do_error(_('página inexistente'), 404);
@@ -322,18 +322,25 @@ if (!empty($new_comment_error)) {
 
 do_tabs("main", _('noticia'), true);
 
-if (empty($link->url) && (mb_strlen($link->content) > $globals['link_blog_len_min'])) {
+if (
+    empty($link->url)
+    && (
+        ($link->content_type === 'article')
+        || (mb_strlen($link->content) > $globals['link_blog_len_min'])
+    )
+) {
     require __DIR__.'/story-blog.php';
 } else {
     /*** SIDEBAR ****/
     echo '<div id="sidebar">';
+
     do_sub_message_right();
     do_banner_right();
 
-        // GEO
-        if ($link->latlng) {
-            echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
-        }
+    // GEO
+    if ($link->latlng) {
+        echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
+    }
 
     if (!$current_user->user_id) {
         do_most_clicked_stories();
@@ -346,13 +353,16 @@ if (empty($link->url) && (mb_strlen($link->content) > $globals['link_blog_len_mi
     }
 
     do_rss_box();
+
     echo '</div>';
     /*** END SIDEBAR ***/
 
     echo '<div id="newswrap">';
+
     $link->print_summary();
 
     require __DIR__.'/story-comments.php';
+
     echo '</div>';
 }
 
@@ -631,7 +641,7 @@ function print_votes_raw($link)
 /* Get a list of the answers and their questions */
 function get_qanda($link)
 {
-    include_once(mnminclude.'commenttree.php');
+    require_once mnminclude.'commenttree.php';
 
     global $db;
 

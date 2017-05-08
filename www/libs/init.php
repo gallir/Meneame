@@ -6,7 +6,7 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called 'COPYING'.
 
-include mnminclude.'utils.php';
+require_once mnminclude.'utils.php';
 
 global $globals;
 
@@ -68,7 +68,8 @@ if ($globals['cli']) {
         $globals['proxy_ip'] = false;
     }
 
-    $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode(getenv('REQUEST_URI'))); // clean it for future use
+    $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode(getenv('REQUEST_URI')));
+    $globals['is_ajax'] = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
 }
 
 // Use proxy and load balancer detection
@@ -151,6 +152,7 @@ function __autoload($class)
         'RGDB' => 'rgdb.php',
         'LCPBase' => 'LCPBase.php',
         'Link' => 'link.php',
+        'LinkValidator' => 'link_validator.php',
         'Comment' => 'comment.php',
         'Vote' => 'votes.php',
         'Annotation' => 'annotation.php',
@@ -190,7 +192,7 @@ function __autoload($class)
     }
 
     if (is_file($class.'.php')) {
-        include_once($class.'.php');
+        require_once($class.'.php');
     }
 }
 
@@ -243,7 +245,13 @@ Haanga::configure($config);
 
 function __($text)
 {
-    return htmlentities($text, ENT_QUOTES, 'UTF-8', false);
+    if (func_num_args() === 1) {
+        return $text;
+    }
+
+    $args = array_slice(func_get_args(), 1);
+
+    return is_array($args[0]) ? strtr($text, $args[0]) : vsprintf($text, $args);
 }
 
 function _e($text)

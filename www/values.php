@@ -1,7 +1,7 @@
 <?php
 // Developed by @Hass, 2009
-include('config.php');
-include(mnminclude.'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 
 /*
 if (!$current_user->admin) {
@@ -13,27 +13,26 @@ if (!$current_user->admin) {
 function print_time($secs)
 {
     if ($secs < 60) {
-        return $secs . ' ' . _("segundos");
+        return $secs . ' ' . _('segundos');
     } elseif ($secs == 60) {
-        return "1" . ' ' . _("minuto");
+        return '1' . ' ' . _('minuto');
     } elseif ($secs % 60 == 0 && $secs < 3600) {
-        return ($secs / 60) . ' ' ._("minutos");
+        return ($secs / 60) . ' ' ._('minutos');
     } elseif ($secs == 3600) {
-        return "1" . ' ' . _("hora");
+        return '1' . ' ' . _('hora');
     } elseif ($secs % 3600 == 0 && $secs < 86400) {
-        return ($secs / 3600) . ' ' ._("horas");
+        return ($secs / 3600) . ' ' ._('horas');
     } elseif ($secs == 86400) {
-        return "1" . ' ' . _("día");
+        return '1' . ' ' . _('día');
     } elseif ($secs % 86400 == 0) {
-        return ($secs / 86400) . ' ' ._("días");
+        return ($secs / 86400) . ' ' ._('días');
     } else {
-        return $secs . ' ' . _("segundos");
+        return $secs . ' ' . _('segundos');
     }
 }
 
 do_header(_('Información sobre valores de karma y límites') . ' | ' . _('menéame'));
 echo '<div id="singlewrap">'."\n";
-
 
 echo '
 <div style="text-align:center">
@@ -123,7 +122,7 @@ echo '
 				'._("Tiempo que permanecen abiertos los comentarios en meneos descartados por abuso") . ': ' . print_time($globals['time_enabled_comments_status']['abuse']) . '<br/>
 				<br/>
 				'._("Número máximo de reportes de comentarios en las últimas 24 horas") . ': ' . $globals['max_reports_for_comments'] . '<br/>
-				<br/>				
+				<br/>
 				'._("Tiempo que debe pasar desde el registro para que un nuevo usuario pueda comentar") . ': ' . print_time($globals['min_time_for_comments']) . '<br/>
 		</fieldset>';
 

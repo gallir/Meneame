@@ -200,7 +200,7 @@ switch ($tab_option) {
     case 10:
         echo '<div class="comments" id="comments-top">';
 
-        include_once(mnminclude.'commenttree.php');
+        require_once mnminclude.'commenttree.php';
 
         $tree = new CommentTree();
 

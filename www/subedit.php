@@ -6,8 +6,8 @@
 //              http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
-include(mnminclude.'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 $globals['ads'] = false;
 
 array_push($globals['cache-control'], 'no-cache');
@@ -147,9 +147,36 @@ function save_sub($id)
     }
 
     if ($id > 0) {
-        $r = $db->query("update subs set owner = $owner, enabled = $enabled, allow_main_link = $allow_main_link, nsfw = $nsfw, name = '$name', name_long = '$name_long', private = $private, show_admin = $show_admin, page_mode = '$page_mode' where id = $id");
+        $r = $db->query('
+            UPDATE subs
+            SET
+                owner = "'.$owner.'",
+                enabled = "'.$enabled.'",
+                allow_main_link = "'.$allow_main_link.'",
+                nsfw = "'.$nsfw.'",
+                name = "'.$name.'",
+                name_long = "'.$name_long.'",
+                private = "'.$private.'",
+                show_admin = "'.$show_admin.'",
+                page_mode = "'.$page_mode.'"
+            WHERE id = "'.$id.'"
+        ');
     } else {
-        $r = $db->query("insert into subs (created_from, owner, nsfw, name, name_long, sub, private, show_admin) values ($site->id, $owner, $nsfw, '$name', '$name_long', 1, $private, 1)");
+        $r = $db->query('
+            INSERT INTO subs
+            SET
+                created_from = "'.$site->id.'",
+                owner = "'.$owner.'",
+                enabled = "'.$enabled.'",
+                allow_main_link = "'.$allow_main_link.'",
+                nsfw = "'.$nsfw.'",
+                name = "'.$name.'",
+                name_long = "'.$name_long.'",
+                private = "'.$private.'",
+                show_admin = "'.$show_admin.'",
+                page_mode = "'.$page_mode.'",
+                sub = 1
+            ');
         $id = $db->insert_id;
     }
 
@@ -160,7 +187,16 @@ function save_sub($id)
     $db->transaction();
 
     // Copy values from first site
-    $r = $db->query("update subs as a join subs as b on a.id = $id and b.id=$site->id set a.server_name = b.server_name, a.base_url = b.base_url");
+    $r = $db->query('
+        UPDATE subs AS a
+        JOIN subs AS b ON (
+            a.id = "'.$id.'"
+            AND b.id = "'.$site->id.'"
+        )
+        SET
+            a.server_name = b.server_name,
+            a.base_url = b.base_url
+    ');
 
     // Update copy_from
     if ($current_user->admin) {

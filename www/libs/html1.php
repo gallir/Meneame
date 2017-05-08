@@ -6,22 +6,25 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-if (is_file(mnminclude.'ads-credits-functions.php')) {
-    include_once mnminclude.'ads-credits-functions.php';
+if (is_file(mnminclude . 'ads-credits-functions.php')) {
+    require_once mnminclude . 'ads-credits-functions.php';
 }
 
 // Warning, it redirects to the content of the variable
 if (!empty($globals['lounge'])) {
-    die(header('Location: http://'.get_server_name().$globals['base_url_general'].$globals['lounge']));
+    die(header('Location: http://' . get_server_name() . $globals['base_url_general'] . $globals['lounge']));
 }
 
 if (PHP_SAPI !== 'cli' && !empty($globals['force_ssl']) && !$globals['https'] && !isset($_GET['force'])) {
     header('HTTP/1.1 301 Moved');
-    die(header('Location: https://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']));
+    die(header('Location: https://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']));
 }
 
 $globals['extra_js'] = array();
 $globals['extra_css'] = array();
+
+$globals['extra_vendor_js'] = array();
+$globals['extra_vendor_css'] = array();
 
 if (!$globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $_SERVER['HTTP_USER_AGENT']))) {
     if (!$globals['mobile']) {
@@ -30,7 +33,7 @@ if (!$globals['bot'] && ($globals['allow_partial'] || preg_match('/meneame/i', $
 
     if (isset($_REQUEST['partial'])) {
         $globals['partial'] = true;
-        $_SERVER['QUERY_STRING'] =preg_replace('/partial&|\?partial$|&partial/', '', $_SERVER['QUERY_STRING']);
+        $_SERVER['QUERY_STRING'] = preg_replace('/partial&|\?partial$|&partial/', '', $_SERVER['QUERY_STRING']);
     } else {
         $globals['partial'] = false;
     }
@@ -54,7 +57,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false)
     /* Not used any more */
 }
 
-function do_header($title, $id='home', $options = false, $tab_options = false, $tab_class = 'dropdown-menu menu-subheader')
+function do_header($title, $id = 'home', $options = false, $tab_options = false, $tab_class = 'dropdown-menu menu-subheader')
 {
     global $current_user, $dblang, $globals, $db;
 
@@ -82,12 +85,11 @@ function do_header($title, $id='home', $options = false, $tab_options = false, $
         $globals['extra_js'][] = 'jquery.form.min.js';
     }
 
-    $sites = $db->get_results("select * from subs where visible order by id asc");
     $this_site = SitesMgr::get_info();
     $this_site_properties = SitesMgr::get_extended_properties();
 
     if ($this_site->sub) {
-        $this_site->url = $this_site->base_url.'m/'.$this_site->name;
+        $this_site->url = $this_site->base_url . 'm/' . $this_site->name;
     } else {
         $this_site->url = $this_site->base_url;
     }
@@ -103,7 +105,7 @@ function do_header($title, $id='home', $options = false, $tab_options = false, $
         }
 
         $this_site->logo_width = round($r * $this_site->logo_height);
-        $this_site->logo_url = Upload::get_cache_relative_dir($this_site->id).'/media_thumb-sub_logo-'.$this_site->id.'.'.$this_site->media_extension.'?'.$this_site->media_date;
+        $this_site->logo_url = Upload::get_cache_relative_dir($this_site->id) . '/media_thumb-sub_logo-' . $this_site->id . '.' . $this_site->media_extension . '?' . $this_site->media_date;
     }
 
     if ($this_site->nsfw) {
@@ -123,30 +125,25 @@ function do_header($title, $id='home', $options = false, $tab_options = false, $
 
         if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
             $submit_new_post_text = boolval($globals['mobile']) ? _('enviar') : _('enviar historia');
-            $left_options[] = new MenuOption($submit_new_post_text, $globals['base_url'].'submit', $id, _('enviar nueva historia'), "submit_new_post");
+            $left_options[] = new MenuOption($submit_new_post_text, $globals['base_url'] . 'submit', $id, _('enviar nueva historia'), "submit_new_post");
         }
 
         $left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
-        $left_options[] = new MenuOption(_('nuevas'), $globals['base_url'].'queue', $id, _('menear noticias pendientes'));
-        $left_options[] = new MenuOption(_('populares'), $globals['base_url'].'popular', $id, _('historias más votadas'));
-        $left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'].'top_visited', $id, _('historias más visitadas/leídas'));
-        $left_options[] = new MenuOption(_('destacadas'), $globals['base_url'].'top_active', $id, _('historias más activas'));
+        $left_options[] = new MenuOption(_('nuevas'), $globals['base_url'] . 'queue', $id, _('menear noticias pendientes'));
+        $left_options[] = new MenuOption(_('populares'), $globals['base_url'] . 'popular', $id, _('historias más votadas'));
+        $left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'] . 'top_visited', $id, _('historias más visitadas/leídas'));
+        $left_options[] = new MenuOption(_('artículos'), $globals['base_url'] . 'articles', $id, _('Artículos'));
 
         $right_options = array();
-        //$right_options[] = new MenuOption(_('m/'), $globals['base_url_general'].'subs', $id, _('sub menéames'));
-        $right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak', $id, _('visualizador en tiempo real'));
+        $right_options[] = new MenuOption(_('fisgona'), $globals['base_url'] . 'sneak', $id, _('visualizador en tiempo real'));
         $right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
-//        $right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
     } else {
         $left_options = $options;
         $right_options = array();
-        //$right_options[] = new MenuOption(_('portada'), $globals['base_url'], '', _('página principal'));
-        $right_options[] = new MenuOption(_('nuevas'), $globals['base_url'].'queue', '', _('menear noticias pendientes'));
 
-        //$right_options[] = new MenuOption(_('m/'), $globals['base_url_general'].'subs', $id, _('sub menéames'));
-        $right_options[] = new MenuOption(_('fisgona'), $globals['base_url'].'sneak', $id, _('visualizador en tiempo real'));
+        $right_options[] = new MenuOption(_('nuevas'), $globals['base_url'] . 'queue', '', _('menear noticias pendientes'));
+        $right_options[] = new MenuOption(_('fisgona'), $globals['base_url'] . 'sneak', $id, _('visualizador en tiempo real'));
         $right_options[] = new MenuOption(_('nótame'), post_get_base_url(), $id, _('leer o escribir notas y mensajes privados'));
-//        $right_options[] = new MenuOption(_('galería'), 'javascript:fancybox_gallery(\'all\');', false, _('las imágenes subidas por los usuarios'));
     }
 
     $tabs = Tabs::renderForSection($id, $tab_options, $tab_class);
@@ -174,12 +171,14 @@ function do_header($title, $id='home', $options = false, $tab_options = false, $
                 }
 
                 $sub->site_info->logo_width = round($r * $sub->site_info->logo_height);
-                $sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id).'/media_thumb-sub_logo-'.$sub->site_info->id.'.'.$sub->site_info->media_extension.'?'.$sub->site_info->media_date;
+                $sub->site_info->logo_url = Upload::get_cache_relative_dir($sub->site_info->id) . '/media_thumb-sub_logo-' . $sub->site_info->id . '.' . $sub->site_info->media_extension . '?' . $sub->site_info->media_date;
             }
 
             $followed_subs[] = $sub;
         }
     }
+
+    $sites = $db->get_results('SELECT * FROM subs WHERE visible ORDER BY id ASC;');
 
     return Haanga::Load('header.html', compact(
         'title', 'greeting', 'id', 'left_options', 'right_options',
@@ -193,11 +192,11 @@ function do_js_from_array($array)
 
     foreach ($array as $js) {
         if (preg_match('/^http|^\//', $js)) {
-            echo '<script src="'.$js.'" type="text/javascript"></script>'."\n";
+            echo '<script src="' . $js . '" type="text/javascript"></script>' . "\n";
         } elseif (preg_match('/\.js$/', $js)) {
-            echo '<script src="'.$globals['base_static'].'js/'.$js.'" type="text/javascript"></script>'."\n";
+            echo '<script src="' . $globals['base_static'] . 'js/' . $js . '" type="text/javascript"></script>' . "\n";
         } else {
-            echo '<script src="'.$globals['base_url'].'js/'.$js.'" type="text/javascript"></script>'."\n";
+            echo '<script src="' . $globals['base_url'] . 'js/' . $js . '" type="text/javascript"></script>' . "\n";
         }
     }
 }
@@ -226,7 +225,7 @@ function force_authentication()
     global $current_user, $globals;
 
     if (!$current_user->authenticated) {
-        die(header('Location: '.$globals['base_url_general'].'login?return='.$globals['uri']));
+        die(header('Location: ' . $globals['base_url_general'] . 'login?return=' . $globals['uri']));
     }
 
     return true;
@@ -245,10 +244,10 @@ function mobile_redirect()
             !$_SERVER['HTTP_REFERER']
             // Check if the user comes from our own domain
             // If so, don't redirect her
-            || !preg_match('/^https*:\/\/.*?'.preg_quote(preg_replace('/.+?\.(.+?\..+?)$/', "$1", get_server_name())).'/i', $_SERVER['HTTP_REFERER'])
+             || !preg_match('/^https*:\/\/.*?' . preg_quote(preg_replace('/.+?\.(.+?\..+?)$/', "$1", get_server_name())) . '/i', $_SERVER['HTTP_REFERER'])
         )
     ) {
-        die(header('Location: http://'.$globals['url_shortener_mobile_to'].$_SERVER['REQUEST_URI']));
+        die(header('Location: http://' . $globals['url_shortener_mobile_to'] . $_SERVER['REQUEST_URI']));
     }
 }
 
@@ -276,7 +275,7 @@ function do_pages_reverse($total, $page_size = 25, $margin = true)
     $query = preg_replace('/^&*(.*)&*$/', "$1", $query);
 
     if (!empty($query)) {
-        $query = '&amp;'.htmlspecialchars($query);
+        $query = '&amp;' . htmlspecialchars($query);
     }
 
     $total_pages = ceil($total / $page_size);
@@ -294,9 +293,9 @@ function do_pages_reverse($total, $page_size = 25, $margin = true)
         $i = $current + 1;
         $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
 
-        echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="next">'.$go_next.' &#171;</a>';
+        echo '<a href="?page=' . $i . $query . '"' . $nofollow . ' rel="next">' . $go_next . ' &#171;</a>';
     } else {
-        echo '<span class="nextprev">&#171; '.$go_next. '</span>';
+        echo '<span class="nextprev">&#171; ' . $go_next . '</span>';
     }
 
     if ($total_pages > 0) {
@@ -304,17 +303,17 @@ function do_pages_reverse($total, $page_size = 25, $margin = true)
             $i = $total_pages;
             $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
 
-            echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
+            echo '<a href="?page=' . $i . $query . '" title="' . _('ir a página') . " $i" . '"' . $nofollow . '>' . $i . '</a>';
             echo "<span>$separator</span>";
         }
 
         for ($i = min($end, $total_pages); $i >= $start; $i--) {
             if ($i == $current) {
-                echo '<span class="current">'.$i.'</span>';
+                echo '<span class="current">' . $i . '</span>';
             } else {
                 $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
 
-                echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
+                echo '<a href="?page=' . $i . $query . '" title="' . _('ir a página') . " $i" . '"' . $nofollow . '>' . $i . '</a>';
             }
         }
 
@@ -322,24 +321,24 @@ function do_pages_reverse($total, $page_size = 25, $margin = true)
             $i = 1;
 
             echo "<span>$separator</span>";
-            echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+            echo '<a href="?page=' . $i . $query . '" title="' . _('ir a página') . " $i" . '">' . $i . '</a>';
         }
     } else {
-        echo '<span class="current">'.$current.'</span>';
+        echo '<span class="current">' . $current . '</span>';
 
         if ($current > 2) {
             echo "<span>$separator</span>";
-            echo '<a href="?page=1'.$query.'" title="'._('ir a página')." 1".'">1</a>';
+            echo '<a href="?page=1' . $query . '" title="' . _('ir a página') . " 1" . '">1</a>';
         }
     }
 
     if ($current == 1) {
-        echo '<span class="nextprev">&#187; '.$go_prev. '</span>';
+        echo '<span class="nextprev">&#187; ' . $go_prev . '</span>';
     } else {
         $i = $current - 1;
         $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
 
-        echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="prev">&#187; '.$go_prev.'</a>';
+        echo '<a href="?page=' . $i . $query . '"' . $nofollow . ' rel="prev">&#187; ' . $go_prev . '</a>';
     }
 
     echo '</div>';
@@ -369,7 +368,7 @@ function do_pages($total, $page_size = 25, $margin = true)
     $query = preg_replace('/^&*(.*)&*$/', "$1", $query);
 
     if (!empty($query)) {
-        $query = '&amp;'.htmlspecialchars($query);
+        $query = '&amp;' . htmlspecialchars($query);
     }
 
     $current = get_current_page();
@@ -384,28 +383,28 @@ function do_pages($total, $page_size = 25, $margin = true)
     }
 
     if ($current == 1) {
-        echo '<span class="nextprev">&#171; '.$go_prev. '</span>';
+        echo '<span class="nextprev">&#171; ' . $go_prev . '</span>';
     } else {
         $i = $current - 1;
         $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
 
-        echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="prev">&#171; '.$go_prev.'</a>';
+        echo '<a href="?page=' . $i . $query . '"' . $nofollow . ' rel="prev">&#171; ' . $go_prev . '</a>';
     }
 
     if ($total_pages > 0) {
         if ($start > 1) {
             $i = 1;
 
-            echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'">'.$i.'</a>';
+            echo '<a href="?page=' . $i . $query . '" title="' . _('ir a página') . " $i" . '">' . $i . '</a>';
             echo "<span>$separator</span>";
         }
 
         for ($i = $start; $i <= $end && $i <= $total_pages; $i++) {
             if ($i == $current) {
-                echo '<span class="current">'.$i.'</span>';
+                echo '<span class="current">' . $i . '</span>';
             } else {
                 $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
-                echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
+                echo '<a href="?page=' . $i . $query . '" title="' . _('ir a página') . " $i" . '"' . $nofollow . '>' . $i . '</a>';
             }
         }
 
@@ -414,68 +413,78 @@ function do_pages($total, $page_size = 25, $margin = true)
             $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
 
             echo "<span>$separator</span>";
-            echo '<a href="?page='.$i.$query.'" title="'._('ir a página')." $i".'"'.$nofollow.'>'.$i.'</a>';
+            echo '<a href="?page=' . $i . $query . '" title="' . _('ir a página') . " $i" . '"' . $nofollow . '>' . $i . '</a>';
         }
     } else {
         if ($current > 2) {
-            echo '<a href="?page=1'.$query.'" title="'._('ir a página')." 1".'">1</a>';
+            echo '<a href="?page=1' . $query . '" title="' . _('ir a página') . " 1" . '">1</a>';
             echo "<span>$separator</span>";
         }
 
-        echo '<span class="current">'.$current.'</span>';
+        echo '<span class="current">' . $current . '</span>';
     }
 
     if ($total < 0 || $current < $total_pages) {
         $i = $current + 1;
         $nofollow = ($i > 10) ? ' rel="nofollow"' : '';
 
-        echo '<a href="?page='.$i.$query.'"'.$nofollow.' rel="next">'.$go_next.' &#187;</a>';
+        echo '<a href="?page=' . $i . $query . '"' . $nofollow . ' rel="next">' . $go_next . ' &#187;</a>';
     } else {
-        echo '<span class="nextprev">&#187; '.$go_next. '</span>';
+        echo '<span class="nextprev">&#187; ' . $go_next . '</span>';
     }
 
     echo '</div>';
 }
 
+function get_subs_main()
+{
+    global $globals;
+
+    if (!empty($globals['submnm'])) {
+        return array();
+    }
+
+    return SitesMgr::get_sub_subs();
+}
+
+function get_subs_subscriptions(array $main = array())
+{
+    global $globals, $current_user;
+
+    $ids = array_map(function($value) {
+        return $value->id;
+    }, $main);
+
+    $subs = array();
+
+    foreach (SitesMgr::get_subscriptions($current_user->user_id) as $sub) {
+        if (!in_array($sub->id, $ids) && SitesMgr::can_send($sub->id)) {
+            $subs[] = $sub;
+        }
+    }
+
+    return $subs;
+}
+
+function get_sub_selected($selected)
+{
+    global $globals;
+
+    $selected = $selected ?: SitesMgr::my_id();
+
+    if (SitesMgr::can_send($selected) && ($sub = SitesMgr::get_info($selected))) {
+        return $sub;
+    }
+}
+
 //Used in editlink.php and submit.php
 function print_subs_form($selected = false)
 {
-    global $db, $globals, $current_user;
+    $subs = get_subs_main();
+    $subscriptions = get_subs_subscriptions($subs);
 
-    function id($s)
-    {
-        return $s->id;
-    }
-
-    if (!empty($globals['submnm'])) {
-        $subs = false;
-    } else {
-        $subs = SitesMgr::get_sub_subs();
-        $ids = array_map('id', $subs);
-
-        // A link in a sub is edited from another sub, or from the main site
-        // Add its selected sub.
-        if ($selected && !in_array($selected, $ids) && SitesMgr::can_send($selected)) {
-            $e = SitesMgr::get_info($selected);
-
-            if ($e) {
-                array_unshift($subs, $e); // Add to the form
-                array_unshift($ids, $selected); // Avoid to show it again if subscribed to
-            }
-        }
-
-        $extras = SitesMgr::get_subscriptions($current_user->user_id);
-        $subscriptions = array();
-
-        foreach ($extras as $s) {
-            if (!in_array($s->id, $ids)  && SitesMgr::can_send($s->id)) {
-                $subscriptions[] = $s;
-            }
-        }
-    }
-
-    if ($selected == false) {
-        $selected = SitesMgr::my_id();
+    if ($selected = get_sub_selected($selected)) {
+        $selected = $selected->id;
     }
 
     return Haanga::Load('form_subs.html', compact('selected', 'subs', 'subscriptions'));
@@ -492,19 +501,19 @@ function do_vertical_tags($what = false)
     if (empty($what)) {
         $status = "!= 'discarded'";
     } else {
-        $status = '= "'.$what. '"';
+        $status = '= "' . $what . '"';
     }
 
-    $cache_key = 'tags_'.$globals['site_shortname'].$globals['v'].$status;
+    $cache_key = 'tags_' . $globals['site_shortname'] . $globals['v'] . $status;
 
     if (memcache_mprint($cache_key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
     $min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours (edit! 2zero)
-    $from_where = "FROM links, sub_statuses WHERE id = ".SitesMgr::my_id()." AND link_id = link and link_date > '$min_date' and link_status $status";
+    $from_where = "FROM links, sub_statuses WHERE id = " . SitesMgr::my_id() . " AND link_id = link and link_date > '$min_date' and link_status $status";
 
     $res = $db->get_col("select link_tags $from_where");
 
@@ -540,20 +549,20 @@ function do_vertical_tags($what = false)
         $size = round($min_pts + ($count - 1) * $coef, 1);
         $op = round(0.4 + 0.6 * $count / $max, 2);
 
-        $content .= '<a style="font-size: '.$size.'pt;opacity:'.$op.'" href="';
+        $content .= '<a style="font-size: ' . $size . 'pt;opacity:' . $op . '" href="';
 
         if ($globals['base_search_url']) {
-            $content .= $globals['base_url'].$globals['base_search_url'].'tag:';
+            $content .= $globals['base_url'] . $globals['base_search_url'] . 'tag:';
         } else {
-            $content .= $globals['base_url'].'search?p=tags&amp;q=';
+            $content .= $globals['base_url'] . 'search?p=tags&amp;q=';
         }
 
-        $content .= urlencode($word).'">'.$word.'</a>  ';
+        $content .= urlencode($word) . '">' . $word . '</a>  ';
     }
 
     if ($max > 2) {
         $title = _('etiquetas');
-        $url = $globals['base_url'].'cloud';
+        $url = $globals['base_url'] . 'cloud';
 
         echo $output = Haanga::Load('tags_sidebox.html', compact('content', 'title', 'url'), true);
     } else {
@@ -571,19 +580,19 @@ function do_best_sites()
         return;
     }
 
-    $key = 'best_sites_'.$globals['site_shortname'].$globals['v'];
+    $key = 'best_sites_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
     $min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // about  48 hours
 
     // The order is not exactly the votes counts
     // but a time-decreasing function applied to the number of votes
-    $res = $db->get_results("select sum(link_votes + link_anonymous) as total_count, sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10");
+    $res = $db->get_results("select sum(link_votes + link_anonymous) as total_count, sum(link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/172800) as coef, sum(link_votes-link_negatives*2) as total, blog_url from links, blogs, sub_statuses where id = " . SitesMgr::my_id() . " AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id group by link_blog order by coef desc limit 10");
 
     if ($res && count($res) > 4) {
         $title = _('sitios más votados');
@@ -604,19 +613,19 @@ function do_most_clicked_sites()
         return;
     }
 
-    $key = 'most_clicked_sites_'.$globals['site_shortname'].$globals['v'];
+    $key = 'most_clicked_sites_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
     $min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // about  48 hours
 
     // The order is not exactly the votes counts
     // but a time-decreasing function applied to the number of votes
-    $res = $db->get_results("select sum(counter) as total_count, sum(counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800)) as value, blog_url from links, link_clicks, blogs, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id AND link_clicks.id = link group by link_blog order by value desc limit 10");
+    $res = $db->get_results("select sum(counter) as total_count, sum(counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800)) as value, blog_url from links, link_clicks, blogs, sub_statuses where sub_statuses.id = " . SitesMgr::my_id() . " AND link_id = link AND date > '$min_date' and status='published' and link_blog = blog_id AND link_clicks.id = link group by link_blog order by value desc limit 10");
 
     if ($res && count($res) > 4) {
         $title = _('sitios más visitados');
@@ -637,13 +646,13 @@ function do_best_comments()
         return;
     }
 
-    $key = 'best_comments_'.$globals['site_shortname'].$globals['v'];
+    $key = 'best_comments_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
     $min_date = date("Y-m-d H:i:00", $globals['now'] - 50000); // about 12 hours
     $link_min_date = date("Y-m-d H:i:00", $globals['now'] - 86400 * 2); // 48 hours
@@ -654,14 +663,14 @@ function do_best_comments()
     $res = $db->get_results(DbHelper::queryPlain('
         SELECT `comment_id`, `comment_order`, `user_id`, `user_login`, `user_avatar`,
             `link_id`, `link_uri`, `link_title`, `link_comments`, `link_negatives` / `link_votes` AS `rel`,
-            `comment_karma` * ( 1 - ('.$now.' - UNIX_TIMESTAMP(`comment_date`)) * 0.7 / 43000) AS `value`
+            `comment_karma` * ( 1 - (' . $now . ' - UNIX_TIMESTAMP(`comment_date`)) * 0.7 / 43000) AS `value`
         FROM (`comments`, `links`, `users`, `sub_statuses`)
         WHERE (
-            `id` = "'.SitesMgr::my_id().'"
+            `id` = "' . SitesMgr::my_id() . '"
             AND `status` in ("published", "queued")
             AND `link_id` = link
-            AND `date` > "'.$link_min_date.'"
-            AND `comment_date` > "'.$min_date.'"
+            AND `date` > "' . $link_min_date . '"
+            AND `comment_date` > "' . $min_date . '"
             AND LENGTH(`comment_content`) > 32
             AND `link_negatives` / `link_votes` < 0.5
             AND `comment_karma` > 50
@@ -696,7 +705,7 @@ function do_best_comments()
     }
 
     $title = _('mejores comentarios');
-    $url = $globals['base_url'].'top_comments';
+    $url = $globals['base_url'] . 'top_comments';
 
     echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
 
@@ -719,15 +728,15 @@ function do_best_story_comments($link)
         $sql_cache = 'SQL_CACHE';
     }
 
-    $key = 'best_story_comments_'.$globals['v'].'_'.$link->id;
+    $key = 'best_story_comments_' . $globals['v'] . '_' . $link->id;
 
     if ($do_cache && memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
-    $limit = min(15, intval($link->comments/5));
+    $limit = min(15, intval($link->comments / 5));
     $res = $db->get_results("select $sql_cache comment_id, comment_order, user_id, user_login, user_avatar, comment_content as content from comments, users  where comment_link_id = $link->id and comment_karma > 30 and comment_user_id = user_id order by comment_karma desc limit $limit");
 
     if (!$res || (count($res) <= 4)) {
@@ -743,7 +752,7 @@ function do_best_story_comments($link)
     foreach ($res as $comment) {
         $obj = new stdClass();
         $obj->id = $comment->comment_id;
-        $obj->link = $link->get_relative_permalink().'/000'.$comment->comment_order;
+        $obj->link = $link->get_relative_permalink() . '/000' . $comment->comment_order;
         $obj->user_id = $comment->user_id;
         $obj->avatar = $comment->user_avatar;
         $obj->title = text_to_summary($comment->content, 75);
@@ -754,7 +763,7 @@ function do_best_story_comments($link)
     }
 
     $title = _('mejores comentarios');
-    $url = $link->get_relative_permalink().'/best-comments';
+    $url = $link->get_relative_permalink() . '/best-comments';
 
     echo $output = Haanga::Load('best_comments_posts.html', compact('objects', 'title', 'url'), true);
 
@@ -771,15 +780,15 @@ function do_active_stories()
         return;
     }
 
-    $key = 'active_stories_'.$globals['site_shortname'].$globals['v'];
+    $key = 'active_stories_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
-    $top = new Annotation('top-actives-'.$globals['site_shortname']);
+    $top = new Annotation('top-actives-' . $globals['site_shortname']);
 
     if (!$top->read() || !($ids = array_filter(explode(',', $top->text)))) {
         return;
@@ -809,7 +818,7 @@ function do_active_stories()
     }
 
     $title = _('destacadas');
-    $url = $globals['base_url'].'top_active';
+    $url = $globals['base_url'] . 'top_active';
     $subclass = 'red';
 
     echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'url', 'subclass'), true);
@@ -825,19 +834,19 @@ function do_best_stories()
         return;
     }
 
-    $key = 'best_stories_'.$globals['site_shortname'].$globals['v'];
+    $key = 'best_stories_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
     $min_date = date("Y-m-d H:i:00", $globals['now'] - 129600); // 36 hours
 
     // The order is not exactly the votes
     // but a time-decreasing function applied to the number of votes
-    $res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' order by value desc limit 5");
+    $res = $db->get_results("select link_id, (link_votes-link_negatives*2)*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.8/129600) as value from links, sub_statuses where id = " . SitesMgr::my_id() . " AND link_id = link AND status='published' and date > '$min_date' order by value desc limit 5");
 
     if (!$res || (count($res) <= 4)) {
         memcache_madd($key, ' ', 180);
@@ -863,7 +872,7 @@ function do_best_stories()
     }
 
     $title = _('más votadas');
-    $url = $globals['base_url'].'popular';
+    $url = $globals['base_url'] . 'popular';
     $subclass = 'red';
 
     echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'url', 'subclass'), true);
@@ -879,13 +888,13 @@ function do_best_queued()
         return;
     }
 
-    $key = 'best_queued_'.$globals['site_shortname'].$globals['v'];
+    $key = 'best_queued_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    $avg_karma = intval($db->get_var("SELECT avg(karma) from sub_statuses WHERE id = ".SitesMgr::my_id()." AND date >= date_sub(now(), interval 1 day) and status='published'"));
+    $avg_karma = intval($db->get_var("SELECT avg(karma) from sub_statuses WHERE id = " . SitesMgr::my_id() . " AND date >= date_sub(now(), interval 1 day) and status='published'"));
     $min_karma = intval($avg_karma / 4);
     $warned_threshold = intval($min_karma * 1.5);
 
@@ -893,7 +902,7 @@ function do_best_queued()
 
     // The order is not exactly the votes
     // but a time-decreasing function applied to the number of votes
-    $res = $db->get_results("select link_id from links, sub_statuses where id = ".SitesMgr::my_id()." AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' order by link_karma desc limit 20");
+    $res = $db->get_results("select link_id from links, sub_statuses where id = " . SitesMgr::my_id() . " AND status='queued' and link_id = link AND link_karma > $min_karma AND date > '$min_date' order by link_karma desc limit 20");
 
     if (!$res || (count($res) <= 5)) {
         memcache_madd($key, ' ', 120);
@@ -905,7 +914,7 @@ function do_best_queued()
     foreach ($res as $l) {
         $link = Link::from_db($l->link_id);
 
-        if ($link->negatives > $link->votes/10 && $link->karma < $warned_threshold) {
+        if ($link->negatives > $link->votes / 10 && $link->karma < $warned_threshold) {
             continue;
         }
 
@@ -927,7 +936,7 @@ function do_best_queued()
     }
 
     $title = _('candidatas');
-    $url = $globals['base_url'].'queue?meta=_popular';
+    $url = $globals['base_url'] . 'queue?meta=_popular';
     $subclass = '';
 
     echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'url', 'subclass'), true);
@@ -943,19 +952,19 @@ function do_most_clicked_stories()
         return;
     }
 
-    $key = 'most_clicked_'.$globals['site_shortname'].$globals['v'];
+    $key = 'most_clicked_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
     $min_date = date("Y-m-d H:i:00", $globals['now'] - 172800); // 48 hours
 
     // The order is not exactly the votes
     // but a time-decreasing function applied to the number of votes
-    $res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = ".SitesMgr::my_id()." AND link_id = link AND status='published' and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
+    $res = $db->get_results("select link_id, counter*(1-(unix_timestamp(now())-unix_timestamp(link_date))*0.5/172800) as value from links, link_clicks, sub_statuses where sub_statuses.id = " . SitesMgr::my_id() . " AND link_id = link AND status='published' and date > '$min_date' and link_clicks.id = link order by value desc limit 5");
 
     if (!$res || (count($res) <= 4)) {
         memcache_madd($key, ' ', 180);
@@ -980,7 +989,7 @@ function do_most_clicked_stories()
     }
 
     $title = _('más visitadas');
-    $url = $globals['base_url'].'top_visited';
+    $url = $globals['base_url'] . 'top_visited';
 
     echo $output = Haanga::Load('most_clicked_stories.html', compact('links', 'title', 'url'), true);
 
@@ -995,13 +1004,13 @@ function do_best_posts($with_poll = false)
         return;
     }
 
-    $key = 'best_posts_'.$globals['site_shortname'].$globals['v'];
+    $key = 'best_posts_' . $globals['site_shortname'] . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-    echo '<!-- Calculating '.__FUNCTION__.' -->';
+    echo '<!-- Calculating ' . __FUNCTION__ . ' -->';
 
     // 24 hours to regular posts, 96 hours to posts with polls
     $min_date = date('Y-m-d H:i:00', $globals['now'] - 86400 * ($with_poll ? 4 : 1));
@@ -1009,9 +1018,9 @@ function do_best_posts($with_poll = false)
     $res = $db->get_results(DbHelper::queryPlain('
         SELECT `posts`.`post_id`
         FROM (`posts`, `users`)
-        '.($with_poll ? ('JOIN `polls` ON (`polls`.`post_id` = `posts`.`post_id`)') : '').'
+        ' . ($with_poll ? ('JOIN `polls` ON (`polls`.`post_id` = `posts`.`post_id`)') : '') . '
         WHERE (
-            `post_date` > "'.$min_date.'"
+            `post_date` > "' . $min_date . '"
             AND `post_user_id` = `user_id`
             AND `post_karma` > 0
         )
@@ -1033,7 +1042,7 @@ function do_best_posts($with_poll = false)
 
         $obj = new stdClass();
         $obj->id = $post->id;
-        $obj->link = post_get_base_url().$post->id;
+        $obj->link = post_get_base_url() . $post->id;
         $obj->user_id = $post->author;
         $obj->avatar = $post->avatar;
         $obj->title = text_to_summary($post->clean_content(), 80);
@@ -1059,7 +1068,7 @@ function do_last_blogs()
         return;
     }
 
-    $key = 'last_blogs_'.$globals['v'];
+    $key = 'last_blogs_' . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
@@ -1087,7 +1096,7 @@ function do_last_blogs()
     }
 
     $title = _('apuntes de blogs');
-    $url = $globals['base_url'].'rsss';
+    $url = $globals['base_url'] . 'rsss';
 
     echo $output = Haanga::Load('last_blogs.html', compact('objects', 'title', 'url'), true);
 
@@ -1102,19 +1111,19 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date')
         return;
     }
 
-    $key = "last_subs_$status-$count-$order_".$globals['v'];
+    $key = "last_subs_$status-$count-$order_" . $globals['v'];
 
     if (memcache_mprint($key)) {
         return;
     }
 
-	$where_not_banned = '';
+    $where_not_banned = '';
 
-	if (isset($globals['subs_banned']) and is_array($globals['subs_banned']) and count($globals['subs_banned']) > 0) {
-		$where_not_banned = " and subs.name not in ('" . implode(",", $globals['subs_banned']) . "')";
-	}
+    if (isset($globals['subs_banned']) and is_array($globals['subs_banned']) and count($globals['subs_banned']) > 0) {
+        $where_not_banned = " and subs.name not in ('" . implode(",", $globals['subs_banned']) . "')";
+    }
 
-	$ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link $where_not_banned order by $order desc limit $count");
+    $ids = $db->get_col("select link from sub_statuses, subs, links where date > date_sub(now(), interval 48 hour) and status = '$status' and sub_statuses.id = origen and subs.id = sub_statuses.id and owner > 0 and not nsfw and link_id = link $where_not_banned order by $order desc limit $count");
 
     if (empty($ids)) {
         memcache_madd($key, ' ', 300);
@@ -1144,7 +1153,7 @@ function do_last_subs($status = 'published', $count = 10, $order = 'date')
     }
 
     $title = _('En subs');
-    $url = $globals['base_url_general'].'subs';
+    $url = $globals['base_url_general'] . 'subs';
     $subclass = 'brown';
 
     echo $output = Haanga::Load('best_stories.html', compact('links', 'title', 'subclass', 'url'), true);
@@ -1177,7 +1186,7 @@ function do_sub_message_right()
         }
 
         $site->logo_width = round($r * $site->logo_height);
-        $site->logo_url = Upload::get_cache_relative_dir($site->id).'/media_thumb-sub_logo-'.$site->id.'.'.$site->media_extension.'?'.$site->media_date;
+        $site->logo_url = Upload::get_cache_relative_dir($site->id) . '/media_thumb-sub_logo-' . $site->id . '.' . $site->media_extension . '?' . $site->media_date;
     }
 
     $site->followers = SitesMgr::get_followers();
@@ -1186,7 +1195,7 @@ function do_sub_message_right()
         'site' => $site,
         'owner' => SitesMgr::get_owner(),
         'properties' => $properties,
-        'user' => $current_user
+        'user' => $current_user,
     ));
 }
 
@@ -1215,7 +1224,7 @@ function do_sub_description()
         }
 
         $site->logo_width = round($r * $site->logo_height);
-        $site->logo_url = Upload::get_cache_relative_dir($site->id).'/media_thumb-sub_logo-'.$site->id.'.'.$site->media_extension.'?'.$site->media_date;
+        $site->logo_url = Upload::get_cache_relative_dir($site->id) . '/media_thumb-sub_logo-' . $site->id . '.' . $site->media_extension . '?' . $site->media_date;
     }
 
     $site->followers = SitesMgr::get_followers();
@@ -1224,13 +1233,13 @@ function do_sub_description()
         'site' => $site,
         'owner' => SitesMgr::get_owner(),
         'properties' => $properties,
-        'user' => $current_user
+        'user' => $current_user,
     ));
 }
 
 function do_sidebar_block($name = 'default')
 {
-    Haanga::Safe_Load('private/sidebar-block-'.$name.'.html');
+    Haanga::Safe_Load('private/sidebar-block-' . $name . '.html');
 }
 
 function print_follow_sub($id)
@@ -1239,56 +1248,83 @@ function print_follow_sub($id)
 
     Haanga::Load('sub_follow.html', array(
         'id' => $id,
-        'user' => $current_user
+        'user' => $current_user,
     ));
 }
 
-function get_data_widget_official_subs() {
-
+function get_data_widget_official_subs()
+{
     global $globals;
 
-    if ($globals['memcache_host']) {
-        $memcache_widget_official_subs = 'widget_official_subs';
-    }
+    $cache = $globals['memcache_host'] ? 'widget_official_subs' : null;
 
-    if (!$memcache_widget_official_subs || !$official_subs = unserialize(memcache_mget($memcache_widget_official_subs))) {
-        $official_subs = query_official_subs_for_widget();
-        if ($memcache_widget_official_subs) {
-            memcache_madd($memcache_widget_official_subs, serialize($official_subs), 1800);
+    if (($cache === null) || !($subs = unserialize(memcache_mget($cache)))) {
+        $subs = query_official_subs_for_widget();
+
+        if ($cache) {
+            memcache_madd($cache, serialize($subs), 1800);
         }
     }
 
-    return $official_subs;
+    return $subs;
 }
 
-function query_official_subs_for_widget() {
-
+function query_official_subs_for_widget()
+{
     global $globals, $db;
 
-    if (!$globals['widget_official_subs']) return false;
-
-    $official_subs = [];
-
-    foreach (array_keys($globals['widget_official_subs']) as $sub_name) {
-        $sub = SitesMgr::get_info(SitesMgr::get_id($sub_name));
-        $sub->extra_info = $globals['widget_official_subs'][$sub_name];
-        $official_subs[] = $sub;
+    if (empty($globals['widget_official_subs'])) {
+        return false;
     }
 
-    $ids_subs = array_map(function ($row) {
-        return (int)$row->id;
-    }, $official_subs);
+    $subs = array();
 
-    $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN (' . implode(',', $ids_subs) . ') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
+    foreach (array_keys($globals['widget_official_subs']) as $name) {
+        $sub = SitesMgr::get_info(SitesMgr::get_id($name));
+        $sub->extra_info = $globals['widget_official_subs'][$name];
 
-    foreach ($official_subs as $sub) {
-        foreach ($followers as $row) {
-            if ($sub->id == $row->id) {
-                $sub->followers = $row->c;
-                break;
-            }
-        }
+        $subs[$sub->id] = $sub;
     }
 
-    return $official_subs;
+    if (empty($subs)) {
+        return array();
+    }
+
+    $followers = $db->get_results('
+        SELECT `subs`.`id`, COUNT(*) AS `count`
+        FROM `subs`, `prefs`
+        WHERE (
+            `subs`.`id` IN (' . implode(',', array_keys($subs)) . ')
+            AND `prefs`.`pref_key` = "sub_follow"
+            AND `subs`.`id` = `prefs`.`pref_value`
+        )
+        GROUP BY `subs`.`id`;
+    ');
+
+    foreach ($followers as $row) {
+        $subs[$row->id]->followers = $row->count;
+    }
+
+    return array_values($subs);
+}
+
+function responseJson($data, $success = true)
+{
+    if (is_integer($data)) {
+        die((string)$data);
+    }
+
+    $response = array(
+        'success' => $success,
+        'data' => null,
+        'message' => null
+    );
+
+    if (is_string($data)) {
+        $response['message'] = $data;
+    } else {
+        $response['data'] = $data;
+    }
+
+    die(json_encode($response));
 }

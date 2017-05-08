@@ -3,11 +3,11 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//		http://www.affero.org/oagpl.html
+//        http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
-include_once(mnminclude.'ban.php');
+include __DIR__.'/../config.php';
+require_once mnminclude . 'ban.php';
 
 header('Content-Type: application/json; charset=UTF-8');
 array_push($globals['cache-control'], 'no-cache');
@@ -17,7 +17,7 @@ if (check_ban_proxy()) {
     error(_('IP no permitida'));
 }
 
-if (!($id=check_integer('id'))) {
+if (!($id = check_integer('id'))) {
     error(_('falta el ID del comentario'));
 }
 
@@ -33,7 +33,7 @@ if (!check_security_key($_REQUEST['key'])) {
     error(_('clave de control incorrecta'));
 }
 
-if (empty($_REQUEST['value']) || ! is_numeric($_REQUEST['value'])) {
+if (empty($_REQUEST['value']) || !is_numeric($_REQUEST['value'])) {
     error(_('falta valor del voto'));
 }
 
@@ -53,6 +53,7 @@ if ($value < 0 && $current_user->user_id == (int) $db->get_var("select link_auth
 
 $comment = new Comment();
 $comment->id = $id;
+
 if (!$comment->read_basic()) {
     error(_('comentario inexistente'));
 }
@@ -71,23 +72,24 @@ if (UserAuth::check_clon_votes($current_user->user_id, $id, 5, 'comments') > 0) 
 }
 
 if ($value > 0) {
-    $votes_freq = intval($db->get_var("select count(*) from votes where vote_type='comments' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') and vote_value > 0 and vote_ip_int = ".$globals['user_ip_int']));
+    $votes_freq = intval($db->get_var("select count(*) from votes where vote_type='comments' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') and vote_value > 0 and vote_ip_int = " . $globals['user_ip_int']));
     $freq = 10;
 } else {
-    $votes_freq = intval($db->get_var("select count(*) from votes where vote_type='comments' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') and vote_value <= 0 and vote_ip_int = ".$globals['user_ip_int']));
+    $votes_freq = intval($db->get_var("select count(*) from votes where vote_type='comments' and vote_user_id=$current_user->user_id and vote_date > subtime(now(), '0:0:30') and vote_value <= 0 and vote_ip_int = " . $globals['user_ip_int']));
     $freq = 5;
 }
 
 if ($votes_freq > $freq) {
-    if ($current_user->user_id > 0 && $current_user->user_karma > 4) {
-        // Crazy votes attack, decrease karma
-        // she does not deserve it :-)
-        $user = new User($current_user->user_id);
-        $user->add_karma(-0.2, _('Voto cowboy a comentarios'));
-        error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
-    } else {
+    if (!$current_user->user_id || $current_user->user_karma <= 4) {
         error(_('¡tranquilo cowboy!'));
     }
+
+    // Crazy votes attack, decrease karma
+    // she does not deserve it :-)
+    $user = new User($current_user->user_id);
+    $user->add_karma(-0.2, _('Voto cowboy a comentarios'));
+
+    error(_('¡tranquilo cowboy!, tu karma ha bajado: ') . $user->karma);
 }
 
 // EXPERIMENTAL: the negative karma to comments depends upon the number of comments and posts
@@ -96,8 +98,7 @@ $comments = $db->get_var("select count(*) from comments where comment_user_id = 
 $posts = $db->get_var("select count(*) from posts where post_user_id = $current_user->user_id and post_date > date_sub(now(), interval $hours hour) and post_karma >= 0");
 $negatives = $db->get_var("select count(*) from votes where vote_type = 'comments' and vote_user_id = $current_user->user_id and vote_date > date_sub(now(), interval $hours hour) and vote_value < 0");
 
-
-if (! $current_user->admin && ! $current_user->special) {
+if (!$current_user->admin && !$current_user->special) {
     if ($value < 0) {
         $points = 2 * $comments + $posts - $negatives;
         $value = round(-1 * max(min($points, $current_user->user_karma), 1)); // Min is -1
@@ -108,8 +109,6 @@ if (! $current_user->admin && ! $current_user->special) {
 } else {
     $value = round($value * $current_user->user_karma);
 }
-
-
 
 if (!$comment->insert_vote($value)) {
     error(_('ya se votó antes con el mismo usuario o IP'));
@@ -124,11 +123,9 @@ $dict['votes'] = $comment->votes;
 $dict['value'] = $value;
 $dict['karma'] = $comment->karma;
 
-echo json_encode($dict);
+die(json_encode($dict));
 
-function error($mess)
+function error($error)
 {
-    $dict['error'] = $mess;
-    echo json_encode($dict);
-    die;
+    die(json_encode(array('error' => $error)));
 }

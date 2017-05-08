@@ -26,6 +26,10 @@ $link->related = $link->get_related();
 
 $link->print_summary('full', 50, true, 'story/blog.html');
 
+if ($link->status === 'discard') {
+    return;
+}
+
 $link->related = false;
 $link->best_comment = false;
 

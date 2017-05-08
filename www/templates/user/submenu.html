@@ -1,0 +1,7 @@
+{% if options %}
+<nav class="contents-submenu">
+    {% for key, value in options %}
+    <a href="{{ value.link }}" {% if key == view %} class="selected" {% endif %} >{{ value.title }}</a>
+    {% endfor %}
+</nav>
+{% endif %}

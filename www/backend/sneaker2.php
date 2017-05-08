@@ -7,9 +7,9 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 
-include('../config.php');
-include_once(mnminclude.'sneak.php');
-include_once(mnminclude.'ban.php');
+require_once __DIR__.'/../config.php';
+require_once mnminclude.'sneak.php';
+require_once mnminclude.'ban.php';
 
 
 $events = array();
@@ -353,7 +353,7 @@ function get_chat()
 function get_votes($dbtime)
 {
     global $db, $globals, $events, $last_timestamp, $max_items, $current_user;
-    
+
     if ($globals['subs']) {
         $filter = 'and sub_statuses.id in ('.$globals['subs'].')';
     } else {

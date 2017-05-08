@@ -66,7 +66,7 @@ class RGDB extends mysqli
         // Rollback dangling transactions
         if ($this->in_transaction > 0) {
             parent::rollback();
-            syslog(LOG_INFO, "Dangling transactions, rollback forced ".$_SERVER['SCRIPT_NAME']);
+            syslog(LOG_INFO, "Dangling transactions, rollback forced " . $_SERVER['SCRIPT_NAME']);
         }
 
         parent::close();
@@ -96,7 +96,7 @@ class RGDB extends mysqli
     public function savepoint_name()
     {
         if ($this->in_transaction > 1) {
-            return self::POINT_KEY.$this->in_transaction;
+            return self::POINT_KEY . $this->in_transaction;
         }
     }
 
@@ -104,10 +104,10 @@ class RGDB extends mysqli
     {
         $this->in_transaction++;
 
-        if ($this->in_transaction === 1) {
+        if ($this->in_transaction == 1) {
             $this->query('START TRANSACTION');
-        } elseif (!$this->query('SAVEPOINT '.$this->savepoint_name())) {
-            syslog(LOG_INFO, 'Error SAVEPOINT '.$this->savepoint_name().' '.$_SERVER['SCRIPT_NAME']);
+        } elseif (!$this->query('SAVEPOINT ' . $this->savepoint_name())) {
+            syslog(LOG_INFO, 'Error SAVEPOINT ' . $this->savepoint_name() . ' ' . $_SERVER['SCRIPT_NAME']);
         }
 
         return $this->in_transaction;
@@ -116,18 +116,18 @@ class RGDB extends mysqli
     public function commit($flags = null, $name = null)
     {
         if ($this->in_transaction <= 0) {
-            syslog(LOG_INFO, 'Error COMMIT, transaction = 0 '.$_SERVER['SCRIPT_NAME']);
+            syslog(LOG_INFO, 'Error COMMIT, transaction = 0 ' . $_SERVER['SCRIPT_NAME']);
             return false;
         }
 
         if ($this->in_transaction > 1) {
-            $r = $this->query('RELEASE SAVEPOINT '.$this->savepoint_name());
+            $r = $this->query('RELEASE SAVEPOINT ' . $this->savepoint_name());
         } else {
             $r = parent::commit();
         }
 
         if (!$r) {
-            syslog(LOG_INFO, 'Error commit/RELEASE SAVEPOINT '.$this->savepoint_name().' '.$_SERVER['SCRIPT_NAME']);
+            syslog(LOG_INFO, 'Error commit/RELEASE SAVEPOINT ' . $this->savepoint_name() . ' ' . $_SERVER['SCRIPT_NAME']);
         }
 
         $this->in_transaction--;
@@ -138,18 +138,18 @@ class RGDB extends mysqli
     public function rollback($flags = null, $name = null)
     {
         if ($this->in_transaction <= 0) {
-            syslog(LOG_INFO, 'Error ROLLBACK, transaction = 0 '.$_SERVER['SCRIPT_NAME']);
+            syslog(LOG_INFO, 'Error ROLLBACK, transaction = 0 ' . $_SERVER['SCRIPT_NAME']);
             return false;
         }
 
         if ($this->in_transaction > 1) {
-            $r = $this->query('ROLLBACK TO '.$this->savepoint_name());
+            $r = $this->query('ROLLBACK TO ' . $this->savepoint_name());
         } else {
             $r = parent::rollback();
         }
 
         if (!$r) {
-            syslog(LOG_INFO, 'Error rollback/ROLLBACK TO '.$this->savepoint_name().' '.$_SERVER['SCRIPT_NAME']);
+            syslog(LOG_INFO, 'Error rollback/ROLLBACK TO ' . $this->savepoint_name() . ' ' . $_SERVER['SCRIPT_NAME']);
         }
 
         $this->in_transaction--;
@@ -172,7 +172,7 @@ class RGDB extends mysqli
         @parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, $this->connect_timeout);
 
         if ($this->persistent && version_compare(PHP_VERSION, '5.3.0') > 0) {
-            $this->connected = @parent::real_connect('p:'.$this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname, $this->port);
+            $this->connected = @parent::real_connect('p:' . $this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname, $this->port);
         } else {
             $this->connected = @parent::real_connect($this->dbhost, $this->dbuser, $this->dbpassword, $this->dbname, $this->port);
         }
@@ -212,7 +212,7 @@ class RGDB extends mysqli
             dd($str, $this->error, true);
         }
 
-        syslog(LOG_NOTICE, "rgdb.php ($this->dbhost) error $str ".$_SERVER['REQUEST_URI']." ($this->error)");
+        syslog(LOG_NOTICE, "rgdb.php ($this->dbhost) error $str " . $_SERVER['REQUEST_URI'] . " ($this->error)");
 
         return false;
     }
@@ -245,9 +245,10 @@ class RGDB extends mysqli
             return true;
         }
 
-        $num_rows=0;
+        $num_rows = 0;
 
-        while (($row = $result->fetch_object($class_name)) && ($num_rows < $this->max_rows)) { // We put a limit
+        while (($row = $result->fetch_object($class_name)) && ($num_rows < $this->max_rows)) {
+            // We put a limit
             if ($index_name) {
                 $index = $row->$index_name;
             } else {
@@ -260,7 +261,7 @@ class RGDB extends mysqli
         }
 
         if ($num_rows >= $this->max_rows) {
-            syslog(LOG_INFO, 'MAX_ROWS reached by '.$globals['user_ip'].' in '.$_SERVER['REQUEST_URI']);
+            syslog(LOG_INFO, 'MAX_ROWS reached by ' . $globals['user_ip'] . ' in ' . $_SERVER['REQUEST_URI']);
         }
 
         @$result->close();
@@ -369,7 +370,7 @@ class RGDB extends mysqli
         }
 
         // Retrieve available status values
-        $row = $this->get_row('SHOW COLUMNS FROM `'.$table.'` LIKE "'.$column.'"');
+        $row = $this->get_row('SHOW COLUMNS FROM `' . $table . '` LIKE "' . $column . '"');
 
         preg_match_all("/'(.*?)'/", $row->Type, $matches);
 

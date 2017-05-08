@@ -2,10 +2,10 @@
 $routes = array(
     ''                       => 'index.php',
     'story'                  => 'story.php',
-    'submit'                 => 'submit.php',
+    'my-story'               => 'my-story.php',
+    'submit'                 => 'submit/index.php',
     'subedit'                => 'subedit.php',
     'subs'                   => 'subs.php',
-    'editlink'               => 'editlink.php',
     'comment_ajax'           => 'backend/comment_ajax.php',
     'login'                  => 'login.php',
     'register'               => 'register.php',
@@ -15,12 +15,14 @@ $routes = array(
     'promote'                => 'promote.php',
     'values'                 => 'values.php',
     'queue'                  => 'shakeit.php',
+    'articles'               => 'articles.php',
     'legal'                  => 'legal.php',
     'go'                     => 'go.php',
     'b'                      => 'bar.php',
     'c'                      => 'comment.php',
     'm'                      => 'submnm.php',
-    'user'                   => 'user.php',
+    'user'                   => 'user/index.php',
+    'profile'                => 'user/edit.php',
     'search'                 => 'search.php',
     'between'                => 'between.php',
     'rss'                    => 'rss2.php',
@@ -34,7 +36,6 @@ $routes = array(
     'top_comments'           => 'topcomments.php',
     'top_users'              => 'topusers.php',
     'top_commented'          => 'topcommented.php',
-    'profile'                => 'profile.php',
     'sitemap'                => 'sitemap.php',
     'trends'                 => 'trends.php',
     'faq-es'                 => 'faq-es.php',
@@ -46,17 +47,16 @@ $routes = array(
     'novedades-en-meneame'   => 'changelog.php'
 );
 
-$globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY);
-$script = $routes[$path[0]];
+$globals['path'] = $path = preg_split('/\/+/', $_SERVER['PATH_INFO'], 10, PREG_SPLIT_NO_EMPTY) ?: array('');
 
-if (empty($script) || !is_file(__DIR__.'/'.$script)) {
-    include_once 'config.php';
+if (!isset($path[0]) || !isset($routes[$path[0]]) || !is_file(__DIR__.'/'.$routes[$path[0]])) {
+    require_once __DIR__.'/config.php';
     do_error('not found', 404, true);
 }
 
-$globals['script'] = $script;
+$globals['script'] = $script = $routes[$path[0]];
 
 if ((include __DIR__.'/'.$script) === false) {
-    include_once 'config.php';
+    require_once __DIR__.'/config.php';
     do_error('bad request '.$script, 400, true);
 }

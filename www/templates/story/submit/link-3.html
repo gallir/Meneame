@@ -1,0 +1,45 @@
+<div id="singlewrap">
+    <div class="genericform">
+        {% include 'story/submit/error.html' %}
+
+        <form method="post" class="genericform">
+            <fieldset>
+                <legend><span class="sign">{% trans _('Previsualización') %}</span></legend>
+
+                <div class="formnotice">
+                    {% exec link.print_summary 'preview' as dummy %}
+                </div>
+
+                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+                <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+                <input type="hidden" name="timestamp" value="{{ globals.now }}" />
+                <input type="hidden" name="id" value="{{ link.id }}" />
+                <input type="hidden" name="trackback" value="{{ _POST['trackback'] | escape }}" />
+                <input type="hidden" name="step" value="3" />
+
+                <div class="genericformtxt text-center m-20">
+                    <label>
+                        {% if error %}
+                        {% trans _('ERROR: No es posible el envío al existir errores que deben ser resueltos') %}
+                        {% else %}
+                        {% trans _('ATENCIÓN: Esto es sólo una muestra. Puedes retroceder o enviar a la cola y finalizar') %}
+                        {% endif %}
+                    </label>
+                </div>
+
+                <div class="text-center m-20">
+                    <input type="button" class="button" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';" value="&#171; {% trans _('Volver a la edición') %}"/>
+
+                    {% if !error %}
+                    &nbsp;&nbsp;
+                    <input type="submit" class="button" value="{% trans _('Enviar a la cola y finalizar') %} &#187;"/>
+                    {% endif %}
+                </div>
+            </fieldset>
+        </form>
+
+        {% if related %}
+            {% include "story/related.html" %}
+        {% endif %}
+    </div>
+</div>

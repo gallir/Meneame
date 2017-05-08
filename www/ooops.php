@@ -9,8 +9,8 @@
 // Don't check the user is logged
 $globals['no_auth'] = true;
 
-include('config.php');
-include(mnminclude.'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 
 $errn = $_GET{"e"};
 

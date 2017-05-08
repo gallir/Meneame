@@ -90,7 +90,7 @@ class PrivateMessage extends LCPBase
 
         if ($current_user->user_id != $this->author && $current_user->user_id != $this->to) {
             return;
-        } // Security check
+        }
 
         $post_meta_class = 'comment-footer';
         $post_class = 'comment-body';
@@ -102,18 +102,21 @@ class PrivateMessage extends LCPBase
         if ($length > 0) {
             $this->content = text_to_summary($this->content, $length);
         }
+
         $this->content = $this->to_html($this->content) . $expand;
 
 
         $vars = compact('post_meta_class', 'post_class', 'length');
-        /* reference $this to use in the template */
+
         $vars['self'] = $this;
+
         return Haanga::Load('priv_summary.html', $vars);
     }
 
     public function print_user_avatar($size=40)
     {
         global $globals;
+
         echo '<a href="'.get_user_uri($this->username).'" class="tooltip u:'.$this->author.'"><img class="avatar" src="'.get_avatar_url($this->author, $this->avatar, $size).'" width="'.$size.'" height="'.$size.'" alt="'.$this->username.'"/></a>';
     }
 

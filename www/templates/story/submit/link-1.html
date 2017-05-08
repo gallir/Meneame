@@ -1,0 +1,45 @@
+<section class="section section-medium section-story-submit">
+    <div class="section-story-submit-step1-layout">
+        <div class="section-story-submit-step1-link">
+            <form method="post" class="form">
+                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+                <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+                <input type="hidden" name="step" value="1" />
+                <input type="hidden" name="type" value="link" />
+
+                <h1>{% trans _('Comparte un enlace') %}</h1>
+                <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
+
+                {% include 'story/submit/error.html' %}
+
+                <div class="form-group form-group-highlight mt-20">
+                    <input type="url" name="url" value="{{ link.url }}" class="form-control" placeholder="{% trans _('Pega aquí el enlace que deseas compartir') %}" required />
+                </div>
+
+                <div class="form-group mt-20">
+                    <button type="submit" class="btn btn-mnm btn-lg">{% trans _('Enviar') %}</button>
+                </div>
+            </form>
+        </div>
+
+        {% if site_properties.no_link %}
+        <div class="section-story-submit-step1-separator"><span>0</span></div>
+
+        <div class="section-story-submit-step1-article">
+            <form method="post" class="form">
+                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+                <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+                <input type="hidden" name="step" value="1" />
+                <input type="hidden" name="type" value="article" />
+
+                <h1>{% trans _('Escribe tu artículo') %}</h1>
+                <p class="info">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
+
+                <button type="submit" name="type" value="article" class="btn btn-mnm btn-inverted btn-lg mt-20">
+                    {% trans _('Empezar a escribir') %}
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</section>

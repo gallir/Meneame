@@ -1,5 +1,5 @@
 <?php
-include('../config.php');
+require_once __DIR__.'/../config.php';
 
 header('Content-Type: text/css; charset=utf-8');
 header('Cache-Control: public, max-age=864000');

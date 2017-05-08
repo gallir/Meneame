@@ -10,16 +10,18 @@
 //      Must add printing the threads with CommentTree and split the
 //      page with only one post.
 
-include_once '../config.php';
-include 'common.php';
+require_once __DIR__.'/../config.php';
+include __DIR__.'/common.php';
 
 $argv = $globals['path'];
 $argv[0] = clean_input_string($argv[0]);
 
 if ($argv[0] === '_priv') {
-    // Load priv.php
-    include 'priv.php';
-    die;
+    if (!$current_user->user_id) {
+        do_error(_('debe autentificarse'), 401);
+    }
+
+    die(header('Location: '.$current_user->get_uri('notes_privates')));
 }
 
 include mnminclude . 'html1.php';
@@ -33,11 +35,12 @@ $min_date = date("Y-m-d H:00:00", time() - 192800); //  about 48 hours
 $page_size = 50;
 $offset = (get_current_page() - 1) * $page_size;
 $page_title = _('nótame') . ' | ' . $globals['site_name'];
+
 $view = false;
 $short_content = false;
 
 $tab_option = 0;
-$where = $order_by = '';
+$from = $where = $order_by = '';
 $limit = $rows = 0;
 
 switch ($argv[0]) {
@@ -128,56 +131,19 @@ switch ($argv[0]) {
 
             switch ($argv[1]) {
                 case '_friends':
-                    $view = 1;
-                    $page_title = sprintf(_('amigos de %s'), $user->username);
-                    $from = ", friends";
-                    $where = "friend_type='manual' and friend_from = $user->id and friend_to=post_user_id and friend_value > 0";
-                    $order_by = "ORDER BY post_id desc";
-                    $limit = "LIMIT $offset,$page_size";
-                    $rows = $db->get_var("SELECT count(*) FROM posts, friends WHERE friend_type='manual' and friend_from = $user->id and friend_to=post_user_id and friend_value > 0");
-                    $rss_option = "sneakme_rss?friends_of=$user->id";
-                    break;
+                    die(header('Location: '.$user->get_uri('notes_friends'), 301));
 
                 case '_favorites':
-                    $view = 2;
-                    $page_title = sprintf(_('favoritas de %s'), $user->username);
-                    $ids = $db->get_col("SELECT favorite_link_id FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post' ORDER BY favorite_link_id DESC LIMIT $offset,$page_size");
-                    $from = "";
-                    $where = $ids ? ("post_id IN (" . implode(',', $ids) . ")") : 'FALSE';
-                    $order_by = "ORDER BY post_id desc";
-                    $limit = "";
-                    $rows = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_user_id=$user->id AND favorite_type='post'");
-                    $rss_option = "sneakme_rss?favorites_of=$user->id";
-                    break;
+                    die(header('Location: '.$user->get_uri('notes_favorites'), 301));
 
                 case '_conversation':
-                    $view = 3;
-                    $page_title = sprintf(_('conversación de %s'), $user->username);
-                    $ids = $db->get_col("SELECT distinct conversation_from FROM conversations WHERE conversation_user_to=$user->id and conversation_type='post' ORDER BY conversation_time desc LIMIT $offset,$page_size");
-                    $where = $ids ? ("post_id IN (" . implode(',', $ids) . ")") : 'FALSE';
-                    $from = "";
-                    $order_by = "ORDER BY post_id desc ";
-                    $limit = "";
-                    $rows = -1; // $db->get_var("SELECT count(distinct(conversation_from)) FROM conversations, posts WHERE conversation_user_to=$user->id and conversation_type='post' and post_id = conversation_from ");
-                    $rss_option = "sneakme_rss?conversation_of=$user->id";
-                    break;
+                    die(header('Location: '.$user->get_uri('notes_conversation'), 301));
 
                 case '_votes':
-                    $view = 4;
-                    $page_title = sprintf(_('votos de %s'), $user->username);
-                    $rows = -1; // $rows = -1; //$db->get_var("SELECT count(*) FROM votes, posts WHERE vote_type='posts' and vote_user_id=$user->id and post_id = vote_link_id and post_user_id != vote_user_id");
-                    $rss_option = false;
-                    break;
+                    die(header('Location: '.$user->get_uri('notes_votes'), 301));
 
                 default:
-                    $view = 0;
-                    $page_title = sprintf(_('notas de %s'), $user->username);
-                    $globals['search_options']['u'] = $user->username;
-                    $where = "post_user_id=$user->id";
-                    $order_by = "ORDER BY post_id desc";
-                    $limit = "LIMIT $offset,$page_size";
-                    $rows = $db->get_var("SELECT count(*) FROM posts WHERE post_user_id=$user->id");
-                    $rss_option = "sneakme_rss?user_id=$user->id";
+                    die(header('Location: '.$user->get_uri('notes'), 301));
             }
         }
 }
@@ -202,13 +168,13 @@ if ($tab_option == 4) {
     }
 
     $options = array(
-        $whose => post_get_base_url($user->username),
-        _('amigos') => post_get_base_url("$user->username/_friends"),
-        _('favoritos') => post_get_base_url("$user->username/_favorites"),
-        _('conversación') . $conversation_extra => post_get_base_url("$user->username/_conversation"),
-        _('votos') => post_get_base_url("$user->username/_votes"),
+        $whose => $user->get_uri('notes'),
+        _('amigos') => $user->get_uri('notes_friends'),
+        _('favoritos') => $user->get_uri('notes_favorites'),
+        _('conversación') . $conversation_extra => $user->get_uri('notes_conversation'),
+        _('votos') => $user->get_uri('notes_votes'),
         sprintf(_('debates con %s'), $user->username) => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login&amp;u2=$user->username",
-        sprintf(_('perfil de %s'), $user->username) => get_user_uri($user->username),
+        sprintf(_('perfil de %s'), $user->username) => $user->get_uri(),
 
     );
 } elseif ($tab_option == 1 && $current_user->user_id > 0) {
@@ -217,11 +183,10 @@ if ($tab_option == 4) {
 
     $options = array(
         _('todas') => post_get_base_url(''),
-        _('amigos') => post_get_base_url("$current_user->user_login/_friends"),
-        _('favoritos') => post_get_base_url("$current_user->user_login/_favorites"),
-        _('conversación') . $conversation_extra => post_get_base_url("$current_user->user_login/_conversation"),
-        _('votos') => post_get_base_url("$current_user->user_login/_votes"),
-//        _('últimas imágenes') => "javascript:fancybox_gallery('post');",
+        _('amigos') => $current_user->get_uri('notes_friends'),
+        _('favoritos') => $current_user->get_uri('notes_favorites'),
+        _('conversación') . $conversation_extra => $current_user->get_uri('notes_conversation'),
+        _('votos') => $current_user->get_uri('notes_votes'),
         _('debates') . '&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
     );
 } else {

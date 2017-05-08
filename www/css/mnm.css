@@ -1696,6 +1696,14 @@ td.count {
     color: white;
 }
 
+.vote-negative-alert {
+    background: red;
+    padding: 2px 5px;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
 .error {
     font-size: 120%;
     margin: 0 0 10px 0;
@@ -3064,12 +3072,9 @@ button.link.favorite {
     float: left;
     display: block;
     overflow: hidden;
-    height: 25px;
     white-space: nowrap;
-    width: 24%;
-    height: 30px;
     font-size: 85%;
-    white-space: nowrap;
+    padding: 10px;
 }
 
 .friends-item img, .voters-list img {
