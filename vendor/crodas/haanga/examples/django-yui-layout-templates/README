@@ -1,0 +1,5 @@
+Original project:
+http://code.google.com/p/django-yui-layout-templates/
+
+- Changes
+    Changed some block names, since we only support [a-zA-Z][a-zA-Z0-9_\.]*  names

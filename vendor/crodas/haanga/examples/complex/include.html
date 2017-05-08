@@ -1,0 +1,8 @@
+    {% for var in some_list %} 
+        ({% if forloop.counter % 2 == 0 AND 1 == 1 %}
+            Par
+        {% else %}
+            Inpar
+        {% endif %}
+        {{ forloop.counter }})
+    {% endfor %}

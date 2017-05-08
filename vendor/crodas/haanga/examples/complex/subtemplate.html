@@ -1,0 +1,10 @@
+{% extends "base.html" %} 
+
+
+{% block td %}
+    {% include "include.html" %}
+{% endblock %}
+{% block foo %}
+    simplest output
+    [{{ block.super }}]
+{% endblock %}

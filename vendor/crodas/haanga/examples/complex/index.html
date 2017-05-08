@@ -1,0 +1,35 @@
+{{ myvar }}
+{% regroup people by gender as gender_list %}
+
+<h1>Users ({{ people|length }} in {{ gender_list|length }} genders)</h1>
+<ul>
+{% for i,gender in gender_list %}
+    <li>"{{ gender['grouper'] }}" is equals to "{{ gender_list[i]["grouper"] }}"
+    <ul>
+        {% for item in gender['list'] %}
+        <li>{{ item['first_name']|upper|safe }} {{ item['last_name']|safe }} ({% firstof item['foobar'] item['bar'] "unset both" %}) {{ item['bar']|default:"default value"|upper }} 
+        {% if "das" in item['last_name'] %}
+            (Last name contains "das")
+        {% endif %}
+        {% if forloop.last %} 
+             { Last item }
+        {% endif %}</li>
+
+
+        {% endfor %}
+    </ul>
+    </li>
+{% endfor %}
+</ul>
+
+{% if "ab" in "abcd" %}
+    <h1>here</h1>
+{% endif %}
+
+{# Show list of dates #}
+{% for date in days %}
+    {% ifchanged %}<h3>{{ date|date:"F" }}</h3>{% endifchanged %}
+    <a href="{{ date|date:"M/d"|lower }}/">{{ date|date:"j" }}</a>
+{% endfor %}
+
+{% include templates.base %}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://mnmstatic.net/v_116/favicon-32x32.png">
+
+    <title>Menéame authorization page</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<style>
+    footer {
+        margin-top: 30px;
+        border-top: 1px solid #ccc;
+    }
+
+    div.logo-container {
+        text-align: center;
+        padding: 10px 20px;
+    }
+
+    img.meneame-logo {
+        width: 100px;
+    }
+
+    ul.scope-authorization-list {
+        font-size: 15px;
+    }
+
+</style>
+
+<!-- Begin page content -->
+<div class="container" style="margin-top: 20px;">
+
+    <div class="col-sm-6 col-sm-offset-3">
+
+        <div class="logo-container">
+            <img class="meneame-logo" src="https://mnmstatic.net/img/mnm/logo-350x350.png" alt="Menéame">
+        </div>
+
+        <div class="page-header">
+            <h2>Autorización para la aplicación Quick by Menéame</h2>
+        </div>
+        <p class="lead">
+            La aplicación <strong>Quick</strong> solicita acceso a la siguiente información de tu cuenta de menéame
+        </p>
+
+        {% if scope == 'basic' %}
+        <ul class="scope-authorization-list">
+            <li><strong>Nombre de usuario</strong></li>
+            <li><strong>Email</strong></li>
+            <li><strong>Avatar</strong></li>
+        </ul>
+        {% endif %}
+
+        <form method="post" class="text-center">
+            <h3>¿Autorizas el acceso?</h3>
+            <button class="btn btn-success" type="submit" name="authorized" value="yes">Sí</button>
+            <button class="btn btn-danger" type="submit" name="authorized" value="no">No</button>
+        </form>
+
+        <footer class="footer">
+            <p class="text-muted text-center">Menéame Communications S.L.</p>
+        </footer>
+    </div>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
