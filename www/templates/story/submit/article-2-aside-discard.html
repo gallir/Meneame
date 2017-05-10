@@ -42,6 +42,12 @@
 
                         <option value="-1">{% trans _('No enviar a colas, sólo visible en mi perfil') %}</option>
 
+                        {% if site_properties.no_link %}
+                        <optgroup label="{% trans _('En el sub actual') %}">
+                            <option value="{{ site.id }}" {% if (site.id == link.sub_id) %} selected {% endif %}>{{ site.name }} - {{ site.name_long }}</option>
+                        </optgroup>
+                        {% endif %}
+
                         {% if subs_main %}
                         <optgroup label="{% trans _('Enviar a una cola general') %}">
                             {% for sub in subs_main %}

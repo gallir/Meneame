@@ -43,16 +43,16 @@ if ($link->is_new) {
     $subs_main = get_subs_main();
     $subs_subscriptions = get_subs_subscriptions($subs_main);
 
-    $subs_main = array_filter($subs_main, function ($value) {
+    $subs_main = array_filter($subs_main, function ($value) use ($site) {
         $properties = SitesMgr::get_extended_properties($value->id);
 
-        return !empty($properties['no_link']);
+        return ($value->id !== $site->id) && !empty($properties['no_link']);
     });
 
-    $subs_subscriptions = array_filter($subs_subscriptions, function ($value) {
+    $subs_subscriptions = array_filter($subs_subscriptions, function ($value) use ($site) {
         $properties = SitesMgr::get_extended_properties($value->id);
 
-        return !empty($properties['no_link']);
+        return ($value->id !== $site->id) && !empty($properties['no_link']);
     });
 } else {
     $subs_main = $subs_subscriptions = array();
@@ -61,6 +61,7 @@ if ($link->is_new) {
 Haanga::Load('story/submit/article-2.html', array(
     'subs_main' => $subs_main,
     'subs_subscriptions' => $subs_subscriptions,
+    'site' => $site,
     'site_properties' => $site_properties,
     'link' => $link,
     'error' => $error,
