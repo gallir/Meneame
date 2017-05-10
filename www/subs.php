@@ -80,7 +80,7 @@ switch ($option) {
 
 $ids_subs = array_map(function ($row) {
     return (int)$row->id;
-}, $all_subs);
+}, $all_subs) ?: [0];
 
 $infos = $db->get_results(SitesMgr::SQL_BASIC.' WHERE subs.id IN ('.implode(',', $ids_subs).')');
 $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
@@ -142,7 +142,7 @@ if ($globals['official_subs']) {
 
     $ids_subs = array_map(function ($row) {
         return (int)$row->id;
-    }, $official_subs);
+    }, $official_subs) ?: [0];
 
     $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
 
@@ -169,7 +169,7 @@ if ($globals['recommended_subs']) {
 
     $ids_subs = array_map(function ($row) {
         return (int)$row->id;
-    }, $recommended_subs);
+    }, $recommended_subs) ?: [0];
 
     $followers = $db->get_results('SELECT subs.id, COUNT(*) AS c FROM subs, prefs WHERE subs.id IN ('.implode(',', $ids_subs).') AND pref_key = "sub_follow" AND subs.id = pref_value GROUP BY subs.id ORDER BY c DESC;');
 
