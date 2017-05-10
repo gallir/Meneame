@@ -46,13 +46,13 @@ if ($link->is_new) {
     $subs_main = array_filter($subs_main, function ($value) use ($site) {
         $properties = SitesMgr::get_extended_properties($value->id);
 
-        return ($value->id !== $site->id) && !empty($properties['no_link']);
+        return ($value->id != $site->id) && !empty($properties['no_link']);
     });
 
     $subs_subscriptions = array_filter($subs_subscriptions, function ($value) use ($site) {
         $properties = SitesMgr::get_extended_properties($value->id);
 
-        return ($value->id !== $site->id) && !empty($properties['no_link']);
+        return ($value->id != $site->id) && !empty($properties['no_link']);
     });
 } else {
     $subs_main = $subs_subscriptions = array();
