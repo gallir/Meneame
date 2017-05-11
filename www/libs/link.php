@@ -105,7 +105,7 @@ class Link extends LCPBase
             $memcache_promoted_articles = 'promoted_articles';
         }
 
-        if ($memcache_promoted_articles && !($promoted_articles = unserialize(memcache_mget($memcache_promoted_articles)))) {
+        if (!($promoted_articles = unserialize(memcache_mget($memcache_promoted_articles)))) {
             // Not in memcache
             $sql = '
                 SELECT DISTINCT link
