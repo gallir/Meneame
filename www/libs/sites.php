@@ -577,4 +577,11 @@ class SitesMgr
 
         return empty($properties['new_disabled']);
     }
+
+    public static function getMainSiteId()
+    {
+        global $db;
+
+        return $db->get_var("SELECT id FROM subs WHERE sub=0 AND enabled=1");
+    }
 }

@@ -1,5 +1,8 @@
 <div class="news-summary">
-    <div class="news-body">
+    {% if tag== 'promoted_article' %}
+    <div class="tab-promoted-article">ARTÍCULO</div>
+    {%endif%}
+    <div class="news-body mobile{% if tag=='promoted_article' %} promoted-article{% endif %}">
         {% if self.show_shakebox %}
         <div class="news-shakeit {{ self.box_class }}">
             <div class="votes">

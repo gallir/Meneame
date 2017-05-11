@@ -165,10 +165,17 @@ if ($links) {
 
     $counter = 0;
 
+    if ($globals['show_promoted_articles'] ) {
+        $articles = Link::getPopularArticles();
+    }
+
     foreach ($links as $link) {
         $link->poll = $pollCollection->get($link->id);
         $link->max_len = 600;
 
+        if ($globals['show_promoted_articles'] ) {
+            Haanga::Safe_Load('link_promoted_articles.html', compact('counter', 'articles'));
+        }
         Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size', 'sponsored_link', 'official_subs'));
 
         $link->print_summary();
