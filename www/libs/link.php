@@ -97,6 +97,40 @@ class Link extends LCPBase
         return $db->get_object($sql, 'Link');
     }
 
+    public static function getPopularArticles($limit = 2) {
+
+        global $globals, $db;
+
+        if ($globals['memcache_host']) {
+            $memcache_promoted_articles = 'promoted_articles';
+        }
+
+        if ($memcache_promoted_articles && !($promoted_articles = unserialize(memcache_mget($memcache_promoted_articles)))) {
+            // Not in memcache
+            $sql = '
+                SELECT DISTINCT link
+                FROM sub_statuses, subs, links
+                WHERE (
+                    link_content_type = "article"
+                    AND link_status IN ("queued", "published")
+                    AND sub_statuses.link = link_id
+                    AND sub_statuses.date > "'. date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
+                    AND sub_statuses.origen = subs.id
+                    AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id=' .SitesMgr::getMainSiteId(). ' AND sub_statuses.status="published" AND link=link_id)
+                ) ORDER BY link_karma DESC LIMIT '. $limit;
+
+            $articleIds  = $db->get_col($sql);
+
+            foreach ($articleIds as $articleId) {
+                $promoted_articles[] = self::from_db($articleId);
+            }
+
+            memcache_madd($memcache_promoted_articles, serialize($promoted_articles), 1800);
+        }
+
+        return $promoted_articles;
+    }
+
     public static function count($status = '', $force = false)
     {
         global $db, $globals;
@@ -936,7 +970,7 @@ class Link extends LCPBase
         return true;
     }
 
-    public function print_summary($type = 'full', $karma_best_comment = 0, $show_tags = true, $template = 'link_summary.html')
+    public function print_summary($type = 'full', $karma_best_comment = 0, $show_tags = true, $template = 'link_summary.html', $tag="")
     {
         global $current_user, $current_user, $globals, $db;
 
@@ -1061,7 +1095,7 @@ class Link extends LCPBase
 
         $sponsored = $this->is_sponsored();
 
-        $vars = compact('type', 'sponsored');
+        $vars = compact('type', 'sponsored', 'tag');
         $vars['self'] = $this;
 
         return Haanga::Load($template, $vars);

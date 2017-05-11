@@ -309,6 +309,16 @@ select.select-menu-more-options {
     width: 100%;
     border-top: none;
     border-bottom: none;
+    background-color: #fbfbfb;
+}
+
+div.tab-promoted-article {
+    right:0;
+}
+
+.news-body.mobile.promoted-article {
+    background-color: #F2F5FA;
+    padding-top: 5px;
 }
 
 .news-details .news-details-data {

@@ -1,0 +1,11 @@
+{% if counter == 3 %}
+    {% if articles[0] %}
+        {% exec articles[0].print_summary 'full', 0, true, 'link_summary.html' 'promoted_article' as dummy %}
+    {% endif %}
+{% endif %}
+
+{% if counter == 8 %}
+    {% if articles[1] %}
+        {% exec articles[1].print_summary 'full', 0, true, 'link_summary.html' 'promoted_article' as dummy %}
+    {% endif %}
+{% endif %}
