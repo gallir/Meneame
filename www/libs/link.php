@@ -122,7 +122,9 @@ class Link extends LCPBase
             $articleIds  = $db->get_col($sql);
 
             foreach ($articleIds as $articleId) {
-                $promoted_articles[] = self::from_db($articleId);
+                $article = self::from_db($articleId);
+                $article->max_len = 600;
+                $promoted_articles[] = $article;
             }
 
             memcache_madd($memcache_promoted_articles, serialize($promoted_articles), 1800);
