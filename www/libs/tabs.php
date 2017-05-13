@@ -405,6 +405,12 @@ final class Tabs
     {
         global $user;
 
+        if ($discard = Link::userArticlesDraft($user)) {
+            $discard = __('Borradores (%s)', $discard);
+        } else {
+            $discard = __('Borradores');
+        }
+
         return array(
             'articles' => array(
                 'title' => _('Públicos'),
@@ -423,7 +429,7 @@ final class Tabs
                 'link' => $user->get_uri('articles_favorites'),
             ),
             'articles_discard' => array(
-                'title' => _('Borradores'),
+                'title' => $discard,
                 'link' => $user->get_uri('articles_discard'),
             ),
         );
