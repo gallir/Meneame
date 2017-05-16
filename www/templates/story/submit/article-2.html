@@ -12,7 +12,7 @@
                 {% include 'story/submit/error.html' %}
 
                 <div class="form-group">
-                    <textarea name="title" row="1" class="form-control input-title" maxlength="100" required>{{
+                    <textarea name="title" id="article-title" rows="1" class="form-control input-title" maxlength="100" required>{{
                         link.title
                     }}</textarea>
                 </div>
@@ -34,3 +34,12 @@
         </div>
     </form>
 </section>
+
+<script>
+var $title = document.getElementById('article-title');
+var value = $title.value;
+
+$title.focus();
+$title.value = '';
+$title.value = value;
+</script>

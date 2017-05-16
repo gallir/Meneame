@@ -229,22 +229,6 @@ class Link extends LCPBase
         return $found !== false;
     }
 
-    public function add_click($no_go = false)
-    {
-        global $globals, $db;
-
-        if (
-            !$globals['bot']
-            && !Link::visited($this->id)
-            && $globals['click_counter']
-            && ($no_go || (isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])))
-            && $this->ip !== $globals['user_ip']
-        ) {
-            // Delay storing
-            self::$clicked = $this->id;
-        }
-    }
-
     public static function store_clicks()
     {
         global $globals, $db;
@@ -348,6 +332,42 @@ class Link extends LCPBase
         }
 
         return $link;
+    }
+
+    public static function userArticlesDraft($user)
+    {
+        global $db;
+
+        if ($user->id < 1) {
+            return 0;
+        }
+
+        return (int)$db->get_var('
+            SELECT SQL_CACHE COUNT(*)
+            FROM links
+            WHERE (
+                link_status = "discard"
+                AND link_author = "'.$user->id.'"
+                AND link_content_type = "article"
+                AND link_votes = 0
+            );
+        ');
+    }
+
+    public function add_click($no_go = false)
+    {
+        global $globals, $db;
+
+        if (
+            !$globals['bot']
+            && !Link::visited($this->id)
+            && $globals['click_counter']
+            && ($no_go || (isset($_COOKIE['k']) && check_security_key($_COOKIE['k'])))
+            && $this->ip !== $globals['user_ip']
+        ) {
+            // Delay storing
+            self::$clicked = $this->id;
+        }
     }
 
     public function json_votes_info($value = false)

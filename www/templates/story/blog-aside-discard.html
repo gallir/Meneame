@@ -18,5 +18,9 @@
     <a href="{% get_url 'submit?step=2&amp;id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="btn btn-mnm btn-sm btn-block">
         <i class="fa fa-edit"></i> {% trans _('Editar Artículo') %}
     </a>
+
+    <div class="alert alert-warning">
+        {% trans _('Este borrador aún no ha sido publicado') %}
+    </div>
     {% endif %}
 </div>
