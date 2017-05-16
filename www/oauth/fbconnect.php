@@ -90,14 +90,9 @@ class FBConnect extends OAuthBase
             exit;
         }
 
-        $oAuth2Client = $this->facebook->getOAuth2Client();
-        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-        $tokenMetadata->validateAppId($globals['facebook_key']);
-
-        $tokenMetadata->validateExpiration();
-
         if (!$accessToken->isLongLived()) {
             try {
+                $oAuth2Client = $this->facebook->getOAuth2Client();
                 $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
             } catch (Facebook\Exceptions\FacebookSDKException $e) {
                 echo "<p>Error getting long-lived access token: " . $this->helper->getMessage() . "</p>\n\n";
