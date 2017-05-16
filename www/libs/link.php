@@ -1349,6 +1349,7 @@ class Link extends LCPBase
         }
 
         $mine = $this->author == $current_user->user_id;
+        $article = $this->content_type === 'article';
 
         return (
             ($current_user->admin || ($current_user->user_id == $this->sub_owner))
@@ -1356,7 +1357,7 @@ class Link extends LCPBase
             || (
                 $mine
                 && (($this->sub_status === 'queued') || (($this->status === 'discard') && ($this->votes == 0)))
-                && (($globals['now'] - $this->sent_date) < $globals['link_edit_time'])
+                && ($article || (($globals['now'] - $this->sent_date) < $globals['link_edit_time']))
             ) || (
                 !$mine
                 && $current_user->special
