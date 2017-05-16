@@ -4,7 +4,8 @@
   "license": "AFFERO GENERAL PUBLIC LICENSE",
   "require": {
     "bshaffer/oauth2-server-php": "~1.8",
-    "crodas/Haanga": "~1.0.7"
+    "crodas/Haanga": "~1.0.7",
+    "facebook/graph-sdk": "^5.5"
   },
   "autoload": {
     "classmap": [
