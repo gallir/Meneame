@@ -247,6 +247,7 @@ class UserAuth
 
     public function Logout($url = './')
     {
+        $url =  empty($url) ? './' : $url;
         $this->user_id = 0;
         $this->user_login = '';
         $this->admin = false;

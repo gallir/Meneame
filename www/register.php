@@ -22,7 +22,6 @@ if ($current_user->user_id > 0) {
     if (!isset($_COOKIE['return_site'])) {
         $_COOKIE['return_site'] = get_server_name();
     }
-
     die(header('Location: http://'.$_COOKIE['return_site'].get_user_uri($current_user->user_login)));
 }
 
