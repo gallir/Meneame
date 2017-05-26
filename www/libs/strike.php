@@ -345,6 +345,21 @@ class Strike
         return self::setReasonMessage($list);
     }
 
+    public static function usersIntoStrike()
+    {
+        global $db;
+
+        return $db->get_results('
+            SELECT `users`.*
+            FROM `users`, `strikes`
+            WHERE (
+              `strike_expires_at` > NOW()
+              AND `strike_restored` = 0
+              AND `users`.`user_id` = `strike_user_id`
+            );
+        ');
+    }
+
     public static function pastNotRestored()
     {
         global $db;
@@ -439,7 +454,7 @@ class Strike
         ');
     }
 
-    public static function delete($strike)
+    public static function cancel($strike)
     {
         global $db, $current_user;
 
@@ -452,15 +467,24 @@ class Strike
                 `strike_id` = "'.(int)$strike->id.'"
                 AND `user_id` = `strike_user_id`
                 AND `strike_restored` = 0
+                AND `strike_expires_at` > NOW()
             );
         ');
 
         $db->query('
-            DELETE FROM `strikes`
-            WHERE `strike_id` = "'.(int)$strike->id.'"
+            UPDATE `strikes`
+            SET
+                `strike_comment` = CONCAT("[ANULADO] ", `strike_comment`),
+                `strike_restored` = 1,
+                `strike_expires_at` = NOW()
+            WHERE (
+                `strike_id` = "'.(int)$strike->id.'"
+                AND `strike_restored` = 0
+                AND `strike_expires_at` > NOW()
+            )
             LIMIT 1;
         ');
 
-        LogAdmin::insert('strike_delete', $strike->user_id, $current_user->user_id, $strike->karma_new, $strike->karma_old);
+        LogAdmin::insert('strike_cancel', $strike->user_id, $current_user->user_id, $strike->karma_new, $strike->karma_old);
     }
 }

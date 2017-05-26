@@ -35,8 +35,8 @@ switch ($_REQUEST['op'] ?: 'list') {
         do_strike_save();
         break;
 
-    case 'delete';
-        do_strike_delete();
+    case 'cancel';
+        do_strike_cancel();
         break;
 }
 
@@ -106,10 +106,17 @@ function do_strike_new($selected_tab)
         $error = null;
     }
 
+    $now = date('Y-m-d H:i:s');
+
     $types = $strike->getUserTypes();
-    $strikes = $strike->getUserStrikes();
     $next = $strike->getNext();
     $reasons = Strike::$reasons;
+
+    $strikes = array_map(function ($value) use ($now) {
+        $value->cancel = ($value->expires_at > $now) && !$value->restored;
+
+        return $value;
+    }, $strike->getUserStrikes());
 
     Haanga::Load('admin/strikes/new.html', compact(
         'selected_tab', 'user', 'strikes', 'types', 'next', 'reasons', 'error'
@@ -149,12 +156,12 @@ function do_strike_save()
     die(header('Location: '.$_SERVER['REQUEST_URI']));
 }
 
-function do_strike_delete()
+function do_strike_cancel()
 {
-    $back = str_replace('op=delete', 'op=new', $_SERVER['REQUEST_URI']);
+    $back = str_replace('op=cancel', 'op=new', $_SERVER['REQUEST_URI']);
 
     if ($strike = Strike::getById((int)$_REQUEST['id'])) {
-        Strike::delete($strike);
+        Strike::cancel($strike);
     }
 
     die(header('Location: '.$back));

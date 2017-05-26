@@ -85,9 +85,11 @@
 
         {% if user %}
         <td class="text-center">
-            <a href="?tab=strikes&amp;op=delete&amp;id={{ strike.id }}&amp;strike_user={{ strike.user_login }}" title="Borrar Strike" class="btn btn-default btn-xs" data-delete="true">
+            {% if strike.cancel %}
+            <a href="?tab=strikes&amp;op=cancel&amp;id={{ strike.id }}&amp;strike_user={{ strike.user_login }}" title="Borrar Strike" class="btn btn-default btn-xs" data-cancel="true">
                 <i class="fa fa-trash"></i>
             </a>
+            {% endif %}
         </td>
         {% else %}
         <td class="text-center">
@@ -104,8 +106,8 @@
 {% if user %}
 <script>
 addPostCode(function() {
-    $('[data-delete]').on('click', function(e) {
-        return confirm('¿Deseas realmente eliminar este strike? Si aceptas, el karma recuperará su estado previo.');
+    $('[data-cancel]').on('click', function(e) {
+        return confirm('¿Deseas realmente anular este strike? Si aceptas, el karma recuperará su estado previo.');
     })
 });
 </script>
