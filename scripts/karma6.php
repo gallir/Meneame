@@ -125,10 +125,20 @@ echo "Starting...\n";
 $no_calculated = 0;
 $calculated = 0;
 
+$exclude_ids = $db->get_results('
+    SELECT `users`.`user_id`
+    FROM `users`, `strikes`
+    WHERE (
+      `strike_expires_at` > NOW()
+      AND `strike_restored` = 0
+      AND `users`.`user_id` = `strike_user_id`
+    );
+');
+
 // Avoid users into strikes
-$exclude_ids = array_filter(array_unique(array_map(function ($value) {
+$exclude_ids = array_unique(array_map(function ($value) {
 	return (int)$value->user_id;
-}, Strike::usersIntoStrike()))) ?: array(0);
+}, $exclude_ids)) ?: array(0);
 
 // select users that voted during last 20 days, also her last vote's day
 $users = '
