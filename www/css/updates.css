@@ -1666,10 +1666,16 @@ ul.slick-dots li button {
     color: #CCC;
 }
 
-.medium-editor-toolbar li button {
-    height: auto;
-    min-width: auto;
-    padding: 10px;
+.ql-toolbar.ql-snow, .ql-container.ql-snow {
+    border: 0;
+    text-align: center;
+}
+
+.ql-toolbar.sticky {
+    background: white;
+    position: sticky;
+    top: 40px;
+    z-index: 1;
 }
 
 .pagination-center {

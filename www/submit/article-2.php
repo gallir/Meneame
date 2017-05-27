@@ -19,9 +19,8 @@ if ($_POST) {
 $globals['extra_js'][] = '//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.min.js';
 $globals['extra_css'][] = '//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css';
 
-$globals['extra_vendor_js'][] = 'medium-editor/js/medium-editor.min.js';
-$globals['extra_vendor_css'][] = 'medium-editor/css/medium-editor.min.css';
-$globals['extra_vendor_css'][] = 'medium-editor/css/themes/default.min.css';
+$globals['extra_vendor_js'][] = 'quill/quill.min.js';
+$globals['extra_vendor_css'][] = 'quill/quill.snow.css';
 
 do_header(_('Enviar un artículo') . ' 2/3', _('Enviar un artículo'));
 

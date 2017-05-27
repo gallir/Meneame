@@ -18,9 +18,8 @@
                 </div>
 
                 <div class="form-group input-group-editable">
-                    <textarea name="bodytext" class="form-control input-editable" minlength="{{ site_properties.intro_min_len }}" maxlength="{{ site_properties.intro_max_len }}" required>{{
-                        link.content
-                    }}</textarea>
+                    <div id="editor" class="input-editable">{{ link.content }}</div>
+                    <textarea name="bodytext" class="hidden"></textarea>
                 </div>
             </div>
 

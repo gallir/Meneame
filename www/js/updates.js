@@ -609,12 +609,44 @@ function showPoll() {
         $('.form textarea[name="title"]').autosize();
         $('#sub_id').selectize();
 
-        new MediumEditor('.input-editable', {
-            placeholder: {
-                text: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
-                hideOnClick: true
+        var $textarea = $('.form textarea[name="bodytext"]');
+
+        var $quill = new Quill('#editor', {
+            placeholder: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, false]}],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    ['link'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+                ]
             }
         });
+
+        var $quillContents = $('.ql-editor');
+
+        setInterval(function () {
+            $textarea.val($quillContents.html());
+        }, 1000);
+
+        var $quillToolbar = $('.ql-toolbar');
+
+        var stuck = false;
+        var initOffsetTop = $quillToolbar.offset().top - $('#header-top').height();
+
+        window.onscroll = function () {
+            var scrollTop = $(window).scrollTop();
+
+            if (!stuck && (scrollTop > initOffsetTop)) {
+                $quillToolbar.toggleClass('sticky');
+                stuck = true;
+            } else if (stuck && (scrollTop <= initOffsetTop)) {
+                $quillToolbar.toggleClass('sticky');
+                stuck = false;
+            }
+        };
 
         $('button[name="discard"]').on('click', function(e) {
             e.preventDefault();
