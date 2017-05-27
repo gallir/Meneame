@@ -1233,9 +1233,37 @@ ul.slick-dots li button {
     color: #4A4A4A;
 }
 
+.story-blog .main-content .text h2,
+.section.section-article-submit .input-editable h2 {
+    font-size: 26px;
+}
+
+.story-blog .main-content .text h3,
+.section.section-article-submit .input-editable h3 {
+    font-size: 22px;
+}
+
 .story-blog .main-content .text p,
 .section.section-article-submit .input-editable p {
     margin-bottom: 25px;
+}
+
+.story-blog .main-content .text ul,
+.story-blog .main-content .text ol,
+.section.section-article-submit .input-editable ul,
+.section.section-article-submit .input-editable ol {
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+}
+
+.story-blog .main-content .text blockquote,
+.section.section-article-submit .input-editable blockquote {
+    margin-bottom: 25px;
+    padding-left: 20px;
+    font-size: 20px;
+    color: #000;
+    border-left: 5px solid #eee;
 }
 
 .section.section-article-submit .story-blog-aside,

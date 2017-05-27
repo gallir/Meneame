@@ -616,11 +616,10 @@ function showPoll() {
             theme: 'snow',
             modules: {
                 toolbar: [
-                    [{ 'header': [1, 2, false]}],
+                    [{'header': [1, 2, false]}],
                     ['bold', 'italic', 'underline', 'strike'],
-                    ['blockquote', 'code-block'],
-                    ['link'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+                    ['link', 'video'],
+                    [{'list': 'ordered'}, {'list': 'bullet'}, 'blockquote']
                 ]
             }
         });

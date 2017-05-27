@@ -153,19 +153,15 @@
 
                 <div class="news-content">{{ self.content }}</div>
 
-                {% if type != 'preview' %}
-
-                {% if self.is_editable %}
-                &nbsp;&nbsp;<a href="{% get_url 'submit?step=2&amp;id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="mini-icon-text edit-link"><i class="fa fa-edit"></i></a>
-                {% endif %}
-
-                {% if self.map_editable %}
+                {% if type != 'preview' && self.map_editable %}
                 &nbsp;&nbsp;
                 <a href="#" onclick="$('#geoedit').load('{% get_url  "geo/get_form.php?id=" self.id  "&amp;type=link&amp;icon=" self.status %}'); return false;">
                     <img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-geo01.png" alt="edit" title="{% trans _('editar geolocalización') %}"/>
                 </a>
                 {% endif %}
 
+                {% if self.is_editable %}
+                &nbsp;&nbsp;<a href="{% get_url 'submit?step=2&amp;id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="mini-icon-text edit-link"><i class="fa fa-edit"></i></a>
                 {% endif %}
 
                 {% endif %} {# END if type == 'full' OR type == 'preview' #}

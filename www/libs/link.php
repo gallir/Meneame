@@ -2393,7 +2393,7 @@ class Link extends LCPBase
             return __('El texto es demasiado corto, debe ser al menos de %s caracteres', $properties['intro_min_len']);
         }
 
-        if (get_uppercase_ratio($content) > 0.3) {
+        if (($this->content_type !== 'article') && get_uppercase_ratio($content) > 0.3) {
             return _('Hay demasiadas mayúsculas en el texto');
         }
 
