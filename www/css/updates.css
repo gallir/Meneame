@@ -1706,6 +1706,10 @@ ul.slick-dots li button {
     z-index: 1;
 }
 
+.ql-snow .ql-picker.ql-header .ql-picker-item::before {
+    font-size: 16px !important;
+}
+
 .pagination-center {
     text-align: center;
     clear: both;

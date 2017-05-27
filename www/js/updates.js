@@ -596,7 +596,7 @@ function showPoll() {
         var stuck = false;
         var initOffsetTop = $sticky.offset().top - $('#header-top').height() - 40;
 
-        window.onscroll = sticky;
+        window.addEventListener('scroll', sticky);
 
         sticky();
     };
@@ -635,7 +635,7 @@ function showPoll() {
         var stuck = false;
         var initOffsetTop = $quillToolbar.offset().top - $('#header-top').height();
 
-        window.onscroll = function () {
+        window.addEventListener('scroll', function () {
             var scrollTop = $(window).scrollTop();
 
             if (!stuck && (scrollTop > initOffsetTop)) {
@@ -645,7 +645,7 @@ function showPoll() {
                 $quillToolbar.toggleClass('sticky');
                 stuck = false;
             }
-        };
+        });
 
         $('button[name="discard"]').on('click', function(e) {
             e.preventDefault();
