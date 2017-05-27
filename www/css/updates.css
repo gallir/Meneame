@@ -1236,16 +1236,24 @@ ul.slick-dots li button {
 .story-blog .main-content .text h2,
 .section.section-article-submit .input-editable h2 {
     font-size: 26px;
+    font-family: 'Open Sans', serif;
 }
 
 .story-blog .main-content .text h3,
 .section.section-article-submit .input-editable h3 {
     font-size: 22px;
+    font-family: 'Open Sans', serif;
 }
 
 .story-blog .main-content .text p,
 .section.section-article-submit .input-editable p {
     margin-bottom: 25px;
+}
+
+.story-blog .main-content .text a,
+.section.section-article-submit .input-editable a {
+    text-decoration: none;
+    color: #03a;
 }
 
 .story-blog .main-content .text ul,
@@ -1649,6 +1657,7 @@ ul.slick-dots li button {
     margin-top: 0;
     margin-bottom: 30px;
     resize: none;
+    color: #000;
 }
 
 .section.section-article-submit .input-group-editable {
