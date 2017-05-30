@@ -400,7 +400,7 @@ function html_remove_headers($html)
 
 function clean_html_with_tags($string)
 {
-    $string = html_fix(strip_tags($string, '<p><strong><b><i><em><u><a><s><h2><h3><ul><ol><li><img><blockquote>'));
+    $string = html_fix(strip_tags($string, '<p><strong><b><i><em><u><a><s><h2><h3><ul><ol><li><img><iframe><blockquote>'));
 
     return html_remove_attributes($string);
 }
