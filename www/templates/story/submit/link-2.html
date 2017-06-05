@@ -141,6 +141,10 @@
 
             {% if not link.is_new && (current_user.admin > 0 OR current_user.user_level == "blogger") %}
 
+            <label>{% trans _('Marcar como nsfw') %}: <input type="checkbox" name="nsfw"{% if link.nsfw == 1 %} checked="checked"{% endif %}/></label>
+            <span class="note">({% trans _('prevención de penalizaciones en publicidad') %})</span>
+            <br/>
+
             {% if link.thumb_url OR link.media_size > 0 %}
 
             <label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
