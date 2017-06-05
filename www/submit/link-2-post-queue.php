@@ -77,6 +77,15 @@ if (
     $link->status = $_POST['status'];
 }
 
+// change nsfw
+
+$nsfw = intval(!empty($_POST['nsfw']));
+
+
+if ($nsfw !== $link->nsfw) {
+    $link->nsfw = $nsfw;
+}
+
 if (empty($link->uri)) {
     $link->get_uri();
 }
