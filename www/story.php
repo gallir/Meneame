@@ -279,10 +279,6 @@ if ($link->status !== 'published' && $globals['now'] - $link->date > 864000) {
     $globals['noindex'] = true;
 }
 
-if ($globals['ads'] && stristr($link->title, 'nsfw')) {
-    $globals['ads'] = false;
-}
-
 do_modified_headers($link->modified, $current_user->user_id.'-'.$globals['link_id'].'-'.$link->status.'-'.$link->comments.'-'.$link->modified);
 
 // Enable user AdSense
@@ -306,6 +302,10 @@ $globals['extra_head'] .= '<link rel="canonical" href="'.$link->get_canonical_pe
 
 // add also a rel to the comments rss
 $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'comments_rss?id='.$link->id.'" />';
+
+if (stristr($link->title, 'nsfw') or $link->nsfw) {
+    $globals['extra_head'] .= '<script>var adKeyword="article=sexo";</script>';
+}
 
 if ($link->has_thumb()) {
     $globals['thumbnail'] = $link->media_url;
