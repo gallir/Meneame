@@ -44,6 +44,9 @@ if (!empty($_POST['type'])) {
     $type = $link->content_type;
 }
 
+// Avoid Chrome Error: ERR_BLOCKED_BY_XSS_AUDITOR
+header('X-XSS-Protection: 0');
+
 if ($type === 'article') {
     require __DIR__.'/article-'.getStep().'.php';
 } else {

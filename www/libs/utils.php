@@ -369,25 +369,44 @@ function html_fix($html)
     return html_remove_headers($DOM->saveHTML());
 }
 
-function html_remove_attributes($html, $allow = array('src', 'href'))
+function html_xpath_clean($html, $attributes = array('src', 'href'))
 {
     if (empty($html)) {
         return '';
     }
 
     $DOM = new DOMDocument;
-    $DOM->loadHTML($html);
+    $DOM->recover = true;
+    $DOM->preserveWhiteSpace = false;
+    $DOM->substituteEntities = false;
+    $DOM->loadHtml('<?xml encoding="UTF-8">'.$html, LIBXML_NOBLANKS | LIBXML_ERR_NONE);
 
     $xpath = new DOMXPath($DOM);
 
     $query = '//@*';
 
-    if ($allow) {
-        $query .= '[local-name() != "'.implode('" and local-name() != "', $allow).'"]';
+    if ($attributes) {
+        $query .= '[local-name() != "'.implode('" and local-name() != "', $attributes).'"]';
     }
 
     foreach ($xpath->query($query) as $node) {
         $node->parentNode->removeAttribute($node->nodeName);
+    }
+
+    foreach ($xpath->query('//img') as $node) {
+        $src = $node->getAttribute('src');
+
+        if (!preg_match('#^https://.*\.(png|jpg|jpeg|gif)$#i', $src)) {
+            $node->parentNode->removeChild($node);
+        }
+    }
+
+    foreach ($xpath->query('//iframe') as $node) {
+        $src = $node->getAttribute('src');
+
+        if (!preg_match('#^https://(www\.youtube\.com/embed|player\.vimeo\.com/video)/#', $src)) {
+            $node->parentNode->removeChild($node);
+        }
     }
 
     return html_remove_headers($DOM->saveHTML());
@@ -402,7 +421,7 @@ function clean_html_with_tags($string)
 {
     $string = html_fix(strip_tags($string, '<p><strong><b><i><em><u><a><s><h2><h3><ul><ol><li><img><iframe><blockquote>'));
 
-    return html_remove_attributes($string);
+    return html_xpath_clean($string);
 }
 
 function text_to_summary($string, $length = 50)

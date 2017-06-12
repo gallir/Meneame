@@ -1233,6 +1233,26 @@ ul.slick-dots li button {
     color: #4A4A4A;
 }
 
+/* .story-blog img is parsed by php */
+.section.section-article-submit .input-editable img {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* .story-blog iframe is parsed by php */
+.section.section-article-submit .input-editable iframe {
+    margin-bottom: 20px !important;
+    position: relative;
+    display: block;
+    height: 0;
+    padding: 0;
+    width: 100%;
+    height: 480px;
+}
+
 .story-blog .main-content .text h2,
 .section.section-article-submit .input-editable h2 {
     font-size: 26px;

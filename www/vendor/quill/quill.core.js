@@ -1,5 +1,5 @@
 /*!
- * Quill Editor v1.2.4
+ * Quill Editor v1.2.6
  * https://quilljs.com/
  * Copyright (c) 2014, Jason Chen
  * Copyright (c) 2013, salesforce.com
@@ -79,7 +79,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 135);
+/******/ 	return __webpack_require__(__webpack_require__.s = 136);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -98,9 +98,9 @@ var block_1 = __webpack_require__(56);
 var embed_1 = __webpack_require__(57);
 var text_1 = __webpack_require__(60);
 var attributor_1 = __webpack_require__(13);
-var class_1 = __webpack_require__(31);
-var style_1 = __webpack_require__(33);
-var store_1 = __webpack_require__(32);
+var class_1 = __webpack_require__(32);
+var style_1 = __webpack_require__(34);
+var store_1 = __webpack_require__(33);
 var Registry = __webpack_require__(1);
 var Parchment = {
     Scope: Registry.Scope,
@@ -631,17 +631,17 @@ var isPlainObject = function isPlainObject(obj) {
 	// Own properties are enumerated firstly, so to speed up,
 	// if last one is own, then all properties are own.
 	var key;
-	for (key in obj) {/**/}
+	for (key in obj) { /**/ }
 
 	return typeof key === 'undefined' || hasOwn.call(obj, key);
 };
 
 module.exports = function extend() {
-	var options, name, src, copy, copyIsArray, clone,
-		target = arguments[0],
-		i = 1,
-		length = arguments.length,
-		deep = false;
+	var options, name, src, copy, copyIsArray, clone;
+	var target = arguments[0];
+	var i = 1;
+	var length = arguments.length;
+	var deep = false;
 
 	// Handle a deep copy situation
 	if (typeof target === 'boolean') {
@@ -649,7 +649,8 @@ module.exports = function extend() {
 		target = arguments[1] || {};
 		// skip the boolean and the target
 		i = 2;
-	} else if ((typeof target !== 'object' && typeof target !== 'function') || target == null) {
+	}
+	if (target == null || (typeof target !== 'object' && typeof target !== 'function')) {
 		target = {};
 	}
 
@@ -688,7 +689,6 @@ module.exports = function extend() {
 	// Return the modified object
 	return target;
 };
-
 
 
 /***/ }),
@@ -1043,7 +1043,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-__webpack_require__(43);
+__webpack_require__(44);
 
 var _quillDelta = __webpack_require__(2);
 
@@ -1077,7 +1077,7 @@ var _logger = __webpack_require__(10);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _theme = __webpack_require__(29);
+var _theme = __webpack_require__(30);
 
 var _theme2 = _interopRequireDefault(_theme);
 
@@ -1163,6 +1163,7 @@ var Quill = function () {
     this.container.__quill = this;
     this.root = this.addContainer('ql-editor');
     this.root.classList.add('ql-blank');
+    this.root.setAttribute('data-gramm', false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new _emitter4.default();
     this.scroll = _parchment2.default.create(this.root, {
@@ -1594,7 +1595,7 @@ Quill.DEFAULTS = {
 Quill.events = _emitter4.default.events;
 Quill.sources = _emitter4.default.sources;
 // eslint-disable-next-line no-undef
-Quill.version =  false ? 'dev' : "1.2.4";
+Quill.version =  false ? 'dev' : "1.2.6";
 
 Quill.imports = {
   'delta': _quillDelta2.default,
@@ -1726,7 +1727,7 @@ function shiftRange(range, index, length, source) {
       end = void 0;
   if (index instanceof _quillDelta2.default) {
     var _map = [range.index, range.index + range.length].map(function (pos) {
-      return index.transformPosition(pos, source === _emitter4.default.sources.USER);
+      return index.transformPosition(pos, source !== _emitter4.default.sources.USER);
     });
 
     var _map2 = _slicedToArray(_map, 2);
@@ -1735,7 +1736,7 @@ function shiftRange(range, index, length, source) {
     end = _map2[1];
   } else {
     var _map3 = [range.index, range.index + range.length].map(function (pos) {
-      if (pos < index || pos === index && source !== _emitter4.default.sources.USER) return pos;
+      if (pos < index || pos === index && source === _emitter4.default.sources.USER) return pos;
       if (length >= 0) {
         return pos + length;
       } else {
@@ -2198,6 +2199,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var ASCII = /^[ -~]*$/;
+
 var Editor = function () {
   function Editor(scroll) {
     _classCallCheck(this, Editor);
@@ -2428,7 +2431,7 @@ var Editor = function () {
       var cursorIndex = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : undefined;
 
       var oldDelta = this.delta;
-      if (mutations.length === 1 && mutations[0].type === 'characterData' && _parchment2.default.find(mutations[0].target)) {
+      if (mutations.length === 1 && mutations[0].type === 'characterData' && mutations[0].target.data.match(ASCII) && _parchment2.default.find(mutations[0].target)) {
         // Optimization for character changes
         var textBlot = _parchment2.default.find(mutations[0].target);
         var formats = (0, _block.bubbleFormats)(textBlot);
@@ -2708,6 +2711,54 @@ var Selection = function () {
       if (selection == null || selection.rangeCount <= 0) return null;
       var nativeRange = selection.getRangeAt(0);
       if (nativeRange == null) return null;
+      var range = this.normalizeNative(nativeRange);
+      debug.info('getNativeRange', range);
+      return range;
+    }
+  }, {
+    key: 'getRange',
+    value: function getRange() {
+      var normalized = this.getNativeRange();
+      if (normalized == null) return [null, null];
+      var range = this.normalizedToRange(normalized);
+      return [range, normalized];
+    }
+  }, {
+    key: 'hasFocus',
+    value: function hasFocus() {
+      return document.activeElement === this.root;
+    }
+  }, {
+    key: 'normalizedToRange',
+    value: function normalizedToRange(range) {
+      var _this2 = this;
+
+      var positions = [[range.start.node, range.start.offset]];
+      if (!range.native.collapsed) {
+        positions.push([range.end.node, range.end.offset]);
+      }
+      var indexes = positions.map(function (position) {
+        var _position = _slicedToArray(position, 2),
+            node = _position[0],
+            offset = _position[1];
+
+        var blot = _parchment2.default.find(node, true);
+        var index = blot.offset(_this2.scroll);
+        if (offset === 0) {
+          return index;
+        } else if (blot instanceof _parchment2.default.Container) {
+          return index + blot.length();
+        } else {
+          return index + blot.index(node, offset);
+        }
+      });
+      var end = Math.min(Math.max.apply(Math, _toConsumableArray(indexes)), this.scroll.length() - 1);
+      var start = Math.min.apply(Math, [end].concat(_toConsumableArray(indexes)));
+      return new Range(start, end - start);
+    }
+  }, {
+    key: 'normalizeNative',
+    value: function normalizeNative(nativeRange) {
       if (!contains(this.root, nativeRange.startContainer) || !nativeRange.collapsed && !contains(this.root, nativeRange.endContainer)) {
         return null;
       }
@@ -2732,44 +2783,36 @@ var Selection = function () {
         }
         position.node = node, position.offset = offset;
       });
-      debug.info('getNativeRange', range);
       return range;
     }
   }, {
-    key: 'getRange',
-    value: function getRange() {
-      var _this2 = this;
+    key: 'rangeToNative',
+    value: function rangeToNative(range) {
+      var _this3 = this;
 
-      var range = this.getNativeRange();
-      if (range == null) return [null, null];
-      var positions = [[range.start.node, range.start.offset]];
-      if (!range.native.collapsed) {
-        positions.push([range.end.node, range.end.offset]);
-      }
-      var indexes = positions.map(function (position) {
-        var _position = _slicedToArray(position, 2),
-            node = _position[0],
-            offset = _position[1];
+      var indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
+      var args = [];
+      var scrollLength = this.scroll.length();
+      indexes.forEach(function (index, i) {
+        index = Math.min(scrollLength - 1, index);
+        var node = void 0,
+            _scroll$leaf5 = _this3.scroll.leaf(index),
+            _scroll$leaf6 = _slicedToArray(_scroll$leaf5, 2),
+            leaf = _scroll$leaf6[0],
+            offset = _scroll$leaf6[1];
+        var _leaf$position5 = leaf.position(offset, i !== 0);
 
-        var blot = _parchment2.default.find(node, true);
-        var index = blot.offset(_this2.scroll);
-        if (offset === 0) {
-          return index;
-        } else if (blot instanceof _parchment2.default.Container) {
-          return index + blot.length();
-        } else {
-          return index + blot.index(node, offset);
-        }
+        var _leaf$position6 = _slicedToArray(_leaf$position5, 2);
+
+        node = _leaf$position6[0];
+        offset = _leaf$position6[1];
+
+        args.push(node, offset);
       });
-      var start = Math.min.apply(Math, _toConsumableArray(indexes)),
-          end = Math.max.apply(Math, _toConsumableArray(indexes));
-      end = Math.min(end, this.scroll.length() - 1);
-      return [new Range(start, end - start), range];
-    }
-  }, {
-    key: 'hasFocus',
-    value: function hasFocus() {
-      return document.activeElement === this.root;
+      if (args.length < 2) {
+        args = args.concat(args);
+      }
+      return args;
     }
   }, {
     key: 'scrollIntoView',
@@ -2843,8 +2886,6 @@ var Selection = function () {
   }, {
     key: 'setRange',
     value: function setRange(range) {
-      var _this3 = this;
-
       var force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
       var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _emitter4.default.sources.API;
 
@@ -2854,28 +2895,7 @@ var Selection = function () {
       }
       debug.info('setRange', range);
       if (range != null) {
-        var indexes = range.collapsed ? [range.index] : [range.index, range.index + range.length];
-        var args = [];
-        var scrollLength = this.scroll.length();
-        indexes.forEach(function (index, i) {
-          index = Math.min(scrollLength - 1, index);
-          var node = void 0,
-              _scroll$leaf5 = _this3.scroll.leaf(index),
-              _scroll$leaf6 = _slicedToArray(_scroll$leaf5, 2),
-              leaf = _scroll$leaf6[0],
-              offset = _scroll$leaf6[1];
-          var _leaf$position5 = leaf.position(offset, i !== 0);
-
-          var _leaf$position6 = _slicedToArray(_leaf$position5, 2);
-
-          node = _leaf$position6[0];
-          offset = _leaf$position6[1];
-
-          args.push(node, offset);
-        });
-        if (args.length < 2) {
-          args = args.concat(args);
-        }
+        var args = this.rangeToNative(range);
         this.setNativeRange.apply(this, _toConsumableArray(args).concat([force]));
       } else {
         this.setNativeRange(null);
@@ -3277,6 +3297,8 @@ var Scroll = function (_Parchment$Scroll) {
         return whitelist;
       }, {});
     }
+    // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
+    _this.domNode.addEventListener('DOMNodeInserted', function () {});
     _this.optimize();
     _this.enable();
     return _this;
@@ -3852,7 +3874,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var linked_list_1 = __webpack_require__(61);
-var shadow_1 = __webpack_require__(34);
+var shadow_1 = __webpack_require__(35);
 var Registry = __webpack_require__(1);
 var ContainerBlot = (function (_super) {
     __extends(ContainerBlot, _super);
@@ -4097,7 +4119,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var attributor_1 = __webpack_require__(13);
-var store_1 = __webpack_require__(32);
+var store_1 = __webpack_require__(33);
 var container_1 = __webpack_require__(21);
 var Registry = __webpack_require__(1);
 var FormatBlot = (function (_super) {
@@ -4180,7 +4202,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var shadow_1 = __webpack_require__(34);
+var shadow_1 = __webpack_require__(35);
 var Registry = __webpack_require__(1);
 var LeafBlot = (function (_super) {
     __extends(LeafBlot, _super);
@@ -4515,6 +4537,87 @@ exports.ColorStyle = ColorStyle;
 "use strict";
 
 
+var _parchment = __webpack_require__(0);
+
+var _parchment2 = _interopRequireDefault(_parchment);
+
+var _quill = __webpack_require__(6);
+
+var _quill2 = _interopRequireDefault(_quill);
+
+var _block = __webpack_require__(4);
+
+var _block2 = _interopRequireDefault(_block);
+
+var _break = __webpack_require__(17);
+
+var _break2 = _interopRequireDefault(_break);
+
+var _container = __webpack_require__(24);
+
+var _container2 = _interopRequireDefault(_container);
+
+var _cursor = __webpack_require__(25);
+
+var _cursor2 = _interopRequireDefault(_cursor);
+
+var _embed = __webpack_require__(7);
+
+var _embed2 = _interopRequireDefault(_embed);
+
+var _inline = __webpack_require__(8);
+
+var _inline2 = _interopRequireDefault(_inline);
+
+var _scroll = __webpack_require__(18);
+
+var _scroll2 = _interopRequireDefault(_scroll);
+
+var _text = __webpack_require__(12);
+
+var _text2 = _interopRequireDefault(_text);
+
+var _clipboard = __webpack_require__(46);
+
+var _clipboard2 = _interopRequireDefault(_clipboard);
+
+var _history = __webpack_require__(42);
+
+var _history2 = _interopRequireDefault(_history);
+
+var _keyboard = __webpack_require__(31);
+
+var _keyboard2 = _interopRequireDefault(_keyboard);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_quill2.default.register({
+  'blots/block': _block2.default,
+  'blots/block/embed': _block.BlockEmbed,
+  'blots/break': _break2.default,
+  'blots/container': _container2.default,
+  'blots/cursor': _cursor2.default,
+  'blots/embed': _embed2.default,
+  'blots/inline': _inline2.default,
+  'blots/scroll': _scroll2.default,
+  'blots/text': _text2.default,
+
+  'modules/clipboard': _clipboard2.default,
+  'modules/history': _history2.default,
+  'modules/keyboard': _keyboard2.default
+});
+
+_parchment2.default.register(_block2.default, _break2.default, _cursor2.default, _inline2.default, _scroll2.default, _text2.default);
+
+module.exports = _quill2.default;
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -4565,7 +4668,7 @@ Theme.themes = {
 exports.default = Theme;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5095,7 +5198,7 @@ exports.default = Keyboard;
 exports.SHORTKEY = SHORTKEY;
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5155,15 +5258,15 @@ exports.default = ClassAttributor;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var attributor_1 = __webpack_require__(13);
-var class_1 = __webpack_require__(31);
-var style_1 = __webpack_require__(33);
+var class_1 = __webpack_require__(32);
+var style_1 = __webpack_require__(34);
 var Registry = __webpack_require__(1);
 var AttributorStore = (function () {
     function AttributorStore(domNode) {
@@ -5228,7 +5331,7 @@ exports.default = AttributorStore;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5285,7 +5388,7 @@ exports.default = StyleAttributor;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5438,87 +5541,6 @@ var ShadowBlot = (function () {
 ShadowBlot.blotName = 'abstract';
 exports.default = ShadowBlot;
 
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _parchment = __webpack_require__(0);
-
-var _parchment2 = _interopRequireDefault(_parchment);
-
-var _quill = __webpack_require__(6);
-
-var _quill2 = _interopRequireDefault(_quill);
-
-var _block = __webpack_require__(4);
-
-var _block2 = _interopRequireDefault(_block);
-
-var _break = __webpack_require__(17);
-
-var _break2 = _interopRequireDefault(_break);
-
-var _container = __webpack_require__(24);
-
-var _container2 = _interopRequireDefault(_container);
-
-var _cursor = __webpack_require__(25);
-
-var _cursor2 = _interopRequireDefault(_cursor);
-
-var _embed = __webpack_require__(7);
-
-var _embed2 = _interopRequireDefault(_embed);
-
-var _inline = __webpack_require__(8);
-
-var _inline2 = _interopRequireDefault(_inline);
-
-var _scroll = __webpack_require__(18);
-
-var _scroll2 = _interopRequireDefault(_scroll);
-
-var _text = __webpack_require__(12);
-
-var _text2 = _interopRequireDefault(_text);
-
-var _clipboard = __webpack_require__(45);
-
-var _clipboard2 = _interopRequireDefault(_clipboard);
-
-var _history = __webpack_require__(42);
-
-var _history2 = _interopRequireDefault(_history);
-
-var _keyboard = __webpack_require__(30);
-
-var _keyboard2 = _interopRequireDefault(_keyboard);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_quill2.default.register({
-  'blots/block': _block2.default,
-  'blots/block/embed': _block.BlockEmbed,
-  'blots/break': _break2.default,
-  'blots/container': _container2.default,
-  'blots/cursor': _cursor2.default,
-  'blots/embed': _embed2.default,
-  'blots/inline': _inline2.default,
-  'blots/scroll': _scroll2.default,
-  'blots/text': _text2.default,
-
-  'modules/clipboard': _clipboard2.default,
-  'modules/history': _history2.default,
-  'modules/keyboard': _keyboard2.default
-});
-
-_parchment2.default.register(_block2.default, _break2.default, _cursor2.default, _inline2.default, _scroll2.default, _text2.default);
-
-module.exports = _quill2.default;
 
 /***/ }),
 /* 36 */
@@ -5867,7 +5889,8 @@ exports.default = History;
 exports.getLastChangeIndex = getLastChangeIndex;
 
 /***/ }),
-/* 43 */
+/* 43 */,
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5938,8 +5961,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /***/ }),
-/* 44 */,
-/* 45 */
+/* 45 */,
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6213,11 +6236,12 @@ function matchAttributor(node, delta) {
       formats[attr.attrName] = attr.value(node);
       if (formats[attr.attrName]) return;
     }
-    if (ATTRIBUTE_ATTRIBUTORS[name] != null) {
-      attr = ATTRIBUTE_ATTRIBUTORS[name];
+    attr = ATTRIBUTE_ATTRIBUTORS[name];
+    if (attr != null && attr.attrName === name) {
       formats[attr.attrName] = attr.value(node) || undefined;
     }
-    if (STYLE_ATTRIBUTORS[name] != null) {
+    attr = STYLE_ATTRIBUTORS[name];
+    if (attr != null && attr.attrName === name) {
       attr = STYLE_ATTRIBUTORS[name];
       formats[attr.attrName] = attr.value(node) || undefined;
     }
@@ -6297,7 +6321,7 @@ function matchStyles(node, delta) {
   if (style.fontStyle && computeStyle(node).fontStyle === 'italic') {
     formats.italic = true;
   }
-  if (style.fontWeight && computeStyle(node).fontWeight === 'bold') {
+  if (style.fontWeight && (computeStyle(node).fontWeight.startsWith('bold') || parseInt(computeStyle(node).fontWeight) >= 700)) {
     formats.bold = true;
   }
   if (Object.keys(formats).length > 0) {
@@ -6345,7 +6369,6 @@ exports.matchSpacing = matchSpacing;
 exports.matchText = matchText;
 
 /***/ }),
-/* 46 */,
 /* 47 */,
 /* 48 */,
 /* 49 */,
@@ -8096,10 +8119,11 @@ exports.default = LinkedList;
 /* 132 */,
 /* 133 */,
 /* 134 */,
-/* 135 */
+/* 135 */,
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(35);
+module.exports = __webpack_require__(29);
 
 
 /***/ })

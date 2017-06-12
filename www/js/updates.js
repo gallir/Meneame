@@ -611,16 +611,39 @@ function showPoll() {
 
         var $textarea = $('.form textarea[name="bodytext"]');
 
+        function imageHandler() {
+            var value = prompt('{% trans _('URL de la imagen') %}');
+
+            if (!value) {
+                return;
+            }
+
+            if (value.indexOf('https://') !== 0) {
+                return alert('{% trans _('Sólo se permiten URLs bajo HTTPS') %}');
+            }
+
+            if (!value.match(/\.(png|jpg|jpeg|gif)$/i)) {
+                return alert('{% trans _('Sólo se permiten URLs que finalicen en jpg, png y gif') %}');
+            }
+
+            this.quill.insertEmbed(this.quill.getSelection().index, 'image', value, Quill.sources.USER);
+        }
+
         var $quill = new Quill('#editor', {
             placeholder: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
             theme: 'snow',
             modules: {
-                toolbar: [
-                    [{'header': [2, 3, false]}],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    ['link', 'video'],
-                    [{'list': 'ordered'}, {'list': 'bullet'}, 'blockquote']
-                ]
+                toolbar: {
+                    container: [
+                        [{'header': [2, 3, false]}],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['link', 'image', 'video'],
+                        [{'list': 'ordered'}, {'list': 'bullet'}, 'blockquote']
+                    ],
+                    handlers: {
+                        image: imageHandler
+                    }
+                }
             }
         });
 
