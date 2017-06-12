@@ -57,8 +57,8 @@
 
             {% if medals %}
             <div class="section-profile-header-medals">
-                {% for medal in medals %}
-                <img src="{{ globals.base_static }}img/common/medal_{{ medal.type }}_large.png" width="41" height="42" title="{{ medal.title }}" />
+                {% for key, value in medals %}
+                <img src="{{ globals.base_static }}img/common/medal_{{ value.type }}_large.png" width="41" height="42" title="{{ value.title }}" />
                 {% endfor %}
             </div>
             {% endif %}
