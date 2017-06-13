@@ -3,10 +3,10 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//         http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called 'COPYING'.
 
-require_once mnmpath . '/../vendor/autoload.php';
+require_once mnmpath.'/../vendor/autoload.php';
 
 global $globals;
 
@@ -80,7 +80,8 @@ if (($globals['cli'] === false) && getenv('HTTP_HOST')) {
         !$globals['bot']
         && isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', getenv('HTTP_USER_AGENT'))
         && !preg_match('/ipad|tablet/i', getenv('HTTP_USER_AGENT'))
-    ) { // Don't treat iPad as mobiles
+    ) {
+        // Don't treat iPad as mobiles
         $globals['mobile'] = 1;
     } else {
         $globals['mobile'] = 0;
@@ -113,7 +114,7 @@ if (empty($globals['static_server'])) {
 $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';
 
 // Votes' tags
-$globals['negative_votes_values'] = array( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
+$globals['negative_votes_values'] = array(-1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'), -9 => _('copia/plagio'));
 
 // Allows a script to define to use the alternate server
 if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_servers'][$globals['alternate_db_server']])) {
@@ -134,8 +135,8 @@ function haanga_bootstrap()
 /* Load template engine here */
 $config = array(
     'template_dir' => mnmpath.'/'.$globals['haanga_templates'],
-    'autoload'     => true,
-    'bootstrap'    => 'haanga_bootstrap',
+    'autoload' => true,
+    'bootstrap' => 'haanga_bootstrap',
     'compiler' => array( /* opts for the tpl compiler */
         /* Avoid use if empty($var) */
         'if_empty' => false,
@@ -144,7 +145,7 @@ $config = array(
         /* let's save bandwidth */
         'strip_whitespace' => true,
         /* call php functions from the template */
-        'allow_exec'  => true,
+        'allow_exec' => true,
         /* global $global, $current_user for all templates */
         'global' => array('globals', 'current_user'),
     ),
@@ -153,12 +154,13 @@ $config = array(
 
 // Allow full or relative pathname for the cache (i.e. /var/tmp or cache)
 if ($globals['haanga_cache'][0] === '/') {
-    $config['cache_dir'] =  $globals['haanga_cache'] .'/Haanga/'.getenv('SERVER_NAME');
+    $config['cache_dir'] = $globals['haanga_cache'].'/Haanga/'.getenv('SERVER_NAME');
 } else {
-    $config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.getenv('SERVER_NAME');
+    $config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'].'/Haanga/'.getenv('SERVER_NAME');
 }
 
 Haanga::configure($config);
+Haanga::checkCacheDir();
 
 function __($text)
 {
