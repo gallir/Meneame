@@ -1,5 +1,5 @@
 <?php
-include('../config.php');
+include_once '../config.php';
 
 header("Content-Type: text/plain");
 
@@ -10,9 +10,19 @@ $db->query("delete from logs where log_date < date_sub(now(), interval 60 day)")
 // Delete not validated users
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_date > date_sub(now(), interval 1 week) and user_validated_date is null");
 
-// Delete old bad links
+// Delete old bad links but keep ARTICLES
 $minutes = intval($globals['draft_time'] / 60);
-$db->query("delete from links where link_status='discard' and link_date < date_sub(now(), interval $minutes minute) and link_date  > date_sub(now(), interval 1 week)and link_votes = 0");
+
+$db->query('
+	DELETE FROM `links`
+	WHERE (
+		`link_status` = "discard"
+		AND `link_content_type` != "article"
+		AND `link_date` < DATE_SUB(NOW(), INTERVAL '.$minutes.' MINUTE)
+		AND `link_date`  > DATE_SUB(NOW(), INTERVAL  1 WEEK)
+		AND `link_votes` = 0
+	);
+');
 
 // Delete old conversations
 ///
@@ -72,11 +82,13 @@ $history_from_ts = time() - $history_hours*3600;
 $ignored_nonpublished = "date_sub($now, interval 12 hour)";
 $points_per_published = $globals['karma_points_per_published'];
 $points_per_published_max = $globals['karma_points_per_published_max'];
+
 if ($globals['karma_points_by_votes'] > 0) {
 	$points_given = $globals['karma_points_by_votes'];
 } else {
 	$points_given = 5;
 }
+
 $comment_votes = $globals['comment_votes_multiplier'];
 $post_votes = $globals['post_votes_multiplier'];
 
@@ -89,9 +101,8 @@ $ignored_nondiscarded = "date_sub($now, interval 6 hour)";
 // The formula to calculate the decreasing vote points
 $sql_points_calc = 'sum((unix_timestamp(link_date) - unix_timestamp(vote_date))/(unix_timestamp(link_date) - unix_timestamp(link_sent_date))) as points';
 
-
-
 $db->barrier();
+
 $published_links = max(1, intval($db->get_var("SELECT SQL_NO_CACHE count(*) from links where link_status = 'published' and link_date > $history_from")));
 
 $sum=0; $i=0;
@@ -103,25 +114,50 @@ $max_avg_negative_received = (int) $db->get_var("select avg(link_karma) from lin
 $max_avg_negative_received = min(intval($max_avg_negative_received), -20);
 
 
-
 print "Number of published links in period: $published_links\n";
 print "Pos (top 10 average): $max_avg_positive_received, Neg: $max_avg_negative_received\n";
 //print "Max unfair comment votes: $max_negative_comment_votes\n";
 
-
 /////////////////////////
 
-
-
 echo "Starting...\n";
+
 $no_calculated = 0;
 $calculated = 0;
 
+$exclude_ids = $db->get_results('
+    SELECT `users`.`user_id`
+    FROM `users`, `strikes`
+    WHERE (
+      `strike_expires_at` > NOW()
+      AND `strike_restored` = 0
+      AND `users`.`user_id` = `strike_user_id`
+    );
+');
+
+// Avoid users into strikes
+$exclude_ids = array_unique(array_map(function ($value) {
+	return (int)$value->user_id;
+}, $exclude_ids)) ?: array(0);
+
 // select users that voted during last 20 days, also her last vote's day
-$users = "select sql_no_cache user_id, user_karma, unix_timestamp(max(vote_date)) as ts from votes, users where vote_type in ('links', 'comments', 'posts')  and vote_date > date_sub(now(), interval 20 day) and vote_user_id > 0 and user_id = vote_user_id and user_level not in ('disabled', 'autodisabled') group by user_id";
+$users = '
+	SELECT SQL_NO_CACHE `user_id`, `user_karma`, UNIX_TIMESTAMP(MAX(`vote_date`)) AS `ts`
+	FROM `votes`, `users`
+	WHERE (
+		`vote_type` IN ("links", "comments", "posts")
+		AND `vote_date` > DATE_SUB(NOW(), INTERVAL 20 DAY)
+		AND `vote_user_id` > 0
+		AND `user_id` = `vote_user_id`
+		AND `user_level` NOT IN ("disabled", "autodisabled")
+		AND `user_id` NOT IN ("'.implode('","', $exclude_ids).'")
+	)
+	GROUP BY `user_id`;
+';
 
 // Main loop
 $res = $db->get_results($users);
+
 foreach ($res as $dbuser) {
 	$user = new User;
 	$user->id=$dbuser->user_id;
