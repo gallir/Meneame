@@ -83,10 +83,6 @@ if ($link->is_sub) {
 $canonical_base .= 'c/';
 $globals['extra_head'] = '<link rel="canonical" href="'.$globals['scheme'].'//'.$canonical_server.$canonical_base.$comment->id.'"/>';
 
-if (stristr($link->title, 'nsfw') or $link->nsfw) {
-    $globals['extra_head'] .= '<script>var adKeyword="article=sexo";</script>';
-}
-
 do_header($title);
 
 /*** SIDEBAR ****/
