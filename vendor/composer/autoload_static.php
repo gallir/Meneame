@@ -12,25 +12,86 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Symfony\\Component\\Yaml\\' => 23,
+        ),
         'F' => 
         array (
             'Facebook\\' => 9,
         ),
+        'D' => 
+        array (
+            'Doctrine\\Instantiator\\' => 22,
+            'Doctrine\\Common\\Cache\\' => 22,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Component\\Yaml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/yaml',
+        ),
         'Facebook\\' => 
         array (
             0 => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook',
         ),
+        'Doctrine\\Instantiator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
+        ),
+        'Doctrine\\Common\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
     );
 
     public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PhpOption\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpoption/phpoption/src',
+            ),
+            'PhpCollection' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpcollection/phpcollection/src',
+            ),
+        ),
         'O' => 
         array (
             'OAuth2' => 
             array (
                 0 => __DIR__ . '/..' . '/bshaffer/oauth2-server-php/src',
+            ),
+        ),
+        'M' => 
+        array (
+            'Metadata\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/jms/metadata/src',
+            ),
+        ),
+        'J' => 
+        array (
+            'JMS\\Serializer' => 
+            array (
+                0 => __DIR__ . '/..' . '/jms/serializer/src',
+            ),
+            'JMS\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/jms/parser-lib/src',
+            ),
+        ),
+        'D' => 
+        array (
+            'Doctrine\\Common\\Lexer\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
+            ),
+            'Doctrine\\Common\\Annotations\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/annotations/lib',
             ),
         ),
     );
@@ -50,6 +111,7 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'Facebook' => __DIR__ . '/../..' . '/www/libs/facebook/facebook.php',
         'FacebookApiException' => __DIR__ . '/../..' . '/www/libs/facebook/base_facebook.php',
         'HG_Parser' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Compiler/Tokenizer.php',
+        'HMemcache' => __DIR__ . '/../..' . '/www/libs/hmemcache.php',
         'Haanga' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga.php',
         'Haanga_AST' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/AST.php',
         'Haanga_Compiler' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Compiler.php',
@@ -79,7 +141,7 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'Haanga_Extension_Filter_IsArray' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Extension/Filter/Isarray.php',
         'Haanga_Extension_Filter_Join' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Extension/Filter/Join.php',
         'Haanga_Extension_Filter_Json' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Extension/Filter/Json.php',
-        'Haanga_Extension_Filter_Length' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Extension/Filter/Strlen.php',
+        'Haanga_Extension_Filter_Length' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Extension/Filter/Length.php',
         'Haanga_Extension_Filter_Linebreaksbr' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Extension/Filter/Linebreaksbr.php',
         'Haanga_Extension_Filter_Lower' => __DIR__ . '/..' . '/crodas/haanga/lib/Haanga/Extension/Filter/Lower.php',
         'Haanga_Extension_Filter_NoScheme' => __DIR__ . '/../..' . '/www/libs/haanga_mnm.php',
@@ -175,6 +237,16 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'UserAuth' => __DIR__ . '/../..' . '/www/libs/login.php',
         'Vote' => __DIR__ . '/../..' . '/www/libs/votes.php',
         'WebThumb' => __DIR__ . '/../..' . '/www/libs/webimages.php',
+        'bar' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'bar_3d' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'bar_fade' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'bar_glass' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'bar_outline' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'bar_sketch' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'candle' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'graph' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'hlc' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
+        'point' => __DIR__ . '/../..' . '/www/libs/ofc-library/open-flash-chart.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

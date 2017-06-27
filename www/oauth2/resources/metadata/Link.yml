@@ -1,0 +1,82 @@
+Link:
+  exclusion_policy: all
+  virtual_properties:
+    has_thumb:
+      serialized_name: thumb
+      type: string
+    get_permalink:
+      serialized_name: permalink
+      type: string
+    get_tags:
+      serialized_name: tags
+      type: array
+    get_date:
+      serialized_name: date
+      type: DateTime
+    get_creator_uri:
+      serialized_name: creator_uri
+      type: string
+    get_creator_avatar:
+      serialized_name: creator_avatar
+      type: string
+  properties:
+    id:
+      expose: true
+      type: integer
+    title:
+      expose: true
+      type: string
+    username:
+      serialized_name: creator
+      expose: true
+      type: string
+    author:
+      serialized_name: creator_id
+      expose: true
+      type: integer
+    karma:
+      expose: true
+      type: double
+    url:
+      expose: true
+      type: string
+    url_title:
+      expose: true
+      type: string
+    content:
+      expose: true
+      type: string
+    status:
+      expose: true
+      type: string
+    votes:
+      expose: true
+      type: integer
+    anonymous:
+      expose: true
+      type: integer
+    clicks:
+      expose: true
+      type: integer
+    sub_id:
+      expose: true
+      type: integer
+    sub_name:
+      expose: true
+      type: string
+    is_sub:
+      expose: true
+      type: boolean
+    nsfw:
+      expose: true
+      type: boolean
+    total_votes:
+      expose: true
+      type: integer
+    content_type:
+      expose: true
+      type: string
+    thumb_x:
+      expose: true
+      type: integer
+

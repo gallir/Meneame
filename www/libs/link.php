@@ -6,7 +6,7 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once mnminclude . 'favorites.php';
+require_once mnminclude.'favorites.php';
 
 class Link extends LCPBase
 {
@@ -46,6 +46,11 @@ class Link extends LCPBase
     public $banned = false;
     public $thumb_status = 'unknown';
     public $clicks = 0;
+    public $is_sub;
+    public $sub_id;
+    public $sub_name;
+    public $total_votes;
+    public $avatar;
 
     public $image;
     public $best_comments = array();
@@ -90,15 +95,16 @@ class Link extends LCPBase
         }
 
         if ($complete) {
-            $sql = 'SELECT ' . Link::SQL . ' WHERE ' . $selector . ';';
+            $sql = 'SELECT '.Link::SQL.' WHERE '.$selector.';';
         } else {
-            $sql = 'SELECT ' . Link::SQL_BASIC . ' WHERE ' . $selector . ';';
+            $sql = 'SELECT '.Link::SQL_BASIC.' WHERE '.$selector.';';
         }
 
         return $db->get_object($sql, 'Link');
     }
 
-    public static function getPopularArticles($limit = 2) {
+    public static function getPopularArticles($limit = 2)
+    {
 
         global $globals, $db;
 
@@ -115,12 +121,12 @@ class Link extends LCPBase
                     link_content_type = "article"
                     AND link_status IN ("queued", "published")
                     AND sub_statuses.link = link_id
-                    AND sub_statuses.date > "'. date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
+                    AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
                     AND sub_statuses.origen = subs.id
-                    AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id=' .SitesMgr::getMainSiteId(). ' AND sub_statuses.status="published" AND link=link_id)
-                ) ORDER BY link_karma DESC LIMIT '. $limit;
+                    AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
+                ) ORDER BY link_karma DESC LIMIT '.$limit;
 
-            $articleIds  = $db->get_col($sql);
+            $articleIds = $db->get_col($sql);
 
             foreach ($articleIds as $articleId) {
                 $article = self::from_db($articleId);
@@ -183,14 +189,14 @@ class Link extends LCPBase
         $list .= ", $list2";
 
         /***** TODO: check and decid how duplicated must be dealt with
-        $subs = array();
-        $site_id = SitesMgr::my_id();
-        $subs[] = $site_id;
-        $subs = array_merge($subs, SitesMgr::get_senders(), SitesMgr::get_receivers());
-        $subs = implode(',', $subs);
-
-        // If it was abuse o autodiscarded allow other to send it again
-        $found = $db->get_var("SELECT link_id FROM links, sub_statuses WHERE link_url in ($list) AND status not in ('abuse') AND link_votes > 0 AND sub_statuses.link = link_id AND sub_statuses.id in ($subs) ORDER by link_id asc limit 1");
+         * $subs = array();
+         * $site_id = SitesMgr::my_id();
+         * $subs[] = $site_id;
+         * $subs = array_merge($subs, SitesMgr::get_senders(), SitesMgr::get_receivers());
+         * $subs = implode(',', $subs);
+         *
+         * // If it was abuse o autodiscarded allow other to send it again
+         * $found = $db->get_var("SELECT link_id FROM links, sub_statuses WHERE link_url in ($list) AND status not in ('abuse') AND link_votes > 0 AND sub_statuses.link = link_id AND sub_statuses.id in ($subs) ORDER by link_id asc limit 1");
          *******/
 
         if ($site > 0) {
@@ -201,7 +207,9 @@ class Link extends LCPBase
         }
 
         // If it was abuse o autodiscarded allow other to send it again
-        return $db->get_var("SELECT link_id FROM links $from_extra WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 $where_extra ORDER by link_id asc limit 1");
+        return $db->get_var(
+            "SELECT link_id FROM links $from_extra WHERE link_url in ($list) AND link_status not in ('abuse') AND link_votes > 0 $where_extra ORDER by link_id asc limit 1"
+        );
     }
 
     public static function visited($id)
@@ -244,6 +252,7 @@ class Link extends LCPBase
 
         if (!memcache_menabled()) {
             $db->query("UPDATE link_clicks SET counter = counter + 1 WHERE id = $id");
+
             return true;
         }
 
@@ -263,6 +272,7 @@ class Link extends LCPBase
         // We use random to minimize race conditions for deleting the cache
         if ($globals['start_time'] - $cache['time'] <= (3.0 + rand(0, 100) / 100)) {
             memcache_madd($key, $cache);
+
             return;
         }
 
@@ -286,7 +296,9 @@ class Link extends LCPBase
 
             foreach ($cache as $id => $counter) {
                 if ($id > 0 && $counter > 0) {
-                    $r = $db->query("INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter");
+                    $r = $db->query(
+                        "INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter"
+                    );
 
                     if (!$r) {
                         break;
@@ -314,7 +326,7 @@ class Link extends LCPBase
         global $globals;
 
         // It retrieves the annotiation generated by the Python script top-news.py
-        $top = new Annotation('top-link-' . $globals['site_shortname']);
+        $top = new Annotation('top-link-'.$globals['site_shortname']);
 
         if (!$top->read()) {
             return false;
@@ -343,7 +355,8 @@ class Link extends LCPBase
             return 0;
         }
 
-        return (int)$db->get_var('
+        return (int)$db->get_var(
+            '
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
@@ -352,7 +365,8 @@ class Link extends LCPBase
                 AND link_content_type = "article"
                 AND link_votes = 0
             );
-        ');
+        '
+        );
     }
 
     public function add_click($no_go = false)
@@ -401,10 +415,10 @@ class Link extends LCPBase
 
     public function print_html()
     {
-        echo "Valid: " . $this->valid . "<br>\n";
-        echo "Url: " . $this->url . "<br>\n";
-        echo "Title: " . $this->url_title . "<br>\n";
-        echo "encoding: " . $this->encoding . "<br>\n";
+        echo "Valid: ".$this->valid."<br>\n";
+        echo "Url: ".$this->url."<br>\n";
+        echo "Title: ".$this->url_title."<br>\n";
+        echo "encoding: ".$this->encoding."<br>\n";
     }
 
     public function check_url($url, $check_ban = true, $first_level = false)
@@ -436,7 +450,7 @@ class Link extends LCPBase
             return false;
         }
 
-        require_once mnminclude . 'ban.php';
+        require_once mnminclude.'ban.php';
 
         if (!($this->ban = check_ban($url, 'hostname', false, $first_level))) {
             return true;
@@ -464,7 +478,7 @@ class Link extends LCPBase
 
             // Check if it has pingbacks
             if (preg_match('/X-Pingback: *(.+)/i', $response['header'], $match)) {
-                $this->pingback = 'ping:' . clean_input_url($match[1]);
+                $this->pingback = 'ping:'.clean_input_url($match[1]);
             }
 
             /* Were we redirected? */
@@ -479,6 +493,7 @@ class Link extends LCPBase
                 /* Check again the url */
                 if (!$this->check_url($new_url, $check_ban, true)) {
                     $this->url = $new_url;
+
                     return false;
                 }
 
@@ -516,7 +531,11 @@ class Link extends LCPBase
         }
 
         // Check if it forbides including in an iframe
-        if (preg_match('/X-Frame-Options: *(.+)/i', $response['header']) || preg_match('/top\.location\.href *=/', $response['content'])) {
+        if (preg_match('/X-Frame-Options: *(.+)/i', $response['header']) || preg_match(
+                '/top\.location\.href *=/',
+                $response['content']
+            )
+        ) {
             $this->noiframe = true;
         }
 
@@ -542,9 +561,17 @@ class Link extends LCPBase
         // It avoids the trick of using google or technorati
         // Ignore it if the link has a rel="nofollow" to ignore comments in blogs
         if (!preg_match('/content="[^"]*(vBulletin|phpBB)/i', $this->html)) {
-            preg_match_all('/(< *meta +http-equiv|< *frame[^<]*>|window\.|document.\|parent\.|top\.|self\.)[^><]*(url|src|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
+            preg_match_all(
+                '/(< *meta +http-equiv|< *frame[^<]*>|window\.|document.\|parent\.|top\.|self\.)[^><]*(url|src|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i',
+                $this->html,
+                $matches
+            );
         } else {
-            preg_match_all('/(<* meta +http-equiv|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|top\.|self\.)[^><]*(href|url|src|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i', $this->html, $matches);
+            preg_match_all(
+                '/(<* meta +http-equiv|<* iframe|<* frame[^<]*>|window\.|document.\|parent\.|top\.|self\.)[^><]*(href|url|src|replace) *[=\(] *[\'"]{0,1}https*:\/\/[^\s "\'>]+[\'"\;\)]{0,1}[^>]*>/i',
+                $this->html,
+                $matches
+            );
         }
 
         $check_counter = 0;
@@ -559,7 +586,11 @@ class Link extends LCPBase
                 continue;
             }
 
-            preg_match('/(href|url|src|replace) *[=\(] *[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"\;\)]{0,1}/i', $match, $url_a);
+            preg_match(
+                '/(href|url|src|replace) *[=\(] *[\'"]{0,1}(https*:\/\/[^\s "\'>]+)[\'"\;\)]{0,1}/i',
+                $match,
+                $url_a
+            );
 
             $embeded_link = $url_a[2];
             $new_url_components = @parse_url($embeded_link);
@@ -590,7 +621,11 @@ class Link extends LCPBase
             }
         }
 
-        if (preg_match('/< *meta +name=[\'"]description[\'"] +content=[\'"]([^<>]+)[\'"] *\/*>/si', $this->html, $matches)) {
+        if (preg_match(
+            '/< *meta +name=[\'"]description[\'"] +content=[\'"]([^<>]+)[\'"] *\/*>/si',
+            $this->html,
+            $matches
+        )) {
             $this->url_description = clean_text_with_tags($matches[1], 0, false, 400);
         }
 
@@ -604,7 +639,8 @@ class Link extends LCPBase
         // Now detect trackbacks
         if (preg_match('/trackback:ping="([^"]+)"/i', $this->html, $matches) ||
             preg_match('/trackback:ping +rdf:resource="([^>]+)"/i', $this->html, $matches) ||
-            preg_match('/<trackback:ping>([^<>]+)/i', $this->html, $matches)) {
+            preg_match('/<trackback:ping>([^<>]+)/i', $this->html, $matches)
+        ) {
             $trackback = trim($matches[1]);
         } elseif (preg_match('/<a[^>]+rel="trackback"[^>]*>/i', $this->html, $matches)) {
             if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
@@ -638,7 +674,7 @@ class Link extends LCPBase
                 $trackback = $this->pingback;
             } elseif (preg_match('/<link[^>]+rel="pingback"[^>]*>/i', $this->html, $matches)) {
                 if (preg_match('/href="([^"]+)"/i', $matches[0], $matches2)) {
-                    $trackback = 'ping:' . trim($matches2[1]);
+                    $trackback = 'ping:'.trim($matches2[1]);
                 }
             }
         }
@@ -669,6 +705,7 @@ class Link extends LCPBase
 
         if (!$this->store()) {
             $db->rollback();
+
             return false;
         }
 
@@ -676,7 +713,8 @@ class Link extends LCPBase
 
         Log::conditional_insert('link_new', $this->id, $this->author);
 
-        $db->query('
+        $db->query(
+            '
             DELETE FROM links
             WHERE (
                 link_author = "'.$this->author.'"
@@ -685,7 +723,8 @@ class Link extends LCPBase
                 AND link_content_type != "article"
                 AND link_votes = 0
             )
-        ');
+        '
+        );
 
         if (!empty($_POST['trackback'])) {
             $trackres = new Trackback;
@@ -726,7 +765,8 @@ class Link extends LCPBase
 
         Log::conditional_insert('link_new', $this->id, $this->author);
 
-        $db->query('
+        $db->query(
+            '
             DELETE FROM links
             WHERE (
                 link_author = "'.$this->author.'"
@@ -735,7 +775,8 @@ class Link extends LCPBase
                 AND link_content_type != "article"
                 AND link_votes = 0
             )
-        ');
+        '
+        );
 
         $db->commit();
     }
@@ -791,6 +832,7 @@ class Link extends LCPBase
 
         if (!$this->store_basic()) {
             $db->rollback();
+
             return false;
         }
 
@@ -803,20 +845,22 @@ class Link extends LCPBase
         $link_thumb_status = $db->escape($this->thumb_status);
         $link_nsfw = $this->nsfw ? 1 : 0;
 
-        $r = $db->query('
+        $r = $db->query(
+            '
             UPDATE links
             SET
-                link_url = "' . $link_url . '",
-                link_uri = "' . $link_uri . '",
-                link_url_title = "' . $link_url_title . '",
-                link_title = "' . $link_title . '",
-                link_content = "' . $link_content . '",
-                link_tags = "' . $link_tags . '",
-                link_thumb_status = "' . $link_thumb_status . '",
-                link_nsfw = "' . $link_nsfw . '"
-            WHERE link_id = "' . $this->id . '"
+                link_url = "'.$link_url.'",
+                link_uri = "'.$link_uri.'",
+                link_url_title = "'.$link_url_title.'",
+                link_title = "'.$link_title.'",
+                link_content = "'.$link_content.'",
+                link_tags = "'.$link_tags.'",
+                link_thumb_status = "'.$link_thumb_status.'",
+                link_nsfw = "'.$link_nsfw.'"
+            WHERE link_id = "'.$this->id.'"
             LIMIT 1;
-        ');
+        '
+        );
 
         $db->commit();
 
@@ -849,47 +893,52 @@ class Link extends LCPBase
             $this->ip = $globals['user_ip'];
             $this->ip_int = $globals['user_ip_int'];
 
-            $r = $db->query('
+            $r = $db->query(
+                '
                 INSERT INTO links
                 SET
-                    link_author = "' . $link_author . '",
-                    link_blog = "' . $link_blog . '",
-                    link_status = "' . $link_status . '",
-                    link_randkey = "' . $link_randkey . '",
-                    link_date = FROM_UNIXTIME(' . $link_date . '),
-                    link_sent_date = FROM_UNIXTIME(' . $link_sent_date . '),
-                    link_published_date = FROM_UNIXTIME(' . $link_published_date . '),
-                    link_karma = "' . $link_karma . '",
-                    link_anonymous = "' . $link_anonymous . '",
-                    link_votes_avg = "' . $link_votes_avg . '",
-                    link_content_type = "' . $link_content_type . '",
-                    link_ip_int = "' . $this->ip_int . '",
-                    link_ip = "' . $db->escape($this->ip) . '";
-            ');
+                    link_author = "'.$link_author.'",
+                    link_blog = "'.$link_blog.'",
+                    link_status = "'.$link_status.'",
+                    link_randkey = "'.$link_randkey.'",
+                    link_date = FROM_UNIXTIME('.$link_date.'),
+                    link_sent_date = FROM_UNIXTIME('.$link_sent_date.'),
+                    link_published_date = FROM_UNIXTIME('.$link_published_date.'),
+                    link_karma = "'.$link_karma.'",
+                    link_anonymous = "'.$link_anonymous.'",
+                    link_votes_avg = "'.$link_votes_avg.'",
+                    link_content_type = "'.$link_content_type.'",
+                    link_ip_int = "'.$this->ip_int.'",
+                    link_ip = "'.$db->escape($this->ip).'";
+            '
+            );
             $this->id = $db->insert_id;
         } else {
-            $r = $db->query('
+            $r = $db->query(
+                '
                 UPDATE links
                 SET
-                    link_author = "' . $link_author . '",
-                    link_blog = "' . $link_blog . '",
-                    link_status = "' . $link_status . '",
-                    link_randkey = "' . $link_randkey . '",
-                    link_date = FROM_UNIXTIME(' . $link_date . '),
-                    link_sent_date = FROM_UNIXTIME(' . $link_sent_date . '),
-                    link_published_date = FROM_UNIXTIME(' . $link_published_date . '),
-                    link_karma = "' . $link_karma . '",
-                    link_votes_avg = "' . $link_votes_avg . '",
-                    link_content_type = "' . $link_content_type . '"
-                WHERE link_id = "' . $this->id . '"
+                    link_author = "'.$link_author.'",
+                    link_blog = "'.$link_blog.'",
+                    link_status = "'.$link_status.'",
+                    link_randkey = "'.$link_randkey.'",
+                    link_date = FROM_UNIXTIME('.$link_date.'),
+                    link_sent_date = FROM_UNIXTIME('.$link_sent_date.'),
+                    link_published_date = FROM_UNIXTIME('.$link_published_date.'),
+                    link_karma = "'.$link_karma.'",
+                    link_votes_avg = "'.$link_votes_avg.'",
+                    link_content_type = "'.$link_content_type.'"
+                WHERE link_id = "'.$this->id.'"
                 LIMIT 1;
-            ');
+            '
+            );
         }
 
         // Deploy changes to other sub sites
         if (!$r || !SitesMgr::deploy($this)) {
             syslog(LOG_INFO, "failed insert of update in store_basic: $this->id");
             $db->rollback();
+
             return false;
         }
 
@@ -918,16 +967,23 @@ class Link extends LCPBase
             return;
         }
 
-        $count = $db->get_var("select count(*) from votes where vote_type='links' and vote_link_id=$this->id FOR UPDATE");
+        $count = $db->get_var(
+            "select count(*) from votes where vote_type='links' and vote_link_id=$this->id FOR UPDATE"
+        );
 
         if ($count == ($this->votes + $this->anonymous + $this->negatives)) {
             return;
         }
 
-        $db->query("update links set link_votes=(select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value > 0), link_anonymous = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0), link_negatives = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value < 0) where link_id = $this->id");
+        $db->query(
+            "update links set link_votes=(select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value > 0), link_anonymous = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0), link_negatives = (select count(*) from votes where vote_type='links' and vote_link_id=$this->id and vote_user_id > 0 and vote_value < 0) where link_id = $this->id"
+        );
 
         if ($db->affected_rows > 0) {
-            syslog(LOG_INFO, "Votes count ($count) are wrong in $this->id ($this->votes, $this->anonymous, $this->negatives), updating");
+            syslog(
+                LOG_INFO,
+                "Votes count ($count) are wrong in $this->id ($this->votes, $this->anonymous, $this->negatives), updating"
+            );
         }
     }
 
@@ -951,7 +1007,7 @@ class Link extends LCPBase
                 break;
         }
 
-        if (!($result = $db->get_row('SELECT ' . Link::SQL_BASIC . ' WHERE ' . $cond . ';'))) {
+        if (!($result = $db->get_row('SELECT '.Link::SQL_BASIC.' WHERE '.$cond.';'))) {
             return false;
         }
 
@@ -970,19 +1026,19 @@ class Link extends LCPBase
 
         switch ($key) {
             case 'uri':
-                $cond = 'link_uri = "' . $this->uri . '"';
+                $cond = 'link_uri = "'.$this->uri.'"';
                 break;
 
             case 'url':
-                $cond = 'link_url = "' . $this->url . '"';
+                $cond = 'link_url = "'.$this->url.'"';
                 break;
 
             default:
-                $cond = 'link_id = "' . $this->id . '"';
+                $cond = 'link_id = "'.$this->id.'"';
                 break;
         }
 
-        if (!($result = $db->get_row('SELECT ' . Link::SQL . ' WHERE ' . $cond . ';'))) {
+        if (!($result = $db->get_row('SELECT '.Link::SQL.' WHERE '.$cond.';'))) {
             return $this->read = false;
         }
 
@@ -993,8 +1049,13 @@ class Link extends LCPBase
         return true;
     }
 
-    public function print_summary($type = 'full', $karma_best_comment = 0, $show_tags = true, $template = 'link_summary.html', $tag="")
-    {
+    public function print_summary(
+        $type = 'full',
+        $karma_best_comment = 0,
+        $show_tags = true,
+        $template = 'link_summary.html',
+        $tag = ""
+    ) {
         global $current_user, $current_user, $globals, $db;
 
         if (!$this->read) {
@@ -1041,7 +1102,8 @@ class Link extends LCPBase
         if (($this->status === 'abuse') || $this->has_warning) {
             $this->negative_text = false;
 
-            $negatives = $db->get_row('
+            $negatives = $db->get_row(
+                '
                 SELECT SQL_CACHE vote_value, COUNT(vote_value) AS `count`
                 FROM votes
                 WHERE (
@@ -1052,7 +1114,8 @@ class Link extends LCPBase
                 GROUP BY vote_value
                 ORDER BY `count` DESC
                 LIMIT 1
-            ');
+            '
+            );
 
             if ($negatives->count > 2 && $negatives->count >= $this->negatives / 2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
                 $this->negative_text = get_negative_vote($negatives->vote_value);
@@ -1060,20 +1123,24 @@ class Link extends LCPBase
         }
 
         if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
-            $this->best_comment = $db->get_row(DbHelper::queryPlain('
+            $this->best_comment = $db->get_row(
+                DbHelper::queryPlain(
+                    '
                 SELECT SQL_CACHE comment_id, comment_order, comment_content AS content_full,
                     comment_date, comment_modified, SUBSTR(comment_content, 1, 225) AS content,
                     user_id, user_login, user_avatar
                 FROM comments
                 JOIN users ON (user_id = comment_user_id)
                 WHERE (
-                    comment_link_id = "' . $this->id . '"
-                    AND comment_karma > "' . $karma_best_comment . '"
+                    comment_link_id = "'.$this->id.'"
+                    AND comment_karma > "'.$karma_best_comment.'"
                     AND comment_votes > 0
                 )
                 ORDER BY comment_karma DESC
                 LIMIT 1;
-            '));
+            '
+                )
+            );
         } else {
             $this->best_comment = false;
         }
@@ -1087,7 +1154,8 @@ class Link extends LCPBase
         $this->get_box_class();
 
         if ($this->do_inline_friend_votes) {
-            $this->friend_votes = $db->get_results('
+            $this->friend_votes = $db->get_results(
+                '
                 SELECT vote_user_id AS user_id, vote_value, user_avatar,
                     user_login, UNIX_TIMESTAMP(vote_date) AS ts,
                     INET_NTOA(vote_ip_int) AS ip
@@ -1105,7 +1173,8 @@ class Link extends LCPBase
                     AND vote_user_id != "'.$this->author.'"
                 )
                 ORDER BY vote_date DESC
-            ');
+            '
+            );
         }
 
         if ($this->poll === true) {
@@ -1132,20 +1201,24 @@ class Link extends LCPBase
             return $this->best_comments;
         }
 
-        $this->best_comments = $db->get_results(DbHelper::queryPlain('
+        $this->best_comments = $db->get_results(
+            DbHelper::queryPlain(
+                '
             SELECT SQL_CACHE comment_id, comment_order, comment_content AS content_full,
                 comment_date, comment_modified, SUBSTR(comment_content, 1, 225) AS content,
                 user_id, user_login, user_avatar
             FROM comments
             JOIN users ON (user_id = comment_user_id)
             WHERE (
-                comment_link_id = "' . $this->id . '"
+                comment_link_id = "'.$this->id.'"
                 AND comment_karma > 0
                 AND comment_votes > 0
             )
             ORDER BY comment_karma DESC
-            LIMIT ' . (int) $limit . ';
-        '));
+            LIMIT '.(int)$limit.';
+        '
+            )
+        );
 
         foreach ($this->best_comments as $comment) {
             $comment->html = str_replace('<br />', ' ', $this->html($this->truncate_text($comment->content_full, 500)));
@@ -1203,13 +1276,19 @@ class Link extends LCPBase
         }
 
         // Dont do further analisys for published or discarded links
-        if ($this->sub_status === 'published' || $this->is_discarded() || $globals['bot'] || $globals['now'] - $this->date > 86400 * 3) {
+        if ($this->sub_status === 'published' || $this->is_discarded(
+            ) || $globals['bot'] || $globals['now'] - $this->date > 86400 * 3
+        ) {
             return $this->warned = true;
         }
 
         // Check positive and negative karmas
-        $pos = $db->get_row("select sum(vote_value) as karma, avg(vote_value) as avg from votes where vote_type = 'links' and vote_link_id = $this->id and vote_value > 0 and vote_user_id > 0");
-        $neg = $db->get_row("select sum(user_karma) as karma, avg(user_karma) as avg from votes, users where vote_type = 'links' and vote_link_id = $this->id and vote_value < 0 and user_id = vote_user_id and user_level not in ('autodisabled','disabled')");
+        $pos = $db->get_row(
+            "select sum(vote_value) as karma, avg(vote_value) as avg from votes where vote_type = 'links' and vote_link_id = $this->id and vote_value > 0 and vote_user_id > 0"
+        );
+        $neg = $db->get_row(
+            "select sum(user_karma) as karma, avg(user_karma) as avg from votes, users where vote_type = 'links' and vote_link_id = $this->id and vote_value < 0 and user_id = vote_user_id and user_level not in ('autodisabled','disabled')"
+        );
 
         if ($neg->karma > 0 && $neg->avg > 0 && $pos->avg > 0) {
             // To avoid division by zero
@@ -1263,6 +1342,7 @@ class Link extends LCPBase
 
         if (!$vote->insert()) {
             $db->rollback();
+
             return false;
         }
 
@@ -1329,7 +1409,9 @@ class Link extends LCPBase
             return true;
         }
 
-        $db->query("update links set link_comments = (SELECT count(*) FROM comments WHERE comment_link_id = link_id) where link_id = $this->id");
+        $db->query(
+            "update links set link_comments = (SELECT count(*) FROM comments WHERE comment_link_id = link_id) where link_id = $this->id"
+        );
 
         $this->comments = $count;
     }
@@ -1415,7 +1497,7 @@ class Link extends LCPBase
         global $globals;
 
         if ($globals['sponsored_tag']) {
-            return preg_match("/\b" . $globals['sponsored_tag'] . "\b/i", $this->tags);
+            return preg_match("/\b".$globals['sponsored_tag']."\b/i", $this->tags);
         }
     }
 
@@ -1453,20 +1535,22 @@ class Link extends LCPBase
     {
         global $db, $globals, $routes;
 
-        require_once mnminclude . 'uri.php';
+        require_once mnminclude.'uri.php';
 
         $new_uri = $base_uri = get_uri($this->title);
         $seq = 0;
 
         // The uri is not equal to a standard uri, from dispatch.php
-        while (($seq < 20) && (!empty($routes[$new_uri]) || $db->get_var("select count(*) from links where link_uri='$new_uri' and link_id != $this->id"))) {
+        while (($seq < 20) && (!empty($routes[$new_uri]) || $db->get_var(
+                    "select count(*) from links where link_uri='$new_uri' and link_id != $this->id"
+                ))) {
             $seq++;
-            $new_uri = $base_uri . "-$seq";
+            $new_uri = $base_uri."-$seq";
         }
 
         // In case we tried 20 times, we just add the id of the article
         if ($seq >= 20) {
-            $new_uri = $base_uri . "-$this->id";
+            $new_uri = $base_uri."-$this->id";
         }
 
         $this->uri = $new_uri;
@@ -1477,14 +1561,14 @@ class Link extends LCPBase
         global $globals;
 
         if ($globals['url_shortener']) {
-            $server_name = $globals['url_shortener'] . '/';
+            $server_name = $globals['url_shortener'].'/';
             $id = base_convert($this->id, 10, 36);
         } else {
-            $server_name = get_server_name() . $globals['base_url'] . 'story/';
+            $server_name = get_server_name().$globals['base_url'].'story/';
             $id = $this->id;
         }
 
-        return 'http://' . $server_name . $id;
+        return 'http://'.$server_name.$id;
     }
 
     public function get_relative_permalink($strict = false)
@@ -1496,18 +1580,20 @@ class Link extends LCPBase
         }
 
         if ($this->is_sub && ($globals['submnm'] || $strict || self::$original_status || !$this->allow_main_link)) {
-            if (!empty($globals['submnm']) && $this->sub_status_id == SitesMgr::my_id() && !$strict && !self::$original_status) {
-                $base = $this->base_url . 'm/' . $globals['submnm'] . '/';
+            if (!empty($globals['submnm']) && $this->sub_status_id == SitesMgr::my_id(
+                ) && !$strict && !self::$original_status
+            ) {
+                $base = $this->base_url.'m/'.$globals['submnm'].'/';
             } else {
-                $base = $this->base_url . 'm/' . $this->sub_name . '/';
+                $base = $this->base_url.'m/'.$this->sub_name.'/';
             }
         } elseif ($this->status === 'private') {
-            $base = $this->base_url . 'my-story/'. $this->username .'/';
+            $base = $this->base_url.'my-story/'.$this->username.'/';
         } else {
-            $base = $this->base_url . 'story/';
+            $base = $this->base_url.'story/';
         }
 
-        return $base . (empty($this->uri) ? $this->id : $this->uri);
+        return $base.(empty($this->uri) ? $this->id : $this->uri);
     }
 
     public function get_permalink($strict = false, $relative = false)
@@ -1524,7 +1610,7 @@ class Link extends LCPBase
             $relative = $this->get_relative_permalink($strict);
         }
 
-        return $globals['scheme'] . '//' . $server_name . $relative;
+        return $globals['scheme'].'//'.$server_name.$relative;
     }
 
     public function get_canonical_permalink($page = false)
@@ -1539,14 +1625,14 @@ class Link extends LCPBase
 
         $page = (!$page || $page == 1) ? '' : "/$page";
 
-        return $globals['scheme'] . '//' . $server_name . $this->get_relative_permalink(true) . $page;
+        return $globals['scheme'].'//'.$server_name.$this->get_relative_permalink(true).$page;
     }
 
     public function get_trackback()
     {
         global $globals;
 
-        return $globals['scheme'] . '//' . get_server_name() . $globals['base_url_general'] . 'trackback.php?id=' . $this->id;
+        return $globals['scheme'].'//'.get_server_name().$globals['base_url_general'].'trackback.php?id='.$this->id;
     }
 
     public function get_status_text($status = false)
@@ -1571,13 +1657,14 @@ class Link extends LCPBase
 
     public function get_latlng()
     {
-        require_once mnminclude . 'geo.php';
+        require_once mnminclude.'geo.php';
 
         return geo_latlng('link', $this->id);
     }
 
     public function print_content_type_buttons()
     {
+        global $globals;
         $type = array();
 
         // Is it an image or video?
@@ -1594,14 +1681,18 @@ class Link extends LCPBase
         }
 
         echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        echo '<input type="radio" ' . $type['text'] . ' name="type" value="text"/>';
-        echo '&nbsp;' . _('texto') . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        echo '<input type="radio" '.$type['text'].' name="type" value="text"/>';
+        echo '&nbsp;'._('texto').'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
-        echo '<input type="radio" ' . $type['image'] . ' name="type" value="image"/>';
-        echo '&nbsp;<img src="' . $globals['base_static'] . 'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="' . _('¿es una imagen?') . '" title="' . _('¿es una imagen?') . '" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        echo '<input type="radio" '.$type['image'].' name="type" value="image"/>';
+        echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._(
+                '¿es una imagen?'
+            ).'" title="'._('¿es una imagen?').'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
-        echo '<input type="radio" ' . $type['video'] . ' name="type" value="video"/>';
-        echo '&nbsp;<img src="' . $globals['base_static'] . 'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="' . _('¿es un vídeo?') . '" title="' . _('¿es un vídeo?') . '" />';
+        echo '<input type="radio" '.$type['video'].' name="type" value="video"/>';
+        echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="'._(
+                '¿es un vídeo?'
+            ).'" title="'._('¿es un vídeo?').'" />';
     }
 
     public function read_content_type_buttons($type)
@@ -1626,12 +1717,14 @@ class Link extends LCPBase
     {
         global $db, $globals;
 
-        require_once mnminclude . 'ban.php';
+        require_once mnminclude.'ban.php';
 
         $this->old_karma = round($this->karma);
 
         if (!$globals['users_karma_avg']) {
-            $globals['users_karma_avg'] = (float) $db->get_var("select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)");
+            $globals['users_karma_avg'] = (float)$db->get_var(
+                "select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)"
+            );
         }
 
         if (empty($this->annotation)) {
@@ -1645,9 +1738,15 @@ class Link extends LCPBase
         // low =~ users with higher karma less-equal than average
         $votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
-        $votes_pos_anon = intval($db->get_var("select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
+        $votes_pos_anon = intval(
+            $db->get_var(
+                "select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"
+            )
+        );
 
-        $votes = $db->get_results("select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'");
+        $votes = $db->get_results(
+            "select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'"
+        );
 
         $n = $vlow = $vhigh = $diff = 0;
 
@@ -1684,13 +1783,19 @@ class Link extends LCPBase
             }
         }
 
-        echo "Affinity Difference: $diff Base: " . intval($karma_pos_user_high + $karma_pos_user_low + $karma_neg_user) . " ($n, $votes_pos)\n";
+        echo "Affinity Difference: $diff Base: ".intval(
+                $karma_pos_user_high + $karma_pos_user_low + $karma_neg_user
+            )." ($n, $votes_pos)\n";
 
         if ($n > $votes_pos / 5) {
-            $this->annotation .= intval($n / $votes_pos * 100) . _('% de votos con afinidad elevada') . "<br/>";
+            $this->annotation .= intval($n / $votes_pos * 100)._('% de votos con afinidad elevada')."<br/>";
         }
 
-        $karma_pos_ano = intval($db->get_var("select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"));
+        $karma_pos_ano = intval(
+            $db->get_var(
+                "select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"
+            )
+        );
 
         if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
             $this->votes = $votes_pos;
@@ -1703,10 +1808,16 @@ class Link extends LCPBase
             $perc = intval($vlow / ($vlow + $vhigh) * 100);
 
             $this->low_karma_perc = $perc;
-            $this->annotation .= $perc . _('% de votos con karma menores que la media') . " (" . round($globals['users_karma_avg'], 2) . ")<br/>";
+            $this->annotation .= $perc._('% de votos con karma menores que la media')." (".round(
+                    $globals['users_karma_avg'],
+                    2
+                ).")<br/>";
         }
 
-        $karma_pos_user = (int) $karma_pos_user_high + (int) min(max($karma_pos_user_high * 1.15, 4), $karma_pos_user_low); // Allowed difference up to 15% of $karma_pos_user_high
+        $karma_pos_user = (int)$karma_pos_user_high + (int)min(
+                max($karma_pos_user_high * 1.15, 4),
+                $karma_pos_user_low
+            ); // Allowed difference up to 15% of $karma_pos_user_high
         $karma_pos_ano = min($karma_pos_user_high * 0.1, $karma_pos_ano);
 
         // Small quadratic punishment for links having too many negatives
@@ -1752,9 +1863,9 @@ class Link extends LCPBase
         }
 
         if ($this->coef < .99) {
-            $this->annotation .= _('Noticia «antigua»') . "<br/>";
+            $this->annotation .= _('Noticia «antigua»')."<br/>";
         } elseif ($this->coef > 1.01) {
-            $this->annotation .= _('Bonus por noticia reciente') . "<br/>";
+            $this->annotation .= _('Bonus por noticia reciente')."<br/>";
         }
 
         /*
@@ -1778,7 +1889,10 @@ class Link extends LCPBase
 
             // Annotate meta's coeeficient if the variation > 5%
             if (abs(1 - $meta_coef[$this->sub_id]) > 0.05) {
-                $this->annotation .= _('Coeficiente sub') . ' (' . $this->sub_name . ') : ' . round($meta_coef[$this->sub_id], 2) . "<br/>";
+                $this->annotation .= _('Coeficiente sub').' ('.$this->sub_name.') : '.round(
+                        $meta_coef[$this->sub_id],
+                        2
+                    )."<br/>";
             }
         }
 
@@ -1802,7 +1916,7 @@ class Link extends LCPBase
             $c = max($c, -0.3);
             $bonus = round($this->karma * $c);
 
-            $this->annotation .= _('Bonus clics') . ": $bonus<br/>";
+            $this->annotation .= _('Bonus clics').": $bonus<br/>";
             $this->karma += $bonus;
         }
 
@@ -1814,7 +1928,9 @@ class Link extends LCPBase
     {
         global $db, $globals;
 
-        $hours = $db->get_var("select ($this->date - unix_timestamp(link_date))/3600 from links where link_blog=$this->blog and link_id < $this->id order by link_id desc limit 1");
+        $hours = $db->get_var(
+            "select ($this->date - unix_timestamp(link_date))/3600 from links where link_blog=$this->blog and link_id < $this->id order by link_id desc limit 1"
+        );
 
         if (!isset($hours) || $hours > $globals['new_source_max_hours']) {
             $hours = $globals['new_source_max_hours'];
@@ -1871,7 +1987,7 @@ class Link extends LCPBase
     {
         global $globals;
 
-        $log = new Annotation($key . "-$this->id");
+        $log = new Annotation($key."-$this->id");
 
         if ($log->read()) {
             $array = unserialize($log->text);
@@ -1882,7 +1998,7 @@ class Link extends LCPBase
 
     public function time_annotation($key)
     {
-        $log = Annotation::from_db($key . "-$this->id");
+        $log = Annotation::from_db($key."-$this->id");
 
         return $log ? $log->time : 0;
     }
@@ -1896,7 +2012,7 @@ class Link extends LCPBase
             return false;
         }
 
-        $log = new Annotation("subs-coef-" . SitesMgr::my_id());
+        $log = new Annotation("subs-coef-".SitesMgr::my_id());
 
         if (!$log->read()) {
             return false;
@@ -1946,7 +2062,7 @@ class Link extends LCPBase
         $this->thumb = '';
 
         if ($img) {
-            $filepath = Upload::get_cache_dir() . "/tmp/thumb-$this->id.jpg";
+            $filepath = Upload::get_cache_dir()."/tmp/thumb-$this->id.jpg";
             $thumbnail = $img->scale($globals['medium_thumb_size']);
             $thumbnail->save($filepath, IMAGETYPE_JPEG);
 
@@ -1961,7 +2077,7 @@ class Link extends LCPBase
                 $this->thumb_status = 'error';
 
                 if ($debug) {
-                    echo "<!-- Meneame, error saving thumbnail " . $this->get_permalink() . " -->\n";
+                    echo "<!-- Meneame, error saving thumbnail ".$this->get_permalink()." -->\n";
                 }
             }
         }
@@ -2008,8 +2124,10 @@ class Link extends LCPBase
 
         $base = $globals['base_static_noversion'];
 
-        $this->thumb_uri = Upload::get_cache_relative_dir($this->id) . "/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
-        $this->thumb_url = $base . $this->thumb_uri;
+        $this->thumb_uri = Upload::get_cache_relative_dir(
+                $this->id
+            )."/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
+        $this->thumb_url = $base.$this->thumb_uri;
         $this->media_url = Upload::get_url('link', $this->id, 0, $this->media_date, $this->media_mime);
         $this->thumb_x = $this->thumb_y = $globals['thumb_size'];
 
@@ -2028,7 +2146,7 @@ class Link extends LCPBase
             return $related;
         }
 
-        require_once mnminclude . 'search.php';
+        require_once mnminclude.'search.php';
 
         $maxid = $db->get_var("select max(link_id) from links");
 
@@ -2044,7 +2162,11 @@ class Link extends LCPBase
         // Filter title
         $a = preg_split(
             '/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
-            preg_replace('/[\[\(] *\w{1,6} *[\)\]] */', ' ', htmlspecialchars_decode($this->title, ENT_QUOTES)) // delete [lang] and (lang), -1, PREG_SPLIT_NO_EMPTY
+            preg_replace(
+                '/[\[\(] *\w{1,6} *[\)\]] */',
+                ' ',
+                htmlspecialchars_decode($this->title, ENT_QUOTES)
+            ) // delete [lang] and (lang), -1, PREG_SPLIT_NO_EMPTY
         );
         $i = 0;
         $n = count($a);
@@ -2086,7 +2208,7 @@ class Link extends LCPBase
 
                 // Increase coefficient if a name appears also in tags
                 // s{0,1} is a trick for plurals, until we use stemmed words
-                if (preg_match('/(^|[ ,])' . preg_quote($w) . 's{0,1}([ ,]|$)/ui', $this->tags)) {
+                if (preg_match('/(^|[ ,])'.preg_quote($w).'s{0,1}([ ,]|$)/ui', $this->tags)) {
                     $coef *= 2;
 
                     // It's the first or last word
@@ -2143,8 +2265,10 @@ class Link extends LCPBase
         // Filter content, check length and that it's begin con capital
         $a = preg_split(
             '/[\s,\.;:“”–\"\'\-\(\)\[\]«»<>\/\?¿¡!]+/u',
-            preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', $this->sanitize($this->content)), // Delete parenthesided and links too
-            -1, PREG_SPLIT_NO_EMPTY
+            preg_replace('/https{0,1}:\/\/\S+|[\[\(] *\w{1,6} *[\)\]]/i', '', $this->sanitize($this->content)),
+            // Delete parenthesided and links too
+            -1,
+            PREG_SPLIT_NO_EMPTY
         );
 
         foreach ($a as $w) {
@@ -2197,7 +2321,10 @@ class Link extends LCPBase
         foreach ($words as $w => $v) {
             // Filter words if we got good candidates
             // echo "<!-- $w: ".$freqs[$w]." coef: ".$words[$w]."-->\n";
-            if ($i > 4 && $freq_min < 0.005 && strlen($w) > 3 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 100)) {
+            if ($i > 4 && $freq_min < 0.005 && strlen(
+                    $w
+                ) > 3 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 100)
+            ) {
                 continue;
             }
 
@@ -2259,7 +2386,7 @@ class Link extends LCPBase
 
     public function user_clicked()
     {
-        return (isset($_COOKIE['v']) && preg_match('/(x|^)' . $this->id . '(x|$)/', $_COOKIE['v']));
+        return (isset($_COOKIE['v']) && preg_match('/(x|^)'.$this->id.'(x|$)/', $_COOKIE['v']));
     }
 
     public function calculate_common_votes()
@@ -2268,7 +2395,9 @@ class Link extends LCPBase
 
         $this->mean_common_votes = false;
 
-        $previous = $db->get_row("select value, n, UNIX_TIMESTAMP(date) as date, UNIX_TIMESTAMP(created) as created from link_commons where link = $this->id and created > date_sub(now(), interval 3 hour)");
+        $previous = $db->get_row(
+            "select value, n, UNIX_TIMESTAMP(date) as date, UNIX_TIMESTAMP(created) as created from link_commons where link = $this->id and created > date_sub(now(), interval 3 hour)"
+        );
 
         if ($previous && $previous->n > 0 && $previous->date > 0) {
             $this->mean_common_votes = $previous->value;
@@ -2285,7 +2414,9 @@ class Link extends LCPBase
             $to_date = '';
         }
 
-        $votes = $db->get_results("select vote_user_id, vote_value, UNIX_TIMESTAMP(vote_date) as date from votes where vote_type = 'links' and vote_link_id = $this->id and vote_user_id > 0 and vote_value > 0 $to_date order by vote_id asc");
+        $votes = $db->get_results(
+            "select vote_user_id, vote_value, UNIX_TIMESTAMP(vote_date) as date from votes where vote_type = 'links' and vote_link_id = $this->id and vote_user_id > 0 and vote_value > 0 $to_date order by vote_id asc"
+        );
 
         if (!$votes) {
             return $this->mean_common_votes;
@@ -2310,7 +2441,9 @@ class Link extends LCPBase
                     continue;
                 }
 
-                $common = $db->get_row("select value, UNIX_TIMESTAMP(date) as date from users_similarities where minor = $x and major = $y");
+                $common = $db->get_row(
+                    "select value, UNIX_TIMESTAMP(date) as date from users_similarities where minor = $x and major = $y"
+                );
 
                 if (!$common) {
                     $value = 0;
@@ -2336,7 +2469,9 @@ class Link extends LCPBase
 
         $this->mean_common_votes = $values_total / $total_values;
 
-        $db->query("REPLACE link_commons (link, value, n, date, created) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date), FROM_UNIXTIME($created))");
+        $db->query(
+            "REPLACE link_commons (link, value, n, date, created) VALUES ($this->id, $this->mean_common_votes, $total_values, FROM_UNIXTIME($last_date), FROM_UNIXTIME($created))"
+        );
 
         return $this->mean_common_votes;
     }
@@ -2390,7 +2525,10 @@ class Link extends LCPBase
             return _('Hay demasiadas mayúsculas en el título');
         }
 
-        if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen($content) < $properties['intro_min_len']) {
+        if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen(
+                $content
+            ) < $properties['intro_min_len']
+        ) {
             return __('El texto es demasiado corto, debe ser al menos de %s caracteres', $properties['intro_min_len']);
         }
 
@@ -2447,5 +2585,61 @@ class Link extends LCPBase
     public function delete_image($type = null)
     {
         return parent::delete_image('link');
+    }
+
+    /**
+     * Get tags as array
+     * return array
+     */
+    public function get_tags()
+    {
+        if (empty($this->tags)) {
+            return array();
+        }
+
+        $tags = array_map(
+            'trim',
+            explode(",", $this->tags)
+        );
+
+        return $tags;
+    }
+
+    /**
+     * Get date
+     * return mixed false | string
+     */
+    public function get_date()
+    {
+        if (empty($this->date)) {
+            return false;
+        }
+
+        $date = new DateTime();
+        $date->setTimestamp($this->date);
+
+        return $date;
+    }
+
+    /**
+     * Get creator uri
+     * return string
+     */
+    public function get_creator_uri()
+    {
+        global $globals;
+
+        return $globals['scheme'].'//'.$globals['server_name'].get_user_uri($this->username);
+    }
+
+    /**
+     * Get creator avatar
+     * return string
+     */
+    public function get_creator_avatar()
+    {
+        global $globals;
+
+        return $globals['scheme'].get_avatar_url($this->author, $this->avatar, 25, false);
     }
 }

@@ -17,6 +17,7 @@ class OAuth2Server
             'enforce_state' => false
         ]);
         $this->server->addGrantType(new \OAuth2\GrantType\AuthorizationCode($this->storage));
+        $this->server->addGrantType(new \OAuth2\GrantType\ClientCredentials($this->storage));
     }
 
     private function configureStorage()

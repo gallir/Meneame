@@ -274,6 +274,9 @@ $globals['cache_redirector'] = false;
 // Check it's writeable by the web server
 $globals['cache_dir'] = 'cache';
 
+// JMS serializer cache
+$globals['jms_cache'] = '/var/tmp';
+
 // Haanga templates configuration
 $globals['haanga_cache'] = '/var/tmp';
 $globals['haanga_templates'] = 'templates';

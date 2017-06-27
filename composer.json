@@ -5,7 +5,10 @@
   "require": {
     "bshaffer/oauth2-server-php": "~1.8",
     "crodas/Haanga": "~1.0.7",
-    "facebook/graph-sdk": "^5.5"
+    "facebook/graph-sdk": "^5.5",
+    "jms/serializer": "^1.7",
+    "symfony/yaml": "^3.3",
+    "doctrine/cache": "^1.6"
   },
   "autoload": {
     "classmap": [
