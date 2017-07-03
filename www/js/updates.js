@@ -630,7 +630,7 @@ function showPoll() {
         }
 
         var $quill = new Quill('#editor', {
-            placeholder: '{% trans _('Hace mucho tiempo en una galaxia muy muy lejana...') %}',
+            placeholder: '{% trans _('Crea algo maravilloso') %}',
             theme: 'snow',
             modules: {
                 toolbar: {

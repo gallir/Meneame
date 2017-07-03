@@ -59,6 +59,7 @@ function do_tabs($tab_name, $tab_selected = false, $extra_tab = false)
 
 function do_header($title, $id = 'home', $options = false, $tab_options = false, $tab_class = 'dropdown-menu menu-subheader')
 {
+
     global $current_user, $dblang, $globals, $db;
 
     header('Content-Type: text/html; charset=utf-8');
@@ -86,6 +87,7 @@ function do_header($title, $id = 'home', $options = false, $tab_options = false,
     }
 
     $this_site = SitesMgr::get_info();
+
     $this_site_properties = SitesMgr::get_extended_properties();
 
     if ($this_site->sub) {
@@ -124,15 +126,25 @@ function do_header($title, $id = 'home', $options = false, $tab_options = false,
         $left_options = array();
 
         if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
-            $submit_new_post_text = boolval($globals['mobile']) ? _('enviar') : _('enviar historia');
+            $submit_new_post_text = boolval($globals['mobile']) ? _('enviar') : _('publicar');
             $left_options[] = new MenuOption($submit_new_post_text, $globals['base_url'] . 'submit', $id, _('enviar nueva historia'), "submit_new_post");
         }
 
-        $left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
-        $left_options[] = new MenuOption(_('nuevas'), $globals['base_url'] . 'queue', $id, _('menear noticias pendientes'));
-        $left_options[] = new MenuOption(_('populares'), $globals['base_url'] . 'popular', $id, _('historias más votadas'));
-        $left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'] . 'top_visited', $id, _('historias más visitadas/leídas'));
-        $left_options[] = new MenuOption(_('artículos'), $globals['base_url'] . 'articles', $id, _('Artículos'));
+        if ($this_site->id == SitesMgr::getMainSiteId() && in_array($globals['script'], ['index.php', 'shakeit.php'])) {
+            $left_options[] = new MenuOption(_('artículos'), $globals['base_url'] . 'articles', $id, _('Artículos'), "button-new");
+            $left_options[] = new MenuOption(_('subs'), $globals['base_url'] . 'subs', $id, _('Subs'));
+            $left_options[] = new MenuOption(_('nuevas'), $globals['base_url'] . 'queue', $id, _('menear noticias pendientes'));
+            $left_options[] = new MenuOption(_('populares'), $globals['base_url'] . 'popular', $id, _('historias más votadas'));
+            $left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'] . 'top_visited', $id, _('historias más visitadas/leídas'));
+
+        } else {
+            $left_options[] = new MenuOption(_('portada'), $globals['base_url'], $id, _('página principal'));
+            $left_options[] = new MenuOption(_('nuevas'), $globals['base_url'] . 'queue', $id, _('menear noticias pendientes'));
+            $left_options[] = new MenuOption(_('artículos'), $globals['base_url'] . 'articles', $id, _('Artículos'));
+            $left_options[] = new MenuOption(_('subs'), $globals['base_url_general'] . 'subs', $id, _('Subs'));
+            $left_options[] = new MenuOption(_('populares'), $globals['base_url'] . 'popular', $id, _('historias más votadas'));
+            $left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'] . 'top_visited', $id, _('historias más visitadas/leídas'));
+        }
 
         $right_options = array();
         $right_options[] = new MenuOption(_('fisgona'), $globals['base_url'] . 'sneak', $id, _('visualizador en tiempo real'));

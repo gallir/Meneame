@@ -188,7 +188,10 @@
                     <div class="header-menu01"{% if globals.mobile %} style="display:none;"{% endif %}>
                         <ul class="menu01-itemsl">
                             {% for o in left_options %}
-                            <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
+                            <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}">
+                                <a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a>
+                                {% if o.class=="button-new" %}<span class="button-new">{% trans _('nuevo') %}</span>{% endif %}
+                            </li>
                             {% endfor %}
                         </ul>
 

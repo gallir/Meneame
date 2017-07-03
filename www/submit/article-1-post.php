@@ -36,7 +36,6 @@ try {
     return;
 }
 
-$link->title = __('Escribe aquí el título');
 $link->status = 'discard';
 $link->content_type = 'article';
 $link->author = $current_user->user_id;
