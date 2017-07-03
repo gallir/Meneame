@@ -3,31 +3,35 @@
         <div class="row">
             <div class="col-md-9">
 
-                <input type="hidden" name="key" value="{% exec get_security_key %}" />
-                <input type="hidden" name="randkey" value="{{ link.randkey }}" />
-                <input type="hidden" name="timestamp" value="{{ globals.now }}" />
-                <input type="hidden" name="id" value="{{ link.id }}" />
-                <input type="hidden" name="step" value="2" />
+                <input type="hidden" name="key" value="{% exec get_security_key %}"/>
+                <input type="hidden" name="randkey" value="{{ link.randkey }}"/>
+                <input type="hidden" name="timestamp" value="{{ globals.now }}"/>
+                <input type="hidden" name="id" value="{{ link.id }}"/>
+                <input type="hidden" name="step" value="2"/>
 
                 {% include 'story/submit/error.html' %}
 
-                <div class="form-group">
-                    <textarea name="title" id="article-title" rows="1" class="form-control input-title" maxlength="100" required>{{
-                        link.title
-                    }}</textarea>
+                <div class="article-container">
+
+                    <div id="editor" class="input-editable">{{ link.content }}</div>
+
+                    <div class="form-group input-group-editable">
+                        <textarea name="title" id="article-title" rows="1" class="form-control input-title" tabindex="1"
+                                  maxlength="100" placeholder="{% trans _('Escribe aquí el título') %}" required>{{ link.title }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea name="bodytext" class="hidden"></textarea>
+                    </div>
                 </div>
 
-                <div class="form-group input-group-editable">
-                    <div id="editor" class="input-editable">{{ link.content }}</div>
-                    <textarea name="bodytext" class="hidden"></textarea>
-                </div>
             </div>
 
             <div class="col-md-2 col-md-offset-1 text-center">
                 {% if link.is_new %}
-                    {% include 'story/submit/article-2-aside-discard.html' %}
+                {% include 'story/submit/article-2-aside-discard.html' %}
                 {% else %}
-                    {% include 'story/submit/article-2-aside.html' %}
+                {% include 'story/submit/article-2-aside.html' %}
                 {% endif %}
             </div>
         </div>
@@ -35,10 +39,10 @@
 </section>
 
 <script>
-var $title = document.getElementById('article-title');
-var value = $title.value;
+    var $title = document.getElementById('article-title');
+    var value = $title.value;
 
-$title.focus();
-$title.value = '';
-$title.value = value;
+    $title.focus();
+    $title.value = '';
+    $title.value = value;
 </script>
