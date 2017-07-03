@@ -630,7 +630,7 @@ function showPoll() {
         }
 
         var $quill = new Quill('#editor', {
-            placeholder: '{% trans _('Crea algo maravilloso') %}',
+            placeholder: '{% trans _('Empieza a escribir tu artículo...') %}',
             theme: 'snow',
             modules: {
                 toolbar: {
