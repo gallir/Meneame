@@ -41,6 +41,16 @@ $link->content_type = 'article';
 $link->author = $current_user->user_id;
 $link->sent_date = $link->date = time();
 
-$link->store();
+if ($link->author == $current_user->user_id) {
+    if (empty($_POST['randkey']) && ! empty($site_properties['no_link'])) {
+        $link->randkey = rand(10000, 10000000);
+        $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+    } else {
+        $link->randkey = $_POST['randkey'];
+        $link->key = $_POST['key'];
+    }
 
-die(header('Location: '.$globals['base_url'].'submit?step=2&id=' . $link->id));
+    $link->store();
+}
+
+die(header('Location: '.$globals['base_url'].'submit?step=2&id='.$link->id));

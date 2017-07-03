@@ -8,7 +8,7 @@ if ($current_user->admin && $user->id == $current_user->user_id) {
 }
 
 $subs = $db->get_results('
-    SELECT *
+    SELECT SQL_CACHE *
     FROM subs
     WHERE (
         sub = 1

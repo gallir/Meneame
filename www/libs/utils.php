@@ -570,6 +570,15 @@ function get_human_date($date, $format, $locale = 'es_ES.UTF-8')
     return $date;
 }
 
+function get_month($timestamp) {
+    $months = [ 1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril', 5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto', 9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'];
+    return $months[intval(strftime('%m', $timestamp))];
+}
+
+function get_year($timestamp) {
+    return  intval(strftime('%Y', $timestamp));
+}
+
 function get_server_name()
 {
     global $globals;
@@ -657,14 +666,26 @@ function get_user_uri($user, $view = '')
     global $globals;
 
     $uri = $globals['base_url_general'].'user/'.htmlspecialchars($user);
-    $uri .= $view ? ('/'.$view) : '';
+
+    if ($view) {
+        $uri .= "/$view";
+    }
 
     return $uri;
 }
 
 function get_user_uri_by_uid($user, $view = '')
 {
-    return get_user_uri($user, $view);
+    global $globals;
+
+    $uid = guess_user_id($user);
+
+    // User does not exist, ensure it will give error later
+    if ($uid == 0) {
+        $uid = -1;
+    }
+
+    return get_user_uri($user, $view)."/$uid";
 }
 
 function post_get_base_url($option = '', $give_base = true)

@@ -9,14 +9,8 @@ $query = '
     )
 ';
 
-$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
-
-if ($count === 0) {
-    return Haanga::Load('user/empty.html');
-}
-
 $comments = $db->get_results('
-    SELECT comment_id, link_id, comment_type
+    SELECT SQL_CACHE comment_id, link_id, comment_type
     '.$query.'
     ORDER BY comment_date DESC
     LIMIT '.(int)$offset.', '.(int)$limit.';
@@ -30,4 +24,4 @@ require __DIR__.'/libs-comments.php';
 
 print_comment_list($comments, $user);
 
-do_pages($count, $limit);
+do_pages(-1, $limit);

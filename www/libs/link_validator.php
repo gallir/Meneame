@@ -12,7 +12,7 @@ class LinkValidator
 {
     public $link;
     public $user;
-
+    public $user_id;
     public $errorCallback;
     public $warningCallback;
 
@@ -32,6 +32,7 @@ class LinkValidator
 
         $this->link = $link;
         $this->user = $current_user;
+        $this->user_id = $current_user->user_id;
     }
 
     public function fixUrl()
@@ -42,18 +43,14 @@ class LinkValidator
             $this->link->url = 'http://' . $this->link->url;
         }
 
-        if (!filter_var($this->link->url, FILTER_VALIDATE_URL)) {
-            $this->setError(_('La URL enviada no parece válida'));
-        }
-
         return $this;
     }
 
     public function checkUrl()
     {
-        $components = parse_url($this->link->url);
+        $host = parse_url($this->link->url, PHP_URL_HOST);
 
-        if (empty($components) || empty($components['host']) || gethostbyname($components['host']) === $components['host']) {
+        if (empty($host) || (gethostbyname($host) === $host)) {
             $this->setError(_('La URL enviada no parece válida'), '', 'Hostname error: ' . $this->link->url);
         }
 
@@ -61,18 +58,28 @@ class LinkValidator
             $this->setError(_('URL demasiado larga'), _('La longitud de la URL supera el tamaño máximo permitido (250 caracteres)'));
         }
 
+        if (!filter_var($this->urlToAscii($this->link->url), FILTER_VALIDATE_URL)) {
+            $this->setError(_('La URL enviada no parece válida'));
+        }
+
         return $this;
+    }
+
+    protected function urlToAscii($url)
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+
+        return str_replace($path, implode('/', array_map('urlencode', explode('/', $path))), $url);
     }
 
     public function checkKey()
     {
-        if (empty($_POST['randkey']) || empty($_POST['key']) || !check_security_key($_POST['key'])) {
-            $this->setError(_('Clave de proceso incorrecta'));
-        }
 
-        if ($link->randkey && ($link->randkey != $_POST['randkey'])) {
+        global $site_key, $current_user;
+
+        if ($_POST['key'] != md5($_POST['randkey'].$current_user->user_id.$current_user->user_email.$site_key.get_server_name())) {
             $this->setError(_('Clave de proceso incorrecta'));
-        }
+        };
 
         return $this;
     }
@@ -216,25 +223,34 @@ class LinkValidator
 
     public function checkDrafts()
     {
-        global $globals, $db;
+        global $globals, $db, $current_user;
 
         // Check the user does not have too many drafts
         if ($this->getUserDrafts() > $globals['draft_limit']) {
-            $this->setError(
-                _('Demasiados borradores'),
-                _('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . ' <a href="' . $globals['base_url'] . 'queue?meta=_discarded">' . _('Cola de descartadas') . '</a>',
-                'too many drafts: ' . $this->link->url
-            );
+            if ($this->link->content_type === 'article') {
+                $this->setError(
+                    _('Demasiados borradores'),
+                    _('Has hecho demasiados intentos, puedes continuar con ellos desde el ') . ' <a href="' . $globals['base_url'] . 'user/'. $current_user->user_login . '/articles_discard">' . _('listado de borradores') . '</a>',
+                    'too many drafts: ' . $this->link->url
+                );
+            } else {
+                $this->setError(
+                    _('Demasiados borradores'),
+                    _('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . ' <a href="' . $globals['base_url'] . 'queue?meta=_discarded">' . _('Cola de descartadas') . '</a>',
+                    'too many drafts: ' . $this->link->url
+                );
+            }
         }
 
         $db->query('
-            DELETE FROM links
+            DELETE FROM `links`
             WHERE (
-                link_author = "' . $this->user_id . '"
-                AND link_date > DATE_SUB(NOW(), INTERVAL 30 MINUTE)
-                AND link_date < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
-                AND link_status = "discard"
-                AND link_votes = 0
+                `link_author` = "' . $this->user_id . '"
+                AND `link_content_type` != "article"
+                AND `link_date` > DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+                AND `link_date` < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+                AND `link_status` = "discard"
+                AND `link_votes` = 0
             );
         ');
 
@@ -258,7 +274,7 @@ class LinkValidator
 
         $total = $this->getUserSent();
 
-        if (($total === 0) || !$globals['min_user_votes'] || $this->user->user_karma >= $globals['new_user_karma']) {
+        if (!$globals['min_user_votes'] || $this->user->user_karma >= $globals['new_user_karma']) {
             return $this;
         }
 
@@ -276,11 +292,15 @@ class LinkValidator
 
         $needed = $min_votes - $user_votes;
 
+        $this->setWarning(_('no votes de forma apresurada, penaliza el karma'), '<a href="'.$globals['base_url'].'queue" target="_blank">'._('haz clic aquí para ir a votar').'</a>');
+
         if ($total === 0) {
             $this->setError(_('¿Es la primera vez que envías una historia?'), __('Necesitas como mínimo %s votos', $needed));
+        } else {
+            $this->setError(_('No tienes el mínimo de votos necesarios para enviar una nueva historia'), __('Necesitas votar como mínimo a %s envíos', $needed));
         }
 
-        $this->setError(_('No tienes el mínimo de votos necesarios para enviar una nueva historia'), __('Necesitas votar como mínimo a %s envíos', $needed));
+        return $this;
     }
 
     public function checkClones()

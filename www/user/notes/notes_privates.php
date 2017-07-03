@@ -7,14 +7,13 @@ if ($current_user->user_id != $user->id) {
 
 $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_js'][] = 'jquery.user_autocomplete.js';
-$globals['extra_css'][] = 'jquery.autocomplete.css';
 
 echo '<div class="clearfix mb-20">';
 echo '<a href="javascript:priv_new(0);" class="btn btn-mnm btn-inverted pull-right">+ '._('Nuevo privado').'</a>';
 echo '</div>';
 
 $count = $db->get_var('
-    SELECT COUNT(*)
+    SELECT SQL_CACHE COUNT(*)
     FROM privates
     WHERE "'.(int)$current_user->user_id.'" IN (privates.user, privates.to);
 ');
@@ -33,6 +32,8 @@ $privates = $db->get_results('
 if (empty($privates)) {
     return Haanga::Load('user/empty.html');
 }
+
+User::reset_notification($current_user->user_id, 'private');
 
 echo '<ol class="comments-list">';
 

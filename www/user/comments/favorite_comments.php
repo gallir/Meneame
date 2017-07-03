@@ -10,14 +10,14 @@ $query = '
     )
 ';
 
-$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+$count = (int)$db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
 if ($count === 0) {
     return Haanga::Load('user/empty.html');
 }
 
 $comments = $db->get_col('
-    SELECT comment_id
+    SELECT SQL_CACHE comment_id
     '.$query.'
     ORDER BY comment_id DESC
     LIMIT '.(int)$offset.', '.(int)$limit.';

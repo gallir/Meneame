@@ -612,7 +612,7 @@ function showPoll() {
         var $textarea = $('.form textarea[name="bodytext"]');
 
         function imageHandler() {
-            var value = prompt('{% trans _('URL de la imagen') %}');
+            var value = prompt('{% trans _('Enlace de la imagen:') %}');
 
             if (!value) {
                 return;

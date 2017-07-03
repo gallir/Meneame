@@ -841,12 +841,16 @@ class User
         return geo_latlng('user', $this->id);
     }
 
-    public function get_uri($view = '')
+    public function get_uri($view = '', $anchor = '')
     {
         global $globals;
 
         $uri = $globals['base_url_general'].'user/'.htmlspecialchars($this->username);
         $uri .= $view ? ('/'.$view) : '';
+
+        if (!empty($anchor)) {
+            $uri .= '#' . $anchor;
+        }
 
         return $uri;
     }

@@ -57,6 +57,8 @@ if ($link->is_new) {
     $subs_main = $subs_subscriptions = array();
 }
 
+$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+
 Haanga::Load('story/submit/article-2.html', array(
     'subs_main' => $subs_main,
     'subs_subscriptions' => $subs_subscriptions,
@@ -65,4 +67,5 @@ Haanga::Load('story/submit/article-2.html', array(
     'link' => $link,
     'error' => $error,
     'warning' => $warning,
+    'current_user' => $current_user
 ));

@@ -30,16 +30,16 @@ if (empty($id)) {
 switch ($_GET['what']) {
     /* From notifier */
     case 'privates':
-        do_redirection($current_user->get_uri('notes_privates'));
+        do_redirection($current_user->get_uri('notes_privates', 'menu'));
 
     case 'posts':
-        do_redirection($current_user->get_uri('notes_conversation'));
+        do_redirection($current_user->get_uri('notes_conversation', 'menu'));
 
     case 'comments':
-        do_redirection($current_user->get_uri('conversation'));
+        do_redirection($current_user->get_uri('conversation', 'menu'));
 
     case 'friends':
-        do_redirection($current_user->get_uri('friends_new'));
+        do_redirection($current_user->get_uri('friends_new', 'menu'));
 
     case 'post':
         do_redirection($globals['scheme'].'//'.get_server_name().post_get_base_url($id));
@@ -51,7 +51,7 @@ switch ($_GET['what']) {
         do_redirection($globals['scheme'].'//'.get_server_name().$c->get_relative_individual_permalink());
 
     case 'favorites':
-        do_redirection($current_user->get_uri('conversation'));
+        do_redirection($current_user->get_uri('conversation', 'menu'));
 }
 
 $l = Link::from_db($id, null, false);

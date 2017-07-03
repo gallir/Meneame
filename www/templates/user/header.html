@@ -7,7 +7,7 @@
         <div class="section-profile-header-info">
             <h1>{{ user.username }}</h1>
             <p class="info">{% exec text_to_html user.bio %}</p>
-            <p><strong>{% trans _('En menéame desde') %} {% exec get_human_date user.date "%B de %Y" %}</strong>
+            <p><strong>{% trans _('En menéame desde') %} {% exec get_month user.date %} de {% exec get_year user.date %}</strong>
 
             {% if user.id == current_user.user_id %}
             <div class="mt-20">
@@ -65,11 +65,12 @@
         </div>
 
         <div class="section-profile-header-banner">
-            <img src="http://lorempixel.com/300/250/" width="300" height="250" class="img-responsive" />
+            
         </div>
     </div>
 
     <div class="contents-layout">
+        <a name="menu"></a>
         <nav class="contents-menu">
             <a href="{% exec user.get_uri "articles" %}" {% if menu == 'articles' %} class="selected" {% endif %}>
                 <i class="fa fa-file-text-o"></i> <span>{% trans _('Artículos') %}</span>

@@ -84,7 +84,6 @@
             {% endif %}
         </div>
 
-
         <div class="col-md-2 col-md-offset-1">
             <div class="story-blog-aside apply-sticky">
                 {% if self.status === 'discard' %}
@@ -97,7 +96,7 @@
     </div>
 </div>
 
-{% if self.status != 'discard' %}
+{% if self.votes %}
 
 <div class="story-blog">
     <div class="row">

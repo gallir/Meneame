@@ -10,7 +10,7 @@ $ids_subs = array_map(function ($row) {
 }, $subs);
 
 $tmp = $db->get_results('
-    SELECT subs.id, COUNT(*) AS `count`
+    SELECT SQL_CACHE subs.id, COUNT(*) AS `count`
     FROM subs, prefs
     WHERE (
         subs.id IN (' . implode(',', $ids_subs) . ')

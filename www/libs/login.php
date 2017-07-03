@@ -335,12 +335,16 @@ class UserAuth
         return $db->get_var("select uid from auths where user_id = $this->user_id and service = '$service'");
     }
 
-    public function get_uri($view = '')
+    public function get_uri($view = '', $anchor = '')
     {
         global $globals;
 
         $uri = $globals['base_url_general'].'user/'.htmlspecialchars($this->user_login);
         $uri .= $view ? ('/'.$view) : '';
+
+        if (!empty($anchor)) {
+            $uri .= '#' . $anchor;
+        }
 
         return $uri;
     }

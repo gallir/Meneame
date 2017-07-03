@@ -128,12 +128,13 @@ function do_header($title, $id = 'home', $options = false, $tab_options = false,
         if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
             $submit_new_post_text = boolval($globals['mobile']) ? _('enviar') : _('publicar');
             $left_options[] = new MenuOption($submit_new_post_text, $globals['base_url'] . 'submit', $id, _('enviar nueva historia'), "submit_new_post");
+            $left_options[] = new MenuOption(_('Crear artículo'), $globals['base_url'] . 'submit?type=article&write=true', $id, _('enviar nueva historia'), 'submit_new_article');
         }
 
         if ($this_site->id == SitesMgr::getMainSiteId() && in_array($globals['script'], ['index.php', 'shakeit.php'])) {
+            $left_options[] = new MenuOption(_('nuevas'), $globals['base_url'] . 'queue', $id, _('menear noticias pendientes'));
             $left_options[] = new MenuOption(_('artículos'), $globals['base_url'] . 'articles', $id, _('Artículos'), "button-new");
             $left_options[] = new MenuOption(_('subs'), $globals['base_url'] . 'subs', $id, _('Subs'));
-            $left_options[] = new MenuOption(_('nuevas'), $globals['base_url'] . 'queue', $id, _('menear noticias pendientes'));
             $left_options[] = new MenuOption(_('populares'), $globals['base_url'] . 'popular', $id, _('historias más votadas'));
             $left_options[] = new MenuOption(_('más visitadas'), $globals['base_url'] . 'top_visited', $id, _('historias más visitadas/leídas'));
 

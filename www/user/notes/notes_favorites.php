@@ -10,7 +10,7 @@ $query = '
     )
 ';
 
-$count = $db->get_var('SELECT COUNT(*) '.$query.';');
+$count = $db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
 if ($count === 0) {
     return Haanga::Load('user/empty.html');

@@ -49,7 +49,17 @@ if ($current_user->user_id == $user->id || $current_user->admin) {
 
 $show_email = $current_user->user_id > 0 && !empty($user->public_info) && ($current_user->user_id == $user->id || $current_user->user_level === 'god');
 
+$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
+
+if ($current_user->admin) {
+    $nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id $clones_from");
+}
+
+if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
+    $friend_icon = User::friend_teaser($current_user->user_id, $user->id);
+}
+
 return Haanga::Load('user/profile.html', compact(
-    'user', 'url', 'nofollow', 'show_email', 'entropy', 'percent',
-    'addresses', 'strike'
+    'user', 'url', 'nofollow', 'show_email', 'entropy', 'percent', 'nclones',
+    'addresses', 'strike', 'friend_icon'
 ));

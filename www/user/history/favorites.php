@@ -11,14 +11,14 @@ $query = '
     )
 ';
 
-$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+$count = (int)$db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
 if ($count === 0) {
     return Haanga::Load('user/empty.html');
 }
 
 $links = $db->get_col('
-    SELECT link_id
+    SELECT SQL_CACHE link_id
     '.$query.'
     ORDER BY favorite_link_readed ASC, link_date DESC
     LIMIT '.(int)$offset.', '.(int)$limit.';
@@ -29,7 +29,7 @@ if (empty($links)) {
 }
 
 foreach ($links as $link_id) {
-    Link::from_db($link_id)->print_summary('short', 0, false, 'link_summary_favorites.html');
+    Link::from_db($link_id)->print_summary('short', 0, false, 'link_summary_favorites.html','', $user);
 }
 
 do_pages($count, $limit);

@@ -11,14 +11,14 @@ $query = '
     )
 ';
 
-$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
+$count = (int)$db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
 if ($count === 0) {
     return Haanga::Load('user/empty.html');
 }
 
 $comments = $db->get_results('
-    SELECT vote_link_id AS id, vote_value AS value
+    SELECT SQL_CACHE vote_link_id AS id, vote_value AS value
     '.$query.'
     ORDER BY vote_date DESC
     LIMIT '.(int)$offset.', '.(int)$limit.';
