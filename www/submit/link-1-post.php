@@ -48,7 +48,7 @@ if (!empty($site_properties['rules']) && $site_properties['no_link'] == 2) {
 
 // Now stores new draft
 $link->sent_date = $link->date = time();
-if ($link->author == $current_user->user_id) {
+if (($link->author == $current_user->user_id && $link->votes == 0) || $current_user->admin) {
     $link->store();
 }
 

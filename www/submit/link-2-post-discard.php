@@ -52,7 +52,7 @@ $link->title = $link->get_title_fixed();
 $link->content = $link->get_content_fixed();
 $link->sent_date = time();
 
-if ($link->author == $current_user->user_id || $current_user->admin) {
+if (($link->author == $current_user->user_id && $link->votes == 0) || $current_user->admin) {
     $link->store();
 }
 

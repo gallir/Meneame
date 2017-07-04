@@ -60,7 +60,7 @@ $link->content = $link->get_content_fixed();
 
 $db->transaction();
 
-if ($link->author == $current_user->user_id || $current_user->admin) {
+if (($link->author == $current_user->user_id && $link->votes == 0) || $current_user->admin) {
     $link->store();
 }
 
@@ -71,7 +71,7 @@ if ($globals['now'] - $link->date < 86400 * 15) {
         Log::insert('link_discard', $link->id, $current_user->user_id);
 
         // Don't save edit log if it's discarded by an admin
-        if ($link->author == $current_user->user_id) {
+        if (($link->author == $current_user->user_id && $link->votes == 0) || $current_user->admin) {
             $link->store();
             Log::insert('link_edit', $link->id, $current_user->user_id);
         }

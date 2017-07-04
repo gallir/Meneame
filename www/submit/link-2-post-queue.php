@@ -102,7 +102,7 @@ $link->content = $link->get_content_fixed();
 
 $db->transaction();
 
-if ($link->author == $current_user->user_id || $current_user->admin) {
+if (($link->author == $current_user->user_id && $link->votes == 0) || $current_user->admin) {
     $link->store();
 }
 
