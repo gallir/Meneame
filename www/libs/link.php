@@ -119,6 +119,7 @@ class Link extends LCPBase
                 WHERE (
                     link_content_type = "article"
                     AND link_status IN ("queued", "published")
+                    AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
                     AND sub_statuses.link = link_id
                     AND sub_statuses.origen = subs.id
                     AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)

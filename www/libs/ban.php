@@ -21,6 +21,8 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 {
     global $db, $globals;
 
+    return false;
+
     $ban_text = $db->escape($ban_text);
     $ban_type = $db->escape($ban_type);
     $where = '';

@@ -663,7 +663,7 @@ ul#userinfo li.search {
     font-weight: 600;
 }
 
-.header-menu01 a.submit_new_post {
+.header-menu01 a.submit_new_post,.header-menu01 a.submit_new_article  {
     text-transform: uppercase;
     padding: 4px 10px;
     -webkit-border-radius: 3px;
@@ -679,7 +679,11 @@ ul#userinfo li.search {
     box-shadow: 0 1px 0 0 #FFFFFF;
 }
 
-.header-menu01 .selected a.submit_new_post {
+.header-menu01 a.submit_new_article {
+    margin-left: -16px;
+}
+
+.header-menu01 .selected a.submit_new_post, .header-menu01 .selected a.submit_new_article {
     background: none;
 }
 
@@ -696,7 +700,20 @@ ul#userinfo li.search {
     top: 2px;
 }
 
-.menu01-itemsl a.submit_new_post:hover {
+.header-menu01 a.submit_new_article:before {
+    font-family: FontAwesome;
+    content: "\f040";
+    display: inline-block;
+    margin-right: 6px;
+    font-size: 15px;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    position: relative;
+    top: 0px;
+}
+
+.menu01-itemsl a.submit_new_post:hover, .menu01-itemsl a.submit_new_article:hover {
     background-image: none;
 }
 
