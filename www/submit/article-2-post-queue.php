@@ -60,7 +60,7 @@ $link->content = $link->get_content_fixed();
 
 $db->transaction();
 
-if ($link->author == $current_user->user_id) {
+if ($link->author == $current_user->user_id || $current_user->admin) {
     $link->store();
 }
 

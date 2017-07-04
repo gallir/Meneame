@@ -51,6 +51,9 @@ if ($old_sub_id && ($old_sub_id != $link->sub_id)) {
 $link->title = $link->get_title_fixed();
 $link->content = $link->get_content_fixed();
 $link->sent_date = time();
-$link->store();
+
+if ($link->author == $current_user->user_id || $current_user->admin) {
+    $link->store();
+}
 
 die(header('Location: '.$globals['base_url'].'submit?step=3&id=' . $link->id));
