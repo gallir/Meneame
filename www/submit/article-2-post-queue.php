@@ -60,7 +60,9 @@ $link->content = $link->get_content_fixed();
 
 $db->transaction();
 
-$link->store();
+if ($link->author == $current_user->user_id) {
+    $link->store();
+}
 
 // Insert edit log/event if the link it's newer than 15 days
 if ($globals['now'] - $link->date < 86400 * 15) {
@@ -70,6 +72,7 @@ if ($globals['now'] - $link->date < 86400 * 15) {
 
         // Don't save edit log if it's discarded by an admin
         if ($link->author == $current_user->user_id) {
+            $link->store();
             Log::insert('link_edit', $link->id, $current_user->user_id);
         }
     } elseif ($link->votes > 0) {
