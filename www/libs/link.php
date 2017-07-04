@@ -1613,7 +1613,6 @@ class Link extends LCPBase
             && ($this->status !== 'abuse')
             && ($this->status !== 'autodiscard')
             && ($current_user->user_karma >= $globals['min_karma_for_negatives'])
-            && ($this->content_type != 'article')
             && (
                 ($this->status !== 'published')
                 || $this->warned
