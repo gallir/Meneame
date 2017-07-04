@@ -41,7 +41,9 @@ $link->content_type = 'article';
 $link->author = $current_user->user_id;
 $link->sent_date = $link->date = time();
 
-$link->store();
+if ($link->author == $current_user->user_id) {
+    $link->store();
+}
 
 die(header('Location: '.$globals['base_url'].'submit?step=2&id='.$link->id));
 

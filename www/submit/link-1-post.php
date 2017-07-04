@@ -48,6 +48,8 @@ if (!empty($site_properties['rules']) && $site_properties['no_link'] == 2) {
 
 // Now stores new draft
 $link->sent_date = $link->date = time();
-$link->store();
+if ($link->author == $current_user->user_id) {
+    $link->store();
+}
 
 die(header('Location: '.$globals['base_url'].'submit?step=2&id=' . $link->id));

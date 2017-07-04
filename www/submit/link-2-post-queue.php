@@ -102,7 +102,9 @@ $link->content = $link->get_content_fixed();
 
 $db->transaction();
 
-$link->store();
+if ($link->author == $current_user->user_id) {
+    $link->store();
+}
 
 // Insert edit log/event if the link it's newer than 15 days
 if ($globals['now'] - $link->date < 86400 * 15) {
