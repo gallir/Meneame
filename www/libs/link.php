@@ -103,7 +103,51 @@ class Link extends LCPBase
         return $db->get_object($sql, 'Link');
     }
 
-    public static function getPopularArticles($limit = 2)
+    public static function getPopularArticles($limit = 5)
+    {
+        global $globals, $db;
+
+        if ($globals['memcache_host']) {
+            $memcache_popular_articles = 'popular_articles';
+        }
+
+        if (!($popular_articles = unserialize(memcache_mget($memcache_popular_articles)))) {
+            // Not in memcache
+            $sql = '
+                SELECT DISTINCT link
+                FROM sub_statuses, subs, links
+                WHERE (
+                    link_content_type = "article"
+                    AND link_status IN ("queued", "published")
+                    AND sub_statuses.link = link_id
+                    AND sub_statuses.origen = subs.id
+                    AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
+                ) ORDER BY link_votes DESC LIMIT '.$limit;
+
+            $articleIds = $db->get_col($sql);
+
+            foreach ($articleIds as $articleId) {
+                $article = self::from_db($articleId);
+
+                $article->time_published_as_string = $article->getTimePublishedAsString();
+                $article->relative_permalink = $article->get_relative_permalink();
+                $article->permalink = $article->get_permalink(
+                    false,
+                    $article->relative_permalink
+                ); // To avoid double verification
+                $article->url_str = preg_replace('/^www\./', '', parse_url($article->url, 1));
+
+                $article->max_len = 600;
+                $popular_articles[] = $article;
+            }
+
+            memcache_madd($memcache_popular_articles, serialize($popular_articles), 1800);
+        }
+
+        return $popular_articles;
+    }
+
+    public static function getPromotedArticles($limit = 2)
     {
 
         global $globals, $db;
@@ -138,6 +182,54 @@ class Link extends LCPBase
         }
 
         return $promoted_articles;
+    }
+
+    public function getTimePublishedAsString()
+    {
+        $interval = date_create('now')->diff(date_create('@'.$this->published_date));
+
+
+        if (($interval->d >= 3) || (($interval->d > 1) && ($interval->h === 0))) {
+            return sprintf(_('Hace %s días'), $interval->d);
+        }
+
+        if ($interval->d > 1) {
+            return sprintf(_('Hace %s días y %s horas'), $interval->d, $interval->h);
+        }
+
+        if (($interval->d === 1) && ($interval->h === 0)) {
+            return _('Hace 1 día');
+        }
+
+        if ($interval->d === 1) {
+            return sprintf(_('Hace 1 día y %s horas'), $interval->h);
+        }
+
+        if (($interval->h > 1) && ($interval->i === 0)) {
+            return sprintf(_('Hace %s horas'), $interval->h);
+        }
+
+        if ($interval->h > 1) {
+            return sprintf(_('Hace %s horas y %s minutos'), $interval->h, $interval->i);
+        }
+
+        if (($interval->h === 1) && ($interval->i === 0)) {
+            return _('Hace 1 hora');
+        }
+
+        if ($interval->h === 1) {
+            return sprintf(_('Hace 1 hora y %s minutos'), $interval->i);
+        }
+
+        if ($interval->i > 1) {
+            return sprintf(_('Hace %s minutos'), $interval->i);
+        }
+
+        if ($interval->i === 1) {
+            return _('Hace 1 minuto');
+        }
+
+        return sprintf(_('Hace %s segundos'), $interval->s);
     }
 
     public static function count($status = '', $force = false)
@@ -1520,6 +1612,7 @@ class Link extends LCPBase
             && ($this->status !== 'abuse')
             && ($this->status !== 'autodiscard')
             && ($current_user->user_karma >= $globals['min_karma_for_negatives'])
+            && ($this->content_type != 'article')
             && (
                 ($this->status !== 'published')
                 || $this->warned
@@ -2642,4 +2735,26 @@ class Link extends LCPBase
 
         return $globals['scheme'].get_avatar_url($this->author, $this->avatar, 25, false);
     }
+
+    public static function getUserArticleDraftsCount()
+    {
+
+        global $current_user, $db;
+
+        $query = '
+    FROM links
+    WHERE (
+        link_author = "'.(int)$current_user->user_id.'"
+        AND link_status = "discard"
+        AND link_content_type = "article"
+        AND link_votes = 0
+    )
+';
+
+        $count = $db->get_var('SELECT COUNT(*) '.$query.';');
+
+        return $count;
+
+    }
+
 }

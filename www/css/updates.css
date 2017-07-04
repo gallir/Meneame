@@ -875,6 +875,147 @@ a.action-link span {
     border-bottom-left-radius: 10px;
 }
 
+.widget-popular-links-slider {
+    background-color: #D4D4D4;
+    border: 1px solid #F0F0F0;
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.16);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.widget-popular-links-slider .link {
+    padding: 10px 15px;
+    background-color: #fff;
+    position: relative;
+}
+
+.widget-popular-links-slider .link:after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    top: 15px;
+    bottom: 15px;
+    right: 0;
+    background-color: #D4D4D4;
+}
+
+.widget-popular-links-slider .link:first-child:after,  .link:nth-child(2):after{
+    display: none;
+}
+
+.widget-popular-links-slider .thumbnail-wrapper {
+    position: relative;
+    margin: 5px 0 5px 0;
+    width: 155px;
+    height: 93px;
+    overflow: hidden;
+    display: block;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.widget-popular-links-slider img.thumbnail {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    max-width: 100%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+.widget-popular-links-slider a.source {
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    color: #FE6117;
+    margin-bottom: 5px;
+}
+
+.widget-popular-links-slider .title {
+    margin-top: 10px;
+}
+
+.widget-popular-links-slider .title a {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    color: #1F1F1F;
+    display: block;
+    line-height: 15px;
+    font-weight: bold;
+}
+
+.widget-popular-links-slider .content {
+    font-family: Merriweather;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 10px;
+    max-height: 100px;
+}
+
+.widget-popular-links-slider .link-info a.author {
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    color: #E35614;
+    margin-top: 10px;
+}
+
+.widget-popular-links-slider .link-info span.time {
+    font-family: 'Lato', sans-serif;
+    font-size: 10px;
+    color: #3C3C3C;
+}
+
+.widget-popular-links-slider .link.popular-link-widget-right {
+    text-align: center;
+    background-color: transparent;
+    padding-top: 20px;
+}
+
+.popular-link-widget-right div.title {
+    color: #FE6117;
+    font-family: "Open Sans";
+    font-weight: 700;
+    font-size: 38px;
+    line-height: 0.9;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.popular-link-widget-right div.subtitle {
+    color: #FE6117;
+    font-family: "Open Sans";
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.popular-link-widget-right div.description {
+    font-family: Lato;
+    font-size: 12px;
+    color: #3C3C3C;
+    direction: ltr;
+    margin-top: 10px;
+}
+
+.popular-link-widget-right a.meneame-button {
+    margin-top: 20px;
+    color: #fff;
+    padding: 5px 20px;
+    font-weight: bold;
+    font-size: 12px;
+    display: inline-block;
+    background-color: #FE6117 !important;
+    background-image: linear-gradient(-180deg, rgba(199, 199, 199, 0.20) 0%, rgba(68, 68, 68, 0.20) 100%);
+    border: 1px solid rgba(122, 47, 11, 0.45);
+    box-shadow: 0px 0px 0px 0px #FFFFFF;
+    border-radius: 3px;
+}
+
+.popular-link-widget-right a.meneame-button:hover {
+    text-decoration: none;
+}
 
 .subs-listing {
     width: 100%;

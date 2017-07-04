@@ -166,7 +166,13 @@ if ($links) {
     $counter = 0;
 
     if ($globals['show_promoted_articles'] ) {
-        $articles = Link::getPopularArticles();
+        $promoted_articles = Link::getPromotedArticles();
+    }
+
+    if ($globals['show_widget_popular_articles']) {
+        $widget_popular_articles = Link::getPopularArticles();
+    } else {
+        $widget_popular_articles = [];
     }
 
     foreach ($links as $link) {
@@ -174,9 +180,10 @@ if ($links) {
         $link->max_len = 600;
 
         if ($globals['show_promoted_articles'] ) {
-            Haanga::Safe_Load('link_promoted_articles.html', compact('counter', 'articles'));
+            Haanga::Safe_Load('link_promoted_articles.html', compact('counter', 'promoted_articles'));
         }
-        Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size', 'sponsored_link', 'official_subs'));
+
+        Haanga::Safe_Load('private/ad-interlinks.html', ['counter' => $counter, 'page_size' => $page_size, 'sponsored_link' => $sponsored_link, 'official_subs' => $official_subs, 'widget_popular_articles' => $widget_popular_articles]);
 
         $link->print_summary();
 

@@ -128,6 +128,7 @@ function do_header($title, $id = 'home', $options = false, $tab_options = false,
         if ($this_site->enabled && empty($this_site_properties['new_disabled'])) {
             $submit_new_post_text = boolval($globals['mobile']) ? _('enviar') : _('publicar');
             $left_options[] = new MenuOption($submit_new_post_text, $globals['base_url'] . 'submit', $id, _('enviar nueva historia'), "submit_new_post");
+            $left_options[] = new MenuOption(_('Crear artículo'), $globals['base_url'] . 'submit?type=article&write=true', $id, _('enviar nueva historia'), 'submit_new_post');
         }
 
         if ($this_site->id == SitesMgr::getMainSiteId() && in_array($globals['script'], ['index.php', 'shakeit.php'])) {

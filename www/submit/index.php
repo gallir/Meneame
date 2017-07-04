@@ -48,7 +48,13 @@ if (!empty($_POST['type'])) {
 header('X-XSS-Protection: 0');
 
 if ($type === 'article') {
-    require __DIR__.'/article-'.getStep().'.php';
+
+    if (Link::getUserArticleDraftsCount() >= $globals['max_article_drafts'] and getStep() == 1) {
+        require __DIR__.'/draft-limit.php';
+    } else {
+        require __DIR__.'/article-'.getStep().'.php';
+    }
+
 } else {
     require __DIR__.'/link-'.getStep().'.php';
 }

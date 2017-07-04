@@ -43,4 +43,7 @@ $link->sent_date = $link->date = time();
 
 $link->store();
 
-die(header('Location: '.$globals['base_url'].'submit?step=2&id=' . $link->id));
+die(header('Location: '.$globals['base_url'].'submit?step=2&id='.$link->id));
+
+
+

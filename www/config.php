@@ -448,6 +448,8 @@ $globals['strikes'] = array(
     )
 );
 
+$globals['max_article_drafts'] = 5;
+
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
 $globals['anon_to_user_votes'] = 0.2;

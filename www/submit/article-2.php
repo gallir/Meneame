@@ -65,4 +65,5 @@ Haanga::Load('story/submit/article-2.html', array(
     'link' => $link,
     'error' => $error,
     'warning' => $warning,
+    'current_user' => $current_user
 ));
