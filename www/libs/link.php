@@ -138,7 +138,7 @@ class Link extends LCPBase
                 ); // To avoid double verification
                 $article->url_str = preg_replace('/^www\./', '', parse_url($article->url, 1));
 
-                $article->max_len = 600;
+                $article->max_len = 200;
                 $popular_articles[] = $article;
             }
 

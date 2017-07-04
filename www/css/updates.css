@@ -883,10 +883,19 @@ a.action-link span {
     overflow: hidden;
 }
 
+
+
 .widget-popular-links-slider .link {
     padding: 10px 15px;
     background-color: #fff;
     position: relative;
+    max-height: 202px;
+}
+
+.widget-popular-links-slider .link.slick-slide.slick-active {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .widget-popular-links-slider .link:after {
@@ -926,6 +935,11 @@ a.action-link span {
     margin: 0;
 }
 
+
+.widget-popular-links-slider .content a:visited {
+    color: #e35614 !important;
+}
+
 .widget-popular-links-slider a.source {
     font-family: 'Lato', sans-serif;
     font-size: 11px;
@@ -952,7 +966,7 @@ a.action-link span {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 10px;
-    max-height: 100px;
+    margin-bottom: 10px;
 }
 
 .widget-popular-links-slider .link-info a.author {
