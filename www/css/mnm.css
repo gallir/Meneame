@@ -3025,7 +3025,7 @@ button.link.favorite {
 .sneaker-item {
     width: 100%;
     clear: both;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #FFE2C5;
     padding: 5px 0 5px 0;
     text-align: center;
     overflow: hidden;
