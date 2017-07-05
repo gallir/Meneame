@@ -10,7 +10,6 @@ $query = '
     WHERE (
         vote_type = "links"
         AND vote_user_id = "'.(int)$user->id.'"
-        AND vote_value > 0
         AND link_content_type = "article"
         AND link_id = vote_link_id
         AND link_author != "'.(int)$user->id.'"
@@ -38,7 +37,7 @@ foreach ($links as $linkdb) {
     $link = Link::from_db($linkdb->link_id);
 
     if ($linkdb->vote_value < 0) {
-        echo '<div class="vote-negative-alert">';
+        echo '<div class="vote-negative-alert" style="display:inline;">';
         echo get_negative_vote($linkdb->vote_value);
         echo "</div>\n";
     }
