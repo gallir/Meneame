@@ -24,4 +24,4 @@ require __DIR__.'/libs-comments.php';
 
 print_comment_list($comments, $user);
 
-do_pages($count, $limit);
+do_pages(-1, $limit);
