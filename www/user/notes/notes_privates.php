@@ -34,6 +34,8 @@ if (empty($privates)) {
     return Haanga::Load('user/empty.html');
 }
 
+User::reset_notification($current_user->user_id, 'private');
+
 echo '<ol class="comments-list">';
 
 foreach ($privates as $message) {
