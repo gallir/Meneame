@@ -15,7 +15,9 @@
 
     <tr>
         <th>{% trans _('Usuario') %}</th>
-        <td>{{ user.username }}</td>
+        <td>{{ user.username }}  {% if current_user.admin AND nclones %}
+            (<a class="fancybox" href="{{ globals.base_url }}backend/ip_clones.php?id={{ user.id }}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
+            {% endif %}</td>
     </tr>
 
     {% if url %}
@@ -31,13 +33,6 @@
         <th>{% trans _('Registro') %}</th>
         <td>{{ user.username_register }}</td>
     </tr>
-
-    {% if nclones %}
-    <tr>
-        <th>{% trans _('Clones') %}</th>
-        <td><a class="fancybox" href="{{ globals.base_url }}backend/ip_clones.php?id={{ user.id }}" title="{% trans _('Clones') %}">{{ nclones }}</a></td>
-    </tr>
-    {% endif %}
 
     {% endif %}
 
