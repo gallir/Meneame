@@ -9,12 +9,6 @@ $query = '
     )
 ';
 
-$count = (int)$db->get_var('SELECT COUNT(*) '.$query.';');
-
-if ($count === 0) {
-    return Haanga::Load('user/empty.html');
-}
-
 $comments = $db->get_results('
     SELECT comment_id, link_id, comment_type
     '.$query.'
