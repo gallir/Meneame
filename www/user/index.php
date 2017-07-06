@@ -163,6 +163,7 @@ switch ($view) {
 
 // Add canonical address
 $globals['extra_head'] = '<link rel="canonical" href="//' . get_server_name() . $user->get_uri() . '" />' . "\n";
+$globals['extra_css'][] = 'jquery.autocomplete.css';
 
 $header_title = $user->username;
 
