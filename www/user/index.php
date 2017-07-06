@@ -17,26 +17,57 @@ $offset = ($page - 1) * $limit;
 if ($globals['bot'] && $page > 2) {
     do_error('Pages exceeded', 404);
 }
+if (!empty($_SERVER['PATH_INFO'])) {
+    $url_args = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
 
-if (empty($_SERVER['PATH_INFO'])) {
-    if ($current_user->user_id) {
-        $location = get_user_uri($current_user->user_login);
-    } else {
-        $location = $globals['base_url'];
+    array_shift($url_args);
+
+    $_REQUEST['login'] = clean_input_string($url_args[0]);
+    $_REQUEST['view'] = $url_args[1];
+    $_REQUEST['uid'] = intval($url_args[2]);
+
+    if (!$_REQUEST['uid'] && is_numeric($_REQUEST['view'])) {
+        // This is a empty view but an user_id, change it
+        $_REQUEST['uid'] = intval($_REQUEST['view']);
+        $_REQUEST['view'] = '';
     }
+} else {
+    $_REQUEST['login'] = clean_input_string($_REQUEST['login']);
+    $_REQUEST['uid'] = intval($_REQUEST['uid']);
 
-    die(header('Location: ' . $location));
+    if (!empty($_REQUEST['login'])) {
+        die(header('Location: ' . html_entity_decode(get_user_uri($_REQUEST['login'], clean_input_string($_REQUEST['view'])))));
+    }
 }
 
-$url = preg_split('/\/+/', $_SERVER['PATH_INFO'], 6, PREG_SPLIT_NO_EMPTY);
-
-array_shift($url);
-
-$_REQUEST['login'] = clean_input_string(array_shift($url));
-$_REQUEST['view'] = array_shift($url) ?: 'history';
-
 $user = new User();
-$user->username = $_REQUEST['login'];
+
+$login = $_REQUEST['login'];
+$uid = $_REQUEST['uid'];
+$view = $_REQUEST['view'];
+
+if (empty($login)) {
+    if ($current_user->user_id > 0) {
+        die(header('Location: ' . html_entity_decode(get_user_uri($current_user->user_login))));
+    } else {
+        die(header('Location: ' . $globals['base_url']));
+    }
+}
+
+if ($current_user->admin) {
+    if ($uid > 0) {
+        $user->id = $uid;
+    } else {
+        die(redirect(html_entity_decode(get_user_uri_by_uid($login, $view))));
+    }
+} else {
+    if ($uid > 0) {
+        die(header('Location: ' . html_entity_decode(get_user_uri($login, $view))));
+    }
+    $user->username = $login;
+}
+
+$view = $view ?: 'profile';
 
 if (!$user->read()) {
     do_error(_('usuario inexistente'), 404);
@@ -44,7 +75,6 @@ if (!$user->read()) {
 
 $globals['search_options'] = array('u' => $user->username);
 
-$view = clean_input_string($_REQUEST['view']) ?: 'history';
 
 // The profile's use marked the current one as friend
 if ($current_user->user_id) {

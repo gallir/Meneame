@@ -666,14 +666,26 @@ function get_user_uri($user, $view = '')
     global $globals;
 
     $uri = $globals['base_url_general'].'user/'.htmlspecialchars($user);
-    $uri .= $view ? ('/'.$view) : '';
+
+    if ($view) {
+        $uri .= "/$view";
+    }
 
     return $uri;
 }
 
 function get_user_uri_by_uid($user, $view = '')
 {
-    return get_user_uri($user, $view);
+    global $globals;
+
+    $uid = guess_user_id($user);
+
+    // User does not exist, ensure it will give error later
+    if ($uid == 0) {
+        $uid = -1;
+    }
+
+    return get_user_uri($user, $view)."/$uid";
 }
 
 function post_get_base_url($option = '', $give_base = true)
