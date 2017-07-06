@@ -137,7 +137,7 @@
                     <div class="form-group">
                         <label for="password" class="title">{% trans _('Contraseña') %}</label>
                         <p class="note">{% trans _('No se cambiará si la dejas en blanco') %}</p>
-                        <input type="text" id="password" name="password" value="{{ user.adcode }}" class="form-control" onkeyup="return securePasswordCheck(this);" />
+                        <input type="password" autocomplete="off" id="password" name="password" size="25" onkeyup="return securePasswordCheck(this.form.password);" />
                     </div>
                 </div>
 
@@ -145,7 +145,7 @@
                     <div class="form-group">
                         <label for="verify" class="title">{% trans _('Repite la contraseña') %}</label>
                         <p class="note">{% trans _('No se cambiará si la dejas en blanco') %}</p>
-                        <input type="text" id="verify" name="password2" value="{{ user.adchannel }}" class="form-control" onkeyup="checkEqualFields(this.form.password2, this.form.password)" />
+                        <input type="password" autocomplete="off" id="verify" name="password2" size="25" onkeyup="checkEqualFields(this.form.password2, this.form.password)" />
                     </div>
                 </div>
             </div>
