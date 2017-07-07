@@ -12,7 +12,7 @@ class LinkValidator
 {
     public $link;
     public $user;
-
+    public $user_id;
     public $errorCallback;
     public $warningCallback;
 
@@ -32,6 +32,7 @@ class LinkValidator
 
         $this->link = $link;
         $this->user = $current_user;
+        $this->user_id = $current_user->user_id;
     }
 
     public function fixUrl()
