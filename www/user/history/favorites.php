@@ -29,7 +29,7 @@ if (empty($links)) {
 }
 
 foreach ($links as $link_id) {
-    Link::from_db($link_id)->print_summary('short', 0, false, 'link_summary_favorites.html');
+    Link::from_db($link_id)->print_summary('short', 0, false, 'link_summary_favorites.html','', $user);
 }
 
 do_pages($count, $limit);
