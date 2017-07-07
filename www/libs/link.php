@@ -153,33 +153,24 @@ class Link extends LCPBase
 
         global $globals, $db;
 
-        if ($globals['memcache_host']) {
-            $memcache_promoted_articles = 'promoted_articles';
-        }
+        $sql = '
+            SELECT DISTINCT link
+            FROM sub_statuses, subs, links
+            WHERE (
+                link_content_type = "article"
+                AND link_status IN ("queued", "published")
+                AND sub_statuses.link = link_id
+                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - 36*3600).'"
+                AND sub_statuses.origen = subs.id
+                AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
+            ) ORDER BY link_karma DESC LIMIT '.$limit;
 
-        if (!($promoted_articles = unserialize(memcache_mget($memcache_promoted_articles)))) {
-            // Not in memcache
-            $sql = '
-                SELECT DISTINCT link
-                FROM sub_statuses, subs, links
-                WHERE (
-                    link_content_type = "article"
-                    AND link_status IN ("queued", "published")
-                    AND sub_statuses.link = link_id
-                    AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
-                    AND sub_statuses.origen = subs.id
-                    AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
-                ) ORDER BY link_karma DESC LIMIT '.$limit;
+        $articleIds = $db->get_col($sql);
 
-            $articleIds = $db->get_col($sql);
-
-            foreach ($articleIds as $articleId) {
-                $article = self::from_db($articleId);
-                $article->max_len = 600;
-                $promoted_articles[] = $article;
-            }
-
-            memcache_madd($memcache_promoted_articles, serialize($promoted_articles), 1800);
+        foreach ($articleIds as $articleId) {
+            $article = self::from_db($articleId);
+            $article->max_len = 600;
+            $promoted_articles[] = $article;
         }
 
         return $promoted_articles;
