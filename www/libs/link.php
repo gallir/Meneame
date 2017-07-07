@@ -1138,8 +1138,10 @@ class Link extends LCPBase
         $karma_best_comment = 0,
         $show_tags = true,
         $template = 'link_summary.html',
-        $tag = ""
+        $tag = "",
+        $user = null
     ) {
+
         global $current_user, $current_user, $globals, $db;
 
         if (!$this->read) {
@@ -1270,8 +1272,8 @@ class Link extends LCPBase
         }
 
         $sponsored = $this->is_sponsored();
-
-        $vars = compact('type', 'sponsored', 'tag');
+        
+        $vars = compact('type', 'sponsored', 'tag', 'user');
         $vars['self'] = $this;
 
         return Haanga::Load($template, $vars);
