@@ -23,7 +23,6 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
 echo "</div>"."\n";
 
 do_footer();
-
 exit;
 
 function do_edit($link)

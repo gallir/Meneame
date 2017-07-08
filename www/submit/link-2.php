@@ -40,6 +40,7 @@ $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_de
 
 $link->has_thumb();
 $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
+
 Haanga::Load('story/submit/link-2.html', array(
     'site_properties' => $site_properties,
     'link' => $link,

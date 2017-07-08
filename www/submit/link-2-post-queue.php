@@ -126,4 +126,8 @@ if ($link->store_image_from_form('image')) {
     $link->store_thumb_status();
 }
 
-die(header('Location: '.$link->get_permalink()));
+if ($_POST['edit']) {
+    Haanga::Load('story/edit/link-edit-success.html', compact('link'));
+} else {
+    die(header('Location: '.$link->get_permalink()));
+}

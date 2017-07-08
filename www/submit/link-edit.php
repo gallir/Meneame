@@ -29,12 +29,12 @@ echo "</div>"."\n";
 
 function do_edit($link)
 {
-    global $dblang, $db, $current_user, $globals;
+    global $dblang, $db, $current_user, $globals, $site_key;
 
     $link->status = $link->sub_status;
     $link->discarded = $link->is_discarded();
     $link->status_text = $link->get_status_text();
-    $link->key = md5($globals['now'].$link->randkey);
+    $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
     $link->has_thumb();
     $link->is_new = false;
     $link->is_sub_owner = SitesMgr::is_owner();
@@ -48,5 +48,5 @@ function do_edit($link)
         $link->poll->read('link_id', $link->id);
     }
 
-    Haanga::Load('link/edit.html', compact('globals', 'link', 'site_properties'));
+    Haanga::Load('story/edit/edit.html', compact('globals', 'link', 'site_properties'));
 }
