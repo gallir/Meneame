@@ -1,8 +1,8 @@
 <section class="section section-medium section-story-submit">
     <div class="section-story-submit-step1-layout">
         <div class="section-story-submit-step1-link">
-            <form method="post" class="form">
-                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+            <form name="new" method="post" class="form">
+                <input type="hidden" name="key" value="{{ link.key }}" />
                 <input type="hidden" name="randkey" value="{{ link.randkey }}" />
                 <input type="hidden" name="step" value="1" />
                 <input type="hidden" name="type" value="link" />
@@ -27,7 +27,7 @@
 
         <div class="section-story-submit-step1-article">
             <form method="post" class="form">
-                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+                <input type="hidden" name="key" value="{{ link.key }}" />
                 <input type="hidden" name="randkey" value="{{ link.randkey }}" />
                 <input type="hidden" name="step" value="1" />
                 <input type="hidden" name="type" value="article" />

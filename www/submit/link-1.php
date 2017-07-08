@@ -8,12 +8,14 @@
 
 defined('mnminclude') or die();
 
-$link->randkey = rand(10000, 10000000);
 $link->url = empty($_REQUEST['url']) ? '' : clean_input_url($_REQUEST['url']);
+$link->randkey = rand(10000, 10000000);
+$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 
 if ($_POST) {
     require __DIR__.'/link-1-post.php';
 }
+
 
 do_header(_('Enviar historia') . ' 1/3', _('Enviar historia'));
 

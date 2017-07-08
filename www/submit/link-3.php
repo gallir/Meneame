@@ -15,6 +15,7 @@ if (empty($link->id)) {
 if ($link->check_field_errors()) {
     returnToStep(2, $link->id);
 }
+$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 
 if ($_POST) {
     require __DIR__.'/link-3-post.php';

@@ -18,11 +18,7 @@ function getStep()
 function getLinkByRequestId($link, $from)
 {
     $link->id = (int)(isset($from['id']) ? $from['id'] : 0);
-
-    if (empty($link->id) || !$link->read() || !$link->is_editable()) {
-        returnToStep(2, $link->id);
-    }
-
+    $link->read();
     return $link;
 }
 

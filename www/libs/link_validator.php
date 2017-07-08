@@ -67,13 +67,12 @@ class LinkValidator
 
     public function checkKey()
     {
-        if (empty($_POST['randkey']) || empty($_POST['key']) || !check_security_key($_POST['key'])) {
-            $this->setError(_('Clave de proceso incorrecta'));
-        }
 
-        if ($link->randkey && ($link->randkey != $_POST['randkey'])) {
+        global $site_key, $current_user;
+
+        if ($_POST['key'] != md5($_POST['randkey'].$current_user->user_id.$current_user->user_email.$site_key.get_server_name())) {
             $this->setError(_('Clave de proceso incorrecta'));
-        }
+        };
 
         return $this;
     }
@@ -217,15 +216,25 @@ class LinkValidator
 
     public function checkDrafts()
     {
-        global $globals, $db;
+        global $globals, $db, $current_user;
 
         // Check the user does not have too many drafts
         if ($this->getUserDrafts() > $globals['draft_limit']) {
-            $this->setError(
-                _('Demasiados borradores'),
-                _('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . ' <a href="' . $globals['base_url'] . 'queue?meta=_discarded">' . _('Cola de descartadas') . '</a>',
-                'too many drafts: ' . $this->link->url
-            );
+
+            if ($this->link->content_type == "article") {
+                $this->setError(
+                    _('Demasiados borradores'),
+                    _('Has hecho demasiados intentos, puedes continuar con ellos desde el ') . ' <a href="' . $globals['base_url'] . 'user/'. $current_user->user_login . '/articles_discard">' . _('listado de borradores') . '</a>',
+                    'too many drafts: ' . $this->link->url
+                );
+            } else {
+                $this->setError(
+                    _('Demasiados borradores'),
+                    _('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . ' <a href="' . $globals['base_url'] . 'queue?meta=_discarded">' . _('Cola de descartadas') . '</a>',
+                    'too many drafts: ' . $this->link->url
+                );
+            }
+
         }
 
         $db->query('
@@ -258,8 +267,8 @@ class LinkValidator
         global $globals, $db;
 
         $total = $this->getUserSent();
-
-        if (($total === 0) || !$globals['min_user_votes'] || $this->user->user_karma >= $globals['new_user_karma']) {
+        
+        if (!$globals['min_user_votes'] || $this->user->user_karma >= $globals['new_user_karma']) {
             return $this;
         }
 
@@ -277,11 +286,15 @@ class LinkValidator
 
         $needed = $min_votes - $user_votes;
 
+        $this->setWarning(_('no votes de forma apresurada, penaliza el karma'), '<a href="'.$globals['base_url'].'queue" target="_blank">'._('haz clic aquí para ir a votar').'</a>');
+
         if ($total === 0) {
             $this->setError(_('¿Es la primera vez que envías una historia?'), __('Necesitas como mínimo %s votos', $needed));
+        } else {
+            $this->setError(_('No tienes el mínimo de votos necesarios para enviar una nueva historia'), __('Necesitas votar como mínimo a %s envíos', $needed));
         }
 
-        $this->setError(_('No tienes el mínimo de votos necesarios para enviar una nueva historia'), __('Necesitas votar como mínimo a %s envíos', $needed));
+        return $this;
     }
 
     public function checkClones()

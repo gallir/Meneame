@@ -10,7 +10,7 @@
                     {% exec link.print_summary 'preview' as dummy %}
                 </div>
 
-                <input type="hidden" name="key" value="{% exec get_security_key %}" />
+                <input type="hidden" name="key" value="{{ link.key }}" />
                 <input type="hidden" name="randkey" value="{{ link.randkey }}" />
                 <input type="hidden" name="timestamp" value="{{ globals.now }}" />
                 <input type="hidden" name="id" value="{{ link.id }}" />

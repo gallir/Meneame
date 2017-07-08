@@ -9,6 +9,7 @@
 defined('mnminclude') or die();
 
 $link->randkey = rand(10000, 10000000);
+$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 
 if ($_POST || !empty($_GET['write'])) {
     require __DIR__.'/article-1-post.php';

@@ -33,8 +33,10 @@ $validator->setWarningCallback('addFormWarning');
 
 if (!empty($_REQUEST['id'])) {
     $link = getLinkByRequestId($link, $_REQUEST);
-    $link->is_new = !$link->votes && ($link->status === 'discard');
 }
+
+$link->is_new = !$link->votes && ($link->status === 'discard');
+
 
 if (!empty($_POST['type'])) {
     $type = $_POST['type'];
@@ -48,15 +50,21 @@ if (!empty($_POST['type'])) {
 header('X-XSS-Protection: 0');
 
 if ($type === 'article') {
+    require __DIR__.'/article-'.getStep().'.php';
+} else {
 
-    if (Link::getUserArticleDraftsCount() >= $globals['max_article_drafts'] and getStep() == 1) {
-        require __DIR__.'/draft-limit.php';
+    if ($link->is_new) {
+
+        if ($link->read()) {
+            require __DIR__.'/link-'.getStep().'.php';
+        } else {
+            require __DIR__.'/link-1.php';
+        }
+
     } else {
-        require __DIR__.'/article-'.getStep().'.php';
+        require __DIR__.'/link-edit.php';
     }
 
-} else {
-    require __DIR__.'/link-'.getStep().'.php';
 }
 
 do_footer();

@@ -31,7 +31,6 @@ $link->change_status = !$link->is_new
     && ((!$link->discarded && $current_user->user_id == $link->author) || $current_user->admin || $link->is_sub_owner));
 
 $link->url_title = mb_substr($link->url_title, 0, 200);
-$link->title = $link->title ?: $link->url_title;
 
 if (mb_strlen($link->url_description) > 40) {
     $link->content = $link->url_description;
@@ -40,7 +39,7 @@ if (mb_strlen($link->url_description) > 40) {
 $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
 $link->has_thumb();
-
+$link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 Haanga::Load('story/submit/link-2.html', array(
     'site_properties' => $site_properties,
     'link' => $link,
