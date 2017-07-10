@@ -162,6 +162,8 @@ class Link extends LCPBase
                 AND sub_statuses.link = link_id
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - 36*3600).'"
                 AND sub_statuses.origen = subs.id
+                AND link_karma > 0
+                AND link_votes > ' . $globals['article_promoted_min_votes'] . '
                 AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
             ) ORDER BY link_karma DESC LIMIT '.$limit;
 
