@@ -20,6 +20,22 @@
             {% endif %}</td>
     </tr>
 
+    {% if friend_icon %}
+    <tr>
+        <th>{% trans _('Relación') %}</th>
+        <td>
+            <select onchange="user_relation({{ current_user.user_id }}, {{ user.id }}, this);">
+                <option value="0">{% trans _('Sin relación') %}</option>
+                <option value="1" {% if user.friendship == 1 %}selected{% endif %}>{% trans _('Amigo') %}</option>
+                <option value="-1" {% if user.friendship == -1 %}selected{% endif %}>{% trans _('Ignorado') %}</option>
+            </select>
+
+            {{ friend_icon }}
+        </td>
+    </tr>
+    {% endif %}
+
+
     {% if url %}
     <tr>
         <th>{% trans _('Sitio web') %}</th>
