@@ -160,10 +160,11 @@ class Link extends LCPBase
                 link_content_type = "article"
                 AND link_status IN ("queued", "published")
                 AND sub_statuses.link = link_id
-                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - 36*3600).'"
+                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['article_promoted_max_time_from_publish']*3600).'"
                 AND sub_statuses.origen = subs.id
                 AND link_karma > 0
-                AND link_votes > ' . $globals['article_promoted_min_votes'] . '
+                AND (link_negatives / (link_votes + link_anonymous)) > '. $globals['article_promoted_vote_ratio']. '
+                AND (link_votes + link_negatives + link_anonymous) > ' . $globals['article_promoted_min_votes'] . '
                 AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
             ) ORDER BY link_karma DESC LIMIT '.$limit;
 

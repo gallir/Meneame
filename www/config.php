@@ -236,7 +236,6 @@ $globals['user_links_limit'] = 5;
 $globals['user_links_interval'] = 7200;
 $globals['user_links_clon_interval'] = 12; // hours forbidden to send with a clone, 0 to allow it
 
-$globals['show_promoted_articles'] = false;
 $globals['link_edit_time'] = 1800; // seconds to allow a regular user to edit a link
 $globals['link_edit_special_time'] = 10400; // seconds to allow a special user to edit a link
 $globals['link_edit_blogger_time'] = 10800; // seconds to allow a blogger user to edit a link
@@ -449,7 +448,10 @@ $globals['strikes'] = array(
 );
 
 $globals['max_article_drafts'] = 5;
-$globals['article_promoted_min_votes'] = 100;
+$globals['show_promoted_articles'] = false;
+$globals['article_promoted_min_votes'] = 20;
+$globals['article_promoted_max_time_from_publish'] = 36; // Article max time from published in hours
+$globals['article_promoted_vote_ratio'] = .25; // (minimum negative vs (positive + anonymous) ratio to promote a article)
 
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
