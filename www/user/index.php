@@ -197,7 +197,7 @@ Haanga::Load('user/submenu.html', [
     'view' => $view
 ]);
 
-if ($user->ignored()) {
+if ($user->ignored() && $view != 'profile') {
     Haanga::Load('user/ignored.html');
 } else {
     require __DIR__.'/'.$menu.'/'.$view.'.php';
