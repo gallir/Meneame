@@ -70,6 +70,7 @@
     </div>
 
     <div class="contents-layout">
+        <a name="menu"></a>
         <nav class="contents-menu">
             <a href="{% exec user.get_uri "articles" %}" {% if menu == 'articles' %} class="selected" {% endif %}>
                 <i class="fa fa-file-text-o"></i> <span>{% trans _('Artículos') %}</span>
