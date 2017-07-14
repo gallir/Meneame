@@ -11,15 +11,13 @@ $db->query("delete from logs where log_date < date_sub(now(), interval 60 day)")
 $db->query("delete from users where user_date < date_sub(now(), interval 24 hour) and user_date > date_sub(now(), interval 1 week) and user_validated_date is null");
 
 // Delete old bad links but keep ARTICLES
-$minutes = intval($globals['draft_time'] / 60);
-
 $db->query('
 	DELETE FROM `links`
 	WHERE (
 		`link_status` = "discard"
 		AND `link_content_type` != "article"
-		AND `link_date` < DATE_SUB(NOW(), INTERVAL '.$minutes.' MINUTE)
-		AND `link_date` > DATE_SUB(NOW(), INTERVAL  1 WEEK)
+		AND `link_date` < DATE_SUB(NOW(), INTERVAL '.intval($globals['draft_time'] / 60).' MINUTE)
+		AND `link_date` > DATE_SUB(NOW(), INTERVAL 1 WEEK)
 		AND `link_votes` = 0
 	);
 ');

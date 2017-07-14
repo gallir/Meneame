@@ -4,27 +4,34 @@ include 'utils.php';
 include mnminclude.'external_post.php';
 
 $now = time();
-$max_date = "DATE_SUB(NOW(), INTERVAL 15 MINUTE)";
-$min_date = "DATE_SUB(NOW(), INTERVAL 24 HOUR)";
+$max_date = 'DATE_SUB(NOW(), INTERVAL 15 MINUTE)';
+$min_date = 'DATE_SUB(NOW(), INTERVAL 24 HOUR)';
 
 echo "STARTING delete non validated users\n";
 
 // Delete not validated users
-$db->query("DELETE FROM users WHERE user_date < DATE_SUB(NOW(), INTERVAL 12 HOUR) and user_date > DATE_SUB(NOW(), INTERVAL 24 HOUR) and user_validated_date is null");
+$db->query('
+    DELETE FROM users
+    WHERE (
+        user_date < DATE_SUB(NOW(), INTERVAL 12 HOUR)
+        AND user_date > DATE_SUB(NOW(), INTERVAL 24 HOUR)
+        AND user_validated_date IS NULL
+    );
+');
 
 echo "STARTING delete old bad links\n";
 
 // Delete old bad links
 $ids = $db->get_col('
-	SELECT link_id
-	FROM links
-	WHERE (
-		link_status = "discard"
-		AND link_content_type != "article"
-		AND link_date > DATE_SUB(NOW(), INTERVAL 24 HOUR)
-		AND link_date < DATE_SUB(NOW(), INTERVAL '.intval($globals['draft_time'] / 60).' MINUTE)
-		AND link_votes = 0
-	) ORDER BY link_id ASC;
+    SELECT link_id
+    FROM links
+    WHERE (
+        link_status = "discard"
+        AND link_content_type != "article"
+        AND link_date > DATE_SUB(NOW(), INTERVAL 24 HOUR)
+        AND link_date < DATE_SUB(NOW(), INTERVAL '.intval($globals['draft_time'] / 60).' MINUTE)
+        AND link_votes = 0
+    );
 ');
 
 if ($ids) {
@@ -33,8 +40,8 @@ if ($ids) {
     echo "Deleting $ids_str\n";
 
     $db->query('
-    	DELETE FROM links
-    	WHERE link_id IN ('.$ids.');
+        DELETE FROM links
+        WHERE link_id IN ('.$ids.');
     ');
 }
 
@@ -42,14 +49,18 @@ $sites = SitesMgr::get_active_sites();
 
 foreach ($sites as $site) {
     echo "START SITE: $site\n";
+
     SitesMgr::__init($site);
+
     $site_info = SitesMgr::get_info($site_id);
+
+    // Only depublish in main subs
     if ($site_info->owner == 0) {
-        // Only depublish in main subs
         depublish($site);
     }
+
+    // Only discard in the subs
     if ($site_info->sub) {
-        // Only discard in the subs
         discard($site);
     }
 }
@@ -63,6 +74,7 @@ function discard($site_id)
     global $db, $globals, $max_date, $min_date;
 
     echo "STARTING discard for $site_id\n";
+
     $site_info = SitesMgr::get_info($site_id);
 
     // Discard links
@@ -81,11 +93,13 @@ function discard($site_id)
 
         $l->status = 'discard';
         $l->store();
+
         echo "Discard id: $l->id\n";
 
         if ($site_info->sub) {
             // Double check
             $user = new User($l->author);
+
             if ($user->read) {
                 $user->add_karma(-$globals['instant_karma_per_discard'], _('Noticia descartada'));
                 echo "$user->username: $user->karma\n";
@@ -105,6 +119,7 @@ function punish_comments($hours = 2)
     echo "STARTING punish_comments\n";
 
     $log = new Annotation('punish-comment');
+
     if ($log->read() && $log->time > time() - 3600 * $hours) {
         echo "Comments already verified at: ".get_date_time($log->time)."\n";
         return false;
