@@ -26,7 +26,7 @@ $link->related = $link->get_related();
 
 $link->print_summary('full', 50, true, 'story/blog.html');
 
-if ($link->status === 'discard') {
+if (empty($link->votes)) {
     return;
 }
 

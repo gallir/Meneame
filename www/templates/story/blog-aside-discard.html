@@ -19,8 +19,11 @@
         <i class="fa fa-edit"></i> {% trans _('Editar Artículo') %}
     </a>
 
+    {% if ! self.votes %}
     <div class="alert alert-warning">
         {% trans _('Este borrador aún no ha sido publicado') %}
     </div>
+    {% endif %}
+
     {% endif %}
 </div>
