@@ -19,7 +19,7 @@ $comments = $db->get_results('
     FROM comments
     INNER JOIN links ON (link_id = comment_link_id)
     INNER JOIN (
-        SELECT SQL_CACHE DISTINCT(conversation_from)
+        SELECT DISTINCT(conversation_from)
         FROM conversations
         WHERE (
             conversation_user_to = "'.(int)$user->id.'"
