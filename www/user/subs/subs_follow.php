@@ -2,7 +2,7 @@
 defined('mnminclude') or die();
 
 $subs = $db->get_results('
-    SELECT subs.*
+    SELECT SQL_CACHE subs.*
     FROM subs, prefs
     WHERE (
         pref_user_id = "' . (int) $user->id . '"

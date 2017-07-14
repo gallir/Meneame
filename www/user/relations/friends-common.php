@@ -34,10 +34,10 @@ switch ($prefered_type) {
             )
         ';
 
-        $count = (int) $db->get_var('SELECT COUNT(*) '.$query.';');
+        $count = (int) $db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
         $dbusers = $db->get_results('
-            SELECT friend_to AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+            SELECT SQL_CACHE friend_to AS who, UNIX_TIMESTAMP(friend_date) AS `date`
             '.$query.'
             ORDER BY user_login ASC
             LIMIT '.$offset.', '.$limit.';
@@ -55,10 +55,10 @@ switch ($prefered_type) {
                 AND friend_value > 0
             )
         ';
-        $count = (int) $db->get_var('SELECT COUNT(*) '.$query.';');
+        $count = (int) $db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
         $dbusers = $db->get_results('
-            SELECT friend_from AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+            SELECT SQL_CACHE friend_from AS who, UNIX_TIMESTAMP(friend_date) AS `date`
             '.$query.'
             ORDER BY user_login ASC
             LIMIT '.$offset.', '.$limit.';
@@ -76,7 +76,7 @@ switch ($prefered_type) {
 
         if ($count) {
             $dbusers = $db->get_results('
-                SELECT friend_from AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+                SELECT SQL_CACHE friend_from AS who, UNIX_TIMESTAMP(friend_date) AS `date`
                 FROM friends, users
                 WHERE (
                     friend_type = "manual"
@@ -106,10 +106,10 @@ switch ($prefered_type) {
             )
         ';
 
-        $count = (int) $db->get_var('SELECT COUNT(*) '.$query.';');
+        $count = (int) $db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
         $dbusers = $db->get_results('
-            SELECT friend_to AS who, UNIX_TIMESTAMP(friend_date) AS `date`
+            SELECT SQL_CACHE friend_to AS who, UNIX_TIMESTAMP(friend_date) AS `date`
             '.$query.'
             ORDER BY user_login ASC
             LIMIT '.$offset.', '.$limit.';

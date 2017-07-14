@@ -6,7 +6,7 @@ if ($globals['bot']) {
 }
 
 $friends = $db->get_col('
-    SELECT friend_to
+    SELECT SQL_CACHE friend_to
     FROM friends
     WHERE (
         friend_type = "manual"
@@ -30,14 +30,14 @@ $query = '
     )
 ';
 
-$count = (int)$db->get_var('SELECT COUNT(DISTINCT link_id) '.$query.';');
+$count = (int)$db->get_var('SELECT SQL_CACHE COUNT(DISTINCT link_id) '.$query.';');
 
 if ($count === 0) {
     return Haanga::Load('user/empty.html');
 }
 
 $links = $db->get_results('
-    SELECT DISTINCT link_id
+    SELECT SQL_CACHE DISTINCT link_id
     '.$query.'
     ORDER BY link_id DESC
     LIMIT '.(int)$offset.', '.(int)$limit.';

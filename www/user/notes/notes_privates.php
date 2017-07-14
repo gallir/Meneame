@@ -13,7 +13,7 @@ echo '<a href="javascript:priv_new(0);" class="btn btn-mnm btn-inverted pull-rig
 echo '</div>';
 
 $count = $db->get_var('
-    SELECT COUNT(*)
+    SELECT SQL_CACHE COUNT(*)
     FROM privates
     WHERE "'.(int)$current_user->user_id.'" IN (privates.user, privates.to);
 ');

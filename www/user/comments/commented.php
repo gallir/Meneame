@@ -10,7 +10,7 @@ $query = '
 ';
 
 $comments = $db->get_results('
-    SELECT comment_id, link_id, comment_type
+    SELECT SQL_CACHE comment_id, link_id, comment_type
     '.$query.'
     ORDER BY comment_date DESC
     LIMIT '.(int)$offset.', '.(int)$limit.';

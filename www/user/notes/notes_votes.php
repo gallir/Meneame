@@ -11,13 +11,18 @@ $query = '
     )
 ';
 
-$count = $db->get_var('SELECT COUNT(*) '.$query.';');
+$count = $db->get_var('SELECT SQL_CACHE COUNT(*) '.$query.';');
 
 if ($count === 0) {
     return Haanga::Load('user/empty.html');
 }
 
-$posts = $db->get_results('SELECT vote_link_id as id, vote_value as value' . $query  . " ORDER BY vote_date DESC LIMIT $offset,$limit" );
+$posts = $db->get_results('
+    SELECT SQL_CACHE vote_link_id AS id, vote_value AS value
+    '.$query.'
+    ORDER BY vote_date DESC
+    LIMIT '.$offset.', '.$limit.';
+');
 
 if (empty($posts)) {
     return Haanga::Load('user/empty.html');
