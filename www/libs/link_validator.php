@@ -220,8 +220,7 @@ class LinkValidator
 
         // Check the user does not have too many drafts
         if ($this->getUserDrafts() > $globals['draft_limit']) {
-
-            if ($this->link->content_type == "article") {
+            if ($this->link->content_type === 'article') {
                 $this->setError(
                     _('Demasiados borradores'),
                     _('Has hecho demasiados intentos, puedes continuar con ellos desde el ') . ' <a href="' . $globals['base_url'] . 'user/'. $current_user->user_login . '/articles_discard">' . _('listado de borradores') . '</a>',
@@ -234,17 +233,17 @@ class LinkValidator
                     'too many drafts: ' . $this->link->url
                 );
             }
-
         }
 
         $db->query('
-            DELETE FROM links
+            DELETE FROM `links`
             WHERE (
-                link_author = "' . $this->user_id . '"
-                AND link_date > DATE_SUB(NOW(), INTERVAL 30 MINUTE)
-                AND link_date < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
-                AND link_status = "discard"
-                AND link_votes = 0
+                `link_author` = "' . $this->user_id . '"
+                AND `link_content_type` != "article"
+                AND `link_date` > DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+                AND `link_date` < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
+                AND `link_status` = "discard"
+                AND `link_votes` = 0
             );
         ');
 
@@ -267,7 +266,7 @@ class LinkValidator
         global $globals, $db;
 
         $total = $this->getUserSent();
-        
+
         if (!$globals['min_user_votes'] || $this->user->user_karma >= $globals['new_user_karma']) {
             return $this;
         }
