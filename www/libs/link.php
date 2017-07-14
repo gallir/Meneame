@@ -850,8 +850,7 @@ class Link extends LCPBase
 
         Log::conditional_insert('link_new', $this->id, $this->author);
 
-        $db->query(
-            '
+        $db->query('
             DELETE FROM links
             WHERE (
                 link_author = "'.$this->author.'"
@@ -859,9 +858,8 @@ class Link extends LCPBase
                 AND link_status = "discard"
                 AND link_content_type != "article"
                 AND link_votes = 0
-            )
-        '
-        );
+            );
+        ');
 
         $db->commit();
     }
