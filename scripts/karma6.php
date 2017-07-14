@@ -19,7 +19,7 @@ $db->query('
 		`link_status` = "discard"
 		AND `link_content_type` != "article"
 		AND `link_date` < DATE_SUB(NOW(), INTERVAL '.$minutes.' MINUTE)
-		AND `link_date`  > DATE_SUB(NOW(), INTERVAL  1 WEEK)
+		AND `link_date` > DATE_SUB(NOW(), INTERVAL  1 WEEK)
 		AND `link_votes` = 0
 	);
 ');

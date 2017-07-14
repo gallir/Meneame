@@ -19,6 +19,7 @@ function getLinkByRequestId($link, $from)
 {
     $link->id = (int)(isset($from['id']) ? $from['id'] : 0);
     $link->read();
+
     return $link;
 }
 

@@ -30,7 +30,7 @@ foreach ($posts as $post) {
     $post->poll = $pollCollection->get($post->id);
     $post->print_summary();
 
-    if ($view == 'notes_votes') {
+    if ($view === 'notes_votes') {
         if ($post->value > 0){
             echo '<i class="fa fa-arrow-circle-up" style="color:green;position:relative;top: -29px;"></i>';
         } else {

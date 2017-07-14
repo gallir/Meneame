@@ -78,9 +78,7 @@ if (
 }
 
 // change nsfw
-
 $nsfw = intval(!empty($_POST['nsfw']));
-
 
 if ($nsfw !== $link->nsfw) {
     $link->nsfw = $nsfw;
@@ -126,8 +124,8 @@ if ($link->store_image_from_form('image')) {
     $link->store_thumb_status();
 }
 
-if ($_POST['edit']) {
-    Haanga::Load('story/edit/link-edit-success.html', compact('link'));
-} else {
+if (empty($_POST['edit'])) {
     die(header('Location: '.$link->get_permalink()));
 }
+
+Haanga::Load('story/edit/link-edit-success.html', compact('link'));

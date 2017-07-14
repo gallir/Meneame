@@ -37,7 +37,6 @@ if (!empty($_REQUEST['id'])) {
 
 $link->is_new = !$link->votes && ($link->status === 'discard');
 
-
 if (!empty($_POST['type'])) {
     $type = $_POST['type'];
 } elseif (!empty($_GET['type'])) {
@@ -51,20 +50,14 @@ header('X-XSS-Protection: 0');
 
 if ($type === 'article') {
     require __DIR__.'/article-'.getStep().'.php';
-} else {
-
-    if ($link->is_new) {
-
-        if ($link->read()) {
-            require __DIR__.'/link-'.getStep().'.php';
-        } else {
-            require __DIR__.'/link-1.php';
-        }
-
+} elseif ($link->is_new) {
+    if ($link->read()) {
+        require __DIR__.'/link-'.getStep().'.php';
     } else {
-        require __DIR__.'/link-edit.php';
+        require __DIR__.'/link-1.php';
     }
-
+} else {
+    require __DIR__.'/link-edit.php';
 }
 
 do_footer();

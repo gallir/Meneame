@@ -49,10 +49,8 @@ if ($link->author == $current_user->user_id) {
         $link->randkey = $_POST['randkey'];
         $link->key = $_POST['key'];
     }
+
     $link->store();
 }
 
 die(header('Location: '.$globals['base_url'].'submit?step=2&id='.$link->id));
-
-
-

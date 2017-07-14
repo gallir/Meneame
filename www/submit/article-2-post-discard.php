@@ -49,9 +49,10 @@ $link->title = $link->get_title_fixed();
 $link->content = $link->get_content_fixed();
 
 if (empty($_POST['publish'])) {
-    if ($link->status == 'discard') {
+    if ($link->status === 'discard') {
         $link->sent_date = time();
     }
+
     $link->store();
 
     if ($globals['is_ajax']) {

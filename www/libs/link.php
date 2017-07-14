@@ -800,18 +800,16 @@ class Link extends LCPBase
 
         Log::conditional_insert('link_new', $this->id, $this->author);
 
-        $db->query(
-            '
-            DELETE FROM links
+        $db->query('
+            DELETE FROM `links`
             WHERE (
-                link_author = "'.$this->author.'"
-                AND link_date > DATE_SUB(NOW(), INTERVAL 2 HOUR)
-                AND link_status = "discard"
-                AND link_content_type != "article"
-                AND link_votes = 0
-            )
-        '
-        );
+                `link_author` = "'.$this->author.'"
+                AND `link_date` > DATE_SUB(NOW(), INTERVAL 2 HOUR)
+                AND `link_status` = "discard"
+                AND `link_content_type` != "article"
+                AND `link_votes` = 0
+            );
+        ');
 
         if (!empty($_POST['trackback'])) {
             $trackres = new Trackback;
@@ -1275,7 +1273,7 @@ class Link extends LCPBase
         }
 
         $sponsored = $this->is_sponsored();
-        
+
         $vars = compact('type', 'sponsored', 'tag', 'user');
         $vars['self'] = $this;
 

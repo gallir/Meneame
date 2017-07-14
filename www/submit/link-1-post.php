@@ -23,6 +23,7 @@ $anti_spam = empty($site_properties['no_anti_spam']);
 try {
     $validator->checkDrafts();
     $validator->checkVotesMin();
+
     if ($anti_spam) {
         $validator->checkKarmaMin();
         $validator->checkBanUser();
@@ -46,8 +47,8 @@ if (!empty($site_properties['rules']) && $site_properties['no_link'] == 2) {
 
 // Now stores new draft
 $link->sent_date = $link->date = time();
-if (($link->author == $current_user->user_id && $link->votes == 0) || $current_user->admin) {
 
+if (($link->author == $current_user->user_id && $link->votes == 0) || $current_user->admin) {
     if (empty($_POST['randkey']) && ! empty($site_properties['no_link'])) {
         $link->randkey = rand(10000, 10000000);
         $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());

@@ -16,7 +16,6 @@ if ($_POST) {
     require __DIR__.'/link-1-post.php';
 }
 
-
 do_header(_('Enviar historia') . ' 1/3', _('Enviar historia'));
 
 Haanga::Load('story/submit/link-1.html', array(
