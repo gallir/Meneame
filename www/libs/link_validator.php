@@ -43,18 +43,14 @@ class LinkValidator
             $this->link->url = 'http://' . $this->link->url;
         }
 
-        if (!filter_var($this->link->url, FILTER_VALIDATE_URL)) {
-            $this->setError(_('La URL enviada no parece válida'));
-        }
-
         return $this;
     }
 
     public function checkUrl()
     {
-        $components = parse_url($this->link->url);
+        $host = parse_url($this->link->url, PHP_URL_HOST);
 
-        if (empty($components) || empty($components['host']) || gethostbyname($components['host']) === $components['host']) {
+        if (empty($host) || (gethostbyname($host) === $host)) {
             $this->setError(_('La URL enviada no parece válida'), '', 'Hostname error: ' . $this->link->url);
         }
 
@@ -62,7 +58,18 @@ class LinkValidator
             $this->setError(_('URL demasiado larga'), _('La longitud de la URL supera el tamaño máximo permitido (250 caracteres)'));
         }
 
+        if (!filter_var($this->urlToAscii($this->link->url), FILTER_VALIDATE_URL)) {
+            $this->setError(_('La URL enviada no parece válida'));
+        }
+
         return $this;
+    }
+
+    protected function urlToAscii($url)
+    {
+        $path = parse_url($url, PHP_URL_PATH);
+
+        return str_replace($path, implode('/', array_map('urlencode', explode('/', $path))), $url);
     }
 
     public function checkKey()
