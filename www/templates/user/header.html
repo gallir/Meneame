@@ -9,13 +9,13 @@
             <p class="info">{% exec text_to_html user.bio %}</p>
             <p><strong>{% trans _('En menéame desde') %} {% exec get_month user.date %} de {% exec get_year user.date %}</strong>
 
-            {% if user.id == current_user.user_id %}
+            {% if user.id == current_user.user_id OR current_user.user_level === "god" %}
             <div class="mt-20">
-                {% if user.id == current_user.user_id OR current_user.user_level == "god" %}
                 <a href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}" class="btn btn-mnm btn-inverted">{% trans _('Editar y configurar') %}</a>
-                {% endif %}
 
+                {% if user.id == current_user.user_id %}
                 <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{% trans _('Cerrar sesión') %}" class="btn btn-mnm btn-inverted">{% trans _('Desconectar') %}</a>
+                {% endif %}
             </div>
             {% endif %}
         </div>
@@ -65,7 +65,7 @@
         </div>
 
         <div class="section-profile-header-banner">
-            
+
         </div>
     </div>
 
