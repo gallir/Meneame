@@ -111,46 +111,56 @@ class Link extends LCPBase
             $memcache_popular_articles = 'popular_articles';
         }
 
-        if (!($popular_articles = unserialize(memcache_mget($memcache_popular_articles)))) {
-            // Not in memcache
-            $sql = '
-                SELECT DISTINCT link
-                FROM sub_statuses, subs, links
-                WHERE (
-                    link_content_type = "article"
-                    AND link_status IN ("queued", "published")
-                    AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
-                    AND sub_statuses.link = link_id
-                    AND sub_statuses.origen = subs.id
-                    AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
-                ) ORDER BY link_votes DESC LIMIT '.$limit;
-
-            $articleIds = $db->get_col($sql);
-
-            foreach ($articleIds as $articleId) {
-                $article = self::from_db($articleId);
-
-                $article->time_published_as_string = $article->getTimePublishedAsString();
-                $article->relative_permalink = $article->get_relative_permalink();
-                $article->permalink = $article->get_permalink(
-                    false,
-                    $article->relative_permalink
-                ); // To avoid double verification
-                $article->url_str = preg_replace('/^www\./', '', parse_url($article->url, 1));
-
-                $article->max_len = 200;
-                $popular_articles[] = $article;
-            }
-
-            memcache_madd($memcache_popular_articles, serialize($popular_articles), 1800);
+        if ($articles = unserialize(memcache_mget($memcache_popular_articles))) {
+            return $articles;
         }
 
-        return $popular_articles;
+        // Not in memcache
+        $sql = '
+            SELECT DISTINCT link
+            FROM sub_statuses, subs, links
+            WHERE (
+                link_content_type = "article"
+                AND link_status IN ("queued", "published")
+                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
+                AND sub_statuses.link = link_id
+                AND sub_statuses.origen = subs.id
+                AND NOT EXISTS (
+                    SELECT link
+                    FROM sub_statuses
+                    WHERE (
+                        sub_statuses.id = "'.SitesMgr::getMainSiteId().'"
+                        AND sub_statuses.status = "published"
+                        AND link = link_id
+                    )
+                )
+            ) ORDER BY link_votes DESC
+            LIMIT '.(int) $limit.';
+        ';
+
+        $articles = array();
+
+        foreach ($db->get_col($sql) as $id) {
+            $article = self::from_db($id);
+
+            $article->time_published_as_string = $article->getTimePublishedAsString();
+            $article->relative_permalink = $article->get_relative_permalink();
+
+            // To avoid double verification
+            $article->permalink = $article->get_permalink(false, $article->relative_permalink);
+            $article->url_str = preg_replace('/^www\./', '', parse_url($article->url, 1));
+
+            $article->max_len = 200;
+            $articles[] = $article;
+        }
+
+        memcache_madd($memcache_popular_articles, serialize($articles), 1800);
+
+        return $articles;
     }
 
     public static function getPromotedArticles($limit = 2)
     {
-
         global $globals, $db;
 
         $sql = '
@@ -160,29 +170,38 @@ class Link extends LCPBase
                 link_content_type = "article"
                 AND link_status IN ("queued", "published")
                 AND sub_statuses.link = link_id
-                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['article_promoted_max_time_from_publish']*3600).'"
+                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['article_promoted_max_time_from_publish'] * 3600).'"
                 AND sub_statuses.origen = subs.id
                 AND link_karma > 0
-                AND (link_negatives / (link_votes + link_anonymous)) > '. $globals['article_promoted_vote_ratio']. '
-                AND (link_votes + link_negatives + link_anonymous) > ' . $globals['article_promoted_min_votes'] . '
-                AND NOT EXISTS (SELECT link FROM sub_statuses WHERE sub_statuses.id='.SitesMgr::getMainSiteId().' AND sub_statuses.status="published" AND link=link_id)
-            ) ORDER BY link_karma DESC LIMIT '.$limit;
+                AND (link_negatives / (link_votes + link_anonymous)) > '.$globals['article_promoted_vote_ratio'].'
+                AND (link_votes + link_negatives + link_anonymous) > '.$globals['article_promoted_min_votes'].'
+                AND NOT EXISTS (
+                    SELECT link
+                    FROM sub_statuses
+                    WHERE (
+                        sub_statuses.id = "'.SitesMgr::getMainSiteId().'"
+                        AND sub_statuses.status = "published"
+                        AND link = link_id
+                    )
+                )
+            ) ORDER BY link_karma DESC
+            LIMIT '.(int) $limit.';
+        ';
 
-        $articleIds = $db->get_col($sql);
+        $articles = array();
 
-        foreach ($articleIds as $articleId) {
-            $article = self::from_db($articleId);
+        foreach ($db->get_col($sql) as $id) {
+            $article = self::from_db($id);
             $article->max_len = 600;
-            $promoted_articles[] = $article;
+            $articles[] = $article;
         }
 
-        return $promoted_articles;
+        return $articles;
     }
 
     public function getTimePublishedAsString()
     {
         $interval = date_create('now')->diff(date_create('@'.$this->published_date));
-
 
         if (($interval->d >= 3) || (($interval->d > 1) && ($interval->h === 0))) {
             return sprintf(_('Hace %s días'), $interval->d);
@@ -235,10 +254,10 @@ class Link extends LCPBase
 
         if (!$status) {
             return Link::count('published', $force)
-                + Link::count('queued', $force)
-                + Link::count('discard', $force)
-                + Link::count('abuse', $force)
-                + Link::count('autodiscard', $force);
+             + Link::count('queued', $force)
+             + Link::count('discard', $force)
+             + Link::count('abuse', $force)
+             + Link::count('autodiscard', $force);
         }
 
         $count = get_count("$my_id.$status");
@@ -442,8 +461,7 @@ class Link extends LCPBase
             return 0;
         }
 
-        return (int)$db->get_var(
-            '
+        return (int) $db->get_var('
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
@@ -452,8 +470,7 @@ class Link extends LCPBase
                 AND link_content_type = "article"
                 AND link_votes = 0
             );
-        '
-        );
+        ');
     }
 
     public function add_click($no_go = false)
@@ -619,9 +636,9 @@ class Link extends LCPBase
 
         // Check if it forbides including in an iframe
         if (preg_match('/X-Frame-Options: *(.+)/i', $response['header']) || preg_match(
-                '/top\.location\.href *=/',
-                $response['content']
-            )
+            '/top\.location\.href *=/',
+            $response['content']
+        )
         ) {
             $this->noiframe = true;
         }
@@ -928,8 +945,7 @@ class Link extends LCPBase
         $link_thumb_status = $db->escape($this->thumb_status);
         $link_nsfw = $this->nsfw ? 1 : 0;
 
-        $r = $db->query(
-            '
+        $r = $db->query('
             UPDATE links
             SET
                 link_url = "'.$link_url.'",
@@ -942,8 +958,7 @@ class Link extends LCPBase
                 link_nsfw = "'.$link_nsfw.'"
             WHERE link_id = "'.$this->id.'"
             LIMIT 1;
-        '
-        );
+        ');
 
         $db->commit();
 
@@ -976,8 +991,7 @@ class Link extends LCPBase
             $this->ip = $globals['user_ip'];
             $this->ip_int = $globals['user_ip_int'];
 
-            $r = $db->query(
-                '
+            $r = $db->query('
                 INSERT INTO links
                 SET
                     link_author = "'.$link_author.'",
@@ -993,12 +1007,11 @@ class Link extends LCPBase
                     link_content_type = "'.$link_content_type.'",
                     link_ip_int = "'.$this->ip_int.'",
                     link_ip = "'.$db->escape($this->ip).'";
-            '
-            );
+            ');
+
             $this->id = $db->insert_id;
         } else {
-            $r = $db->query(
-                '
+            $r = $db->query('
                 UPDATE links
                 SET
                     link_author = "'.$link_author.'",
@@ -1013,8 +1026,7 @@ class Link extends LCPBase
                     link_content_type = "'.$link_content_type.'"
                 WHERE link_id = "'.$this->id.'"
                 LIMIT 1;
-            '
-            );
+            ');
         }
 
         // Deploy changes to other sub sites
@@ -1140,7 +1152,6 @@ class Link extends LCPBase
         $tag = "",
         $user = null
     ) {
-
         global $current_user, $current_user, $globals, $db;
 
         if (!$this->read) {
@@ -1187,8 +1198,7 @@ class Link extends LCPBase
         if (($this->status === 'abuse') || $this->has_warning) {
             $this->negative_text = false;
 
-            $negatives = $db->get_row(
-                '
+            $negatives = $db->get_row('
                 SELECT SQL_CACHE vote_value, COUNT(vote_value) AS `count`
                 FROM votes
                 WHERE (
@@ -1199,8 +1209,7 @@ class Link extends LCPBase
                 GROUP BY vote_value
                 ORDER BY `count` DESC
                 LIMIT 1
-            '
-            );
+            ');
 
             if ($negatives->count > 2 && $negatives->count >= $this->negatives / 2 && ($negatives->vote_value == -6 || $negatives->vote_value == -8)) {
                 $this->negative_text = get_negative_vote($negatives->vote_value);
@@ -1208,9 +1217,7 @@ class Link extends LCPBase
         }
 
         if ($karma_best_comment > 0 && $this->comments > 0 && $this->comments < 50 && $globals['now'] - $this->date < 86400) {
-            $this->best_comment = $db->get_row(
-                DbHelper::queryPlain(
-                    '
+            $this->best_comment = $db->get_row('
                 SELECT SQL_CACHE comment_id, comment_order, comment_content AS content_full,
                     comment_date, comment_modified, SUBSTR(comment_content, 1, 225) AS content,
                     user_id, user_login, user_avatar
@@ -1223,9 +1230,7 @@ class Link extends LCPBase
                 )
                 ORDER BY comment_karma DESC
                 LIMIT 1;
-            '
-                )
-            );
+            ');
         } else {
             $this->best_comment = false;
         }
@@ -1286,9 +1291,7 @@ class Link extends LCPBase
             return $this->best_comments;
         }
 
-        $this->best_comments = $db->get_results(
-            DbHelper::queryPlain(
-                '
+        $this->best_comments = $db->get_results('
             SELECT SQL_CACHE comment_id, comment_order, comment_content AS content_full,
                 comment_date, comment_modified, SUBSTR(comment_content, 1, 225) AS content,
                 user_id, user_login, user_avatar
@@ -1300,10 +1303,8 @@ class Link extends LCPBase
                 AND comment_votes > 0
             )
             ORDER BY comment_karma DESC
-            LIMIT '.(int)$limit.';
-        '
-            )
-        );
+            LIMIT '.(int) $limit.';
+        ');
 
         foreach ($this->best_comments as $comment) {
             $comment->html = str_replace('<br />', ' ', $this->html($this->truncate_text($comment->content_full, 500)));
@@ -1361,9 +1362,7 @@ class Link extends LCPBase
         }
 
         // Dont do further analisys for published or discarded links
-        if ($this->sub_status === 'published' || $this->is_discarded(
-            ) || $globals['bot'] || $globals['now'] - $this->date > 86400 * 3
-        ) {
+        if ($this->sub_status === 'published' || $this->is_discarded() || $globals['bot'] || $globals['now'] - $this->date > 86400 * 3) {
             return $this->warned = true;
         }
 
@@ -1627,8 +1626,8 @@ class Link extends LCPBase
 
         // The uri is not equal to a standard uri, from dispatch.php
         while (($seq < 20) && (!empty($routes[$new_uri]) || $db->get_var(
-                    "select count(*) from links where link_uri='$new_uri' and link_id != $this->id"
-                ))) {
+            "select count(*) from links where link_uri='$new_uri' and link_id != $this->id"
+        ))) {
             $seq++;
             $new_uri = $base_uri."-$seq";
         }
@@ -1665,9 +1664,7 @@ class Link extends LCPBase
         }
 
         if ($this->is_sub && ($globals['submnm'] || $strict || self::$original_status || !$this->allow_main_link)) {
-            if (!empty($globals['submnm']) && $this->sub_status_id == SitesMgr::my_id(
-                ) && !$strict && !self::$original_status
-            ) {
+            if (!empty($globals['submnm']) && $this->sub_status_id == SitesMgr::my_id() && !$strict && !self::$original_status) {
                 $base = $this->base_url.'m/'.$globals['submnm'].'/';
             } else {
                 $base = $this->base_url.'m/'.$this->sub_name.'/';
@@ -1727,12 +1724,16 @@ class Link extends LCPBase
         switch ($status) {
             case 'abuse':
                 return _('abuso');
+
             case 'discard':
                 return _('descartada');
+
             case 'autodiscard':
                 return _('autodescartada');
+
             case 'queued':
                 return _('pendiente');
+
             case 'published':
                 return _('publicada');
         }
@@ -1750,6 +1751,7 @@ class Link extends LCPBase
     public function print_content_type_buttons()
     {
         global $globals;
+
         $type = array();
 
         // Is it an image or video?
@@ -1771,13 +1773,13 @@ class Link extends LCPBase
 
         echo '<input type="radio" '.$type['image'].' name="type" value="image"/>';
         echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-photo02.png" class="media-icon" width="18" height="15" alt="'._(
-                '¿es una imagen?'
-            ).'" title="'._('¿es una imagen?').'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            '¿es una imagen?'
+        ).'" title="'._('¿es una imagen?').'" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
         echo '<input type="radio" '.$type['video'].' name="type" value="video"/>';
         echo '&nbsp;<img src="'.$globals['base_static'].'img/common/is-video02.png" class="media-icon" width="18" height="15" alt="'._(
-                '¿es un vídeo?'
-            ).'" title="'._('¿es un vídeo?').'" />';
+            '¿es un vídeo?'
+        ).'" title="'._('¿es un vídeo?').'" />';
     }
 
     public function read_content_type_buttons($type)
@@ -1807,7 +1809,7 @@ class Link extends LCPBase
         $this->old_karma = round($this->karma);
 
         if (!$globals['users_karma_avg']) {
-            $globals['users_karma_avg'] = (float)$db->get_var(
+            $globals['users_karma_avg'] = (float) $db->get_var(
                 "select SQL_NO_CACHE avg(link_votes_avg) from links where link_status = 'published' and link_date > date_sub(now(), interval 72 hour)"
             );
         }
@@ -1823,11 +1825,9 @@ class Link extends LCPBase
         // low =~ users with higher karma less-equal than average
         $votes_pos = $votes_neg = $karma_pos_user_high = $karma_pos_user_low = $karma_neg_user = 0;
 
-        $votes_pos_anon = intval(
-            $db->get_var(
-                "select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"
-            )
-        );
+        $votes_pos_anon = intval($db->get_var(
+            "select SQL_NO_CACHE count(*) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"
+        ));
 
         $votes = $db->get_results(
             "select SQL_NO_CACHE user_id, vote_value, user_karma from votes, users where vote_type='links' AND vote_link_id=$this->id and vote_user_id > 0 and vote_user_id = user_id and user_level !='disabled'"
@@ -1868,19 +1868,24 @@ class Link extends LCPBase
             }
         }
 
-        echo "Affinity Difference: $diff Base: ".intval(
-                $karma_pos_user_high + $karma_pos_user_low + $karma_neg_user
-            )." ($n, $votes_pos)\n";
+        echo "Affinity Difference: $diff Base: "
+        .intval($karma_pos_user_high + $karma_pos_user_low + $karma_neg_user)
+            ." ($n, $votes_pos)\n";
 
         if ($n > $votes_pos / 5) {
             $this->annotation .= intval($n / $votes_pos * 100)._('% de votos con afinidad elevada')."<br/>";
         }
 
-        $karma_pos_ano = intval(
-            $db->get_var(
-                "select SQL_NO_CACHE sum(vote_value) from votes where vote_type='links' AND vote_link_id=$this->id and vote_user_id = 0 and vote_value > 0"
-            )
-        );
+        $karma_pos_ano = intval($db->get_var('
+            SELECT SQL_NO_CACHE SUM(vote_value)
+            FROM votes
+            WHERE (
+                vote_type = "links"
+                AND vote_link_id = "'.$this->id.'"
+                AND vote_user_id = 0
+                AND vote_value > 0
+            );
+        '));
 
         if ($this->votes != $votes_pos || $this->anonymous != $votes_pos_anon || $this->negatives != $votes_neg) {
             $this->votes = $votes_pos;
@@ -1893,16 +1898,16 @@ class Link extends LCPBase
             $perc = intval($vlow / ($vlow + $vhigh) * 100);
 
             $this->low_karma_perc = $perc;
-            $this->annotation .= $perc._('% de votos con karma menores que la media')." (".round(
-                    $globals['users_karma_avg'],
-                    2
-                ).")<br/>";
+            $this->annotation .= $perc._('% de votos con karma menores que la media')
+            .' ('.round($globals['users_karma_avg'], 2).')<br/>';
         }
 
-        $karma_pos_user = (int)$karma_pos_user_high + (int)min(
-                max($karma_pos_user_high * 1.15, 4),
-                $karma_pos_user_low
-            ); // Allowed difference up to 15% of $karma_pos_user_high
+        // Allowed difference up to 15% of $karma_pos_user_high
+        $karma_pos_user = (int) $karma_pos_user_high + (int) min(
+            max($karma_pos_user_high * 1.15, 4),
+            $karma_pos_user_low
+        );
+
         $karma_pos_ano = min($karma_pos_user_high * 0.1, $karma_pos_ano);
 
         // Small quadratic punishment for links having too many negatives
@@ -1974,10 +1979,9 @@ class Link extends LCPBase
 
             // Annotate meta's coeeficient if the variation > 5%
             if (abs(1 - $meta_coef[$this->sub_id]) > 0.05) {
-                $this->annotation .= _('Coeficiente sub').' ('.$this->sub_name.') : '.round(
-                        $meta_coef[$this->sub_id],
-                        2
-                    )."<br/>";
+                $this->annotation .= _('Coeficiente sub')
+                .' ('.$this->sub_name.') : '.round($meta_coef[$this->sub_id], 2)
+                    .'<br/>';
             }
         }
 
@@ -2097,7 +2101,7 @@ class Link extends LCPBase
             return false;
         }
 
-        $log = new Annotation("subs-coef-".SitesMgr::my_id());
+        $log = new Annotation('subs-coef-'.SitesMgr::my_id());
 
         if (!$log->read()) {
             return false;
@@ -2209,9 +2213,9 @@ class Link extends LCPBase
 
         $base = $globals['base_static_noversion'];
 
-        $this->thumb_uri = Upload::get_cache_relative_dir(
-                $this->id
-            )."/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
+        $this->thumb_uri = Upload::get_cache_relative_dir($this->id)
+            ."/media_thumb-link-$this->id.$this->media_extension?$this->media_date";
+
         $this->thumb_url = $base.$this->thumb_uri;
         $this->media_url = Upload::get_url('link', $this->id, 0, $this->media_date, $this->media_mime);
         $this->thumb_x = $this->thumb_y = $globals['thumb_size'];
@@ -2406,10 +2410,7 @@ class Link extends LCPBase
         foreach ($words as $w => $v) {
             // Filter words if we got good candidates
             // echo "<!-- $w: ".$freqs[$w]." coef: ".$words[$w]."-->\n";
-            if ($i > 4 && $freq_min < 0.005 && strlen(
-                    $w
-                ) > 3 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 100)
-            ) {
+            if ($i > 4 && $freq_min < 0.005 && strlen($w) > 3 && (empty($freqs[$w]) || $freqs[$w] > 0.01 || $freqs[$w] > $freq_min * 100)) {
                 continue;
             }
 
@@ -2611,8 +2612,8 @@ class Link extends LCPBase
         }
 
         if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen(
-                $content
-            ) < $properties['intro_min_len'] && ($this->content_type !== 'article')
+            $content
+        ) < $properties['intro_min_len'] && ($this->content_type !== 'article')
         ) {
             return __('El texto es demasiado corto, debe ser al menos de %s caracteres', $properties['intro_min_len']);
         }
@@ -2682,12 +2683,7 @@ class Link extends LCPBase
             return array();
         }
 
-        $tags = array_map(
-            'trim',
-            explode(",", $this->tags)
-        );
-
-        return $tags;
+        return array_map('trim', explode(',', $this->tags));
     }
 
     /**
@@ -2730,23 +2726,17 @@ class Link extends LCPBase
 
     public static function getUserArticleDraftsCount()
     {
-
         global $current_user, $db;
 
-        $query = '
-    FROM links
-    WHERE (
-        link_author = "'.(int)$current_user->user_id.'"
-        AND link_status = "discard"
-        AND link_content_type = "article"
-        AND link_votes = 0
-    )
-';
-
-        $count = $db->get_var('SELECT COUNT(*) '.$query.';');
-
-        return $count;
-
+        return $db->get_var('
+            SELECT COUNT(*)
+            FROM links
+            WHERE (
+                link_author = "'.(int) $current_user->user_id.'"
+                AND link_status = "discard"
+                AND link_content_type = "article"
+                AND link_votes = 0
+            );
+        ');
     }
-
 }
