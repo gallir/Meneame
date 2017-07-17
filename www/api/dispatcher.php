@@ -8,13 +8,13 @@ if (!preg_match('/\.php$/', $script)) {
 }
 
 if (!is_file($script)) {
-    include_once '../config.php';
+    require_once __DIR__ . '/../config.php';
     do_error('script no found', 404);
 }
 
 $globals['script'] = '/api/'.$globals['path'][1];
 
 if ((include $script) === false) {
-    include_once '../config.php';
+    require_once __DIR__ . '/../config.php';
     do_error("bad request", 400);
 }

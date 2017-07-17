@@ -11,8 +11,8 @@
 Description: it shows the post votes in a div, used in modal windows via AJAX
 ***/
 
-include_once('../config.php');
-include_once('pager.php');
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/pager.php';
 
 header('Content-Type: text/html; charset=utf-8');
 

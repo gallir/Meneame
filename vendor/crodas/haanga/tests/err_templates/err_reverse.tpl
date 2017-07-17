@@ -1,0 +1,1 @@
+{{ foo|reverse:"bar"}}

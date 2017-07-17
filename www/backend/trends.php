@@ -1,6 +1,6 @@
 <?php
-include_once('../config.php');
-include(mnminclude.'search.php');
+require_once __DIR__ . '/../config.php';
+require_once mnminclude.'search.php';
 
 $_REQUEST['q'] = substr(trim(strip_tags($_REQUEST['q'])), 0, 100);
 $q = preg_split('/,/', $_REQUEST['q'], 6, PREG_SPLIT_NO_EMPTY);

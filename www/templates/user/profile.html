@@ -1,296 +1,197 @@
-<section class="section section-medium section-with-sidebar">
+{% if (strike && (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin')) %}
+<div class="alert alert-danger">
+    <h3 class="mb-20">{% trans _('Actualmente dispones de un %s aplicado') strike.type %}:</h3>
+
+    <p><strong>{% trans _('Motivo') %}:</strong> {{ strike.reason_message }}</p>
+    <p><strong>{% trans _('Karma anterior') %}:</strong> {{ strike.karma_old }}</p>
+    <p><strong>{% trans _('Karma actual') %}:</strong> {{ strike.karma_new }}</p>
+    <p><strong>{% trans _('Karma final') %}:</strong> {{ strike.karma_restore }}</p>
+    <p><strong>{% trans _('Finaliza') %}:</strong> +-{{ strike.expires_at }}</p>
+</div>
+{% endif %}
+
+<table class="table table-condensed">
+    {% if user.username %}
+
+    <tr>
+        <th>{% trans _('Usuario') %}</th>
+        <td>{{ user.username }}  {% if current_user.admin AND nclones %}
+            (<a class="fancybox" href="{{ globals.base_url }}backend/ip_clones.php?id={{ user.id }}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
+            {% endif %}</td>
+    </tr>
+
+    {% if friend_icon %}
+    <tr>
+        <th>{% trans _('Relación') %}</th>
+        <td>
+            <select onchange="user_relation({{ current_user.user_id }}, {{ user.id }}, this);">
+                <option value="0">{% trans _('Sin relación') %}</option>
+                <option value="1" {% if user.friendship == 1 %}selected{% endif %}>{% trans _('Amigo') %}</option>
+                <option value="-1" {% if user.friendship == -1 %}selected{% endif %}>{% trans _('Ignorado') %}</option>
+            </select>
+
+            {{ friend_icon }}
+        </td>
+    </tr>
+    {% endif %}
+
+
+    {% if url %}
+    <tr>
+        <th>{% trans _('Sitio web') %}</th>
+        <td><a href="{{ url }}" {{ nofollow }}>{{ url }}</a></td>
+    </tr>
+    {% endif %}
+
+    {% if current_user.admin %}
+
+    <tr>
+        <th>{% trans _('Registro') %}</th>
+        <td>{{ user.username_register }}</td>
+    </tr>
+
+    {% endif %}
+
+    {% if user.id == current_user.user_id OR current_user.admin %}
+
+    <tr>
+        <th>{% trans _('ID y Nivel') %}</th>
+        <td>{{ user.id }} / {{ user.level }}</td>
+    </tr>
+
+    {% endif %}
+
+    {% if user.names %}
+    <tr>
+        <th>{% trans _('Nombre') %}</th>
+        <td>{{ user.names }}</td>
+    </tr>
+    {% endif %}
+
+    {% endif %}
+
+    {% if show_email %}
+    <tr>
+        <th>{% trans _('IM/Email') %}</th>
+        <td> {{ user.public_info }}</td>
+    </tr>
+    {% endif %}
+
+    <tr>
+        <th>{% trans _('Desde') %}</th>
+        <td>{% exec get_date_time user.date %}</td>
+    </tr>
+
+    {% if current_user.user_id == user.id OR current_user.user_level == 'god' %}
+    <tr>
+        <th>{% trans _('Email') %}</th>
+        <td>
+            {{ user.email }}
+
+            {% if current_user.user_level == 'god' %}
+            (<em>{{ user->email_register }}</em>)
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+
+    {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
+    <tr>
+        <th>{% trans _('Clave API') %}</th>
+        <td>
+            <a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{ user.id }}">{% trans _('Ver clave API') %}</a>
+            ({% trans _('no la divulgues') %})
+        </td>
+    </tr>
+
+    {% if user.adcode %}
+    <tr>
+        <th>{% trans _('Código AdSense') %}</th>
+        <td>{{ user.adcode }}</td>
+    </tr>
+
+    <tr>
+        <th>{% trans _('Canal AdSense') %}</th>
+        <td>{{ user.adchannel }}</td>
+    </tr>
+    {% endif %}
+
+    {% endif %}
+
+    <tr>
+        <th>{% trans _('Karma') %}</th>
+        <td>
+            {{ user.karma }}
+
+            {% if (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin') && user.karma_log %}
+            (<a class="fancybox" href="{{ globals.base_url }}backend/get_karma_numbers.php?id={{ user.id }}">{% trans _('detalle del cálculo') %}</a>)
+            {% endif %}
+        </td>
+    </tr>
+
+    <tr>
+        <th>{% trans _('Ranking') %}</th>
+        <td>#{% exec user.ranking %}</td>
+    </tr>
+
+    {% if user.stats %}
+
+    <tr>
+        <th>{% trans _('Noticias enviadas') %}</th>
+        <td>{{ user.total_links }}</td>
+    </tr>
+
+    {% if entropy %}
+    <tr>
+        <th>{% trans _('Entropí­a') %}</th>
+        <td>{{ entropy }}%</td>
+    </tr>
+    {% endif %}
+
+    <tr>
+        <th>{% trans _('Noticias publicadas') %}</th>
+        <td>{{ user.published_links }} ({{ percent }}%)</td>
+    </tr>
+
+    <tr>
+        <th>{% trans _('Comentarios') %}</th>
+        <td>{{ user.total_comments }}</td>
+    </tr>
+
+    <tr>
+        <th>{% trans _('Notas') %}</th>
+        <td>{{ user.total_posts }}</td>
+    </tr>
+
+    <tr>
+        <th>{% trans _('Número de votos') %}</th>
+        <td>{{ user.total_votes }}</td>
+    </tr>
+
+    {% endif %}
+
     {% if user.id == current_user.user_id %}
-
-    <div class="user-profile-info">
-        <h1>{{ user.username }}</h1>
-        <a class="action-link" href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}">MODIFICAR PERFIL</a>
-        <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{% trans _('cerrar sesión') %}" class="action-link" href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}">LOGOUT</a>
-    </div>
-
-    <fieldset>
-        <legend>{% trans _('preferencias básicas') %}</legend>
-
-        <table class="keyvalue">
-            <tr>
-                <th>{% trans _('mostrar suscripciones por defecto en la portada') %}:</th>
-                <td><input name="subs_default" id="subs_default" type="checkbox" value="subs_default" {% if prefs.subs_default %} checked {% endif %} /></td>
-            </tr>
-
-            <tr>
-                <th>{% trans _('comentarios siempre por orden cronológico') %}:</th>
-                <td><input name="com_order" id="com_order" type="checkbox" value="com_order" {% if prefs.com_order %} checked {% endif %} /></td>
-            </tr>
-
-            {# Use last_com_first #}
-            <tr>
-                <th>{% trans _('mostrar por defecto la última página de comentarios') %}:</th>
-                <td><input name="last_com_first" id="last_com_first" type="checkbox" value="last_com_first" {% if prefs.last_com_first %} checked {% endif %} /></td>
-            </tr>
-
-            {# Use bar #}
-            <tr>
-                <th>{% trans _('abrir enlaces con barra superior') %}:</th>
-                <td><input name="use_bar" id="use_bar" type="checkbox" value="use_bar" {% if prefs.use_bar %} checked {% endif %} /></td>
-            </tr>
-       </table>
-
-        <script type="text/javascript">
-        addPostCode(function () {
-            pref_input_check("com_order");
-            pref_input_check("use_bar");
-            pref_input_check("last_com_first");
-            pref_input_check("subs_default");
-        });
-        </script>
-    </fieldset>
-
-    {% else %}
-
-    {% if post %}
-    <div id="addpost"></div>
-
-    <ol class="comments-list" id="last_post">
-        <li>
-            {% exec post.print_summary %}
-        </li>
-    </ol>
-    {% endif %}
-
-    {% endif %}
-
-    <fieldset>
-        <legend>{% trans _('perfil personal') %}</legend>
-
-        <div style="float:right;text-align:center">
-            <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
-
-            {% if current_user.user_id == user.id %}
-                {% inline 'user/avatar_upload.html' %}
-            {% endif %}
-
-            {% if globals.do_geo %}
-            <br/><br/>
-            <div id="map" class="thumbnail" style="width:130px; height:130px; overflow:hidden"></div>
-
-            {% if geodiv %}
-                {% exec geo_distance my_latlng, globals.latlng as distance %}
-                <p style="color: #FF9400; font-size: 90%">{{ user.username }} {% trans _('está a') %}<strong>{{ distance|intval }} kms</strong></p>
-            {% endif %}
-
-            {% endif %}
-        </div>
-
-        <table class="keyvalue">
-            {% if user.username %}
-
-            <tr>
-                <th>{% trans _('usuario') %}:</th>
-                <td>
-                    {% if url %}
-                    <a href="{{ url }}" {{ nofollow }}><strong>{{ user.username }}</strong></a>
-                    {% else %}
-                    {{ user.username }}
-                    {% endif %}
-
-                    {% exec user.print_medals %}
-
-                    {% if current_user.admin AND nclones %}
-                    (<a class="fancybox" href="{{ globals.base_url }}backend/ip_clones.php?id={{ user.id }}" title="{% trans _('clones') %}">{% trans _('clones') %}</a><sup>{{ nclones }}</sup>)
-                    {% endif %}
-
-                    {% if user.id == current_user.user_id OR current_user.admin %}
-                    ({% trans  _('id') %}: <em>{{ user.id }}</em>, <em>{{ user.level }}</em>)
-                    {% endif %}
-
-                    {% if current_user.admin %}
-                    (<em>{{ user.username_register }}</em>)
-                    {% endif %}
-
-                    {% if user.friendship_reverse > 0 %}
-                    <button style="font-size:85%;padding: 0px 1px;border: 0" type="button" onClick="priv_new({{ user.id }})" >{% trans _('enviar privado') %}</button>
-                    {% endif %}
-                </td>
-            </tr>
-
-            {% if friend_icon %}
-            <tr>
-                <th>{% trans _('relación') %}</th>
-                <td>
-                    <select onchange="user_relation({{ current_user.user_id }}, {{ user.id }}, this);">
-                        <option value="0">{% trans _('Sin relación') %}</option>
-                        <option value="1" {% if user.friendship == 1 %}selected{% endif %}>{% trans _('Amigo') %}</option>
-                        <option value="-1" {% if user.friendship == -1 %}selected{% endif %}>{% trans _('Ignorado') %}</option>
-                    </select>
-
-                    {{ friend_icon }}
-                </td>
-            </tr>
-            {% endif %}
-
-            {% endif %}
-
-            {% if user.names %}
-            <tr>
-                <th>{% trans _('nombre') %}:</th>
-                <td>{{ user.names }}</td>
-            </tr>
-            {% endif %}
-
-            {% if user.bio %}
-            <tr>
-                <th>{% trans _('bio') %}:</th>
-                <td style="font-weight:normal">{% exec text_to_html user.bio %}</td>
-            </tr>
-            {% endif %}
-
-            {% if show_email %}
-            <tr>
-                <th>{% trans _('IM/email') %}:</th>
-                <td> {{ user.public_info }}</td>
-            </tr>
-            {% endif %}
-
-            {% if url %}
-            <tr>
-                <th>{% trans _('sitio web') %}:</th>
-                <td><a href="{{ url }}" {{ nofollow }}>{{ url }}</a></td>
-            </tr>
-            {% endif %}
-
-            <tr>
-                <th>{% trans _('desde') %}:</th>
-                <td>{% exec get_date_time user.date %}</td>
-            </tr>
-
-            {% if current_user.user_id == user.id OR current_user.user_level == 'god' %}
-            <tr>
-                <th>{% trans _('email') %}:</th>
-                <td>
-                    {{ user.email }}
-                    {% if current_user.user_level == 'god' %}
-                    (<em>{{ user->email_register }}</em>)
-                    {% endif %}
-                </td>
-            </tr>
-            {% endif %}
-
-            {% if user.id == current_user.user_id OR current_user.user_level == 'god' %}
-            <tr>
-                <th>{% trans _('clave API') %}:</th>
-                <td>
-                    <a class="fancybox" href="{{ globals.base_url }}backend/get_user_api_key.php?id={{ user.id }}" title="API key">{% trans _('leer clave API') %}</a>
-                    ({% trans _('no la divulgues') %})
-                </td>
-            </tr>
-
-            {% if user.adcode %}
-            <tr>
-                <th>{% trans _('Código AdSense') %}:</th>
-                <td>{{ user.adcode }}&nbsp;</td>
-            </tr>
-            <tr>
-                <th>{% trans _('Canal AdSense') %}:</th>
-                <td>{{ user.adchannel }}&nbsp;</td>
-            </tr>
-            {% endif %}
-
-            {% endif %}
-
-            <tr>
-                <th>{% trans _('karma') %}:</th>
-                <td>
-                    {{ user.karma }}
-                    {% if (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin') && user.karma_log %}
-                    (<a class="fancybox" href="{{ globals.base_url }}backend/get_karma_numbers.php?id={{ user.id }}" title="{% trans _('cálculo del karma') %}">{% trans _('detalle cálculo') %}</a>)
-                    {% endif %}
-                </td>
-            </tr>
-
-            <tr>
-                <th>{% trans _('ranking') %}:</th>
-                <td>#{% exec user.ranking %}</td>
-            </tr>
-
-            {% if user.stats %}
-
-            <tr>
-                <th>{% trans _('noticias enviadas') %}:</th>
-                <td>{{ user.total_links }}</td>
-            </tr>
-
-            {% if entropy %}
-            <tr>
-                <th><em>{% trans _('entropía') %}</em>:</th>
-                <td>{{ entropy }}%</td>
-            </tr>
-            {% endif %}
-
-            <tr>
-                <th>{% trans _('noticias publicadas') %}:</th>
-                <td>{{ user.published_links }} ({{ percent }}%)</td>
-            </tr>
-            <tr>
-                <th>{% trans _('comentarios') %}:</th>
-                <td>{{ user.total_comments }}</td>
-            </tr>
-            <tr>
-                <th>{% trans _('notas') %}:</th>
-                <td>{{ user.total_posts }}</td>
-            </tr>
-            <tr>
-                <th>{% trans _('número de votos') %}:</th>
-                <td>{{ user.total_votes }}</td>
-            </tr>
-
-            {% endif %}
-
-            {% if user.id == current_user.user_id %}
-            <tr>
-                <th>{% trans _('IP actual') %}:</th>
-                <td>{{ globals.user_ip }}</td>
-            </tr>
-            {% endif %}
-
-            {% if (strike && (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin')) %}
-            <tr>
-                <th>{% trans _('Strike Aplicado') %}:</th>
-                <td>
-                    <strong>{{ strike.type }} ({{ strike.reason_message }})</strong>
-                    <p>{% trans _('Karma anterior') %} {{ strike.karma_old }}</p>
-                    <p>{% trans _('Karma actual') %} {{ strike.karma_new }}</p>
-                    <p>{% trans _('Karma final') %} {{ strike.karma_restore }}</p>
-                    <p>{% trans _('Finaliza') %} +-{{ strike.expires_at }}</p>
-                </td>
-            </tr>
-            {% endif %}
-        </table>
-
-        {% if user.id == current_user.user_id %}
-        <div class="text-center">
-            {% exec print_oauth_icons _REQUEST.return as foo %}
-        </div>
-        {% endif %}
-    </fieldset>
-
-    {% if geo_form %}
-    <div class="geoform">
-        {{ geo_form }}
-    </div>
-    {% endif %}
-
-    {% if user.total_votes > 20 AND (current_user.user_id == user.id OR current_user.admin) %}
-    {% include "user/chart_votes.html" %}
+    <tr>
+        <th>{% trans _('IP actual') %}</th>
+        <td><span class="label label-default">{{ globals.user_ip }}</span></td>
+    </tr>
     {% endif %}
 
     {% if addresses %}
-    <fieldset>
-        <legend>{% trans _('últimas direcciones IP') %}</legend>
+    <tr>
+        <th>{% trans _('Últimas IPs') %}</th>
 
-        <tt>
+        <td>
             {% for address in addresses %}
-            {{ address }}&nbsp;
+            <span class="label label-default">{{ address }}</span>&nbsp;
             {% endfor %}
-        </tt>
-    </fieldset>
+        </td>
+    </tr>
     {% endif %}
-</section>
+</table>
+
+{% if user.id == current_user.user_id %}
+<div class="text-center">
+    {% exec print_oauth_icons _REQUEST.return as foo %}
+</div>
+{% endif %}

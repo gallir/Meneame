@@ -200,6 +200,10 @@ select.select-menu-more-options {
     margin-top: -4px;
 }
 
+.header-menu01 a.submit_new_article {
+    display:none;
+}
+
 #nav-panel .submit_new_post {
     font-size: 13px;
     border: none;
@@ -309,6 +313,16 @@ select.select-menu-more-options {
     width: 100%;
     border-top: none;
     border-bottom: none;
+    background-color: #fbfbfb;
+}
+
+div.tab-promoted-article {
+    right:0;
+}
+
+.news-body.mobile.promoted-article {
+    background-color: #F2F5FA;
+    padding-top: 5px;
 }
 
 .news-details .news-details-data {

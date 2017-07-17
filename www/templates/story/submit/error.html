@@ -1,0 +1,13 @@
+{% if error %}
+<div class="alert alert-danger mt-20">
+    <p><strong>{{ error.title }}</strong></p>
+    <p>{{ error.info }}</p>
+</div>
+{% endif %}
+
+{% if warning %}
+<div class="alert alert-warning mt-20">
+    <p><strong>{{ warning.title }}</strong></p>
+    <p>{{ warning.info }}</p>
+</div>
+{% endif %}

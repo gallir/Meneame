@@ -273,6 +273,9 @@ $globals['cache_redirector'] = false;
 // Check it's writeable by the web server
 $globals['cache_dir'] = 'cache';
 
+// JMS serializer cache
+$globals['jms_cache'] = '/var/tmp';
+
 // Haanga templates configuration
 $globals['haanga_cache'] = '/var/tmp';
 $globals['haanga_templates'] = 'templates';
@@ -360,7 +363,7 @@ $globals['js_main'] = 'main.js.php';
 // CSS files (main, color, notame)
 $globals['css_main'] = 'mnm.php';
 // Load webfonts from the specified url
-$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Lato:300,400,700|PT+Serif';
+$globals['css_webfonts'] = '//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Lato:300,400,700|Merriweather:300,300i,700,700i';
 $globals['use_fontawesome_cdn'] = true; // If false serve fontawesome locally
 //$globals['css_color'] = 'css/es/mnmcol17.css';
 $globals['html_main'] = 'html1.php';
@@ -444,6 +447,12 @@ $globals['strikes'] = array(
     )
 );
 
+$globals['max_article_drafts'] = 5;
+$globals['show_promoted_articles'] = false;
+$globals['article_promoted_min_votes'] = 20;
+$globals['article_promoted_max_time_from_publish'] = 36; // Article max time from published in hours
+$globals['article_promoted_vote_ratio'] = .25; // (minimum negative vs (positive + anonymous) ratio to promote a article)
+
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
 $globals['anon_to_user_votes'] = 0.2;
@@ -462,8 +471,9 @@ openlog('meneame', LOG_ODELAY, LOG_USER);
 //////////////////////////////////////
 // Don't touch behind this
 //////////////////////////////////////
+
 // Set an utf-8 locale if there is no utf-8 defined
-if (stripos(setlocale(LC_CTYPE, 0), 'utf-8') === false) {
+if (!stristr(setlocale(LC_CTYPE, 0), 'utf-8')) {
     setlocale(LC_CTYPE, 'en_US.UTF-8');
 }
 

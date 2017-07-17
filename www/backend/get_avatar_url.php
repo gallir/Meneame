@@ -1,5 +1,5 @@
 <?php
-include_once('../config.php');
+require_once __DIR__ . '/../config.php';
 
 $id = intval($_GET['id']);
 if (! $id > 0) {

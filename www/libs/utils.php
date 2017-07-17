@@ -224,21 +224,21 @@ function txt_time_diff($from, $now=0)
     $txt = '';
 
     if ($days > 1) {
-        $txt .= " $days "._('días');
+        $txt .= ' '.$days.' '._('días');
     } elseif ($days === 1) {
-        $txt .= " $days "._('día');
+        $txt .= ' '.$days.' '._('día');
     }
 
     if ($hours > 1) {
-        $txt .= " $hours "._('horas');
+        $txt .= ' '.$hours.' '._('horas');
     } elseif ($hours === 1) {
-        $txt .= " $hours "._('hora');
+        $txt .= ' '.$hours.' '._('hora');
     }
 
     if ($minutes > 1) {
-        $txt .= " $minutes "._('minutos');
+        $txt .= ' '.$minutes.' '._('minutos');
     } elseif ($minutes === 1) {
-        $txt .= " $minutes "._('minuto');
+        $txt .= ' '.$minutes.' '._('minuto');
     }
 
     if ($txt) {
@@ -249,7 +249,7 @@ function txt_time_diff($from, $now=0)
         return ' '._('nada');
     }
 
-    return " $secs ". _('segundos');
+    return ' '.$secs.' '. _('segundos');
 }
 
 function txt_shorter($string, $len = 70)
@@ -354,9 +354,80 @@ function clean_lines($string)
     return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
 
+function html_fix($html)
+{
+    libxml_use_internal_errors(true);
+
+    $DOM = new DOMDocument;
+    $DOM->recover = true;
+    $DOM->preserveWhiteSpace = false;
+    $DOM->substituteEntities = false;
+    $DOM->loadHtml('<?xml encoding="UTF-8">'.$html, LIBXML_NOBLANKS | LIBXML_ERR_NONE);
+
+    libxml_use_internal_errors(false);
+
+    return html_remove_headers($DOM->saveHTML());
+}
+
+function html_xpath_clean($html, $attributes = array('src', 'href'))
+{
+    if (empty($html)) {
+        return '';
+    }
+
+    $DOM = new DOMDocument;
+    $DOM->recover = true;
+    $DOM->preserveWhiteSpace = false;
+    $DOM->substituteEntities = false;
+    $DOM->loadHtml('<?xml encoding="UTF-8">'.$html, LIBXML_NOBLANKS | LIBXML_ERR_NONE);
+
+    $xpath = new DOMXPath($DOM);
+
+    $query = '//@*';
+
+    if ($attributes) {
+        $query .= '[local-name() != "'.implode('" and local-name() != "', $attributes).'"]';
+    }
+
+    foreach ($xpath->query($query) as $node) {
+        $node->parentNode->removeAttribute($node->nodeName);
+    }
+
+    foreach ($xpath->query('//img') as $node) {
+        $src = $node->getAttribute('src');
+
+        if (!preg_match('#^https://.*\.(png|jpg|jpeg|gif)$#i', $src)) {
+            $node->parentNode->removeChild($node);
+        }
+    }
+
+    foreach ($xpath->query('//iframe') as $node) {
+        $src = $node->getAttribute('src');
+
+        if (!preg_match('#^https://(www\.youtube\.com/embed|player\.vimeo\.com/video)/#', $src)) {
+            $node->parentNode->removeChild($node);
+        }
+    }
+
+    return html_remove_headers($DOM->saveHTML());
+}
+
+function html_remove_headers($html)
+{
+    return preg_replace('#<(?:!DOCTYPE|/?(?:\?xml|html|head|body))[^>]*>\s*#i', '', $html);
+}
+
+function clean_html_with_tags($string)
+{
+    $string = html_fix(strip_tags($string, '<p><strong><b><i><em><u><a><s><h2><h3><ul><ol><li><img><iframe><blockquote>'));
+
+    return html_xpath_clean($string);
+}
+
 function text_to_summary($string, $length = 50)
 {
-    $string = strip_tags($string);
+    $string = strip_tags(str_replace('<p>', ' <p>', $string));
+
     // Remove references to comments and number in notes referemces
     $string = preg_replace('/(?:#\d+|[\r\n\t]+|,\d+|http\S+|{.+?})\s/u', ' ', $string);
     $len = mb_strlen($string);
@@ -457,17 +528,62 @@ function get_date_time($time)
 
     if (abs($globals['now'] - $time) < 72000) {
         // Difference is less than 20 hours
-        return date(' H:i T', $time);
+        return date('H:i T', $time);
     }
 
-    return date(' d-m-Y H:i T', $time);
+    return date('d-m-Y H:i T', $time);
+}
+
+function get_human_number($number)
+{
+    if ($number < 100) {
+        if (strstr($number, '.')) {
+            return number_format($number, 2, ',', '.');
+        }
+
+        return $number;
+    }
+
+    $number = round($number);
+
+    if ($number < 1000) {
+        return $number;
+    }
+
+    if ($number < 10000) {
+        return number_format($number, 0, ',', '.');
+    }
+
+    return number_format(round($number / 1000), 0, ',', '.').'K';
+}
+
+function get_human_date($date, $format, $locale = 'es_ES.UTF-8')
+{
+    $old = setlocale(LC_TIME, 0);
+
+    setlocale(LC_TIME, $locale);
+
+    $date = strftime($format, is_numeric($date) ? $date : strtotime($date));
+
+    setlocale(LC_TIME, $old);
+
+    return $date;
+}
+
+function get_month($timestamp) {
+    $months = [ 1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril', 5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto', 9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'];
+    return $months[intval(strftime('%m', $timestamp))];
+}
+
+function get_year($timestamp) {
+    return  intval(strftime('%Y', $timestamp));
 }
 
 function get_server_name()
 {
     global $globals;
 
-    return !empty($globals['server_name']) ? $globals['server_name'] : $_SERVER['SERVER_NAME'];
+    return empty($globals['server_name']) ? $_SERVER['SERVER_NAME'] : $globals['server_name'];
 }
 
 function get_static_server_name()
@@ -489,15 +605,7 @@ function get_auth_link()
         return $globals['base_url_general'];
     }
 
-    // If this is the mobile version and it's an external server, e.g www.meneame.net,
-    // we'd call /mobile/login.php instead of /login.php
-    if ($globals['mobile_version'] && $globals['ssl_server'] !== get_server_name()) {
-        $path = 'mobile/';
-    } else {
-        $path = '';
-    }
-
-    return 'https://'.$globals['ssl_server'].$globals['base_url_general'].$path;
+    return 'https://'.$globals['ssl_server'].$globals['base_url_general'];
 }
 
 function check_auth_page()
@@ -584,13 +692,7 @@ function post_get_base_url($option = '', $give_base = true)
 {
     global $globals;
 
-    if ($give_base) {
-        $base = $globals['base_url_general'];
-    } else {
-        $base = '';
-    }
-
-    return $base.'notame/'.$option;
+    return ($give_base ? $globals['base_url_general'] : '').'notame/'.$option;
 }
 
 function get_avatar_url($user, $avatar, $size, $fullurl = true)
@@ -685,7 +787,7 @@ function check_security_key($key)
         return false;
     }
 
-    return $key == get_security_key($time_key[0]);
+    return ($key === get_security_key($time_key[0]));
 }
 
 function do_error($mess = false, $error = false, $send_status = 'Error')
@@ -784,7 +886,7 @@ function guess_user_id($str)
 
     $str = $db->escape(mb_substr($str, 0, 64));
 
-    return intval($db->get_var("select user_id from users where user_login = '$str'"));
+    return (int)$db->get_var('SELECT user_id FROM users WHERE user_login = "'.$str.'" LIMIT 1;');
 }
 
 function put_smileys($str)
@@ -870,7 +972,7 @@ function normalize_smileys($str)
 {
     global $globals;
 
-    include_once(mnminclude.'twemojis.php');
+    require_once mnminclude.'twemojis.php';
 
     $str = Twemojis::normalize($str);
 
@@ -1465,12 +1567,12 @@ function print_oauth_icons($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('twitter')) {
-                $title = _('asociar la cuenta a Twitter, podrás autentificarte también con tu cuenta en Twitter');
-                $text = _('asociar a Twitter');
+                $title = _('Asociar la cuenta a Twitter, podrás autenticarte también con tu cuenta en Twitter');
+                $text = _('Asociar a Twitter');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Twitter');
-            $text = _('login con Twitter');
+            $title = _('Crea una cuenta o autentifícate desde Twitter');
+            $text = _('Login con Twitter');
         }
 
         if ($title) {
@@ -1485,12 +1587,12 @@ function print_oauth_icons($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('facebook')) {
-                $title = _('asociar la cuenta a Facebook, podrás autentificarte también con tu cuenta en Facebook');
-                $text = _('asociar a Facebook');
+                $title = _('Asociar la cuenta a Facebook, podrás autenticarte también con tu cuenta en Facebook');
+                $text = _('Asociar a Facebook');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Facebook');
-            $text = _('login con Facebook');
+            $title = _('Crea una cuenta o autentifícate desde Facebook');
+            $text = _('Login con Facebook');
         }
 
         if ($title) {
@@ -1505,12 +1607,12 @@ function print_oauth_icons($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('gplus')) {
-                $title = _('asociar la cuenta a Google+, podrás autentificarte también con tu cuenta en Google+');
-                $text = _('asociar a Google+');
+                $title = _('Asociar la cuenta a Google+, podrás autenticarte también con tu cuenta en Google+');
+                $text = _('Asociar a Google+');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Google+');
-            $text = _('login con Google+');
+            $title = _('Crea una cuenta o autentifícate desde Google+');
+            $text = _('Login con Google+');
         }
 
         if ($title) {
@@ -1536,12 +1638,12 @@ function print_oauth_icons_large($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('twitter')) {
-                $title = _('asociar la cuenta a Twitter, podrás autentificarte también con tu cuenta en Twitter');
-                $text = _('asociar a Twitter');
+                $title = _('Asociar la cuenta a Twitter, podrás autenticarte también con tu cuenta en Twitter');
+                $text = _('Asociar a Twitter');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Twitter');
-            $text = _('login con Twitter');
+            $title = _('Crea una cuenta o autentifícate desde Twitter');
+            $text = _('Login con Twitter');
         }
 
         if ($title) {
@@ -1560,12 +1662,12 @@ function print_oauth_icons_large($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('facebook')) {
-                $title = _('asociar la cuenta a Facebook, podrás autentificarte también con tu cuenta en Facebook');
-                $text = _('asociar a Facebook');
+                $title = _('Asociar la cuenta a Facebook, podrás autenticarte también con tu cuenta en Facebook');
+                $text = _('Asociar a Facebook');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Facebook');
-            $text = _('login con Facebook');
+            $title = _('Crea una cuenta o autentifícate desde Facebook');
+            $text = _('Login con Facebook');
         }
 
         if ($title) {
@@ -1584,12 +1686,12 @@ function print_oauth_icons_large($return = false)
         if ($current_user->user_id) {
             // Check the user is not already associated to Twitter
             if (!$current_user->GetOAuthIds('gplus')) {
-                $title = _('asociar la cuenta a Google+, podrás autentificarte también con tu cuenta en Google+');
-                $text = _('asociar a Google+');
+                $title = _('Asociar la cuenta a Google+, podrás autenticarte también con tu cuenta en Google+');
+                $text = _('Asociar a Google+');
             }
         } else {
-            $title = _('crea una cuenta o autentifícate desde Google+');
-            $text = _('login con Google+');
+            $title = _('Crea una cuenta o autentifícate desde Google+');
+            $text = _('Login con Google+');
         }
 
         if ($title) {

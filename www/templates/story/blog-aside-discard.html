@@ -1,0 +1,29 @@
+<div class="details {% if globals.mobile OR !self.show_shakebox %}details-center{% endif %}">
+    {% if ! globals.bot %}
+
+    <a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}">
+        <img src="{{ globals.base_static }}img/g.gif" data-src="{% exec get_avatar_url self.author, self.avatar, 80, false %}" data-2x="s:-40.:-80." alt="{{ self.username }}" class="avatar lazy img-responsive center-block" />
+    </a>
+
+    <a href="{% exec get_user_uri self.username, 'history' %}" class="author">{{ self.username }}</a>
+
+    {% endif %}
+
+    <p class="format-tag">
+        {% trans _('enviado') %}<br />
+        <span data-ts="{{ self.sent_date }}" class="ts visible dark" title="{% trans _('enviado') %}: ">____</span>
+    </p>
+
+    {% if self.is_editable %}
+    <a href="{% get_url 'submit?step=2&amp;id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="btn btn-mnm btn-sm btn-block">
+        <i class="fa fa-edit"></i> {% trans _('Editar Artículo') %}
+    </a>
+
+    {% if ! self.votes %}
+    <div class="alert alert-warning">
+        {% trans _('Este borrador aún no ha sido publicado') %}
+    </div>
+    {% endif %}
+
+    {% endif %}
+</div>

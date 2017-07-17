@@ -283,7 +283,16 @@ class User
         global $globals, $current_user;
 
         switch ($view) {
+            case 'articles':
+            case 'articles_private':
+            case 'articles_shaken':
+            case 'articles_favorites':
+            case 'articles_discard':
+                $id = _('Artículos');
+                break;
+
             case 'subs':
+            case 'subs_follow':
                 $id = _('subs');
                 break;
 
@@ -291,6 +300,7 @@ class User
             case 'shaken':
             case 'friends_shaken':
             case 'favorites':
+            case 'discard':
                 $id = _('historias');
                 break;
 
@@ -313,18 +323,39 @@ class User
                 $id = _('perfil');
                 break;
 
+            case 'notes':
+            case 'notes_friends':
+            case 'notes_favorites':
+            case 'notes_conversation':
+            case 'notes_votes':
+                $id = _('notas');
+                break;
+
+            case 'notes_privates':
+                $id = _('privados');
+                break;
+
             default:
                 do_error(_('opción inexistente'), 404);
                 break;
         }
 
         $items = array();
-        $items[] = new MenuOption(_('perfil'), get_user_uri($user), $id, _('información de usuario'));
-        $items[] = new MenuOption(_('relaciones'), get_user_uri($user, 'friends'), $id, _('amigos e ignorados'));
-        $items[] = new MenuOption(_('subs'), get_user_uri($user, 'subs'), $id, _('sub menéames'));
-        $items[] = new MenuOption(_('historias'), get_user_uri($user, 'history'), $id, _('información de envíos'));
-        $items[] = new MenuOption(_('comentarios'), get_user_uri($user, 'commented'), $id, _('información de comentarios'));
-        $items[] = new MenuOption(_('notas'), post_get_base_url($user), $id, _('página de notas'));
+
+        if ($user->id == $current_user->user_id) {
+            $items[] = new MenuOption(_('Crear artículo'), $globals['base_url'] . 'submit?type=article&write=true', $id, _('enviar nueva historia'), 'submit_new_post');
+        }
+
+        $items[] = new MenuOption(_('perfil'), $user->get_uri('profile'), $id, _('Información de usuario'));
+        $items[] = new MenuOption(_('historias'), $user->get_uri('history'), $id, _('Información de envíos'));
+        $items[] = new MenuOption(_('subs'), $user->get_uri('subs'), $id, _('Sub menéames'));
+        $items[] = new MenuOption(_('comentarios'), $user->get_uri('commented'), $id, _('Información de comentarios'));
+        $items[] = new MenuOption(_('notas'), $user->get_uri('notes'), $id, _('Página de notas'));
+        $items[] = new MenuOption(_('relaciones'), $user->get_uri('friends'), $id, _('Amigos e ignorados'));
+
+        if ($user->id == $current_user->user_id) {
+            $items[] = new MenuOption(_('privados'), $user->get_uri('notes_privates'), $id, _('Notas privadas'));
+        }
 
         return $items;
     }
@@ -599,20 +630,20 @@ class User
             $obj = unserialize($stats->text);
         } elseif ($globals['bot'] || $current_user->user_id == 0) {
             return; // Don't calculate stats por bots
-        } else {
-            $obj = new stdClass;
-            $obj->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
-            $obj->total_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
-            $obj->published_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
-            $obj->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
-            $obj->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
-            $obj->total_friends = (int) $db->get_var("select count(*) from friends where friend_to = $this->id");
-            $obj->total_images = Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private');
+        }
 
-            if ($do_cache) {
-                $stats->text = serialize($obj);
-                $stats->store($globals['now'] + 86400 * 90); // Expires in 90 days
-            }
+        $obj = new stdClass;
+        $obj->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
+        $obj->total_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
+        $obj->published_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
+        $obj->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
+        $obj->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
+        $obj->total_friends = (int) $db->get_var("select count(*) from friends where friend_to = $this->id");
+        $obj->total_images = Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private');
+
+        if ($do_cache) {
+            $stats->text = serialize($obj);
+            $stats->store($globals['now'] + 86400 * 90); // Expires in 90 days
         }
 
         foreach (get_object_vars($obj) as $var => $value) {
@@ -622,87 +653,150 @@ class User
         $this->stats = true;
     }
 
+    public function getMedals()
+    {
+        global $globals, $db;
+
+        if (($this->level === 'disabled') || ($this->level === 'autodisabled')) {
+            return array();
+        }
+
+        $this->all_stats();
+
+        $medals = array();
+
+        if ($medal = $this->getMedalAntiquity()) {
+            $medals[] = $medal;
+        }
+
+        if ($medal = $this->getMedalRatio()) {
+            $medals[] = $medal;
+        }
+
+        if ($medal = $this->getMedalPublished()) {
+            $medals[] = $medal;
+        }
+
+        if ($medal = $this->getMedalFriends()) {
+            $medals[] = $medal;
+        }
+
+        return $medals;
+    }
+
+    private function getMedalAntiquity()
+    {
+        global $globals;
+
+        if (($this->total_votes <= 20) && ($this->total_links <= 20)) {
+            return;
+        }
+
+        $years = intval(($globals['now'] - $this->date) / (86400 * 365));
+
+        if ($years > 2) {
+            $type = 'gold';
+        } elseif ($years > 1) {
+            $type = 'silver';
+        } elseif ($years > 0) {
+            $type = 'bronze';
+        } else {
+            return;
+        }
+
+        return array(
+            'type' => $type,
+            'title' => __('antigüedad > %s años', $years)
+        );
+    }
+
+    private function getMedalRatio()
+    {
+        if (($this->total_links <= 20) || ($this->published_links <= 2)) {
+            return;
+        }
+
+        $ratio = round($this->published_links / $this->total_links, 2);
+
+        if ($ratio > 0.15) {
+            $type = 'gold';
+        } elseif ($ratio > 0.10) {
+            $type = 'silver';
+        } elseif ($ratio > 0.08) {
+            $type = 'bronze';
+        } else {
+            return;
+        }
+
+        return array(
+            'type' => $type,
+            'title' => __('porcentaje publicadas (%s)', $ratio)
+        );
+    }
+
+    private function getMedalPublished()
+    {
+        if (empty($this->published_links)) {
+            return;
+        }
+
+        $ratio = round($this->published_links / $this->total_links, 2);
+
+        if ($this->published_links > 50) {
+            $type = 'gold';
+        } elseif ($this->published_links > 20) {
+            $type = 'silver';
+        } elseif (($this->published_links > 2) || (($this->published_links > 10) && ($ratio > 0.05))) {
+            $type = 'bronze';
+        } else {
+            return;
+        }
+
+        return array(
+            'type' => $type,
+            'title' => __('publicadas (%s)', $this->published_links)
+        );
+    }
+
+    private function getMedalFriends()
+    {
+        if ($this->total_friends > 200) {
+            $type = 'gold';
+        } elseif ($this->total_friends > 100) {
+            $type = 'silver';
+        } elseif ($this->total_friends > 50) {
+            $type = 'bronze';
+        } else {
+            return;
+        }
+
+        return array(
+            'type' => $type,
+            'title' => __('amigos (%s)', $this->total_friends)
+        );
+    }
+
+    public function getMedalImage($type, $title = '')
+    {
+        global $globals;
+
+        return '<img src="'.$globals['base_static'].'img/common/medal_'.$type.'_1.png" alt="" title="'.$title.'"/>';
+    }
+
     public function print_medals()
     {
         global $globals, $db;
 
-        if ($this->level === 'disabled' || $this->level === 'autodisabled') {
+        if (($this->level === 'disabled') || ($this->level === 'autodisabled')) {
             return;
         }
 
-        // Credits: using some famfamfam silk free icons
-        $medals = array('gold' => 'medal_gold_1.png', 'silver' => 'medal_silver_1.png', 'bronze' => 'medal_bronze_1.png');
-
-        $this->all_stats();
-
-        // Users "seniority"
-        if ($this->total_votes > 20 || $this->total_links > 20) {
-            $medal = '';
-            $years = intval(($globals['now'] - $this->date) / (86400 * 365));
-
-            if ($years > 2) {
-                $medal = $medals['gold'];
-            } elseif ($years > 1) {
-                $medal = $medals['silver'];
-            } elseif ($years > 0) {
-                $medal = $medals['bronze'];
-            }
-
-            if ($medal) {
-                echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('antigüedad')." > $years "._('años').'"/>';
-            }
-        }
-
-        // Published ratio links
-        if ($this->total_links > 20 && $this->published_links > 2) {
-            $medal = '';
-            $ratio = round($this->published_links / $this->total_links, 2);
-
-            if ($ratio > 0.15) {
-                $medal = $medals['gold'];
-            } elseif ($ratio > 0.10) {
-                $medal = $medals['silver'];
-            } elseif ($ratio > 0.08) {
-                $medal = $medals['bronze'];
-            }
-
-            if ($medal) {
-                echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('porcentaje publicadas')." ($ratio)".'"/>';
-            }
-        }
-
-        // Published links
-        $medal = '';
-
-        if ($this->published_links > 50) {
-            $medal = $medals['gold'];
-        } elseif ($this->published_links > 20) {
-            $medal = $medals['silver'];
-        } elseif ($this->published_links > 2 || ($this->published_links > 10 && $ratio > 0.05)) {
-            $medal = $medals['bronze'];
-        }
-
-        if ($medal) {
-            echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('publicadas')." ($this->published_links)".'"/>';
-        }
-
-        // Number of friends
-        $medal = '';
-
-        if ($this->total_friends > 200) {
-            $medal = $medals['gold'];
-        } elseif ($this->total_friends > 100) {
-            $medal = $medals['silver'];
-        } elseif ($this->total_friends > 50) {
-            $medal = $medals['bronze'];
-        }
-
-        if ($medal) {
-            echo '<img src="'.$globals['base_static'].'img/common/'.$medal.'" alt="" title="'._('amigos')." ($this->total_friends)".'"/>';
+        foreach ($this->getMedals() as $medal) {
+            echo $this->getMedalImage($medal['type'], $medal['title']);
         }
     }
 
-    public function ranking()
+    public function ranking($format = true)
     {
         global $db;
 
@@ -710,7 +804,13 @@ class User
             $this->read();
         }
 
-        return (int) $db->get_var("SELECT SQL_CACHE count(*) FROM users WHERE user_karma > $this->karma") + 1;
+        $value = (int)$db->get_var('
+            SELECT SQL_CACHE COUNT(*)
+            FROM users
+            WHERE user_karma > "'.(float)$this->karma.'";
+        ') + 1;
+
+        return $format ? get_human_number($value) : $value;
     }
 
     public function blogs()
@@ -739,6 +839,20 @@ class User
         require_once(mnminclude.'geo.php');
 
         return geo_latlng('user', $this->id);
+    }
+
+    public function get_uri($view = '', $anchor = '')
+    {
+        global $globals;
+
+        $uri = $globals['base_url_general'].'user/'.htmlspecialchars($this->username);
+        $uri .= $view ? ('/'.$view) : '';
+
+        if (!empty($anchor)) {
+            $uri .= '#' . $anchor;
+        }
+
+        return $uri;
     }
 
     public function add_karma($inc, $log = false)
@@ -898,24 +1012,22 @@ class User
 
         if ($value == 0) {
             return $db->query("delete from prefs where pref_user_id = $id and pref_key = '$key'");
-        } else {
-            return $db->query("replace into prefs set pref_value = $value, pref_user_id = $id, pref_key = '$key'");
         }
+
+        return $db->query("replace into prefs set pref_value = $value, pref_user_id = $id, pref_key = '$key'");
     }
 
     public static function delete_pref($id, $key, $value = false)
     {
         global $db;
 
-        $key = $db->escape($key);
-
-        if ($value) {
-            $value = intval($value);
-            $extra = "and pref_value=$value";
-        } else {
-            $extra = '';
-        }
-
-        return $db->query("delete from prefs where pref_user_id=$id and pref_key='$key' $extra");
+        return $db->query('
+            DELETE FROM `prefs`
+            WHERE (
+                `pref_user_id` = "'.(int)$id.'"
+                AND `pref_key` = "'.$db->escape($key).'"
+                '.($value ? ('AND `pref_value` = "'.(int)$value.'"') : '').'
+            );
+        ');
     }
 }

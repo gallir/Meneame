@@ -9,37 +9,40 @@
 
 // Use the alternate server for api, if it exists
 $globals['alternate_db_server'] = 'api';
-include('config.php');
 
-include(mnminclude.'geo.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'geo.php';
+require_once mnminclude.'ban.php';
 
-include_once(mnminclude.'ban.php');
 if (check_ban_proxy()) {
     die;
 }
 
 if (!empty($_REQUEST['rows'])) {
     $rows = intval($_REQUEST['rows']);
+
     if ($rows > 300) {
         $rows = 100;
     } //avoid abuses
 } else {
     $rows = 100;
 }
-    
+
 $if_modified = get_if_modified();
+
 if ($if_modified) {
     if ($if_modified < time() - 250000) { // Last 3 days at most
         $if_modified = time() - 250000;
     }
+
     $from_time = "post_date > FROM_UNIXTIME($if_modified)";
     $from_time_conversation = "conversation_date > FROM_UNIXTIME($if_modified)";
-} $from_time = 'True'; // Trick to avoid sql errors with empty "and's"
-
-
+} else {
+    $from_time = 'true'; // Trick to avoid sql errors with empty "and's"
+}
 
 if ($_REQUEST['q']) {
-    include(mnminclude.'search.php');
+    require_once mnminclude.'search.php';
     if ($if_modified) {
         $_REQUEST['t'] = $if_modified;
     }
@@ -98,32 +101,38 @@ if ($_REQUEST['q']) {
     $title = _('Nótame').': '._('notas');
 }
 
-
 do_header($title);
 
 $post = new Post;
+
 if ($sql) {
     $posts = $db->get_col($sql);
 }
+
 if ($posts) {
     foreach ($posts as $post_id) {
         $post = Post::from_db($post_id);
+
         if (!$post) {
             continue;
         }
+
         $title = text_to_summary($post->clean_content(), 40);
         $title = $post->username.': ' . htmlentities2unicodeentities($title);
         $content = htmlentities2unicodeentities(put_smileys($post->to_html($post->clean_content())));
+
         echo "	<item>\n";
         echo "		<title>$title</title>\n";
         echo "		<link>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</link>\n";
         echo "		<pubDate>".date("r", $post->date)."</pubDate>\n";
         echo "		<dc:creator>$post->username</dc:creator>\n";
         echo "		<guid>http://".get_server_name().post_get_base_url($post->username).'/'.$post->id."</guid>\n";
+
         // Insert GEO
         if (($latlng = geo_latlng('user', $post->author))) {
             echo "		<georss:point>$latlng->lat $latlng->lng</georss:point>\n";
         }
+
         echo "		<description><![CDATA[$content";
         echo '</p><p>&#187;&nbsp;'._('autor').': <strong>'.$post->username.'</strong></p>';
         echo "]]></description>\n";
@@ -144,14 +153,18 @@ function do_header($title)
             $last_modified = time();
         }
     }
+
     header('X-If-Modified: '. gmdate('D, d M Y H:i:s', $if_modified));
     header('X-Last-Modified: '. gmdate('D, d M Y H:i:s', $last_modified));
+
     if ($last_modified <= $if_modified) {
         header('HTTP/1.1 304 Not Modified');
         exit();
     }
+
     header('Last-Modified: ' .    gmdate('D, d M Y H:i:s', $last_modified) . ' GMT');
     header('Content-type: text/xml; charset=UTF-8', true);
+
     echo '<?xml version="1.0" encoding="UTF-8"?'.'>' . "\n";
     echo '<rss version="2.0" '."\n";
     echo '	xmlns:atom="http://www.w3.org/2005/Atom"'."\n";

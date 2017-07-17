@@ -139,6 +139,17 @@ class LCPBase
         $string = str_replace('<br />', "\n", $this->to_html($string, $fancy));
         $string = str_replace("\n", '<br />', preg_replace("/\n{2,}/", '</p><p>', $string));
 
+        if (strpos($string, '<img ') !== false) {
+            $string = strtr($string, array('<img ' => '<img class="img-responsive center-block" '));
+        }
+
+        if (strpos($string, '<iframe ') !== false) {
+            $string = strtr($string, array(
+                '<iframe ' => '<div class="embed-responsive embed-responsive-16by9 mb-20"><iframe ',
+                '</iframe>' => '</iframe></div>'
+            ));
+        }
+
         return '<p>'.$string.'</p>';
     }
 
@@ -163,73 +174,85 @@ class LCPBase
 
     public function sanitize($string)
     {
-        //$string = preg_replace('/&[^ ;]{1,8};/', ' ', $string);
-        $string = html_entity_decode($string, ENT_COMPAT, 'UTF-8');
-        $string = strip_tags($string);
-        return $string;
+        return strip_tags(html_entity_decode($string, ENT_COMPAT, 'UTF-8'));
     }
 
     public function store_image_from_form($type, $field = 'image')
     {
         $media = new Upload($type, $this->id, 0);
-        if ($type == 'private') {
+
+        if ($type === 'private') {
             $media->to = $this->to;
             $media->access = 'private';
         }
-        if ($media->from_form($field, 'image')) {
-            $this->media_size = $media->size;
-            $this->media_mime = $media->mime;
-            $this->media_extension = $media->extension;
-            return true;
+
+        if (!$media->from_form($field, 'image')) {
+            return false;
         }
-        return false;
+
+        $this->media_size = $media->size;
+        $this->media_mime = $media->mime;
+        $this->media_extension = $media->extension;
+
+        return true;
     }
 
     public function store_image($type, $file)
     {
         $media = new Upload($type, $this->id, 0);
-        if ($type == 'private') {
+
+        if ($type === 'private') {
             $media->to = $this->to;
             $media->access = 'private';
         }
-        if ($media->from_temporal($file, 'image')) {
-            $this->media_size = $media->size;
-            $this->media_mime = $media->mime;
-            $this->media_extension = $media->extension;
-            return true;
+
+        if (!$media->from_temporal($file, 'image')) {
+            return false;
         }
-        return false;
+
+        $this->media_size = $media->size;
+        $this->media_mime = $media->mime;
+        $this->media_extension = $media->extension;
+
+        return true;
     }
 
     public function get_media($type)
     {
         $media = new Upload($type, $this->id);
+
         if ($media) {
             $media->read();
         }
+
         return $media;
     }
 
     public function move_tmp_image($type, $file, $mime)
     {
         $media = new Upload($type, $this->id, 0);
-        if ($type == 'private') {
+
+        if ($type === 'private') {
             $media->to = $this->to;
             $media->access = 'private';
         }
-        if ($media->from_tmp_upload($file, $mime)) {
-            $this->media_size = $media->size;
-            $this->media_mime = $media->mime;
-            $this->media_extension = $media->extension;
-            return true;
+
+        if (!$media->from_tmp_upload($file, $mime)) {
+            return false;
         }
-        return false;
+
+        $this->media_size = $media->size;
+        $this->media_mime = $media->mime;
+        $this->media_extension = $media->extension;
+
+        return true;
     }
 
     public function delete_image($type)
     {
         $media = new Upload($type, $this->id, 0);
         $media->delete();
+
         $this->media_size = 0;
         $this->media_mime = '';
     }

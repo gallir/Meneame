@@ -190,51 +190,60 @@ function parseLinkAnswer(id, link) {
 }
 
 function securePasswordCheck(field) {
+    var color = '#F56874';
+
     if (field.value.length > 5 && field.value.match("^(?=.{6,})(?=(.*[a-z].*))(?=(.*[A-Z0-9].*)).*$", "g")) {
         if (field.value.match("^(?=.{8,})(?=(.*[a-z].*))(?=(.*[A-Z].*))(?=(.*[0-9].*)).*$", "g")) {
-            field.style.backgroundColor = "#8FFF00";
+            color = "#8FFF00";
         } else {
-            field.style.backgroundColor = "#F2ED54";
+            color = "#F2ED54";
         }
-    } else {
-        field.style.backgroundColor = "#F56874";
     }
+
+    field.style.backgroundColor = color;
 
     return false;
 }
 
 function checkEqualFields(field, against) {
-    if (field.value == against.value) {
-        field.style.backgroundColor = '#8FFF00';
-    } else {
-        field.style.backgroundColor = "#F56874";
-    }
+    field.style.backgroundColor = (field.value == against.value) ? '#8FFF00' : '#F56874';
 
     return false;
 }
 
-function enablebutton(button, button2, target) {
-    if (button2) {
-        button2.disabled = false;
-    }
+function checkInput($input) {
+    var $button = $('#check-' + $input.attr('id'));
 
-    button.disabled = target.value.length ? false : true;
+    $button.on('click', function() {
+        checkField($input, $button);
+    });
 }
 
-function checkfield(type, form, field) {
-    var url = base_url + 'backend/checkfield?type=' + type + '&name=' + encodeURIComponent(field.value);
+function checkField($input, $button) {
+    var name = $input.attr('id'),
+        value = $input.val(),
+        url = base_url + 'backend/checkfield?name=' + name + '&value=' + encodeURIComponent(value);
 
     $.get(url, function(html) {
-        if (html === 'OK') {
-            $('#' + type + 'checkitvalue').html('<span style="color:black">"' + encodeURI(field.value) + '": ' + html + '</span>');
-            form.submit.disabled = '';
-        } else {
-            $('#' + type + 'checkitvalue').html('<span style="color:red">"' + encodeURI(field.value) + '": ' + html + '</span>');
-            form.submit.disabled = 'disabled';
-        }
-    });
+        var success = (html === 'OK'),
+            resultId = 'check-result-' + name;
+            $result = $('#' + resultId);
 
-    return false;
+        if (!$result.length) {
+            $result = $('<div id="' + resultId + '" class="alert"></div>');
+            $input.parent().append($result);
+        }
+
+        $result.html(html);
+
+        if (success) {
+            $result.removeClass('alert-danger').addClass('alert-success');
+        } else {
+            $result.removeClass('alert-success').addClass('alert-danger');
+        }
+
+        $input.closest('form').find('button[type="submit"]').prop('disabled', !success);
+    });
 }
 
 function check_checkfield(fieldname, mess) {
@@ -1084,7 +1093,7 @@ function post_reply(id, user) {
     var others = '';
     var regex = /get_post_url(?:\.php){0,1}\?id=([a-z0-9%_\.\-]+(\,\d+){0,1})/ig; /* TODO: delete later (?:\.php)*/
     var text = $('#pid-' + id).html();
-    var textarea = $('.notes .post-edit [name="post"]').last();
+    var textarea = $('.post-edit [name="post"]').last();
     var startSelection, endSelection;
 
     var myself = new RegExp('^' + user_login + '([\s,]|$)', 'i');
@@ -2125,7 +2134,7 @@ var fancyBox = new function() {
         }
 
         if (current_user_admin) {
-            $e.append('<div class="admin"><a href=' + base_url + 'admin/bans.php>Administración</a></div>');
+            $e.append('<div class="admin"><a href=' + base_url + 'admin/logs.php>Administración</a></div>');
         }
 
         $e.show().css({
@@ -3093,6 +3102,70 @@ $(document).ready(function() {
                 dots: true
             }
         }]
+    });
+
+    var $widgetPopularLinksSlider = $('.widget-popular-links-slider');
+    $widgetPopularLinksSlider.slick({
+        rtl: true,
+        dots: true,
+        infinite: false,
+        speed: 300,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        prevArrow: $widgetPopularLinksSlider.find('.slick-prev'),
+        nextArrow: $widgetPopularLinksSlider.find('.slick-next'),
+        appendDots: $widgetPopularLinksSlider.find('.dots'),
+        responsive: [{
+            breakpoint: 2000,
+            settings: {
+                rtl: true,
+                slidesToShow: 5,
+                slidesToScroll: 5,
+                infinite: false,
+                dots: true
+            }
+        }, {
+            breakpoint: 1280,
+            settings: {
+                rtl: true,
+                slidesToShow: 4,
+                slidesToScroll: 4,
+                infinite: true,
+                dots: false
+            }
+        },{
+            breakpoint: 1024,
+            settings: {
+                rtl: true,
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: false
+            }
+        }, {
+            breakpoint: 700,
+            settings: {
+                rtl: true,
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                dots: true
+            }
+        }, {
+            breakpoint: 480,
+            settings: {
+                rtl: true,
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                dots: true
+            }
+        }]
+    });
+
+    $widgetPopularLinksSlider.on('setPosition', function () {
+        $(this).find('.slick-slide').height('auto');
+        var slickTrack = $(this).find('.slick-track');
+        var slickTrackHeight = $(slickTrack).height();
+        $(this).find('.slick-slide').css('height', slickTrackHeight + 'px');
     });
 
     if (current_user > 0) {

@@ -1,0 +1,105 @@
+<section class="section section-large section-profile">
+    <div class="section-profile-header">
+        <div class="section-profile-header-avatar">
+            <img id="avatar" class="avatar big" src="{% exec get_avatar_url user.id, user.avatar, 80 %}" width="80" height="80" alt="{{ user.username }}" title="avatar" />
+        </div>
+
+        <div class="section-profile-header-info">
+            <h1>{{ user.username }}</h1>
+            <p class="info">{% exec text_to_html user.bio %}</p>
+            <p><strong>{% trans _('En menéame desde') %} {% exec get_month user.date %} de {% exec get_year user.date %}</strong>
+
+            {% if user.id == current_user.user_id %}
+            <div class="mt-20">
+                {% if user.id == current_user.user_id OR current_user.user_level == "god" %}
+                <a href="{{ globals.base_url }}profile?login={{ user.username|urlencode }}" class="btn btn-mnm btn-inverted">{% trans _('Editar y configurar') %}</a>
+                {% endif %}
+
+                <a href="{{ globals.base_url_general }}login?op=logout&amp;return=/" title="{% trans _('Cerrar sesión') %}" class="btn btn-mnm btn-inverted">{% trans _('Desconectar') %}</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="section-profile-header-stats">
+            <div class="row">
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.karma %}</strong>
+                    <span>{% trans _('Karma') %}</span>
+                </div>
+
+                <div class="col-xs-4">
+                    <strong>{% exec user.ranking "true" %}</strong>
+                    <span>{% trans _('Ranking') %}</span>
+                </div>
+
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.total_links %}</strong>
+                    <span>{% trans _('Enviadas') %}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.published_links %}</strong>
+                    <span>{% trans _('Publicadas') %}</span>
+                </div>
+
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.total_comments %}</strong>
+                    <span>{% trans _('Comentarios') %}</span>
+                </div>
+
+                <div class="col-xs-4">
+                    <strong>{% exec get_human_number user.total_posts %}</strong>
+                    <span>{% trans _('Notas') %}</span>
+                </div>
+            </div>
+
+            {% if medals %}
+            <div class="section-profile-header-medals">
+                {% for key, value in medals %}
+                <img src="{{ globals.base_static }}img/common/medal_{{ value.type }}_large.png" width="41" height="42" title="{{ value.title }}" />
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="section-profile-header-banner">
+            
+        </div>
+    </div>
+
+    <div class="contents-layout">
+        <a name="menu"></a>
+        <nav class="contents-menu">
+            <a href="{% exec user.get_uri "articles" %}" {% if menu == 'articles' %} class="selected" {% endif %}>
+                <i class="fa fa-file-text-o"></i> <span>{% trans _('Artículos') %}</span>
+            </a>
+
+            <a href="{% exec user.get_uri "history" %}" {% if menu == 'history' %} class="selected" {% endif %}>
+                <i class="fa fa-newspaper-o"></i> <span>{% trans _('Historias') %}</span>
+            </a>
+
+            <a href="{% exec user.get_uri 'subs' %}" {% if menu == 'subs' %} class="selected" {% endif %}>
+                <i class="fa fa-asterisk"></i> <span>{% trans _('Subs') %}</span>
+            </a>
+
+            <a href="{% exec user.get_uri 'commented' %}" {% if menu == 'comments' %} class="selected" {% endif %}>
+                <i class="fa fa-comments-o"></i> <span>{% trans _('Comentarios') %}</span>
+            </a>
+
+            <a href="{% exec user.get_uri 'notes' %}" {% if menu == 'notes' %} class="selected" {% endif %}>
+                <i class="fa fa-sticky-note-o"></i> <span>{% trans _('Notas') %}</span>
+            </a>
+
+            <a href="{% exec user.get_uri 'friends' %}" {% if menu == 'relations' %} class="selected" {% endif %}>
+                <i class="fa fa-users"></i> <span>{% trans _('Relaciones') %}</span>
+            </a>
+
+            <a href="{% exec user.get_uri 'profile' %}" {% if menu == 'profile' %} class="selected" {% endif %}>
+                <img src="{{ globals.base_static }}img/mnm/h9_eli.svg" alt="{% trans _('Perfil') %}" width="39" height="35" />
+                <span>{% trans _('Perfil') %}</span>
+            </a>
+        </nav>
+
+        <div class="contents-body">

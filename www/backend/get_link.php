@@ -12,7 +12,7 @@ if (empty($_GET['id'])) {
 }
 
 if (!defined('mnmpath')) {
-    include_once('../config.php');
+    require_once __DIR__ . '/../config.php';
 
     header('Content-Type: text/html; charset=utf-8');
     header('Cache-Control: public, s-maxage=300');

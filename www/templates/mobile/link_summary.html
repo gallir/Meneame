@@ -1,5 +1,8 @@
 <div class="news-summary">
-    <div class="news-body">
+    {% if tag== 'promoted_article' %}
+    <div class="tab-promoted-article">ARTÍCULO</div>
+    {%endif%}
+    <div class="news-body mobile{% if tag=='promoted_article' %} promoted-article{% endif %}">
         {% if self.show_shakebox %}
         <div class="news-shakeit {{ self.box_class }}">
             <div class="votes">
@@ -71,21 +74,19 @@
 
         {% exec htmlspecialchars self.url as url %}
 
-        {% if globals.link %}<h1>{% else %}<h2>{% endif %}
+        <h2>
+            <a href="{{ url }}" class="l:{{ self.id }}"
+               {% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
+            </a>
 
-        <a href="{{ url }}" class="l:{{ self.id }}"
-           {% if self.status != 'published' %} rel="nofollow"{% endif %}>{{ self.title }}
-        </a>
+            {% if self.content_type == 'image' %}
+            &nbsp;<i class="fa fa-camera" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}"></i>
+            {% else %} {% if self.content_type == 'video' %}
+            &nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i>
+            {% endif %}
 
-        {% if self.content_type == 'image' %}
-        &nbsp;<i class="fa fa-camera" alt="{% trans _('imagen') %}" title="{% trans _('imagen') %}"></i>
-        {% else %} {% if self.content_type == 'video' %}
-        &nbsp;<i class="fa fa-video-camera" alt="{% trans _('vídeo') %}" title="{% trans _('vídeo') %}"></i>
-        {% endif %}
-
-        {% endif %}
-
-        {% if globals.link %}</h1>{% else %}</h2>{% endif %}
+            {% endif %}
+        </h2>
 
         {% else %}
 
@@ -143,7 +144,7 @@
         {% if type != 'preview' %}
 
         {% if self.is_editable %}
-        &nbsp;&nbsp;<a href="{% get_url 'editlink?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="mini-icon-text edit-link"><i class="fa fa-edit"></i></a>
+        &nbsp;&nbsp;<a href="{% get_url 'submit?step=2&amp;id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}" class="mini-icon-text edit-link"><i class="fa fa-edit"></i></a>
         {% endif %}
 
         {% if self.map_editable %}
@@ -168,8 +169,8 @@
         {% if type == 'short' && globals.submnm|subid != self.sub_id %}
         <span class="tool sub-name">
             <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
-               {% if self.sub_owner > 0 %}
                 class="subname"
+               {% if self.sub_owner > 0 %}
                 style="
                     {% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
                     {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
@@ -226,8 +227,8 @@
                     {% if globals.submnm|subid != self.sub_id %}
                     <span class="tool sub-name">
                         <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
-                           {% if self.sub_owner > 0 %}
                             class="subname"
+                           {% if self.sub_owner > 0 %}
                             style="
                                 {% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
                                 {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}

@@ -3,10 +3,10 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//         http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called 'COPYING'.
 
-include mnminclude.'utils.php';
+require_once mnmpath.'/../vendor/autoload.php';
 
 global $globals;
 
@@ -18,19 +18,6 @@ register_shutdown_function('shutdown');
 if (isset($globals['max_load']) && $globals['max_load'] > 0) {
     check_load($globals['max_load']);
 }
-
-// Basic initialization
-//mb_internal_encoding('UTF-8');
-/*
- * Use insteadi in your php.ini:
-
-default_charset = 'UTF-8'
-[mbstring]
-mbstring.internal_encoding = UTF-8
-mbstring.http_input = UTF-8
-mbstring.http_output = UTF-8
-
-*/
 
 // we don't force https if the server name is not the same as de requested host from the client
 if (!empty($globals['force_ssl']) && getenv('SERVER_NAME') !== getenv('HTTP_HOST')) {
@@ -68,15 +55,14 @@ if ($globals['cli']) {
         $globals['proxy_ip'] = false;
     }
 
-    $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode(getenv('REQUEST_URI'))); // clean it for future use
+    $globals['uri'] = preg_replace('/[<>\r\n]/', '', urldecode(getenv('REQUEST_URI')));
+    $globals['is_ajax'] = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && (strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
 }
 
 // Use proxy and load balancer detection
 
 $globals['user_ip_int'] = inet_ptod($globals['user_ip']);
 $globals['cache-control'] = array();
-
-//echo '<!-- ' . $globals['uri'] . '-->\n';
 
 if (($globals['cli'] === false) && getenv('HTTP_HOST')) {
     // Check bots
@@ -94,14 +80,9 @@ if (($globals['cli'] === false) && getenv('HTTP_HOST')) {
         !$globals['bot']
         && isset($_GET['mobile']) || preg_match('/SymbianOS|BlackBerry|iPhone|Nintendo|Mobile|Opera (Mini|Mobi)|\/MIDP|Portable|webOS|Kindle|Fennec/i', getenv('HTTP_USER_AGENT'))
         && !preg_match('/ipad|tablet/i', getenv('HTTP_USER_AGENT'))
-    ) { // Don't treat iPad as mobiles
+    ) {
+        // Don't treat iPad as mobiles
         $globals['mobile'] = 1;
-        /* Removed, with threads it doesn't make sense
-        // TODO: remove these lines if not used again.
-        // Reduce page size for mobiles
-        $globals['comments_page_size'] = intval($globals['comments_page_size']/2);
-        $globals['page_size'] = intval($globals['page_size']/2);
-        */
     } else {
         $globals['mobile'] = 0;
     }
@@ -133,68 +114,7 @@ if (empty($globals['static_server'])) {
 $globals['base_static'] = $globals['base_static_noversion'].'v_'.$globals['v'].'/';
 
 // Votes' tags
-$globals['negative_votes_values'] = array( -1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'),  -9 => _('copia/plagio'));
-
-// autoloaded clasess
-// Should be defined after mnminclude
-// and before the database
-function __autoload($class)
-{
-    static $classfiles = array(
-        'SitesMgr' => 'sites.php',
-        'Annotation' => 'annotation.php',
-        'Log' => 'log.php',
-        'LogAdmin' => 'log_admin.php',
-        'Report' => 'report.php',
-		'Strike' => 'strike.php',
-        'db' => 'mysqli.php',
-        'RGDB' => 'rgdb.php',
-        'LCPBase' => 'LCPBase.php',
-        'Link' => 'link.php',
-        'LinkMobile' => 'linkmobile.php',
-        'Comment' => 'comment.php',
-        'CommentMobile' => 'blog.php',
-        'Vote' => 'votes.php',
-        'Annotation' => 'annotation.php',
-        'Blog' => 'blog.php',
-        'Post' => 'post.php',
-        'PrivateMessage' => 'private.php',
-        'UserAuth' => 'login.php',
-        'User' => 'user.php',
-        'BasicThumb' => 'webimages.php',
-        'WebThumb' => 'webimages.php',
-        'HtmlImages' => 'webimages.php',
-        'Trackback' => 'trackback.php',
-        'Upload' => 'upload.php',
-        'Media' => 'media.php',
-        'S3' => 'S3.php',
-        'Tabs' => 'tabs.php',
-        'Poll' => 'poll/poll.php',
-        'PollCollection' => 'poll/poll_collection.php',
-        'PollOption' => 'poll/poll_option.php',
-        'DbHelper' => 'db_helper.php'
-    );
-
-    if (isset($classfiles[$class]) && is_file(mnminclude.$classfiles[$class])) {
-        require_once(mnminclude.$classfiles[$class]);
-        return;
-    }
-
-    // Build the include for 'standards' frameworks wich uses path1_path2_classnameclassName
-    $filePath = str_replace('_', DIRECTORY_SEPARATOR, $class).'.php';
-    $includePaths = explode(PATH_SEPARATOR, get_include_path());
-
-    foreach ($includePaths as $includePath) {
-        if (is_file($includePath.DIRECTORY_SEPARATOR.$filePath)) {
-            require_once($filePath);
-            return;
-        }
-    }
-
-    if (is_file($class.'.php')) {
-        include_once($class.'.php');
-    }
-}
+$globals['negative_votes_values'] = array(-1 => _('irrelevante'), -2 => _('antigua'), -3 => _('cansina'), -4 => _('sensacionalista'), -5 => _('spam'), -6 => _('duplicada'), -7 => _('microblogging'), -8 => _('errónea'), -9 => _('copia/plagio'));
 
 // Allows a script to define to use the alternate server
 if (isset($globals['alternate_db_server']) && !empty($globals['alternate_db_servers'][$globals['alternate_db_server']])) {
@@ -215,8 +135,8 @@ function haanga_bootstrap()
 /* Load template engine here */
 $config = array(
     'template_dir' => mnmpath.'/'.$globals['haanga_templates'],
-    'autoload'     => false, /* Don't use Haanga's autoloader */
-    'bootstrap'    => 'haanga_bootstrap',
+    'autoload' => true,
+    'bootstrap' => 'haanga_bootstrap',
     'compiler' => array( /* opts for the tpl compiler */
         /* Avoid use if empty($var) */
         'if_empty' => false,
@@ -225,7 +145,7 @@ $config = array(
         /* let's save bandwidth */
         'strip_whitespace' => true,
         /* call php functions from the template */
-        'allow_exec'  => true,
+        'allow_exec' => true,
         /* global $global, $current_user for all templates */
         'global' => array('globals', 'current_user'),
     ),
@@ -234,18 +154,23 @@ $config = array(
 
 // Allow full or relative pathname for the cache (i.e. /var/tmp or cache)
 if ($globals['haanga_cache'][0] === '/') {
-    $config['cache_dir'] =  $globals['haanga_cache'] .'/Haanga/'.getenv('SERVER_NAME');
+    $config['cache_dir'] = $globals['haanga_cache'].'/Haanga/'.getenv('SERVER_NAME');
 } else {
-    $config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'] .'/Haanga/'.getenv('SERVER_NAME');
+    $config['cache_dir'] = mnmpath.'/'.$globals['haanga_cache'].'/Haanga/'.getenv('SERVER_NAME');
 }
 
-require mnminclude.'Haanga.php';
-
 Haanga::configure($config);
+Haanga::checkCacheDir();
 
 function __($text)
 {
-    return htmlentities($text, ENT_QUOTES, 'UTF-8', false);
+    if (func_num_args() === 1) {
+        return $text;
+    }
+
+    $args = array_slice(func_get_args(), 1);
+
+    return is_array($args[0]) ? strtr($text, $args[0]) : vsprintf($text, $args);
 }
 
 function _e($text)

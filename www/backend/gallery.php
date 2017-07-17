@@ -6,11 +6,11 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('../config.php');
+require_once __DIR__.'/../config.php';
 
 $user_id = intval($_GET['user']);
 
-$limit = 250;
+$limit = 100;
 $show_all = false;
 
 switch ($_GET['type']) {
@@ -32,11 +32,7 @@ if ($user_id > 0) {
         $show_all = true;
     }
 
-    if ($user_id == $current_user->user_id) {
-        $limit = 5000;
-    } else {
-        $limit = 500;
-    }
+    $limit = ($user_id == $current_user->user_id) ? 500 : 200;
 }
 
 header('Content-Type: text/html; charset=utf-8');

@@ -1,9 +1,9 @@
 <?php
 if (! defined('mnmpath')) {
-    include_once('../config.php');
+    require_once __DIR__ . '/../config.php';
 }
 
-include_once(mnmpath.'/libs/avatars.php');
+require_once(mnmpath.'/libs/avatars.php');
 
 if (! isset($_GET['id']) && !empty($_GET['user'])) {
     $id = (int) $db->get_var("select user_id from users where user_login = '".$db->escape($_GET['user'])."'");

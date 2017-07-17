@@ -9,7 +9,7 @@
 // Use the alternate server for api, if it exists
 //$globals['alternate_db_server'] = 'backend';
 
-include('../config.php');
+require_once __DIR__.'/../config.php';
 require_once(mnminclude.'favorites.php');
 
 if (!$current_user->user_id) {
@@ -42,19 +42,23 @@ function do_redirect($type)
 
     switch ($type) {
         case 'privates':
-            $url = post_get_base_url('_priv');
+            $url = $current_user->get_uri('notes_privates');
             break;
 
         case 'posts':
-            $url = post_get_base_url($current_user->user_login).'/_conversation';
+            $url = $current_user->get_uri('notes_conversation');
             break;
 
         case 'comments':
-            $url = get_user_uri($current_user->user_login, 'conversation');
+            $url = $current_user->get_uri('conversation');
             break;
 
         case 'friends':
-            $url = get_user_uri($current_user->user_login, 'friends_new');
+            $url = $current_user->get_uri('friends_new');
+            break;
+
+        case 'favorites':
+            $url = $current_user->get_uri('favorites');
             break;
 
         default:

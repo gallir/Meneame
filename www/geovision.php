@@ -6,9 +6,9 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
-include(mnminclude.'html1.php');
-include(mnminclude.'geo.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
+require_once mnminclude.'geo.php';
 
 geo_init('onLoad', false, 3);
 
@@ -91,7 +91,7 @@ function onLoad(foo_lat, foo_lng, foo_zoom, foo_icontype) {
 				GDownloadUrl(base_url+"geo/"+overlay.myType+".php?id="+overlay.myId, function(data, responseCode) {
 					overlay.openInfoWindowHtml(data);
 				});
-			} 
+			}
 		});
 		get_json();
 	}

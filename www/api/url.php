@@ -12,7 +12,7 @@ $globals['no_auth'] = true;
 $globals['alternate_db_server'] = 'api';
 
 $globals['max_load'] = 6;
-include('../config.php');
+require_once __DIR__.'/../config.php';
 
 // Free connections fast
 ini_set('default_socket_timeout', 2);

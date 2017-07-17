@@ -1,11 +1,4 @@
-<section class="section section-medium">
-    <div class="user-profile-info">
-        <h1>{{ user.username }}</h1>
-    </div>
-
+<div class="text-center">
     <p class="intro">{% trans _('Esta sección no está accesible dado que tienes ignorado a este usuario') %}</p>
-    <p class="intro">
-        {% trans _('Si deseas quitar este ignore, puedes hacerlo desde') %}
-        <a href="{% exec get_user_uri user.username %}">{% trans _('su perfil') %}</a>
-    </p>
-</section>
+    <p class="intro">{% trans _('Para poder acceder a sus contenidos, primero debes quitar el ignore a este usuario') %}</p>
+</div>

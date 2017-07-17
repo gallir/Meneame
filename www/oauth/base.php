@@ -21,7 +21,7 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 // for the do_errors
-require_once(mnminclude.$globals['html_main']);
+require_once(mnminclude . $globals['html_main']);
 
 class OAuthBase
 {
@@ -34,6 +34,7 @@ class OAuthBase
         } elseif ($_COOKIE['return']) {
             $this->return = $_COOKIE['return'];
         }
+
     }
 
     public function user_exists()
@@ -54,13 +55,13 @@ class OAuthBase
             $this->user = new User($this->id);
 
             if ($current_user->user_id && $current_user->user_id != $this->id) {
-                if (! $this->user->disabled()) {
-                    do_error(_('cuenta asociada a otro usuario').': '.$this->user->username, false, false);
+                if (!$this->user->disabled()) {
+                    do_error(_('cuenta asociada a otro usuario') . ': ' . $this->user->username, false, false);
                 }
                 // We read again, the previous user is another one, already disabled
                 $this->user = new User($current_user->user_id);
                 $this->id = $this->id = $current_user->user_id;
-            } elseif (! $this->user->id || $this->user->disabled()) {
+            } elseif (!$this->user->id || $this->user->disabled()) {
                 do_error(_('usuario deshabilitado'), false, false);
             }
         } else {
@@ -92,20 +93,25 @@ class OAuthBase
         } else {
             $user->username = $this->username;
         }
-        if (! $user->pass || preg_match('/$\$/', $user->pass)) {
+        if (!$user->pass || preg_match('/$\$/', $user->pass)) {
             $user->pass = "\$$this->service\$$this->secret";
         }
-        if (! $user->names && $this->names) {
+        if (!$user->names && $this->names) {
             $user->names = $this->names;
         }
-        if (! $user->url && $this->url) {
+        if (!$user->url && $this->url) {
             $user->url = $this->url;
         }
         if ($user->id == 0) {
             $user->date = $globals['now'];
             $user->ip = $globals['user_ip'];
-            $user->email = $this->username.'@'.$this->service;
-            $user->email_register = $this->username.'@'.$this->service;
+            if ($this->email) {
+                $user->email = $user->email_register = $this->email;
+            } else {
+                $user->email = $this->username . '@' . $this->service;
+                $user->email_register = $this->username . '@' . $this->service;
+            }
+
             $user->username_register = $user->username;
         }
         syslog(LOG_NOTICE, "Meneame new user from $this->service: $user->username, $user->names");
@@ -115,7 +121,7 @@ class OAuthBase
 
         $db->query("update users set user_validated_date = now() where user_id = $user->id and user_validated_date is null");
         if ($this->avatar) {
-            require_once(mnminclude.'avatars.php');
+            require_once(mnminclude . 'avatars.php');
             avatars_get_from_url($user->id, $this->avatar);
         }
     }
@@ -147,9 +153,9 @@ class OAuthBase
         setcookie('return', '', time() - 10000, $globals['base_url'], UserAuth::domain());
         setcookie('return', '', time() - 10000, $globals['base_url']);
         if (!empty($this->return)) {
-            header('Location: '.$globals['scheme'].'//'.get_server_name().$this->return);
+            header('Location: ' . $globals['scheme'] . '//' . get_server_name() . $this->return);
         } else {
-            header('Location: '.$globals['scheme'].'//'.get_server_name().$globals['base_url']);
+            header('Location: ' . $globals['scheme'] . '//' . get_server_name() . $globals['base_url']);
         }
         exit;
     }

@@ -345,6 +345,21 @@ class Strike
         return self::setReasonMessage($list);
     }
 
+    public static function usersIntoStrike()
+    {
+        global $db;
+
+        return $db->get_results('
+            SELECT `users`.*
+            FROM `users`, `strikes`
+            WHERE (
+              `strike_expires_at` > NOW()
+              AND `strike_restored` = 0
+              AND `users`.`user_id` = `strike_user_id`
+            );
+        ');
+    }
+
     public static function pastNotRestored()
     {
         global $db;
@@ -410,6 +425,17 @@ class Strike
         return isset(self::$reasons[$reason]);
     }
 
+    public static function getById($id)
+    {
+        global $db;
+
+        return $db->get_row('
+            SELECT '.self::SQL_SIMPLE.'
+            WHERE `strike_id` = "'.(int)$id.'"
+            LIMIT 1;
+        ');
+    }
+
     public static function restoreStrike($id)
     {
         global $db;
@@ -426,5 +452,39 @@ class Strike
                 AND `strike_restored` = 0
             );
         ');
+    }
+
+    public static function cancel($strike)
+    {
+        global $db, $current_user;
+
+        $db->query('
+            UPDATE `users`, `strikes`
+            SET
+                `user_karma` = `strike_karma_old`,
+                `user_level` = IF(`user_level` = "disabled", "normal", `user_level`)
+            WHERE (
+                `strike_id` = "'.(int)$strike->id.'"
+                AND `user_id` = `strike_user_id`
+                AND `strike_restored` = 0
+                AND `strike_expires_at` > NOW()
+            );
+        ');
+
+        $db->query('
+            UPDATE `strikes`
+            SET
+                `strike_comment` = CONCAT("[ANULADO] ", `strike_comment`),
+                `strike_restored` = 1,
+                `strike_expires_at` = NOW()
+            WHERE (
+                `strike_id` = "'.(int)$strike->id.'"
+                AND `strike_restored` = 0
+                AND `strike_expires_at` > NOW()
+            )
+            LIMIT 1;
+        ');
+
+        LogAdmin::insert('strike_cancel', $strike->user_id, $current_user->user_id, $strike->karma_new, $strike->karma_old);
     }
 }

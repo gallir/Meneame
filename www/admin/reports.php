@@ -7,9 +7,9 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called 'COPYING'.
 
 $globals['skip_check_ip_noaccess'] = true;
-include('../config.php');
-include(mnminclude . 'html1.php');
-include('libs/admin.php');
+require_once __DIR__.'/../config.php';
+require_once mnminclude.'html1.php';
+require_once __DIR__.'/libs/admin.php';
 
 $page_size = 40;
 $offset = (get_current_page() - 1) * $page_size;
@@ -97,12 +97,17 @@ function do_report_list($selected_tab, $report_status, $report_date, $key, $stat
     }
 
     if ($search = $_REQUEST['s']) {
-        $where .= '
-            AND (
-                authors.user_login LIKE "%'.$db->escape($search).'%"
-                OR report_id = "'.(int)$search.'"
-            )
-        ';
+        if (strpos($search, 'id:') === 0) {
+            $where .= ' AND report_id = "'.explode(':', $search)[1].'"';
+        } else {
+            $where .= '
+                AND (
+                    authors.user_login LIKE "%'.$db->escape($search).'%"
+                    OR report_id = "'.(int)$search.'"
+                )
+            ';
+        }
+
         $rows = 0;
     } else {
         $rows = $db->get_var('SELECT COUNT(*) FROM reports '.$where.';');

@@ -17,6 +17,7 @@
 
         <div class="name text-center">
             <h4><a href="{{ site.url }}">{{ site.name_long }}</a></h4>
+
             {% if site.owner > 0 && current_user.user_id > 0 && (current_user.admin OR site.owner == current_user.user_id) %}
             <a href="{{ globals.base_url }}m/{{ site.name }}/subedit" class="btn btn-mnm" title="{% trans _('Editar') %}">
                 <i class="fa fa-cog"></i>
@@ -32,7 +33,7 @@
         {% endif %}
 
         <div class="follow text-center">
-            <div class="followers">{{ site.followers }} seguidores</div>
+            <span class="followers mr-15">{{ site.followers }} seguidores</span>
 
             {% if user.user_id %}
 

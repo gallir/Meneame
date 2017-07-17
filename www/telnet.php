@@ -6,14 +6,15 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
-include(mnminclude.'html1.php');
-include(mnminclude.'sneak.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
+require_once mnminclude.'sneak.php';
 
 $globals['ads'] = false;
 $globals['favicon'] = 'img/common/konsole.png';
 
 $globals['extra_css'][] = 'es/telnet.css';
+
 init_sneak();
 
 $globals['site_id'] = SitesMgr::my_id();
@@ -23,6 +24,7 @@ do_header("telnet");
 Haanga::Load('sneak/telnet_base.html');
 
 $globals['sneak_telnet'] = true;
+
 Haanga::Load('sneak/form.html', compact('max_item'));
 
 do_footer();

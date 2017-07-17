@@ -8,29 +8,39 @@
 
 class Vote
 {
-    public function __construct($type='links', $link=0, $user=-1)
+    public $type;
+    public $link;
+    public $user;
+    public $ip;
+
+    public function __construct($type = 'links', $link = 0, $user = -1)
     {
         $this->type = $type;
         $this->link = $link;
         $this->user = $user;
     }
 
-    public function get_where($value='> 0')
+    public function get_where($value = '> 0')
     {
         global $globals;
+
         // Begin check user and ip
         $where = "vote_type='$this->type' AND vote_link_id=$this->link";
+
         if (empty($this->ip)) {
-            $this->ip=$globals['user_ip_int'];
+            $this->ip = $globals['user_ip_int'];
         }
+
         if ($this->user > 0) {
             $where .= " AND (vote_user_id=$this->user OR vote_ip_int=$this->ip)";
         } elseif ($this->user == 0) {
             $where .= " AND vote_ip_int=$this->ip";
         }
+
         if (!empty($value)) {
             $where .= " AND vote_value $value ";
         }
+
         // End check user and ip
         return $where;
     }
@@ -39,11 +49,12 @@ class Vote
     {
         global $db, $globals;
 
-        if (! $this->ip) {
-            $this->ip=$globals['user_ip_int'];
+        if (!$this->ip) {
+            $this->ip = $globals['user_ip_int'];
         }
+
         if ($this->user > 0) {
-            if (! $check_ip) {
+            if (!$check_ip) {
                 $where = " AND vote_user_id=$this->user";
             } else {
                 $where = " AND (vote_user_id=$this->user OR vote_ip_int=$this->ip)";
@@ -55,24 +66,28 @@ class Vote
         return $db->get_var("SELECT SQL_NO_CACHE vote_value FROM votes WHERE vote_type='$this->type' AND vote_link_id=$this->link $where LIMIT 1");
     }
 
-    public function count($value="> 0")
+    public function count($value = "> 0")
     {
         global $db;
+
         $where = $this->get_where($value);
-        $count=$db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes WHERE $where");
-        return $count;
+
+        return $db->get_var("SELECT SQL_NO_CACHE count(*) FROM votes WHERE $where");
     }
 
     public function insert()
     {
         global $db, $globals;
-        if (empty($this->ip)) {
-            $this->ip=$globals['user_ip_int'];
-        }
-        $this->value=round($this->value);
 
-        $sql="INSERT IGNORE INTO votes (vote_type, vote_user_id, vote_link_id, vote_value, vote_ip_int) VALUES ('$this->type', $this->user, $this->link, $this->value, $this->ip)";
+        if (empty($this->ip)) {
+            $this->ip = $globals['user_ip_int'];
+        }
+
+        $this->value = round($this->value);
+
+        $sql = "INSERT IGNORE INTO votes (vote_type, vote_user_id, vote_link_id, vote_value, vote_ip_int) VALUES ('$this->type', $this->user, $this->link, $this->value, $this->ip)";
         $r = $db->query($sql);
+
         return $db->affected_rows;
     }
 
@@ -88,8 +103,8 @@ class Vote
             SELECT `vote_date`
             FROM `votes`
             WHERE (
-                `vote_user_id` = "'.(int)$current_user->user_id.'"
-                AND `vote_type` = "'.$type.'"
+                `vote_user_id` = "' . (int) $current_user->user_id . '"
+                AND `vote_type` = "' . $type . '"
             )
             ORDER BY `vote_date` DESC
             LIMIT 1;

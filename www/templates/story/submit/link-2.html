@@ -1,0 +1,197 @@
+<div class="genericform">
+    <form method="post" id="thisform" name="thisform">
+        <input type="hidden" name="key" value="{{ link.key }}" />
+        <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+        <input type="hidden" name="timestamp" value="{{ globals.now }}" />
+        <input type="hidden" name="id" value="{{ link.id }}" />
+        <input type="hidden" name="step" value="2" />
+
+        <fieldset>
+            <legend><span class="sign">{% trans _('Información del enlace') %}</span></legend>
+
+            <p class="genericformtxt">
+                <strong>{{ link.url_title }}</strong>
+                <br />
+                <a href="{{ link.url }}" target="_blank">
+                    {{ link.url | escape }}
+                    <i class="fa fa-external-link fm-sm"></i>
+                </a>
+            </p>
+        </fieldset>
+
+        {% include 'story/submit/error.html' %}
+
+        <fieldset>
+            <legend><span class="sign">{% trans _('Detalles de la noticia') %}</span></legend>
+
+            {% if link.change_url %}
+            <label for="url" accesskey="1">{% trans _('URL de la noticia') %}:</label>
+
+            <p>
+                <span class="note">{% trans _('URL de la noticia') %}</span>
+                <br/><input type="url" id="url" name="url" value="{{ link.url|escape }}" class="form-control" required />
+            </p>
+            {% endif %}
+
+            <label for="title" accesskey="2">{% trans _('Título de la noticia') %}:</label>
+
+            <p>
+                <span class="note">{% trans _('Máximo: 120 caracteres') %}</span>
+
+                {% if link.url %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% include 'link/content_type_buttons.html' %}
+                {% endif %}
+
+                {% if link.change_status %}
+
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <select name="status">
+                    <option value="{{ link.status }}" selected="selected">{{ link.status_text }}</option>
+
+                    {% if link.status == 'queued' %}
+                    <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+
+                    {% if current_user.user_id != link.author %}
+                    <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+                    {% endif %}
+
+                    {% if current_user.user_level == 'god' %}
+                    <option value="published">{% exec link.get_status_text 'published' %}</option>
+                    {% endif %}
+
+                    {% else %} {% if link.discarded %}
+
+                    {% if current_user.admin OR link.is_sub_owner %}
+                    <option value="queued">{% exec link.get_status_text 'queued' %}</option>
+                    <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+                    <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+                    {% endif %}
+
+                    {% else %} {% if current_user.user_level == 'god' OR link.is_sub_owner %}
+                    <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+                    <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+                    <option value="queued">{% exec link.get_status_text 'queued' %}</option>
+                    {% endif %}
+
+                    {% endif %} {# END if current_user.admin OR link.is_sub_owner #}
+                    {% endif %} {# END if link.status == 'queued' #}
+
+                </select>
+
+                {% endif %}
+
+                <br/>
+
+                <input type="text" id="title" name="title" value="{{ link.title }}" maxlength="120" class="form-control" required />
+            </p>
+
+            <label for="tags" accesskey="3">{% trans _('Etiquetas') %}:</label>
+
+            <p>
+                <span class="note"><strong>{% trans _('Pocas palabras, separadas por «,»') %}</strong></span>
+                <br/><input type="text" id="tags" name="tags" value="{{ link.tags | escape }}" class="form-control" maxlength="70" required />
+            </p>
+
+            {% if site_properties.intro_max_len > 0 %}
+
+            {% include 'simpleformat_buttons.html' %}
+
+            <p>
+                <label for="bodytext" accesskey="4">{% trans _('Descripción de la noticia') %}:</label><br />
+
+                <span class="note">
+                    <strong>{% trans _('Describe con fidelidad el contenido del enlace') %}</strong>
+                    ({{ site_properties.intro_min_len }} - {{ site_properties.intro_max_len }})
+                </span>
+
+                <br/>
+
+                <textarea name="bodytext" rows="10" id="bodytext" maxlength="{{ site_properties.intro_max_len }}"
+                    onKeyDown="textCounter(document.thisform.bodytext, document.thisform.bodycounter, {{ site_properties.intro_max_len }})"
+                    onKeyUp="textCounter(document.thisform.bodytext, document.thisform.bodycounter, {{ site_properties.intro_max_len }})"
+                    required>{{ link.content }}</textarea>
+            </p>
+
+            <script type="text/javascript">
+            addPostCode( function () {
+                $('textarea').autosize();
+            });
+            </script>
+
+            <div style="margin-top:-7px">
+                <input readonly type="text" name="bodycounter" size="3" maxlength="3" value="{{ link.chars_left }}" />
+
+                {% if ! globals.mobile %}
+                <span class="note">{% trans _('caracteres libres') %}</span>
+                {% endif %}
+            </div>
+
+            {% endif %} {# END if site_properties.intro_max_len > 0 #}
+
+            {% exec print_subs_form link.sub_id as dummy %}
+
+            {% if link.trackback %}
+            <p>
+                <label for="trackback">{% trans _('Trackback') %}:</label><br />
+                <span class="note">{{ link.trackback }}</span>
+                <input type="hidden" name="trackback" id="trackback" value="{{ link.trackback }}"/>
+            </p>
+            {% endif %}
+
+            {% if not link.is_new && (current_user.admin > 0 OR current_user.user_level == "blogger") %}
+
+            <label>{% trans _('Marcar como nsfw') %}: <input type="checkbox" name="nsfw"{% if link.nsfw == 1 %} checked="checked"{% endif %}/></label>
+            <span class="note">({% trans _('prevención de penalizaciones en publicidad') %})</span>
+            <br/>
+
+            {% if link.thumb_url OR link.media_size > 0 %}
+
+            <label>{% trans _('Eliminar imagen') %}: <input type="checkbox" name="thumb_delete" value="1"/></label><br/>
+
+            {% else %}
+
+            {% if link.url %}
+            <label>{% trans _('Obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
+            {% endif %}
+
+            <label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:60%" /></label><br/>
+
+            {% endif %}
+
+            <label>{% trans _('Actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
+
+            {% endif %}
+
+            <div class="mt-20">
+                {% if link.is_new %}
+                <input type="button" class="button" onclick="window.location = '{{ globals.base_url }}';" value="{% trans _('Cancelar') %}" />&nbsp;&nbsp;
+                <input type="submit" class="button" value="{% trans _('Continuar') %} &#187;" />
+                {% else %}
+                <input type="submit" class="button" value="{% trans _('Guardar y Finalizar') %} &#187;" />
+                {% endif %}
+            </div>
+
+            {% if site_properties.allow_images %}
+
+            <input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            <label>
+                {% trans _('subir imagen') %}
+                <input type="file" autocomplete="off" name="image" id="fileInput" accept="image/*" class="uploadFile" />
+            </label>
+
+            <div class="droparea_info" style></div>
+
+            <script type="text/javascript">
+            addPostCode( function () {
+                $('#thisform').droparea({maxsize: {{ globals.media_max_size }} });
+                $("#fileInput").nicefileinput({ title: 'Agregar imagen' });
+            });
+            </script>
+
+            {% endif %}
+        </fieldset>
+    </form>
+</div>

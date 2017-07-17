@@ -4,8 +4,6 @@
 
 #wrap {
     background: #000;
-    margin: 0;
-    padding: 0;
 }
 
 body {
@@ -17,13 +15,16 @@ body {
     font-size: small;
 }
 
+
 /* elements */
 
-abbr { cursor: help; }
+abbr {
+    cursor: help;
+}
 
 img {
-    opacity:0.3;
-    filter:alpha(opacity=30);
+    opacity: 0.3;
+    filter: alpha(opacity=30);
 }
 
 a, label {
@@ -47,8 +48,27 @@ form, input {
     background: #000;
 }
 
-
 /* sneaker */
+
+.header-top-wrapper {
+    background: none;
+}
+
+.header-top-wrapper a {
+    color: white !important;
+}
+
+#header-top a.sub-name {
+    display: none;
+}
+
+ul#userinfo a.notifications span {
+    border: none;
+}
+
+#variable {
+    margin-top: 50px;
+}
 
 .sneaker {
     margin: 10px 10px 10px 10px;
@@ -87,6 +107,7 @@ form, input {
     overflow: hidden;
 }
 
+
 /*
 .sneaker-item:hover {
     background-color: #FFE2C5;
@@ -98,7 +119,6 @@ form, input {
     margin: 0 0 0 0;
     vertical-align: middle;
 }
-
 
 .sneaker-chat {
     color: #1c9c06;

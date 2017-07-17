@@ -68,13 +68,23 @@
         <link href="{{ globals.base_static }}css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" />
         {% endif %}
 
+        {% for css in globals.extra_css %}
+
+        {% if css|substr:"0, 4" == 'http' OR css|substr:"0, 2" == '//' %}
+        <link href="{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% else %}
+        <link href="{{ globals.base_static }}css/{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% endif %}
+
+        {% endfor %}
+
+        {% for css in globals.extra_vendor_css %}
+        <link href="{{ globals.base_static }}vendor/{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% endfor %}
+
         {% if globals.css_main %}
         <link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{ globals.css_main }}" rel="stylesheet" type="text/css" media="all" />
         {% endif %}
-
-        {% for css in globals.extra_css %}
-        <link href="{{ globals.base_static }}css/{{ css }}" rel="stylesheet" type="text/css" media="all" />
-        {% endfor %}
 
         {# <meta name="mobile-web-app-capable" content="yes"> #}
 
@@ -136,49 +146,16 @@
         </script>
 
         <div id="header">
-            {% if not globals.mobile %}
-
-            <div class="header-center-wrapper wideonly">
-                <div id="header-center" class="mnm-center-in-wrap">
-                    <div class="checkbox checkbox-slider--b-flat checkbox-slider-warning" style="display:inline-block">
-                        <label>
-                            <input id="subs_default_header" name="subs_default" value="subs_default" type="checkbox" {% if current_user && current_user.subs_default %}checked{% endif %}><span>VER SÓLO MIS SUBS</span>
-                        </label>
-                    </div>
-
-                    <a href="{{ globals.base_url_general }}subs" class="discover-subs">DESCUBRIR NUEVOS SUBS</a>
-
-                    <ul class="official-subs">
-                        <li>
-                            <a href="{{ globals.base_url_general }}m/ciencia"><i class="fa fa-flask"></i>CIENCIA</a>
-                        </li>
-                        <li>
-                            <a href="{{ globals.base_url_general }}m/motor"><i class="fa fa-car"></i>MOTOR</a>
-                        </li>
-                        <li>
-                            <a href="{{ globals.base_url_general }}m/series"><i class="fa fa-television"></i>SERIES</a>
-                        </li>
-                        <li>
-                            <a href="{{ globals.base_url_general }}m/startups"><i class="fa fa-pied-piper"></i>STARTUPS</a>
-                        </li>
-                        <li>
-                            <a href="{{ globals.base_url_general }}m/videojuegos"><i class="fa fa-gamepad"></i>VIDEOJUEGOS</a>
-                        </li>
-                        <li>
-                            <a href="{{ globals.base_url_general }}m/retuit"><i class="fa fa-retweet"></i>RETUIT</a>
-                        </li>
-                    </ul>
-                </div><!--header-center-->
-            </div>
-
-            {% endif %}
 
             <div class="header-menu-wrapper">
                 <div id="header-menu" class="mnm-center-in-wrap">
                     <div class="header-menu01"{% if globals.mobile %} style="display:none;"{% endif %}>
                         <ul class="menu01-itemsl">
                             {% for o in left_options %}
-                            <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}"><a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a></li>
+                            <li {% if o.selected %}class="selected"{% endif %} title="{{ o.title }}">
+                                <a href="{{ o.url }}"{% if o.class %} class="{{ o.class }}"{% endif %}>{{ o.text }}</a>
+                                {% if o.class=="button-new" %}<span class="button-new">{% trans _('nuevo') %}</span>{% endif %}
+                            </li>
                             {% endfor %}
                         </ul>
 

@@ -1,0 +1,119 @@
+<div class="story-blog-aside apply-sticky">
+    <br class="clearfix" />
+
+    <div class="btn-group">
+        <button type="button" type="submit" class="btn btn-gray" data-toggle="modal" data-target="#modal-save">
+            <i class="fa fa-cloud-upload"></i>
+            {% trans _('Publicar') %}
+        </button>
+
+        <button type="button" class="btn btn-gray dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-h"></i>
+        </button>
+
+        <ul class="dropdown-menu">
+            <li>
+                <button type="submit" name="discard" value="1">
+                    {% trans _('Guardar borrador') %}
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <p class="clearfix"><br /></p>
+
+    <div class="alert alert-warning">
+        {% trans _('Estás editando un borrador') %}
+    </div>
+
+    <a href="{{globals.base_url_general}}user/{{ current_user->user_login }}/articles_discard" class="btn btn-mnm btn-sm btn-block">Ver borradores</a>
+
+    <p class="clearfix"><br /></p>
+</div>
+
+<div class="modal modal-mnm fade" id="modal-save" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{% trans _('Publicando tu artículo') %}</h4>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>{% trans _('¿Dónde deseas publicarlo?') %}</strong></p>
+
+                <div class="form-group mt-20">
+                    <select id="sub_id" name="sub_id" class="form-control" required>
+                        <option value="">{% trans _('Selecciona una opción') %}</option>
+
+                        <option value="-1">{% trans _('No enviar a colas, sólo visible en mi perfil') %}</option>
+
+                        {% if site_properties.no_link %}
+                        <optgroup label="{% trans _('En el sub actual') %}">
+                            <option value="{{ site.id }}" {% if (site.id == link.sub_id) %} selected {% endif %}>{{ site.name }} - {{ site.name_long }}</option>
+                        </optgroup>
+                        {% endif %}
+
+                        {% if subs_main %}
+                        <optgroup label="{% trans _('Enviar a una cola general') %}">
+                            {% for sub in subs_main %}
+                            <option value="{{ sub.id }}" {% if (sub.id == link.sub_id) %} selected {% endif %}>{{ sub.name }} - {{ sub.name_long }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        {% endif %}
+
+                        {% if subs_subscriptions %}
+                        <optgroup label="{% trans _('Enviar a un sub temático') %}">
+                            {% for sub in subs_subscriptions %}
+                            <option value="{{ sub.id }}" {% if (sub.id == link.sub_id) %} selected {% endif %}>{{ sub.name }} - {{ sub.name_long }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="form-group mt-20">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="nsfw" value="1">
+                            {% trans _('Incluye contenido sexual, violento o no adecuado para entornos de trabajo') %}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" name="publish" value="1">
+                    <i class="fa fa-cloud-upload"></i>
+                    {% trans _('Publicar') %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-mnm fade" id="modal-delete" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{% trans _('Eliminar borrador') %}</h4>
+            </div>
+
+            <div class="modal-body text-center">
+                <p>{% trans _('¿Estás seguro de querer eliminar este borrador?') %}</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fa fa-trash"></i>
+                    {% trans _('Eliminar') %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

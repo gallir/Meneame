@@ -20,8 +20,8 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include_once('config.php');
-include(mnminclude . 'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 
 meta_get_current();
 
@@ -165,11 +165,25 @@ if ($links) {
 
     $counter = 0;
 
+    if ($globals['show_promoted_articles'] ) {
+        $promoted_articles = Link::getPromotedArticles();
+    }
+
+    if ($globals['show_widget_popular_articles']) {
+        $widget_popular_articles = Link::getPopularArticles();
+    } else {
+        $widget_popular_articles = [];
+    }
+
     foreach ($links as $link) {
         $link->poll = $pollCollection->get($link->id);
         $link->max_len = 600;
 
-        Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size', 'sponsored_link', 'official_subs'));
+        if ($globals['show_promoted_articles'] ) {
+            Haanga::Safe_Load('link_promoted_articles.html', compact('counter', 'promoted_articles'));
+        }
+
+        Haanga::Safe_Load('private/ad-interlinks.html', ['counter' => $counter, 'page_size' => $page_size, 'sponsored_link' => $sponsored_link, 'official_subs' => $official_subs, 'widget_popular_articles' => $widget_popular_articles]);
 
         $link->print_summary();
 

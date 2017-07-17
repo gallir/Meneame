@@ -8,9 +8,9 @@
 
 $globals['skip_check_ip_noaccess'] = true;
 
-include('../config.php');
-include(mnminclude.'html1.php');
-include('libs/admin.php');
+require_once __DIR__.'/../config.php';
+require_once mnminclude.'html1.php';
+require_once __DIR__.'/libs/admin.php';
 
 if (!empty($_REQUEST['tab'])) {
     $selected_tab = clean_input_string($_REQUEST['tab']);
@@ -28,11 +28,15 @@ switch ($_REQUEST['op'] ?: 'list') {
     case 'new':
         do_header(_('nuevo strike'));
         do_admin_tabs($selected_tab);
-        do_new_strike($selected_tab);
+        do_strike_new($selected_tab);
         break;
 
     case 'save';
-        do_save_strike();
+        do_strike_save();
+        break;
+
+    case 'cancel';
+        do_strike_cancel();
         break;
 }
 
@@ -70,7 +74,7 @@ function do_strike_list($selected_tab)
     do_pages($rows, $page_size, false);
 }
 
-function do_new_strike($selected_tab)
+function do_strike_new($selected_tab)
 {
     global $db;
 
@@ -102,17 +106,24 @@ function do_new_strike($selected_tab)
         $error = null;
     }
 
+    $now = date('Y-m-d H:i:s');
+
     $types = $strike->getUserTypes();
-    $strikes = $strike->getUserStrikes();
     $next = $strike->getNext();
     $reasons = Strike::$reasons;
+
+    $strikes = array_map(function ($value) use ($now) {
+        $value->cancel = ($value->expires_at > $now) && !$value->restored;
+
+        return $value;
+    }, $strike->getUserStrikes());
 
     Haanga::Load('admin/strikes/new.html', compact(
         'selected_tab', 'user', 'strikes', 'types', 'next', 'reasons', 'error'
     ));
 }
 
-function do_save_strike()
+function do_strike_save()
 {
     global $db, $globals, $current_user;
 
@@ -143,4 +154,15 @@ function do_save_strike()
     // TODO: Do ban to user and save in admin_log with type strike.
 
     die(header('Location: '.$_SERVER['REQUEST_URI']));
+}
+
+function do_strike_cancel()
+{
+    $back = str_replace('op=cancel', 'op=new', $_SERVER['REQUEST_URI']);
+
+    if ($strike = Strike::getById((int)$_REQUEST['id'])) {
+        Strike::cancel($strike);
+    }
+
+    die(header('Location: '.$back));
 }

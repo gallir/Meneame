@@ -6,10 +6,10 @@
 //              http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include('config.php');
-include_once(mnminclude.'html1.php');
-include_once(mnminclude.'recaptcha2.php');
-include_once(mnminclude.'ban.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
+require_once mnminclude.'recaptcha2.php';
+require_once mnminclude.'ban.php';
 
 $globals['ads'] = false;
 
@@ -22,7 +22,6 @@ if ($current_user->user_id > 0) {
     if (!isset($_COOKIE['return_site'])) {
         $_COOKIE['return_site'] = get_server_name();
     }
-
     die(header('Location: http://'.$_COOKIE['return_site'].get_user_uri($current_user->user_login)));
 }
 

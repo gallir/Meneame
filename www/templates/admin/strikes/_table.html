@@ -60,7 +60,7 @@
 
     <tr>
         <td class="text-center">
-            <a target="_blank" href="{{ globals.base_url }}user/{{ strike.user_login }}/{{ strike.user_id }}" class="tooltip u:{{ strike.user_id }}" style="overflow: hidden;white-space: nowrap;">
+            <a target="_blank" href="{{ globals.base_url }}user/{{ strike.user_login }}" class="tooltip u:{{ strike.user_id }}" style="overflow: hidden;white-space: nowrap;">
                 {{ strike.user_login }}
             </a>
         </td>
@@ -69,7 +69,7 @@
         <td class="text-center">{{ strike.comment|txt_shorter:50|clean_text }}</td>
         <td class="text-center">
             {% if strike.report_id %}
-            <a href="{{ globals.base_url }}admin/reports.php?s={{ strike.report_id }}&amp;report_status=all">
+            <a href="{{ globals.base_url }}admin/reports.php?s=id:{{ strike.report_id }}&amp;report_status=all">
                 {{ strike.report_id }}
             </a>
             {% else %}
@@ -82,12 +82,33 @@
         <td class="text-center">{{ strike.date }}</td>
         <td class="text-center">{{ strike.expires_at }}</td>
         <td class="text-center">{{ strike.admin_login }}</td>
+
+        {% if user %}
+        <td class="text-center">
+            {% if strike.cancel %}
+            <a href="?tab=strikes&amp;op=cancel&amp;id={{ strike.id }}&amp;strike_user={{ strike.user_login }}" title="Borrar Strike" class="btn btn-default btn-xs" data-cancel="true">
+                <i class="fa fa-trash"></i>
+            </a>
+            {% endif %}
+        </td>
+        {% else %}
         <td class="text-center">
             <a href="?tab=strikes&amp;op=new&amp;strike_user={{ strike.user_login }}" title="Información" class="btn btn-default btn-xs">
                 <i class="fa fa-info"></i>
             </a>
         </td>
+        {% endif %}
     </tr>
 
     {% endfor %}
 </table>
+
+{% if user %}
+<script>
+addPostCode(function() {
+    $('[data-cancel]').on('click', function(e) {
+        return confirm('¿Deseas realmente anular este strike? Si aceptas, el karma recuperará su estado previo.');
+    })
+});
+</script>
+{% endif %}

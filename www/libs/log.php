@@ -8,7 +8,7 @@
 
 class Log
 {
-    public static function insert($type, $ref_id, $user_id=0, $annotation = false)
+    public static function insert($type, $ref_id, $user_id = 0, $annotation = false)
     {
         global $db, $globals;
 
@@ -16,25 +16,28 @@ class Log
         $ip_int = $globals['user_ip_int'];
         $sub = SitesMgr::my_id(); // Get this subsite's parent id (or itself if it's a parent)
         $res = $db->query("insert into logs (log_sub, log_date, log_type, log_ref_id, log_user_id, log_ip_int, log_ip) values ($sub, now(), '$type', $ref_id, $user_id, $ip_int, '$ip')");
+
         if ($res && $annotation) {
-            $a = new Annotation('log-'.$db->insert_id);
+            $a = new Annotation('log-' . $db->insert_id);
             $a->text = $annotation;
-            $a->store(time()+86400*30); // Valid for one month
+            $a->store(time() + 86400 * 30); // Valid for one month
         }
+
         return $res;
     }
 
-    public static function conditional_insert($type, $ref_id, $user_id=0, $seconds=0, $annotation = false)
+    public static function conditional_insert($type, $ref_id, $user_id = 0, $seconds = 0, $annotation = false)
     {
-        global $db, $globals;
+        global $db;
 
-        if (!Log::get_date($type, $ref_id, $user_id, $seconds)) {
-            return Log::insert($type, $ref_id, $user_id, $annotation);
+        if (Log::get_date($type, $ref_id, $user_id, $seconds)) {
+            return false;
         }
-        return false;
+
+        return Log::insert($type, $ref_id, $user_id, $annotation);
     }
 
-    public static function get_date($type, $ref_id, $user_id=0, $seconds=0)
+    public static function get_date($type, $ref_id, $user_id = 0, $seconds = 0)
     {
         global $db, $globals;
 
@@ -43,12 +46,14 @@ class Log
         } else {
             $interval = '';
         }
+
         return (int) $db->get_var("select count(*) from logs where log_type='$type' and log_ref_id = $ref_id $interval and log_user_id = $user_id order by log_date desc limit 1");
     }
 
     public static function has_annotation($id)
     {
         global $db;
+
         return $db->get_var("select count(*) from annotations where annotation_key = 'log-$id'");
     }
 }

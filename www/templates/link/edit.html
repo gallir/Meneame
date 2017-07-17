@@ -21,7 +21,7 @@
 <h2>{% trans _('editar noticia') %}</h2>
 
 <div class="genericform">
-    <form action="{% get_url 'editlink?id=' link.id '&amp;user=' current_user.user_id %}" method="post" id="thisform" name="thisform">
+    <form action="{% get_url 'submit?step=2&amp;id=' link.id '&amp;user=' current_user.user_id %}" method="post" id="thisform" name="thisform">
         <input type="hidden" name="phase" value="1" />
 
 {% endif %}
@@ -29,6 +29,7 @@
         <input type="hidden" name="key" value="{{ link.key }}" />
         <input type="hidden" name="randkey" value="{{ link.randkey }}" />
         <input type="hidden" name="timestamp" value="{{ globals.now }}" />
+        <input type="hidden" name="edit" value="true" />
         <input type="hidden" name="id" value="{{ link.id }}" />
 
         <fieldset>
@@ -178,13 +179,18 @@
 
             {% if link.poll %}
 
+            {% set poll = link.poll %}
+
+            {% if !poll.id OR !poll.votes %}
+
             <div class="pull-right">
                 <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
                     <i class="fa fa-bar-chart"></i>
                 </button>
             </div>
 
-            {% set poll = link.poll %}
+            {% endif %}
+
             {% include 'poll_form.html' %}
 
             {% endif %}

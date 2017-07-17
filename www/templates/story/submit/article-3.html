@@ -1,0 +1,51 @@
+<div class="story-blog">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1">
+            <div class="main-content">
+                {% include 'story/submit/error.html' %}
+
+                <h1>{{ link.title }}</h1>
+
+                <div class="text">
+                    {{ link.content }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if !error %}
+
+    <form method="post">
+        <input type="hidden" name="key" value="{{ link.key }}" />
+        <input type="hidden" name="randkey" value="{{ link.randkey }}" />
+        <input type="hidden" name="timestamp" value="{{ globals.now }}" />
+        <input type="hidden" name="id" value="{{ link.id }}" />
+        <input type="hidden" name="step" value="3" />
+
+        <p class="text-center mt-20">
+            <strong>{% trans _('ATENCIÓN: esto es sólo una muestra. Puedes retroceder o enviar a la cola y finalizar') %}</strong>
+        </p>
+
+        <div class="mt-20 text-center">
+            <button type="button" class="btn btn-mnm btn-inverted" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';">
+                &#171; {% trans _('Volver a la edición') %}
+            </button>
+
+            <button type="submit" class="btn btn-mnm btn-lg">
+                {% trans _('Enviar a la cola y finalizar') %} &#187;
+            </button>
+        </div>
+    </form>
+
+    {% else %}
+
+    <p class="info text-center mt-20">{% trans _('ERROR: no es posible el envío al existir errores que deben ser resueltos') %}</p>
+
+    <div class="mt-20 text-center">
+        <button type="button" class="btn btn-mnm btn-inverted" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';">
+            &#171; {% trans _('Volver a la edición') %}
+        </button>
+    </div>
+
+    {% endif %}
+</div>

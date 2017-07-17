@@ -8,11 +8,11 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 // The code below was made by Beldar <beldar at gmail dot com>
 if (! defined('mnmpath')) {
-    include_once('../config.php');
+    require_once __DIR__ . '/../config.php';
     header('Content-Type: text/html; charset=utf-8');
 }
 
-include_once('pager.php');
+require_once __DIR__ . '/pager.php';
 
 global $db, $globals;
 
@@ -70,29 +70,32 @@ if ($no_show_voters) {
     echo '<div class="voters-list">';
     foreach ($votes as $vote) {
         echo '<div class="item">';
+
         $vote_detail = get_date_time($vote->ts);
+
         // If current users is a god, show the first IP addresses
         if ($current_user->user_level == 'god') {
             $vote_detail .= ' ('.preg_replace('/\.[0-9]+$/', '', $vote->ip).')';
         }
+
         if ($vote->vote_value>0) {
             $vote_detail .= ' '._('valor').":&nbsp;$vote->vote_value";
             echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
             echo '<img class="avatar" src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/>';
             echo $vote->user_login.'</a>';
+        } elseif ($globals['show_negatives'] > 0 && $vote->ts > $globals['show_negatives']) {
+            echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
+            echo '<img class="avatar" src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/></a>';
+            echo '<span>'.get_negative_vote($vote->vote_value).'</span>';
         } else {
-            if ($globals['show_negatives'] > 0 && $vote->ts > $globals['show_negatives']) {
-                echo '<a href="'.get_user_uri($vote->user_login).'" title="'.$vote->user_login.': '.$vote_detail.'">';
-                echo '<img src="'.get_avatar_url($vote->vote_user_id, $vote->user_avatar, 20).'" width="20" height="20" alt=""/></a>';
-                echo '<span>'.get_negative_vote($vote->vote_value).'</span>';
-            } else {
-                echo '<span>';
-                echo '<img src="'.$globals['base_static'].'img/mnm/mnm-anonym-vote-01.png" width="20" height="20" alt="'._('anónimo').'" title="'.$vote_detail.'"/>';
-                echo get_negative_vote($vote->vote_value).'</span>';
-            }
+            echo '<span>';
+            echo '<img class="avatar" src="'.$globals['base_static'].'img/mnm/mnm-anonym-vote-01.png" width="20" height="20" alt="'._('anónimo').'" title="'.$vote_detail.'"/>';
+            echo get_negative_vote($vote->vote_value).'</span>';
         }
+
         echo '</div>';
     }
     echo "</div>\n";
+
     do_contained_pages($globals['link_id'], $votes_users, $votes_page, $votes_page_size, 'meneos.php', 'voters', 'voters-container');
 }

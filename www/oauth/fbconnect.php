@@ -20,12 +20,10 @@
 // 		http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-
 $base = dirname(dirname($_SERVER["SCRIPT_FILENAME"])); // Get parent dir that works with symbolic links
 include("$base/config.php");
 
 include('base.php');
-include_once(mnminclude.'facebook/facebook.php');
 
 
 class FBConnect extends OAuthBase
@@ -33,75 +31,100 @@ class FBConnect extends OAuthBase
     public function __construct()
     {
         global $globals;
-        // syslog(LOG_INFO, "construct: ".$_SERVER["REQUEST_URI"]);
+
         $this->service = 'facebook';
 
-        if ($globals['mobile_version']) {
-            $server = 'm.facebook.com';
-        } else {
-            $server = 'www.facebook.com';
+        if (!session_id()) {
+            session_start();
         }
 
-        $this->facebook = new Facebook(array(
-                    'appId' => $globals['facebook_key'],
-                    'secret' => $globals['facebook_secret'],
-                    ));
-        $this->user = $this->facebook->getUser();
-        
         parent::__construct();
+
+        $this->facebook = new Facebook\Facebook([
+            'app_id' => $globals['facebook_key'], // Replace {app-id} with your app id
+            'app_secret' => $globals['facebook_secret'],
+            'default_graph_version' => 'v2.9'
+        ]);
     }
 
     public function authRequest()
     {
         global $globals;
-        // syslog(LOG_INFO, "authRequest: ".$_SERVER["REQUEST_URI"]);
 
-        // Print html needed for FB Connect API
-        $loginUrl = $this->facebook->getLoginUrl();
-
+        $helper = $this->facebook->getRedirectLoginHelper();
+        $loginUrl = $helper->getLoginUrl($globals['scheme']. '//' . $globals['server_name'] . $globals['base_url']. 'oauth/fbconnect.php', ['email']);
         echo "<html><head>\n";
-        echo '<script type="text/javascript">'."\n";
-        echo 'self.location = "'.$loginUrl.'";'."\n";
-        echo '</script>'."\n";
-        echo '</head><body></body></html>'."\n";
+        echo '<script type="text/javascript">' . "\n";
+        echo 'self.location = "' . $loginUrl . '";' . "\n";
+        echo '</script>' . "\n";
+        echo '</head><body></body></html>' . "\n";
         exit;
     }
 
     public function authorize()
     {
         global $globals, $db;
-        // syslog(LOG_INFO, "authorize: ".$_SERVER["REQUEST_URI"]);
 
+        $helper = $this->facebook->getRedirectLoginHelper();
+        try {
+            $accessToken = $helper->getAccessToken();
+        } catch (Facebook\Exceptions\FacebookResponseException $e) {
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch (Facebook\Exceptions\FacebookSDKException $e) {
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+
+        if (!isset($accessToken)) {
+            if ($helper->getError()) {
+                header('HTTP/1.0 401 Unauthorized');
+                echo "Error: " . $helper->getError() . "\n";
+                echo "Error Code: " . $helper->getErrorCode() . "\n";
+                echo "Error Reason: " . $helper->getErrorReason() . "\n";
+                echo "Error Description: " . $helper->getErrorDescription() . "\n";
+            } else {
+                header('HTTP/1.0 400 Bad Request');
+                echo 'Bad request';
+            }
+            exit;
+        }
+
+        if (!$accessToken->isLongLived()) {
+            try {
+                $oAuth2Client = $this->facebook->getOAuth2Client();
+                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+            } catch (Facebook\Exceptions\FacebookSDKException $e) {
+                echo "<p>Error getting long-lived access token: " . $this->helper->getMessage() . "</p>\n\n";
+                exit;
+            }
+        }
+
+        $this->facebook->setDefaultAccessToken((string)$accessToken);
 
         try {
-            $user_profile = $this->facebook->api('/me');
+            $user_profile = $this->facebook->get('/me?fields=id,email,name,short_name,link,picture.type(large),website')->getGraphUser()->asArray();
         } catch (FacebookApiException $e) {
             $this->user = null;
             $this->user_return();
             die;
         }
 
-
         $this->token = $user_profile['id'];
         $this->secret = $user_profile['id'];
         $this->uid = $user_profile['id'];
-        $this->username = preg_replace('/.+?\/.*?([\w\.\-_]+)$/', '$1', $user_profile['username']);
-        // Most Facebook users don't have a name, only profile number
-        if (!$this->username || preg_match('/^\d+$/', $this->username)) {
-            // Create a name like a uri used in stories
-            if (strlen($user_profile['name']) > 2) {
-                $this->username = User::get_valid_username($user_profile['name']);
-            } else {
-                $this->username = 'fb'.$this->username;
-            }
-        }
+
+        $this->username = preg_replace('/.+?\/.*?([\w\.\-_]+)$/', '$1', $user_profile['name']);
+
+        $this->username = User::get_valid_username($user_profile['name']);
+
         $db->transaction();
+
         if (!$this->user_exists()) {
             $this->url = $user_profile['link'];
-            $this->names = $user_profile['name'];
-            if ($user_profile['username']) {
-                $this->avatar = "http://graph.facebook.com/".$user_profile['username']."/picture";
-            }
+            $this->names = $this->username;
+            $this->avatar = $user_profile['picture']['url'];
+            $this->email = $user_profile['email'];
             $this->store_user();
         }
         $this->store_auth();
@@ -110,12 +133,10 @@ class FBConnect extends OAuthBase
     }
 }
 
-
 $auth = new FBConnect();
 
-// syslog(LOG_INFO, "FBconnect: ".$_SERVER["REQUEST_URI"]);
-if ($auth->user) {
-    $auth->authorize();
-} else {
+if (empty($_SESSION['FBRLH_state'])) {
     $auth->authRequest();
+} else {
+    $auth->authorize();
 }

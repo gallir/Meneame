@@ -20,8 +20,8 @@
 //	  http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-include_once('config.php');
-include(mnminclude.'html1.php');
+require_once __DIR__.'/config.php';
+require_once mnminclude.'html1.php';
 
 $page_size = $globals['page_size'] * 2;
 
@@ -30,8 +30,8 @@ meta_get_current();
 $page = get_current_page();
 $offset = ($page-1)*$page_size;
 $rows = -1; // Don't show page numbers by default
-
 $from = '';
+
 switch ($globals['meta']) {
     case '_subs':
         if ($current_user->user_id && $current_user->has_subs) {
