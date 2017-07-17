@@ -143,7 +143,7 @@ function notify_user($from, $to, $text)
 
     require_once(mnminclude.'mail.php');
 
-    $url = $globals['scheme'].'://'.get_server_name().$user->get_uri('notes_privates');
+    $url = $globals['scheme'].'//'.get_server_name().$user->get_uri('notes_privates');
     $subject = "Notificación de mensaje privado de $sender->username";
     $message = "$sender->username " . _('escribió') . ":\n$url\n\n$text";
 
