@@ -114,6 +114,10 @@ class LinkValidator
     {
         global $globals;
 
+        if ($this->user->admin) {
+            return $this;
+        }
+        
         if (!($found = Link::duplicates($this->link->url))) {
             return $this;
         }

@@ -72,7 +72,7 @@ function addFormMessage($type, $title, $info = '', $syslog = '')
 
 function validateLinkUrl($link, $validator)
 {
-    global $site, $site_properties;
+    global $site, $site_properties, $current_user;
 
     if (empty($link->url)) {
         return addFormError(_('No se ha enviado ninguna URL'));
@@ -102,7 +102,7 @@ function validateLinkUrl($link, $validator)
     $blog->id = $link->blog;
     $blog->read();
 
-    if (empty($anti_spam)) {
+    if (empty($anti_spam) || $current_user->admin) {
         return true;
     }
 
