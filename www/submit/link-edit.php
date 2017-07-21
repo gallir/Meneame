@@ -13,13 +13,11 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
     if (!$link->is_editable() || intval($_GET['user']) != $current_user->user_id) {
         echo '<div class="form-error-submit">&nbsp;&nbsp;'._("noticia no modificable").'</div>'."\n";
     } else {
-        
         if ($_POST) {
             require __DIR__.'/link-2-post.php';
         } else {
             do_edit($link);
         }
-
     }
 } else {
     echo '<div class="form-error-submit">&nbsp;&nbsp;'._("¿duh?").'</div>';
