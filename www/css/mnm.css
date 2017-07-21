@@ -12,7 +12,6 @@ html * {
 
 body {
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-image: url('{{ globals.base_static }}img/common/bkg-01.png');
     color: #000;
     background-color: #fff;
     margin: 0px;
