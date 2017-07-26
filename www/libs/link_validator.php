@@ -74,7 +74,6 @@ class LinkValidator
 
     public function checkKey()
     {
-
         global $site_key, $current_user;
 
         if ($_POST['key'] != md5($_POST['randkey'].$current_user->user_id.$current_user->user_email.$site_key.get_server_name())) {
@@ -117,7 +116,7 @@ class LinkValidator
         if ($this->user->admin) {
             return $this;
         }
-        
+
         if (!($found = Link::duplicates($this->link->url))) {
             return $this;
         }

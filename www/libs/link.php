@@ -2646,9 +2646,11 @@ class Link extends LCPBase
             return _('Hay demasiadas mayúsculas en el título');
         }
 
-        if ($properties['intro_max_len'] > 0 && $properties['intro_min_len'] > 0 && mb_strlen(
-            $content
-        ) < $properties['intro_min_len'] && ($this->content_type !== 'article')
+        if (
+            ($properties['intro_max_len'] > 0)
+            && ($properties['intro_min_len'] > 0)
+            && (mb_strlen($content) < $properties['intro_min_len'])
+            && ($this->content_type !== 'article')
         ) {
             return __('El texto es demasiado corto, debe ser al menos de %s caracteres', $properties['intro_min_len']);
         }

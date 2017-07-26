@@ -3,7 +3,7 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//		http://www.affero.org/oagpl.html
+//        http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class BasicThumb
@@ -19,8 +19,7 @@ class BasicThumb
     protected $parsed_url = false;
     protected $parsed_referer = false;
 
-
-    public function __construct($url='', $referer=false)
+    public function __construct($url = '', $referer = false)
     {
         $url = $this->clean_url($url);
         if ($referer) {
@@ -39,18 +38,17 @@ class BasicThumb
         return $this->url;
     }
 
-
     public function clean_url($str)
     {
         // Decode HTML entities
         //$str = preg_replace('~&#x0*([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $str);
         //$str = preg_replace('~&#0*([0-9]+);~e', 'chr(\\1)', $str);
-        return    urldecode(preg_replace('/[<>\r\n\t]/', '', $str));
+        return urldecode(preg_replace('/[<>\r\n\t]/', '', $str));
     }
 
-    public function scale($size=100)
+    public function scale($size = 100)
     {
-        if (!$this->image && ! $this->checked) {
+        if (!$this->image && !$this->checked) {
             $this->get();
         }
         if (!$this->image) {
@@ -58,7 +56,7 @@ class BasicThumb
         }
 
 // New code to get rectangular images
-        require_once(mnminclude."simpleimage.php");
+        require_once mnminclude."simpleimage.php";
         $thumb = new SimpleImage();
         $thumb->image = $this->image;
         if ($thumb->resize($size, $size, true)) {
@@ -79,8 +77,8 @@ class BasicThumb
         }
         $colors = array();
         $min = min($this->x, $this->y);
-        $min_colors = min(round($min/10), 6);
-        for ($i=0; $i < $min; $i++) {
+        $min_colors = min(round($min / 10), 6);
+        for ($i = 0; $i < $min; $i++) {
             $color = imagecolorat($this->image, $i, $i);
             // Check disabled due to problems with PNGs (http://aprogrammerslife.info/2011/08/31/programmer%E2%80%99s-logic/)
             // $color &= 0xF0F0F0; // Reduce the number of colours, to avoid being fooled by jpeg compression
@@ -110,23 +108,23 @@ class BasicThumb
         imagesetpixel($this->image, 2, 0, $semi_semi_white);
         imagesetpixel($this->image, 0, 2, $semi_semi_white);
         // Top right
-        imagesetpixel($this->image, $this->x-1, 0, $white);
-        imagesetpixel($this->image, $this->x-2, 0, $semi_white);
-        imagesetpixel($this->image, $this->x-1, 1, $semi_white);
-        imagesetpixel($this->image, $this->x-3, 0, $semi_semi_white);
-        imagesetpixel($this->image, $this->x-1, 2, $semi_semi_white);
+        imagesetpixel($this->image, $this->x - 1, 0, $white);
+        imagesetpixel($this->image, $this->x - 2, 0, $semi_white);
+        imagesetpixel($this->image, $this->x - 1, 1, $semi_white);
+        imagesetpixel($this->image, $this->x - 3, 0, $semi_semi_white);
+        imagesetpixel($this->image, $this->x - 1, 2, $semi_semi_white);
         // Bottom left
-        imagesetpixel($this->image, 0, $this->y-1, $white);
-        imagesetpixel($this->image, 0, $this->y-2, $semi_white);
-        imagesetpixel($this->image, 1, $this->y-1, $semi_white);
-        imagesetpixel($this->image, 0, $this->y-3, $semi_semi_white);
-        imagesetpixel($this->image, 2, $this->y-1, $semi_semi_white);
+        imagesetpixel($this->image, 0, $this->y - 1, $white);
+        imagesetpixel($this->image, 0, $this->y - 2, $semi_white);
+        imagesetpixel($this->image, 1, $this->y - 1, $semi_white);
+        imagesetpixel($this->image, 0, $this->y - 3, $semi_semi_white);
+        imagesetpixel($this->image, 2, $this->y - 1, $semi_semi_white);
         // Bottom right
-        imagesetpixel($this->image, $this->x-1, $this->y-1, $white);
-        imagesetpixel($this->image, $this->x-1, $this->y-2, $semi_white);
-        imagesetpixel($this->image, $this->x-2, $this->y-1, $semi_white);
-        imagesetpixel($this->image, $this->x-1, $this->y-3, $semi_semi_white);
-        imagesetpixel($this->image, $this->x-3, $this->y-1, $semi_semi_white);
+        imagesetpixel($this->image, $this->x - 1, $this->y - 1, $white);
+        imagesetpixel($this->image, $this->x - 1, $this->y - 2, $semi_white);
+        imagesetpixel($this->image, $this->x - 2, $this->y - 1, $semi_white);
+        imagesetpixel($this->image, $this->x - 1, $this->y - 3, $semi_semi_white);
+        imagesetpixel($this->image, $this->x - 3, $this->y - 1, $semi_semi_white);
     }
 
     public function save($filename)
@@ -142,7 +140,8 @@ class BasicThumb
     {
         $res = get_url($this->url, $this->referer, 2000000, false);
         $this->checked = true;
-        if ($res && strlen($res['content']) < 2000000) { // Image is smaller than our limit
+        if ($res && strlen($res['content']) < 2000000) {
+            // Image is smaller than our limit
             $this->content_type = $res['content_type'];
             return $this->fromstring($res['content']);
         }
@@ -183,7 +182,8 @@ class WebThumb extends BasicThumb
 
         // poster captures also HTML5 video thumbnails
         if (!preg_match('/(?:src|poster) *=["\'](.+?)["\']/i', $this->tag, $matches)
-            && !preg_match('/(?:src|poster) *=([^ ]+)/i', $this->tag, $matches)) { // Some sites don't use quotes
+            && !preg_match('/(?:src|poster) *=([^ ]+)/i', $this->tag, $matches)) {
+            // Some sites don't use quotes
             if (!preg_match('/["\']((https*:){0,1}[\.\d\w\-\/]+\.jpg)["\']/i', $this->tag, $matches)) {
                 return;
             }
@@ -203,8 +203,8 @@ class WebThumb extends BasicThumb
         WebThumb::$visited[$this->url] = true;
 
         // Avoid images generated by scripts with different IDs per page
-        if ((! $this->referer || $this->parsed_referer['host'] != $this->parsed_url['host'])
-                && !preg_match('/\.jpg/', $this->url) && preg_match('#/.+?\?.+?&.+?&.+#', $this->url)) {
+        if ((!$this->referer || $this->parsed_referer['host'] != $this->parsed_url['host'])
+            && !preg_match('/\.jpg/', $this->url) && preg_match('#/.+?\?.+?&.+?&.+#', $this->url)) {
             return;
         }
 
@@ -266,10 +266,9 @@ class WebThumb extends BasicThumb
         return max($this->html_x, $this->html_y);
     }
 
-
     public function good($strict = false)
     {
-        if ($this->candidate && ! $this->checked) {
+        if ($this->candidate && !$this->checked) {
             if (!$this->get()) {
                 return false;
             }
@@ -287,13 +286,13 @@ class WebThumb extends BasicThumb
         }
         $ratio = $this->ratio();
         //echo "<!-- $this->url  x:$this->html_x ($this->x) y:$this->html_y ($this->y) minsize: $min_size ratio: $ratio-->\n";
-        if (min($this->html_x, $this->x)  >= $min_size
+        if (min($this->html_x, $this->x) >= $min_size
             && min($this->html_y, $this->y) >= $min_size
             && $this->is_not_black()
             && (
-            (($this->html_x*$this->html_y) > $min_surface && $ratio < 6) ||
-            ($this->html_x > $min_size*4 && ($this->html_x*$this->html_y) > $min_surface*3 && $ratio < 10)) // For panoramic photos
-            ) {
+                (($this->html_x * $this->html_y) > $min_surface && $ratio < 6) ||
+                ($this->html_x > $min_size * 4 && ($this->html_x * $this->html_y) > $min_surface * 3 && $ratio < 10)) // For panoramic photos
+        ) {
             //echo "<!-- Good -->\n";
             return true;
         } else {
@@ -351,20 +350,20 @@ class HtmlImages
 
         // Check first in these server using *only* the URL
         $video_servers = array(
-                        // 'video.google.com' => 'check_google_video',
-                        'youtube.com' => 'check_youtube',
-                        'yfrog.com' => 'check_yfrog',
-                        // 'metacafe.com' => 'check_metacafe',
-                        // 'vimeo.com' => 'check_vimeo',
-                        // 'zappinternet.com' => 'check_zapp_internet',
-                        // 'dailymotion.com' => 'check_daily_motion',
-                );
+            // 'video.google.com' => 'check_google_video',
+            'youtube.com' => 'check_youtube',
+            'yfrog.com' => 'check_yfrog',
+            // 'metacafe.com' => 'check_metacafe',
+            // 'vimeo.com' => 'check_vimeo',
+            // 'zappinternet.com' => 'check_zapp_internet',
+            // 'dailymotion.com' => 'check_daily_motion',
+        );
         $base_host = preg_replace('/^www\./', '', $this->parsed_url['host']);
         if ($video_servers[$base_host]) {
             if ($this->debug) {
                 echo "<!-- Check thumb by URL: $video_servers[$base_host] -->\n";
             }
-            if ($this->$video_servers[$base_host]()) {
+            if ($this->{$video_servers[$base_host]}()) {
                 if ($this->debug) {
                     echo "<!-- Selected thumb by URL: $video_servers[$base_host] -->\n";
                 }
@@ -376,12 +375,12 @@ class HtmlImages
         $res = get_url($this->url, $this->referer, null, false);
         if (!$res) {
             if ($this->debug) {
-                echo "<!-- Error getting " . __($this->url) . "-->\n";
+                echo "<!-- Error getting ".__($this->url)."-->\n";
             }
             return;
         }
         if ($this->debug) {
-            echo "<!-- Got $this->url (". strlen($res['content']) .") -->\n";
+            echo "<!-- Got $this->url (".strlen($res['content']).") -->\n";
         }
         if ($res['location'] != $this->url) {
             $this->redirected = clean_input_url($res['location']);
@@ -409,7 +408,7 @@ class HtmlImages
             if ((
                 preg_match('/<meta\s+?(?:name|property)=[\'"](?:thumbnail_url|og:image|twitter:image:src|product-image)[\'"]\s+?[^>]*?content=[\'"](.+?)[\'"].*?>/is', $this->html, $match) ||
                 preg_match('/<link\s+?rel=[\'"]image_src[\'"]\s+?href=[\'"](.+?)[\'"].*?>/is', $this->html, $match))
-                && ! preg_match('/favicon/i', $match[1])) {
+                && !preg_match('/favicon/i', $match[1])) {
                 $url = $match[1];
                 $url = build_full_url($url, $this->url);
                 if ($this->debug) {
@@ -434,37 +433,39 @@ class HtmlImages
                 }
             }
 
-
             // Analyze HTML <img's
             if (preg_match('/<base *href=["\'](.+?)["\']/i', $this->html, $match)) {
                 $this->base = $match[1];
             }
             $html_short = $this->shorten_html($this->html);
-            //	echo "<!-- $this->html -->\n";
+            //    echo "<!-- $this->html -->\n";
             $this->parse_img($html_short);
 
             // If there is no image or image is slow
             // Check if there are players
             if ((!$this->selected || $this->selected->surface() < 120000)
-                    //&& $this->other_html
-                    && preg_match('/(< *(?:embed|iframe|object|param))[^>]*>|\.flv/i', $this->html)) {
+                //&& $this->other_html
+                 && preg_match('/(< *(?:embed|iframe|object|param))[^>]*>|\.flv/i', $this->html)) {
                 if ($this->debug) {
                     echo "<!-- Searching for video -->\n";
                 }
-                if ($this->check_youtube() ||
-                        $this->check_yfrog() ||
-                        $this->check_google_video() ||
-                        $this->check_metacafe() ||
-                        $this->check_vimeo() ||
-                        $this->check_zapp_internet() ||
-                        $this->check_daily_motion() ||
-                        $this->check_elmundo_video()) {
+
+                if (
+                    $this->check_youtube() ||
+                    $this->check_yfrog() ||
+                    $this->check_google_video() ||
+                    $this->check_metacafe() ||
+                    $this->check_vimeo() ||
+                    $this->check_zapp_internet() ||
+                    $this->check_daily_motion() ||
+                    $this->check_elmundo_video()
+                ) {
                     $this->selected->video = true;
                     return $this->selected;
                 }
             }
         }
-        if (! $this->selected && $this->fallback != false) {
+        if (!$this->selected && $this->fallback != false) {
             $this->selected = $this->fallback;
         }
         if ($this->debug) {
@@ -476,15 +477,15 @@ class HtmlImages
     public function shorten_html(&$html, $max = 200000)
     {
         $html = preg_replace('/^.*?<body[^>]*?>/is', '', $html); // Search for body
-            $html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
-            $html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
-            /* $html = preg_replace('/<script[^>].*?>.*?<\/script>/is', '', $html); // Delete javascript */
-            //$html = preg_replace('/<noscript>.*?<\/noscript>/is', '', $html); // Delete javascript
-            $html = preg_replace('/< *(div|span)[^>]{10,}>/is', '<$1>', $html); // Delete long divs and span with style
-            $html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
-            /* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
-            $html = substr($html, 0, $max); // Only analyze first X bytes
-            return $html;
+        $html = preg_replace('/< *!--.*?-->/s', '', $html); // Delete commented HTML
+        $html = preg_replace('/<style[^>]*?>.+?<\/style>/is', '', $html); // Delete styles
+        /* $html = preg_replace('/<script[^>].*?>.*?<\/script>/is', '', $html); // Delete javascript */
+        //$html = preg_replace('/<noscript>.*?<\/noscript>/is', '', $html); // Delete javascript
+        $html = preg_replace('/< *(div|span)[^>]{10,}>/is', '<$1>', $html); // Delete long divs and span with style
+        $html = preg_replace('/[ ]{3,}/ism', '', $html); // Delete useless spaces
+        /* $html = preg_replace('/^.*?<h1[^>]*?>/is', '', $html); // Search for a h1 */
+        $html = substr($html, 0, $max); // Only analyze first X bytes
+        return $html;
     }
 
     public function parse_img(&$html)
@@ -501,10 +502,10 @@ class HtmlImages
         // Now try with images in JS arrays (Clarin uses it...)
         preg_match_all('/\( *(["\'](https*:){0,1}[\.\d\w\-\/]+\.jpg["\']) *[\),]/is', $html, $matches);
         $tags = array_merge($tags, $matches[1]);
-        if (! count($tags)) {
+        if (!count($tags)) {
             return false;
         }
-        $this->images_count =  count($tags);
+        $this->images_count = count($tags);
 
         $other_html = $this->get_other_html();
         if (!$other_html && $this->debug) {
@@ -518,19 +519,19 @@ class HtmlImages
                 continue;
             }
             if ($this->debug) {
-                echo "<!-- PRE CANDIDATE: ". __($match) ." -->\n";
+                echo "<!-- PRE CANDIDATE: ".__($match)." -->\n";
             }
             if ($img->candidate && $img->good($other_html == false)) {
                 $goods++;
-                $img->coef = intval($img->surface()/(($img->html_x+$img->html_y)/2) * $img->weight);
+                $img->coef = intval($img->surface() / (($img->html_x + $img->html_y) / 2) * $img->weight);
                 if ($this->debug) {
-                    echo "<!-- CANDIDATE: ". __($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef/1.5)." -->\n";
+                    echo "<!-- CANDIDATE: ".__($img->url)." X: $img->html_x Y: $img->html_y Surface: ".$img->surface()." Coef1: $img->coef Coef2: ".intval($img->coef / 1.5)." -->\n";
                 }
-                if (!$this->selected || ($this->selected->coef < $img->coef/1.5)) {
+                if (!$this->selected || ($this->selected->coef < $img->coef / 1.5)) {
                     $this->selected = $img;
                     $n++;
                     if ($this->debug) {
-                        echo "<!-- SELECTED: ". __($img->url)." X: $img->html_x Y: $img->html_y -->\n";
+                        echo "<!-- SELECTED: ".__($img->url)." X: $img->html_x Y: $img->html_y -->\n";
                     }
                 }
             }
@@ -538,7 +539,7 @@ class HtmlImages
                 break;
             }
         }
-        if ($this->selected && ! $this->selected->image) {
+        if ($this->selected && !$this->selected->image) {
             $this->selected->get();
         }
         return $this->selected;
@@ -556,7 +557,7 @@ class HtmlImages
         $my_path_len = path_count($this->path_query);
         if ($this->html) {
             if ($this->debug) {
-                echo "<!-- Analyzing html: ". strlen($this->html). " bytes -->\n";
+                echo "<!-- Analyzing html: ".strlen($this->html)." bytes -->\n";
             }
             $regexp = '[a-z]+?:\/\/'.preg_quote($this->parsed_url['host']).'\/[^\"\'>]+?';
             if ($this->site) {
@@ -615,34 +616,34 @@ class HtmlImages
                         continue;
                     }
 
-                    $equals = min(path_equals($path_query_match, $this->path_query), $other_path_len-1);
+                    $equals = min(path_equals($path_query_match, $this->path_query), $other_path_len - 1);
 
                     if ($equals > 0 && $other_path_len != $my_path_len) {
                         // TODO: convert these checks in one iteration
-                            if (preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/*\d{2,}/).*#', '$1', $path_query_match) ==
-                                // Penalize with up to four levels if urls has same "dates"
-                                preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/*\d{2,}/).*#', '$1', $this->path_query)) {
-                                $c = 4;
-                            } elseif (preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/).*#', '$1', $path_query_match) ==
-                                // Penalize with up to three levels if urls has same "dates"
-                                preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/).*#', '$1', $this->path_query)) {
-                                $c = 3;
-                            } elseif (preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $path_query_match) ==
-                                // Penalize with up to two levels if urls has same "dates"
-                                preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $this->path_query)) {
-                                $c = 2;
-                            }
-                        $equals = max(0, $equals-$c);
+                        if (preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/*\d{2,}/).*#', '$1', $path_query_match) ==
+                            // Penalize with up to four levels if urls has same "dates"
+                            preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/*\d{2,}/).*#', '$1', $this->path_query)) {
+                            $c = 4;
+                        } elseif (preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/).*#', '$1', $path_query_match) ==
+                            // Penalize with up to three levels if urls has same "dates"
+                            preg_replace('#.*?(/\d{4,}/*\d{2,}/*\d{2,}/).*#', '$1', $this->path_query)) {
+                            $c = 3;
+                        } elseif (preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $path_query_match) ==
+                            // Penalize with up to two levels if urls has same "dates"
+                            preg_replace('#.*?(/\d{4,}/*\d{2,}/).*#', '$1', $this->path_query)) {
+                            $c = 2;
+                        }
+                        $equals = max(0, $equals - $c);
                     }
 
                     // Penalize with a level if one has query and the other does not
                     if (empty($parsed_match['query']) != empty($this->parsed_url['query'])) {
-                        $equals = $equals-2;
+                        $equals = $equals - 2;
                     }
 
                     $distance = levenshtein($path_query_match, $this->path_query)
-                                * min(strlen($path_query_match), strlen($this->path_query))
-                                / max(strlen($path_query_match), strlen($this->path_query));
+                     * min(strlen($path_query_match), strlen($this->path_query))
+                    / max(strlen($path_query_match), strlen($this->path_query));
 
                     $item = array($url, $distance);
                     $levels[$equals][] = $item;
@@ -661,12 +662,13 @@ class HtmlImages
                 }
             }
 
-            if (count($selection) > 2) { // we avoid those simple pages with few links to other pages
+            if (count($selection) > 2) {
+                // we avoid those simple pages with few links to other pages
                 $max_to_check = max(2, min(4, count($selection) / 5));
                 $n = $checked = $same_title = $other_title = $images_total = 0;
                 $paths = array();
                 $paths_visited = array();
-                $paths[path_sub_path($this->path_query, 2)] =  $my_path_len;
+                $paths[path_sub_path($this->path_query, 2)] = $my_path_len;
                 foreach ($selection as $url) {
                     if ($checked > 10) {
                         break;
@@ -697,10 +699,10 @@ class HtmlImages
                         echo "<!-- Checking: $url -->\n";
                     }
 
-                    $checked ++;
+                    $checked++;
                     $res = get_url($url, $this->url, null, false);
 
-                    if (! $res || ! preg_match('/text\/html/i', $res['content_type'])) {
+                    if (!$res || !preg_match('/text\/html/i', $res['content_type'])) {
                         continue;
                     }
 
@@ -708,18 +710,18 @@ class HtmlImages
                         $location_parsed = parse_url($res['location']);
                         $location_unified = unify_path_query($location_parsed['path'], $location_parsed['query']);
                         if ($location_parsed['host'] != $parsed['host']
-                                && $location_parsed['host'] != $this->parsed_redirected['host']) {
+                            && $location_parsed['host'] != $this->parsed_redirected['host']) {
                             if ($this->debug) {
                                 echo "<!-- Redirected to another host: ".$res['location'].", skipping -->\n";
                             }
                             continue;
-                        } elseif ($location_unified  == $this->path_query) {
+                        } elseif ($location_unified == $this->path_query) {
                             if ($this->debug) {
                                 echo "<!-- Redirected to same address: ".$res['location'].", skipping -->\n";
                             }
                             continue;
-                        } elseif (path_count($location_unified) <  $my_path_len
-                                    && path_count($location_unified) < path_count($unified)) {
+                        } elseif (path_count($location_unified) < $my_path_len
+                            && path_count($location_unified) < path_count($unified)) {
                             if ($this->debug) {
                                 echo "<!-- Redirected to a shorter path: $url -> ".$res['location'].", skipping -->\n";
                             }
@@ -728,7 +730,7 @@ class HtmlImages
                     }
 
                     $images_count = preg_match_all('/<img .+?>/is', $res['content'], $dummy);
-                    if (! $images_count) {
+                    if (!$images_count) {
                         continue;
                     }
                     $images_total += $images_count;
@@ -752,7 +754,7 @@ class HtmlImages
                     }
                     $paths[$first_paths] = max($paths_len, $paths[$first_paths]);
                     $n++;
-                    $this->other_html .= $this->shorten_html($res['content'], 100000). "<!-- END part $n -->\n";
+                    $this->other_html .= $this->shorten_html($res['content'], 100000)."<!-- END part $n -->\n";
                     if ($n > $max_to_check || $images_total > $this->images_count * 2) {
                         break;
                     }
@@ -769,7 +771,7 @@ class HtmlImages
             $n++;
             if ($n >= $times) {
                 if ($this->debug) {
-                    echo "<!-- Skip ($times): " . __($str). "-->\n";
+                    echo "<!-- Skip ($times): ".__($str)."-->\n";
                 }
                 return true;
             }
@@ -783,7 +785,7 @@ class HtmlImages
     public function check_google_video()
     {
         if (preg_match('/=["\']http:\/\/video\.google\.[a-z]{2,5}\/.+?\?docid=(.+?)&/i', $this->html, $match) &&
-                (preg_match('/video\.google/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
+            (preg_match('/video\.google/', $this->parsed_url['host']) || !$this->check_in_other($match[1]))) {
             $video_id = $match[1];
             if ($this->debug) {
                 echo "<!-- Detect Google Video, id: $video_id -->\n";
@@ -823,7 +825,7 @@ class HtmlImages
     public function check_youtube()
     {
         if ((preg_match('/youtube\.com/', $this->parsed_url['host']) && preg_match('/v=([\w_\-]+)/i', $this->url, $match)) ||
-            (preg_match('/\/\/(?:m|www)\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && ! $this->check_in_other($match[1], 2))) {
+            (preg_match('/\/\/(?:m|www)\.youtube\.com\/(?:v|embed)\/([\w_\-]+?)[\?\"\'&]/i', $this->html, $match) && !$this->check_in_other($match[1], 2))) {
             $video_id = $match[1];
             if ($this->debug) {
                 echo "<!-- Detect Youtube, id: $video_id -->\n";
@@ -863,9 +865,9 @@ class HtmlImages
         if (preg_match('/yfrog\.com/', $this->parsed_url['host'])) {
             $new_url = 'http://yfrog.com/'.basename($this->parsed_url['path']);
             if (preg_match('/[zf]$/i', $this->url)) {
-                $url = $new_url . ":frame";
+                $url = $new_url.":frame";
             } elseif (preg_match('/[jpigbt]$/i', $this->url)) {
-                $url = $new_url . ":medium";
+                $url = $new_url.":medium";
             }
             if ($this->debug) {
                 echo "<!-- Detect YFrog, url: $url -->\n";
@@ -890,7 +892,7 @@ class HtmlImages
     public function check_metacafe()
     {
         if (preg_match('/=["\']http:\/\/www\.metacafe\.com\/fplayer\/(\d+)\//i', $this->html, $match) &&
-                (preg_match('/metacafe\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
+            (preg_match('/metacafe\.com/', $this->parsed_url['host']) || !$this->check_in_other($match[1]))) {
             $video_id = $match[1];
             if ($this->debug) {
                 echo "<!-- Detect Metacafe, id: $video_id -->\n";
@@ -930,7 +932,7 @@ class HtmlImages
     public function check_elmundo_video()
     {
         if (preg_match('#ArchivoFlash *= *"(http.+?reproductor_video.swf)".+?fotograma=(.+?\.jpg)#is', $this->html, $match) &&
-            ! $this->check_in_other($match[2], 2)) {
+            !$this->check_in_other($match[2], 2)) {
             $server = $match[1];
             $url = $match[2];
             if ($this->debug) {
@@ -956,7 +958,7 @@ class HtmlImages
     public function check_vimeo()
     {
         if (preg_match('/=["\'](?:\/\/vimeo\.com\/moogaloop\.swf\?clip_id=|\/\/player.vimeo.com\/video\/)(\d+)/i', $this->html, $match) &&
-                (preg_match('/vimeo\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
+            (preg_match('/vimeo\.com/', $this->parsed_url['host']) || !$this->check_in_other($match[1]))) {
             $video_id = $match[1];
             if ($this->debug) {
                 echo "<!-- Detect Vimeo, id: $video_id -->\n";
@@ -996,7 +998,7 @@ class HtmlImages
     public function check_zapp_internet()
     {
         if (preg_match('#http://zappinternet\.com/v/([^&]+)#i', $this->html, $match) &&
-                (preg_match('/zappinternet\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
+            (preg_match('/zappinternet\.com/', $this->parsed_url['host']) || !$this->check_in_other($match[1]))) {
             $video_id = $match[1];
             if ($this->debug) {
                 echo "<!-- Detect Zapp Internet Video, id: $video_id -->\n";
@@ -1030,7 +1032,7 @@ class HtmlImages
     public function check_daily_motion()
     {
         if (preg_match('#=["\']http://www.dailymotion.com/swf/([^&"\']+)#i', $this->html, $match) &&
-                (preg_match('/dailymotion\.com/', $this->parsed_url['host']) || ! $this->check_in_other($match[1]))) {
+            (preg_match('/dailymotion\.com/', $this->parsed_url['host']) || !$this->check_in_other($match[1]))) {
             $video_id = $match[1];
             if ($this->debug) {
                 echo "<!-- Detect Daily Motion Video, id: $video_id -->\n";
@@ -1064,15 +1066,16 @@ function build_full_url($url, $referer)
 {
     $parsed_referer = @parse_url($referer);
 
-    if (preg_match('/^\/\//', $url)) { // it's an absolute url wihout http:
-            return $parsed_referer['scheme']."$url";
+    if (preg_match('/^\/\//', $url)) {
+        // it's an absolute url wihout http:
+        return $parsed_referer['scheme']."$url";
     }
 
     $parsed_url = @parse_url($url);
-    if (! $parsed_url) {
+    if (!$parsed_url) {
         return false;
     }
-    if (! $parsed_url['scheme']) {
+    if (!$parsed_url['scheme']) {
         $fullurl = $parsed_referer['scheme'].'://'.$parsed_referer['host'];
         if ($parsed_referer['port']) {
             $fullurl .= ':'.$parsed_referer['port'];
@@ -1105,7 +1108,7 @@ function normalize_path($path)
             $parts[] = $part;
         }
     }
-    return '/' . implode("/", $parts);
+    return '/'.implode("/", $parts);
 }
 
 function path_sub_path($path, $level = -1)
@@ -1118,10 +1121,10 @@ function path_sub_path($path, $level = -1)
     } else {
         $n = $level;
     }
-    for ($i=0; $i<$n && $i<$count; $i++) {
+    for ($i = 0; $i < $n && $i < $count; $i++) {
         $parts[] = $dirs[$i];
     }
-    return '/' . implode("/", $parts);
+    return '/'.implode("/", $parts);
 }
 
 function path_equals($path1, $path2)
@@ -1130,12 +1133,11 @@ function path_equals($path1, $path2)
     $path1 = preg_replace('#([^\d]+/)[/\d]{6,}(/[^\d]{40,})#', '$1$2', $path1);
     $path2 = preg_replace('#([^\d]+/)[/\d]{6,}(/[^\d]{40,})#', '$1$2', $path2);
 
-
     $parts1 = explode('/', preg_replace('#^/+|/+$#', '', $path1));
     $parts2 = explode('/', preg_replace('#^/+|/+$#', '', $path2));
     $n = 0;
     $max = min(count($parts1), count($parts2));
-    for ($i=0; $i < $max && $parts1[$i] == $parts2[$i]; $i++) {
+    for ($i = 0; $i < $max && $parts1[$i] == $parts2[$i]; $i++) {
         $n++;
     }
     return $n;
@@ -1162,11 +1164,11 @@ function sort_url_distance_items($a, $b)
 function unify_path_query($path, $query)
 {
     $path_query = preg_replace('#/index\.\w{2,5}$#', '/', $path); // Don't count indexes
-        if (!empty($query)) {
-            $query = preg_replace('/(.+?)&.*/', '$1', $query); // Take just first part
-            $query = preg_replace('#&|=#', '/', $query);
-            $path_query .= "/$query";
-        }
+    if (!empty($query)) {
+        $query = preg_replace('/(.+?)&.*/', '$1', $query); // Take just first part
+        $query = preg_replace('#&|=#', '/', $query);
+        $path_query .= "/$query";
+    }
     $path_query = preg_replace('#/{2,}#', '/', $path_query);
     return $path_query;
 }

@@ -1,20 +1,17 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="radio"
-    {% if link.content_type == 'text' %}checked="checked"{% endif %}
-    name="type" value="text"
+<input type="radio" name="type" value="text"
+    {% if link.content_type == 'text' %} checked="checked" {% endif %}
     />&nbsp;{% trans _('texto') %}
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<input type="radio"
-    {% if link.content_type == 'image' %}checked="checked"{% endif %}
-    name="type" value="image"
+<input type="radio" name="type" value="image"
+    {% if link.content_type == 'image' %} checked="checked" {% endif %}
     />&nbsp;<i class="fa fa-camera" alt="{% trans _('¿es una imagen?') %}" title="{% trans _('¿es una imagen?') %}"></i>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<input type="radio"
-    {% if link.content_type == 'video' %}checked="checked"{% endif %}
-    name="type" value="video"
+<input type="radio" name="type" value="video"
+    {% if link.content_type == 'video' %} checked="checked" {% endif %}
     />&nbsp;<i class="fa fa-video-camera" alt="{% trans _('¿es un vídeo?') %}" title="{% trans _('¿es un vídeo?') %}"></i>
 

@@ -74,6 +74,10 @@ function validateLinkUrl($link, $validator)
 {
     global $site, $site_properties, $current_user;
 
+    if (empty($link->url) && !empty($site_properties['no_link'])) {
+        return true;
+    }
+
     if (empty($link->url)) {
         return addFormError(_('No se ha enviado ninguna URL'));
     }

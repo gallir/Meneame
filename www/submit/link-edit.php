@@ -46,5 +46,5 @@ function do_edit($link)
         $link->poll->read('link_id', $link->id);
     }
 
-    Haanga::Load('story/edit/edit.html', compact('globals', 'link', 'site_properties'));
+    Haanga::Load('story/submit/link-edit.html', compact('globals', 'link', 'site_properties'));
 }

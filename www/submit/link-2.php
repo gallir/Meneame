@@ -38,6 +38,11 @@ if (mb_strlen($link->url_description) > 40) {
 
 $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
+if (empty($link->url)) {
+    $link->poll = new Poll;
+    $link->poll->read('link_id', $link->id);
+}
+
 $link->has_thumb();
 $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 

@@ -6,6 +6,7 @@
         <input type="hidden" name="id" value="{{ link.id }}" />
         <input type="hidden" name="step" value="2" />
 
+        {% if link.url %}
         <fieldset>
             <legend><span class="sign">{% trans _('Información del enlace') %}</span></legend>
 
@@ -18,6 +19,7 @@
                 </a>
             </p>
         </fieldset>
+        {% endif %}
 
         {% include 'story/submit/error.html' %}
 
@@ -40,7 +42,7 @@
 
                 {% if link.url %}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% include 'link/content_type_buttons.html' %}
+                    {% include 'story/submit/content_type_buttons.html' %}
                 {% endif %}
 
                 {% if link.change_status %}

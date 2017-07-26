@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="text-center m-20">
-                    <input type="button" class="button" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';" value="&#171; {% trans _('Volver a la edición') %}"/>
+                    <input type="button" class="button" onclick="window.location = '{% get_url 'submit/?step=2&amp;id=' link.id %}';" value="&#171; {% trans _('Volver a la edición') %}"/>
 
                     {% if !error %}
                     &nbsp;&nbsp;
