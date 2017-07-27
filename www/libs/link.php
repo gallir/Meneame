@@ -142,6 +142,7 @@ class Link extends LCPBase
         $article_ids = $db->get_col($sql);
 
         if (count($article_ids <= $limit)) {
+            $sql_distinct_articles = (count($article_ids) > 0) ? ' AND link_id NOT IN ('. implode(",", $article_ids) .') ': '';
 
             $sql_extra_articles = '
             SELECT DISTINCT link
@@ -152,7 +153,7 @@ class Link extends LCPBase
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
-                AND link_karma >= '. $globals['widget_popular_articles_extra_min_karma'] .'
+                AND link_karma >= '. $globals['widget_popular_articles_extra_min_karma'] . $sql_distinct_articles . '
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
