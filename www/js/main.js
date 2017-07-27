@@ -1005,13 +1005,18 @@ function comment_reply(id, prefix) {
 
     var $parent = $('#cid-' + prefix + id).closest('.comment');
 
-    if ($parent.find('#comment_ajax_form').length > 0) {
+    if ($parent.find('#comment_ajax_form').length) {
         return;
     }
 
-    $('#comment_ajax_form').remove();
+    var $current = $('#comment_ajax_form'),
+        $target = $('<div class="threader"></div>'),
+        contents = '';
 
-    var $target = $('<div class="threader"></div>');
+    if ($current.length) {
+        contents = $current.find('textarea').val();
+        $current.remove();
+    }
 
     $parent.after($target);
 
@@ -1030,7 +1035,14 @@ function comment_reply(id, prefix) {
         var $e = $('<div id="comment_ajax_form" style="margin: 10px 0 20px 0"></div>');
 
         $e.append(data.html);
-        $target.append($e).find('textarea').setFocusToEnd();
+
+        var $textarea = $target.append($e).find('textarea');
+
+        if (contents) {
+            $textarea.val(contents + ' ' + $textarea.val());
+        }
+
+        $textarea.setFocusToEnd();
 
         $('#c_edit_form').ajaxForm({
             async: false,
