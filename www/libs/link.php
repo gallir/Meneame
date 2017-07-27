@@ -2639,8 +2639,8 @@ class Link extends LCPBase
             return __('El título es demasiado corto, debe ser al menos de %s caracteres', 8);
         }
 
-        if (mb_strlen($title) > 100) {
-            return __('El título es demasiado largo, debe ser como máximo %s caracteres', 100);
+        if (mb_strlen($title) > 120) {
+            return __('El título es demasiado largo, debe ser como máximo %s caracteres', 120);
         }
 
         if (get_uppercase_ratio($title) > 0.5) {
