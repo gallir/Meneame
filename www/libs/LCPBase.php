@@ -83,23 +83,23 @@ class LCPBase
                 case '@':
                     $ref = substr($matches[2], 1);
 
-                    if (is_a($this, 'Post')) {
-                        $a = explode(',', $ref);
-
-                        if (count($a) > 1) {
-                            $user = $a[0];
-                            $id = ','.$a[1];
-                        } else {
-                            $user = $ref;
-                            $id = '';
-                        }
-
-                        $user_url = urlencode($user);
-
-                        return $matches[1]."<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url?id=$user_url$id;".$this->date."'>@$user</a>";
+                    if (!is_a($this, 'Post')) {
+                        return $matches[1]."<a class='tooltip u:$ref' href='".get_user_uri($ref)."'>@$ref</a>";
                     }
 
-                    return $matches[1]."<a class='tooltip u:$ref' href='".get_user_uri($ref)."'>@$ref</a>";
+                    $a = explode(',', $ref);
+
+                    if (count($a) > 1) {
+                        $user = $a[0];
+                        $id = ','.$a[1];
+                    } else {
+                        $user = $ref;
+                        $id = '';
+                    }
+
+                    $user_url = urlencode($user);
+
+                    return $matches[1]."<a class='tooltip p:$user_url$id-$this->date' href='".$globals['base_url']."backend/get_post_url?id=$user_url$id;".$this->date."'>@$user</a>";
 
                 case '{':
                     return $matches[1].put_emojis_callback(array($matches[2], substr($matches[2], 1, -1)));

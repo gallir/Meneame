@@ -102,20 +102,20 @@ function save_comment($comment, $link)
     $data = array();
 
     if ($comment->id == 0) {
-        $res = Comment::save_from_post($link, false); // New comment
+        $comment = Comment::save_from_post($link, false); // New comment
     } else {
-        $res = check_and_save($comment, $link); // Edit, others requirements
+        $comment = check_and_save($comment, $link); // Edit, others requirements
     }
 
-    if (is_a($res, 'Comment', false)) {
-        $comment = Comment::from_db($res->id);
+    if (is_a($comment, 'Comment', false)) {
+        $comment = Comment::from_db($comment->id);
         $comment->link_object = $link;
 
         $data['html'] = $comment->print_summary(null, true, true);
         $data['error'] = '';
     } else {
         $data['html'] = '';
-        $data['error'] = $res;
+        $data['error'] = $comment;
     }
 
     echo json_encode($data);
@@ -130,9 +130,7 @@ function check_and_save($comment, $link)
     // Check image limits
 
     if (!empty($_FILES['image']['tmp_name'])) {
-        $limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);
-
-        if ($limit_exceded) {
+        if ($limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size'])) {
             return $limit_exceded;
         }
     }
@@ -172,6 +170,10 @@ function check_and_save($comment, $link)
         if ($current_user->user_id == $comment->author && $comment->banned && $current_user->Date() > $globals['now'] - 86400) {
             syslog(LOG_NOTICE, "Meneame: editcomment not stored, banned link ($current_user->user_login)");
             return _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
+        }
+
+        if ($error = User::checkReferencesToIgnores($comment->content)) {
+            return $error;
         }
 
         if (mb_strlen($comment->content) > 0) {

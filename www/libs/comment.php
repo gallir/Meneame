@@ -176,6 +176,7 @@ class Comment extends LCPBase
 
             if ($r) {
                 $this->id = $new_id;
+
                 // Insert comment_new event into logs
                 if ($full) {
                     Log::insert('comment_new', $this->id, $current_user->user_id);
@@ -183,14 +184,14 @@ class Comment extends LCPBase
             }
         } else {
             $r = $db->query("UPDATE comments set comment_user_id=$this->author, comment_link_id=$this->link, comment_type='$comment_type', comment_karma=$this->karma, comment_date=FROM_UNIXTIME($this->date), comment_modified=now(), comment_randkey=$this->randkey, comment_content='$comment_content' WHERE comment_id=$this->id");
-            if ($r) {
-                // Insert comment_new event into logs
-                if ($full) {
-                    if ($globals['now'] - $this->date < 86400) {
-                        Log::conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
-                    }
-                    $this->update_order();
+
+            // Insert comment_new event into logs
+            if ($r && $full) {
+                if ($globals['now'] - $this->date < 86400) {
+                    Log::conditional_insert('comment_edit', $this->id, $current_user->user_id, 60);
                 }
+
+                $this->update_order();
             }
         }
 
@@ -209,6 +210,7 @@ class Comment extends LCPBase
             syslog(LOG_INFO, "Trying to assign order to comment $this->id after commit");
             $this->update_order();
         }
+
         $db->commit();
 
         return true;
@@ -588,11 +590,13 @@ class Comment extends LCPBase
         // Check if is a POST of a comment
 
         if (!(
-            $link->votes > 0 && $link->date > $globals['now'] - $globals['time_enabled_comments'] * 1.01 &&
-            $link->comments < $globals['max_comments'] &&
-            intval($_POST['link_id']) == $link->id && $current_user->authenticated &&
-            intval($_POST['user_id']) == $current_user->user_id &&
-            intval($_POST['randkey']) > 0
+            ($link->votes > 0)
+            && ($link->date > ($globals['now'] - $globals['time_enabled_comments'] * 1.01))
+            && ($link->comments < $globals['max_comments'])
+            && (intval($_POST['link_id']) == $link->id)
+            && $current_user->authenticated
+            && (intval($_POST['user_id']) == $current_user->user_id)
+            && (intval($_POST['randkey']) > 0)
         )) {
             return _('comentario o usuario incorrecto');
         }
@@ -703,47 +707,59 @@ class Comment extends LCPBase
         $db->transaction();
 
         // Check the comment wasn't already stored
-        $r = intval($db->get_var("select count(*) from comments where comment_link_id = $comment->link and comment_user_id = $comment->author and comment_randkey = $comment->randkey FOR UPDATE"));
-        $already_stored = intval($r);
+        $stored = (int)$db->get_var('
+            SELECT COUNT(*)
+            FROM `comments`
+            WHERE (
+                `comment_link_id` = "'.(int)$comment->link.'"
+                AND `comment_user_id` = "'.(int)$comment->author.'"
+                AND `comment_randkey` = "'.$comment->randkey.'"
+            )
+            FOR UPDATE;
+        ');
 
-        if ($already_stored) {
+        if ($stored) {
             $db->rollback();
             return _('comentario duplicado');
         }
 
+        if ($error = User::checkReferencesToIgnores($comment->content)) {
+            return $error;
+        }
+
         if ($karma_penalty > 0) {
             $db->rollback();
+
             $user = new User($current_user->user_id);
             $user->add_karma(-$karma_penalty, _('texto repetido o abuso de enlaces en comentarios'));
 
             return _('penalización de karma por texto repetido o abuso de enlaces');
         }
 
-        if (!is_null($r) && $comment->store()) {
-            $comment->insert_vote();
-            $link->update_comments();
-            $db->commit();
-
-            // Check image upload or delete
-            if ($_POST['image_delete']) {
-                $comment->delete_image();
-            } else {
-                $comment->store_image_from_form('image');
-            }
-
-            if ($redirect) {
-                // Comment stored, just redirect to it page
-                header('HTTP/1.1 303 Load');
-                header('Location: '.$link->get_permalink().'/c0'.$comment->order.'#c-'.$comment->order);
-                die;
-            } else {
-                return $comment;
-            }
+        if (!$comment->store()) {
+            $db->rollback();
+            return _('error insertando comentario');
         }
 
-        $db->rollback();
+        $comment->insert_vote();
+        $link->update_comments();
 
-        return _('error insertando comentario');
+        $db->commit();
+
+        // Check image upload or delete
+        if ($_POST['image_delete']) {
+            $comment->delete_image();
+        } else {
+            $comment->store_image_from_form('image');
+        }
+
+        // Comment stored, just redirect to it page
+        if ($redirect) {
+            header('HTTP/1.1 303 Load');
+            die(header('Location: '.$link->get_permalink().'/c0'.$comment->order.'#c-'.$comment->order));
+        }
+
+        return $comment;
     }
 
     public function update_conversation()

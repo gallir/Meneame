@@ -98,18 +98,24 @@ class User
     {
         global $db;
 
-        $id = intval($id);
-
-        return $db->get_var("select user_login from users where user_id = $id");
+        return $db->get_var('
+            SELECT `user_login`
+            FROM `users`
+            WHERE `user_id` = "'.(int)$id.'"
+            LIMIT 1;
+        ');
     }
 
     public static function get_user_id($name)
     {
         global $db;
 
-        $name = $db->escape($name);
-
-        return $db->get_var("select user_id from users where user_login = '$name'");
+        return $db->get_var('
+            SELECT `user_id`
+            FROM `users`
+            WHERE `user_login` = "'.$db->escape($name).'"
+            LIMIT 1;
+        ');
     }
 
     public static function calculate_affinity($uid, $min_karma = 200)
@@ -1029,5 +1035,37 @@ class User
                 '.($value ? ('AND `pref_value` = "'.(int)$value.'"') : '').'
             );
         ');
+    }
+
+    public static function checkReferencesToIgnores($message)
+    {
+        global $db, $current_user;
+
+        preg_match_all('/@([\p{L}\.][\.\d\-_\p{L}]+\w)/', $message, $users);
+
+        if (empty($current_user->user_id) || empty($users[1])) {
+            return;
+        }
+
+        $users = array_map(function ($value) use ($db) {
+            return $db->escape($value);
+        }, $users[1]);
+
+        $query = '
+            SELECT SQL_CACHE COUNT(*)
+            FROM `friends`, `users`
+            WHERE (
+                `users`.`user_login` IN ("'.implode('","', $users).'")
+                AND `friends`.`friend_from` = `users`.`user_id`
+                AND `friends`.`friend_type` = "manual"
+                AND `friends`.`friend_to` = "'.(int)$current_user->user_id.'"
+                AND `friends`.`friend_value` < 0
+            )
+            LIMIT 1;
+        ';
+
+        if ((int)$db->get_var($query)) {
+            return _('No es posible hacer referencias a usuarios que te tienen ignorado.');
+        }
     }
 }
