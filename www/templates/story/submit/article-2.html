@@ -16,8 +16,7 @@
                     <div id="editor" class="input-editable">{{ link.content }}</div>
 
                     <div class="form-group input-group-editable">
-                        <textarea name="title" id="article-title" rows="1" class="form-control input-title" tabindex="1"
-                                  maxlength="100" placeholder="{% trans _('Escribe aquí el título') %}" required>{{ link.title }}</textarea>
+                        <textarea name="title" id="article-title" rows="1" class="form-control input-title" tabindex="1" maxlength="100" placeholder="{% trans _('Escribe aquí el título') %}" required>{{ link.title }}</textarea>
                     </div>
 
                     <div class="form-group">
@@ -39,10 +38,10 @@
 </section>
 
 <script>
-    var $title = document.getElementById('article-title');
-    var value = $title.value;
+var $title = document.getElementById('article-title');
+var value = $title.value;
 
-    $title.focus();
-    $title.value = '';
-    $title.value = value;
+$title.focus();
+$title.value = '';
+$title.value = value;
 </script>

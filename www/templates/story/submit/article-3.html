@@ -27,7 +27,7 @@
         </p>
 
         <div class="mt-20 text-center">
-            <button type="button" class="btn btn-mnm btn-inverted" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';">
+            <button type="button" class="btn btn-mnm btn-inverted" onclick="window.location = '{% get_url 'submit/?step=2&amp;id=' link.id %}';">
                 &#171; {% trans _('Volver a la edición') %}
             </button>
 
@@ -42,7 +42,7 @@
     <p class="info text-center mt-20">{% trans _('ERROR: no es posible el envío al existir errores que deben ser resueltos') %}</p>
 
     <div class="mt-20 text-center">
-        <button type="button" class="btn btn-mnm btn-inverted" onclick="window.location = '{% get_url 'submit?step=2&amp;id=' link.id %}';">
+        <button type="button" class="btn btn-mnm btn-inverted" onclick="window.location = '{% get_url 'submit/?step=2&amp;id=' link.id %}';">
             &#171; {% trans _('Volver a la edición') %}
         </button>
     </div>

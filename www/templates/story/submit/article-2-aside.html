@@ -1,6 +1,50 @@
 <div class="story-blog-aside apply-sticky">
     <br class="clearfix" />
 
+    {% if not
+        link.is_new
+        && (link.votes > 0 && (link.status !== 'published' OR current_user.user_level === 'god' OR link.is_sub_owner)
+        && ((not link.discarded && current_user.user_id == link.author) OR current_user.admin OR link.is_sub_owner))
+    %}
+
+    <div class="form-group">
+        <select name="status" class="form-control">
+            <option value="{{ link.status }}" selected="selected">{{ link.status_text }}</option>
+
+            {% if link.status === 'queued' %}
+            <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+
+            {% if current_user.user_id != link.author %}
+            <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+            {% endif %}
+
+            {% if current_user.user_level === 'god' %}
+            <option value="published">{% exec link.get_status_text 'published' %}</option>
+            {% endif %}
+
+            {% else %} {% if link.discarded %}
+
+            {% if current_user.admin OR link.is_sub_owner %}
+            <option value="queued">{% exec link.get_status_text 'queued' %}</option>
+            <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+            <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+            {% endif %}
+
+            {% else %} {% if current_user.user_level === 'god' OR link.is_sub_owner %}
+            <option value="abuse">{% exec link.get_status_text 'abuse' %}</option>
+            <option value="autodiscard">{% exec link.get_status_text 'autodiscard' %}</option>
+            <option value="queued">{% exec link.get_status_text 'queued' %}</option>
+            {% endif %}
+
+            {% endif %} {# END if current_user.admin OR link.is_sub_owner #}
+            {% endif %} {# END if link.status === 'queued' #}
+        </select>
+    </div>
+
+    <br class="clearfix" />
+
+    {% endif %}
+
     <button type="button" type="submit" class="btn btn-gray" data-toggle="modal" data-target="#modal-save">
         <i class="fa fa-floppy-o"></i>
         {% trans _('Guardar') %}

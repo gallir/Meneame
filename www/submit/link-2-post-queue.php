@@ -98,7 +98,19 @@ if ($blog_id > 0 && $blog_id != $link->blog) {
 $link->title = $link->get_title_fixed();
 $link->content = $link->get_content_fixed();
 
+$poll = new Poll;
+
+$poll->read('link_id', $link->id);
+$poll->link_id = $link->id;
+
 $db->transaction();
+
+try {
+    $poll->storeFromArray($_POST);
+} catch (Exception $e) {
+    $db->rollback();
+    die('ERROR: '.$e->getMessage());
+}
 
 $link->store();
 
@@ -119,6 +131,8 @@ if ($globals['now'] - $link->date < 86400 * 15) {
 
 $db->commit();
 
+$link->poll = $poll;
+
 if ($link->store_image_from_form('image')) {
     $link->thumb_status = 'local';
     $link->store_thumb_status();
@@ -128,4 +142,4 @@ if (empty($_POST['edit'])) {
     die(header('Location: '.$link->get_permalink()));
 }
 
-Haanga::Load('story/edit/link-edit-success.html', compact('link'));
+Haanga::Load('story/submit/link-edit-success.html', compact('link'));

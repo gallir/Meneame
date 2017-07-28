@@ -21,7 +21,7 @@
 <h2>{% trans _('editar noticia') %}</h2>
 
 <div class="genericform">
-    <form action="{% get_url 'submit?step=2&amp;id=' link.id '&amp;user=' current_user.user_id %}" method="post" id="thisform" name="thisform">
+    <form action="{% get_url 'submit/?step=2&amp;id=' link.id '&amp;user=' current_user.user_id %}" method="post" id="thisform" name="thisform">
         <input type="hidden" name="phase" value="1" />
 
 {% endif %}
@@ -51,12 +51,13 @@
 
                 {% if link.url %}
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {% include 'link/content_type_buttons.html' %}
+                    {% include 'story/submit/content_type_buttons.html' %}
                 {% endif %}
 
                 {% if not link.is_new
-                    && (link.votes > 0 && (link.status != 'published' OR current_user.user_level == 'god' OR link.is_sub_owner)
-                    && (( not link.discarded && current_user.user_id == link.author) OR current_user.admin OR link.is_sub_owner)) %}
+                    && (link.votes > 0 && (link.status != 'published' OR current_user.user_level === 'god' OR link.is_sub_owner)
+                    && (( not link.discarded && current_user.user_id == link.author) OR current_user.admin OR link.is_sub_owner))
+                %}
 
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <select name="status">

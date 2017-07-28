@@ -108,8 +108,11 @@ class PollOption
         }
 
         $this->votes ++;
-        $this->karma += $karma;
         $this->voted = true;
+
+        if (is_numeric($this->karma)) {
+            $this->karma += $karma;
+        }
 
         return true;
     }

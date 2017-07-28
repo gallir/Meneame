@@ -49,7 +49,7 @@ function send_recover_mail($user, $echo = true)
     }
 
     $key = md5($user->id.$user->pass.$now.$site_key.get_server_name());
-    $url = $globals['scheme'].'://'.get_server_name().$globals['base_url'].'profile?login='.$user->username.'&t='.$now.'&k='.$key;
+    $url = $globals['scheme'].'//'.get_server_name().$globals['base_url'].'profile?login='.$user->username.'&t='.$now.'&k='.$key;
 
     $to = $user->email;
 

@@ -51,7 +51,7 @@ switch ($_GET['what']) {
         do_redirection($globals['scheme'].'//'.get_server_name().$c->get_relative_individual_permalink());
 
     case 'favorites':
-        do_redirection($current_user->get_uri('conversation', 'menu'));
+        do_redirection($current_user->get_uri('favorites', 'menu'));
 }
 
 $l = Link::from_db($id, null, false);

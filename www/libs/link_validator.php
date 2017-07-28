@@ -6,7 +6,7 @@
 //      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once mnminclude . 'favorites.php';
+require_once mnminclude.'favorites.php';
 
 class LinkValidator
 {
@@ -40,7 +40,7 @@ class LinkValidator
         $this->link->url = preg_replace('/#.*$/', '', clean_input_url(urldecode($this->link->url)));
 
         if (!preg_match('#^http(s)?://#', $this->link->url)) {
-            $this->link->url = 'http://' . $this->link->url;
+            $this->link->url = 'http://'.$this->link->url;
         }
 
         return $this;
@@ -51,7 +51,7 @@ class LinkValidator
         $host = parse_url($this->link->url, PHP_URL_HOST);
 
         if (empty($host) || (gethostbyname($host) === $host)) {
-            $this->setError(_('La URL enviada no parece válida'), '', 'Hostname error: ' . $this->link->url);
+            $this->setError(_('La URL enviada no parece válida'), '', 'Hostname error: '.$this->link->url);
         }
 
         if (strlen($this->link->url) > 250) {
@@ -74,7 +74,6 @@ class LinkValidator
 
     public function checkKey()
     {
-
         global $site_key, $current_user;
 
         if ($_POST['key'] != md5($_POST['randkey'].$current_user->user_id.$current_user->user_email.$site_key.get_server_name())) {
@@ -114,6 +113,10 @@ class LinkValidator
     {
         global $globals;
 
+        if ($this->user->admin) {
+            return $this;
+        }
+
         if (!($found = Link::duplicates($this->link->url))) {
             return $this;
         }
@@ -140,7 +143,7 @@ class LinkValidator
             return $this;
         }
 
-        $e = _('Error leyendo la URL') . ': ' . htmlspecialchars($this->link->url);
+        $e = _('Error leyendo la URL').': '.htmlspecialchars($this->link->url);
 
         if ($this->user->user_karma < 7 && $this->user->user_level === 'normal' && !$site->owner) {
             $this->setError($e, _('URL inválida, incompleta o no permitida. Está fuera de línea, o tiene mecanismos antibots.'));
@@ -156,8 +159,12 @@ class LinkValidator
         $components = parse_url($this->link->url);
         $quoted = preg_quote(get_server_name(), '/');
 
-        if (preg_match('/^' . $quoted . '$/', $components['host']) && !strstr($this->link->url, '/my-story/')) {
-            $this->setError(_('El servidor es local'), '', 'Server name is local name: ' . $this->link->url);
+        if ($components['host'] === 'localhost') {
+            $this->setError(_('El servidor es local'), '', 'Server name is local name: '.$this->link->url);
+        }
+
+        if (preg_match('/^'.$quoted.'$/', $components['host']) && !strstr($this->link->url, '/my-story/')) {
+            $this->setError(_('El servidor es local'), '', 'Server name is local name: '.$this->link->url);
         }
 
         return $this;
@@ -165,7 +172,7 @@ class LinkValidator
 
     public function checkBan($url = null)
     {
-        require_once mnminclude . 'ban.php';
+        require_once mnminclude.'ban.php';
 
         $url = $url ?: $this->link->url;
 
@@ -173,18 +180,18 @@ class LinkValidator
             return $this;
         }
 
-        $info = _('Razón') . ': ' . $ban['comment'];
+        $info = _('Razón').': '.$ban['comment'];
 
         if ($ban['expire'] > 0) {
-            $info .= ', ' . _('caduca') . ': ' . get_date_time($ban['expire']);
+            $info .= ', '._('caduca').': '.get_date_time($ban['expire']);
         }
 
-        $this->setError(_('El servidor tiene aplicado un BAN'), $info, 'Server name is banned: ' . $url);
+        $this->setError(_('El servidor tiene aplicado un BAN'), $info, 'Server name is banned: '.$url);
     }
 
     public function checkBanPunished($url = null)
     {
-        require_once mnminclude . 'ban.php';
+        require_once mnminclude.'ban.php';
 
         $url = $url ?: $this->link->url;
 
@@ -193,32 +200,32 @@ class LinkValidator
         }
 
         $info = _('Mejor enviar el enlace a la fuente original');
-        $info .= '.' . _('Razón') . ': ' . $ban['comment'];
+        $info .= '.'._('Razón').': '.$ban['comment'];
 
         if ($ban['expire'] > 0) {
-            $info .= ', ' . _('caduca') . ': ' . get_date_time($ban['expire']);
+            $info .= ', '._('caduca').': '.get_date_time($ban['expire']);
         }
 
-        $this->setWarning(_('Aviso') . ' ' . $ban['match'], $info);
+        $this->setWarning(_('Aviso').' '.$ban['match'], $info);
     }
 
     public function checkBanUser($url = null)
     {
         global $globals;
 
-        require_once mnminclude . 'ban.php';
+        require_once mnminclude.'ban.php';
 
         if (!($ban = check_ban($globals['user_ip'], 'ip', true)) && !($ban = check_ban_proxy())) {
             return $this;
         }
 
         if ($ban['expire'] > 0) {
-            $info = _('Caduca') . ': ' . get_date_time($ban['expire']);
+            $info = _('Caduca').': '.get_date_time($ban['expire']);
         } else {
             $info = '';
         }
 
-        $this->setError(_('Dirección IP no permitida para enviar'), $info, 'Banned IP ' . $globals['user_ip'] . ': ' . $this->link->url);
+        $this->setError(_('Dirección IP no permitida para enviar'), $info, 'Banned IP '.$globals['user_ip'].': '.$this->link->url);
     }
 
     public function checkDrafts()
@@ -230,14 +237,14 @@ class LinkValidator
             if ($this->link->content_type === 'article') {
                 $this->setError(
                     _('Demasiados borradores'),
-                    _('Has hecho demasiados intentos, puedes continuar con ellos desde el ') . ' <a href="' . $globals['base_url'] . 'user/'. $current_user->user_login . '/articles_discard">' . _('listado de borradores') . '</a>',
-                    'too many drafts: ' . $this->link->url
+                    _('Has hecho demasiados intentos, puedes continuar con ellos desde el ').' <a href="'.$globals['base_url'].'user/'.$current_user->user_login.'/articles_discard">'._('listado de borradores').'</a>',
+                    'too many drafts: '.$this->link->url
                 );
             } else {
                 $this->setError(
                     _('Demasiados borradores'),
-                    _('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la') . ' <a href="' . $globals['base_url'] . 'queue?meta=_discarded">' . _('Cola de descartadas') . '</a>',
-                    'too many drafts: ' . $this->link->url
+                    _('Has hecho demasiados intentos, debes esperar o continuar con ellos desde la').' <a href="'.$globals['base_url'].'queue?meta=_discarded">'._('Cola de descartadas').'</a>',
+                    'too many drafts: '.$this->link->url
                 );
             }
         }
@@ -245,7 +252,7 @@ class LinkValidator
         $db->query('
             DELETE FROM `links`
             WHERE (
-                `link_author` = "' . $this->user_id . '"
+                `link_author` = "'.$this->user_id.'"
                 AND `link_content_type` != "article"
                 AND `link_date` > DATE_SUB(NOW(), INTERVAL 30 MINUTE)
                 AND `link_date` < DATE_SUB(NOW(), INTERVAL 10 MINUTE)
@@ -319,8 +326,8 @@ class LinkValidator
             FROM links
             WHERE (
                 link_status != "published"
-                AND link_date > DATE_SUB(NOW(), INTERVAL ' . $hours . ' HOUR)
-                AND link_author IN (' . implode(', ', $clones) . ')
+                AND link_date > DATE_SUB(NOW(), INTERVAL '.$hours.' HOUR)
+                AND link_author IN ('.implode(', ', $clones).')
             );
         ');
 
@@ -328,7 +335,7 @@ class LinkValidator
             $this->setError(
                 _('Ya se envió con otro usuario «clon» en las últimas horas'),
                 '',
-                'Clon submit: ' . $this->link->url
+                'Clon submit: '.$this->link->url
             );
         }
 
@@ -348,8 +355,8 @@ class LinkValidator
             FROM links, subs, sub_statuses
             WHERE (
                 status != "published"
-                AND `date` > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
-                AND link_author = "' . $this->user_id . '"
+                AND `date` > DATE_SUB(NOW(), INTERVAL '.(int) $hours.' HOUR)
+                AND link_author = "'.$this->user_id.'"
                 AND sub_statuses.link = link_id
                 AND subs.id = sub_statuses.id
                 AND sub_statuses.origen = sub_statuses.id
@@ -362,7 +369,7 @@ class LinkValidator
             $this->setError(
                 __('Debes esperar, tienes demasiados envíos en cola de las últimas 24 horas (%s)', $queued),
                 '',
-                'Too many queued in 24 hours: ' . $this->link->url
+                'Too many queued in 24 hours: '.$this->link->url
             );
         }
 
@@ -385,8 +392,8 @@ class LinkValidator
             FROM links
             WHERE (
                 link_status = "queued"
-                AND link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $minutes . ' MINUTE)
-                AND link_author = "' . $this->user_id . '"
+                AND link_date > DATE_SUB(NOW(), INTERVAL '.(int) $minutes.' MINUTE)
+                AND link_author = "'.$this->user_id.'"
             );
         ');
 
@@ -394,7 +401,7 @@ class LinkValidator
             $this->setError(
                 _('Exceso de envíos'),
                 __('Se han enviado demasiadas historias en los últimos 3 minutos (%s > %s)', $queued, $limit),
-                'Too many queued: ' . $this->link->url
+                'Too many queued: '.$this->link->url
             );
         }
 
@@ -411,8 +418,8 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $this->user_id . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.$interval.' HOUR)
+                AND link_author = "'.$this->user_id.'"
             );
         ') - $this->getUserDrafts();
 
@@ -433,8 +440,8 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_ip = "' . $globals['user_ip'] . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.$interval.' HOUR)
+                AND link_ip = "'.$globals['user_ip'].'"
             );
         ') - $this->getUserDrafts();
 
@@ -455,8 +462,8 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $this->user_id . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.$interval.' HOUR)
+                AND link_author = "'.$this->user_id.'"
             );
         ') - $this->getUserDrafts();
 
@@ -468,8 +475,8 @@ class LinkValidator
             SELECT SUM(link_votes)
             FROM links
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $this->user_id . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.$interval.' HOUR)
+                AND link_author = "'.$this->user_id.'"
             );
         ');
 
@@ -477,8 +484,8 @@ class LinkValidator
             SELECT SUM(link_negatives)
             FROM links
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . $interval . ' HOUR)
-                AND link_author = "' . $this->user_id . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.$interval.' HOUR)
+                AND link_author = "'.$this->user_id.'"
             );
         ');
 
@@ -503,7 +510,7 @@ class LinkValidator
             SELECT COUNT(DISTINCT link_blog) / COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $this->user_id . '"
+                link_author = "'.$this->user_id.'"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
             );
         ');
@@ -518,9 +525,9 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $this->user_id . '"
+                link_author = "'.$this->user_id.'"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
-                AND link_blog = "' . $blog->id . '"
+                AND link_blog = "'.$blog->id.'"
             );
         ');
 
@@ -528,7 +535,7 @@ class LinkValidator
             $this->setError(
                 _('Ya has enviado demasiados enlaces a los mismos sitios'),
                 _('Varía las fuentes, podría ser considerado spam'),
-                'Forbidden due to low entropy: ' . $ratio . ' < ' . $threshold . ': ' . $this->link->url
+                'Forbidden due to low entropy: '.$ratio.' < '.$threshold.': '.$this->link->url
             );
         }
 
@@ -549,7 +556,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links, subs, sub_statuses
             WHERE (
-                link_author = "' . $this->user_id . '"
+                link_author = "'.$this->user_id.'"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
                 AND link_content_type IN ("image", "video")
                 AND sub_statuses.link = link_id
@@ -564,7 +571,7 @@ class LinkValidator
             $this->setError(
                 _('Ya has enviado demasiadas imágenes o vídeos'),
                 '',
-                'Forbidden due to too many images or video sent by user: ' . $this->link->url
+                'Forbidden due to too many images or video sent by user: '.$this->link->url
             );
         }
 
@@ -583,7 +590,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links, subs, sub_statuses
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
+                link_date > DATE_SUB(NOW(), INTERVAL '.(int) $hours.' HOUR)
                 AND sub_statuses.link = link_id
                 AND subs.id = sub_statuses.id
                 AND sub_statuses.origen = sub_statuses.id
@@ -596,7 +603,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links, subs, sub_statuses
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
+                link_date > DATE_SUB(NOW(), INTERVAL '.(int) $hours.' HOUR)
                 AND link_content_type IN ("image", "video")
                 AND sub_statuses.link = link_id
                 AND subs.id = sub_statuses.id
@@ -611,7 +618,7 @@ class LinkValidator
             $this->setError(
                 _('Ya se han enviado demasiadas imágenes o vídeos, espera unos minutos por favor'),
                 __('El total en 12 horas ha sido % y el máximo actual es %s', $count, intval($limit * 0.05)),
-                'Forbidden due to overflow images: ' . $this->link->url
+                'Forbidden due to overflow images: '.$this->link->url
             );
         }
 
@@ -626,9 +633,9 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
-                AND link_author = "' . $this->user_id . '"
-                AND link_blog = "' . $blog->id . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.(int) $hours.' HOUR)
+                AND link_author = "'.$this->user_id.'"
+                AND link_blog = "'.$blog->id.'"
                 AND link_votes > 0
             );
         ');
@@ -637,7 +644,7 @@ class LinkValidator
             $this->setError(
                 _('Demasiados enlaces al mismo sitio en las últimas horas'),
                 '',
-                'Forbidden due to too many links to the same site in last ' . $hours . ' hours: ' . $this->link->url
+                'Forbidden due to too many links to the same site in last '.$hours.' hours: '.$this->link->url
             );
         }
 
@@ -652,9 +659,9 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $minutes . ' MINUTE)
-                AND link_author = "' . $this->user_id . '"
-                AND link_blog = "' . $blog->id . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.(int) $minutes.' MINUTE)
+                AND link_author = "'.$this->user_id.'"
+                AND link_blog = "'.$blog->id.'"
                 AND link_votes > 0
             );
         ');
@@ -663,7 +670,7 @@ class LinkValidator
             $this->setError(
                 _('Ya has enviado un enlace al mismo sitio hace poco tiempo'),
                 __('Debes esperar %s minutos entre envíos al mismo sitio.', $minutes),
-                'Forbidden due to short period between links to same site: ' . $this->link->url
+                'Forbidden due to short period between links to same site: '.$this->link->url
             );
         }
 
@@ -684,9 +691,9 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $this->user_id . '"
-                AND link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $days . ' DAY)
-                AND link_blog = "' . $blog->id . '"
+                link_author = "'.$this->user_id.'"
+                AND link_date > DATE_SUB(NOW(), INTERVAL '.(int) $days.' DAY)
+                AND link_blog = "'.$blog->id.'"
             );
         ');
 
@@ -702,14 +709,14 @@ class LinkValidator
             $this->setError(
                 $e,
                 _('Has superado los límites de envíos de este sitio'),
-                'Warn, high ratio, process interrumped: ' . $this->link->url
+                'Warn, high ratio, process interrumped: '.$this->link->url
             );
         }
 
         $this->setWarning(
             $e,
-            _('Continúa, pero ten en cuenta podría recibir votos negativos') . ', ' . '<a href="' . $globals['base_url'] . $globals['legal'] . '">' . _('condiciones de uso') . '</a>' .
-            'warn, high ratio, continue: ' . $this->link->url
+            _('Continúa, pero ten en cuenta podría recibir votos negativos').', '.'<a href="'.$globals['base_url'].$globals['legal'].'">'._('condiciones de uso').'</a>'.
+            'warn, high ratio, continue: '.$this->link->url
         );
 
         return $this;
@@ -724,8 +731,8 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links, subs, sub_statuses
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
-                AND link_blog = "' . $blog->id . '"
+                link_date > DATE_SUB(NOW(), INTERVAL '.(int) $hours.' HOUR)
+                AND link_blog = "'.$blog->id.'"
                 AND link_status = "queued"
                 AND sub_statuses.link = link_id
                 AND subs.id = sub_statuses.id
@@ -743,7 +750,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links, subs, sub_statuses
             WHERE (
-                link_date > DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)
+                link_date > DATE_SUB(NOW(), INTERVAL '.(int) $hours.' HOUR)
                 AND sub_statuses.link = link_id
                 AND subs.id = sub_statuses.id
                 AND sub_statuses.origen = sub_statuses.id
@@ -757,7 +764,7 @@ class LinkValidator
             $this->setError(
                 _('Hay en cola demasiados envíos del mismo sitio, espera unos minutos por favor'),
                 __('Total en 12 horas %s y el máximo actual es de %s', $site, intval($time * 0.05)),
-                'Forbidden due to overflow to the same site: ' . $this->link->url
+                'Forbidden due to overflow to the same site: '.$this->link->url
             );
         }
 
@@ -793,8 +800,8 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $this->user_id . '"
-                AND link_date > DATE_SUB(NOW(), INTERVAL ' . $minutes . ' MINUTE)
+                link_author = "'.$this->user_id.'"
+                AND link_date > DATE_SUB(NOW(), INTERVAL '.$minutes.' MINUTE)
                 AND link_status = "discard"
                 AND link_votes = 0
             );
@@ -815,7 +822,7 @@ class LinkValidator
             WHERE (
                 vote_type = "links"
                 AND vote_date > DATE_SUB(NOW(), INTERVAL 72 HOUR)
-                AND vote_user_id = "' . $this->user_id . '"
+                AND vote_user_id = "'.$this->user_id.'"
             );
         ');
     }
@@ -832,7 +839,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $this->user_id . '"
+                link_author = "'.$this->user_id.'"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 24 HOUR)
                 AND link_status != "discard"
             );
@@ -850,7 +857,7 @@ class LinkValidator
         return $this->userSent = (int) $db->get_var('
             SELECT SQL_CACHE COUNT(*)
             FROM links
-            WHERE link_author = "' . $this->user_id . '";
+            WHERE link_author = "'.$this->user_id.'";
         ') - $this->getUserDrafts();
     }
 
@@ -866,7 +873,7 @@ class LinkValidator
             SELECT SQL_CACHE COUNT(*)
             FROM links
             WHERE (
-                link_author = "' . $this->user_id . '"
+                link_author = "'.$this->user_id.'"
                 AND link_date > DATE_SUB(NOW(), INTERVAL 60 DAY)
             );
         ') - $this->getUserDrafts();
@@ -909,7 +916,7 @@ class LinkValidator
         $this->error = [
             'title' => $title,
             'info' => $info,
-            'syslog' => $syslog
+            'syslog' => $syslog,
         ];
 
         if ($this->errorCallback) {
@@ -924,7 +931,7 @@ class LinkValidator
         $this->warning = [
             'title' => $title,
             'info' => $info,
-            'syslog' => $syslog
+            'syslog' => $syslog,
         ];
 
         if ($this->warningCallback) {

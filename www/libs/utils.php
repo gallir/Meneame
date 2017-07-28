@@ -295,6 +295,7 @@ function clean_text_with_tags($string, $wrap = 0, $replace_nl = true, $maxlength
 
     $string = preg_replace_callback('/(?:&lt;|<)(\/{0,1})(\w{1,6})(?:&gt;|>)/', function ($matches) {
         global $globals;
+
         static $open_tags = array();
 
         if (!preg_match('/^('.$globals['enabled_tags'].')$/', $matches[2])) {
@@ -466,16 +467,13 @@ function add_tags($string)
 
 function text_to_html(&$string)
 {
-    global $globals;
-
     $regexp = '/([\s\(\[{¡;,:¿]|^)((https{0,1}:\/\/)([^\s<>]{5,500}))/Smu';
+
     return preg_replace_callback($regexp, 'text_to_html_callback', $string);
 }
 
 function text_to_html_callback(&$matches)
 {
-    global $globals;
-
     if ($matches[2][0] !== 'h') {
         return $matches[1].$matches[2];
     }
@@ -526,8 +524,8 @@ function get_date_time($time)
 {
     global $globals;
 
+    // Difference is less than 20 hours
     if (abs($globals['now'] - $time) < 72000) {
-        // Difference is less than 20 hours
         return date('H:i T', $time);
     }
 
@@ -676,8 +674,6 @@ function get_user_uri($user, $view = '')
 
 function get_user_uri_by_uid($user, $view = '')
 {
-    global $globals;
-
     $uid = guess_user_id($user);
 
     // User does not exist, ensure it will give error later
@@ -1035,7 +1031,7 @@ function meta_get_current()
     }
 
     // TODO: Move this function as static of login manager.
-    //Check for personalisation
+    // Check for personalisation
     // Authenticated users
     if (!empty($globals['submnm']) || !$current_user->user_id > 0) {
         return;
@@ -1369,14 +1365,10 @@ function clear_whitespace($input)
 
 function isIPIn($ip, $net, $mask)
 {
-    $lnet = ip2long($net);
-    $lip = ip2long($ip);
-    $binnet = str_pad(decbin($lnet), 32, "0", STR_PAD_LEFT);
-    $firstpart = substr($binnet, 0, $mask);
-    $binip = str_pad(decbin($lip), 32, "0", STR_PAD_LEFT);
-    $firstip = substr($binip, 0, $mask);
+    $binnet = str_pad(decbin(ip2long($net)), 32, "0", STR_PAD_LEFT);
+    $binip = str_pad(decbin(ip2long($ip)), 32, "0", STR_PAD_LEFT);
 
-    return (strcmp($firstpart, $firstip) == 0);
+    return (strcmp(substr($binnet, 0, $mask), substr($binip, 0, $mask)) === 0);
 }
 
 function isPrivateIP($ip)

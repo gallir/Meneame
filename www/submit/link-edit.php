@@ -13,13 +13,11 @@ if (!empty($_REQUEST['id']) && is_numeric($_REQUEST['id'])) {
     if (!$link->is_editable() || intval($_GET['user']) != $current_user->user_id) {
         echo '<div class="form-error-submit">&nbsp;&nbsp;'._("noticia no modificable").'</div>'."\n";
     } else {
-        
         if ($_POST) {
             require __DIR__.'/link-2-post.php';
         } else {
             do_edit($link);
         }
-
     }
 } else {
     echo '<div class="form-error-submit">&nbsp;&nbsp;'._("¿duh?").'</div>';
@@ -48,5 +46,5 @@ function do_edit($link)
         $link->poll->read('link_id', $link->id);
     }
 
-    Haanga::Load('story/edit/edit.html', compact('globals', 'link', 'site_properties'));
+    Haanga::Load('story/submit/link-edit.html', compact('globals', 'link', 'site_properties'));
 }
