@@ -1041,9 +1041,13 @@ class User
     {
         global $db, $current_user;
 
+        if (empty($current_user->user_id) || empty($message) || (strpos($message, '@') === false)) {
+            return;
+        }
+
         preg_match_all('/@([\p{L}\.][\.\d\-_\p{L}]+\w)/', $message, $users);
 
-        if (empty($current_user->user_id) || empty($users[1])) {
+        if (empty($users[1])) {
             return;
         }
 
