@@ -33,7 +33,8 @@ if ($url_args[0] === 'story') {
 
 $argc = 0;
 
-if (empty($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) { // Compatibility with story.php?id=x and /story/x
+if (empty($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) {
+    // Compatibility with story.php?id=x and /story/x
     $link = Link::from_db($url_args[0], 'uri');
 
     if (!$link) {
@@ -50,7 +51,7 @@ if (empty($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) { // C
         // Redirect to the right URL if the link has a "semantic" uri
         if (!empty($link->uri)) {
             header('HTTP/1.1 301 Moved Permanently');
-            die(header('Location: ' . $link->get_permalink()));
+            die(header('Location: '.$link->get_permalink()));
         }
     } else {
         do_error(_('noticia no encontrada'), 404);
@@ -60,10 +61,10 @@ if (empty($_REQUEST['id']) && $url_args[0] && !ctype_digit($url_args[0])) { // C
 // Check the link belong to the current site
 $site_id = SitesMgr::my_id();
 
-if ($link->is_sub && ($site_id != $link->sub_id) && (empty($link->sub_status) || ! $link->allow_main_link)) {
+if ($link->is_sub && ($site_id != $link->sub_id) && (empty($link->sub_status) || !$link->allow_main_link)) {
     // The link does not correspond to the current site, find one
     header('HTTP/1.1 301 Moved Permanently');
-    die(header('Location: ' . $link->get_canonical_permalink()));
+    die(header('Location: '.$link->get_canonical_permalink()));
 }
 
 if ($link->is_discarded()) {
@@ -96,7 +97,7 @@ if (($argc = count($url_args)) > 1) {
         $no_page = false;
 
         unset($url_args[1]);
-    } elseif ((int)$url_args[$argc - 1] > 0) {
+    } elseif ((int) $url_args[$argc - 1] > 0) {
         $current_page = intval($url_args[$argc - 1]);
 
         if ($current_page > $total_pages) {
@@ -191,11 +192,11 @@ switch ($url_args[1]) {
         }
 
         if ($canonical_page > 1) {
-            $globals['extra_head'] .= '<link rel="prev" href="'.$link->get_canonical_permalink($canonical_page-1).'" />';
+            $globals['extra_head'] .= '<link rel="prev" href="'.$link->get_canonical_permalink($canonical_page - 1).'" />';
         }
 
         if ($canonical_page < $total_pages) {
-            $globals['extra_head'] .= '<link rel="next" href="'.$link->get_canonical_permalink($canonical_page+1).'" />';
+            $globals['extra_head'] .= '<link rel="next" href="'.$link->get_canonical_permalink($canonical_page + 1).'" />';
         }
 
         // Geo check
@@ -313,7 +314,7 @@ do_header($link->title, 'post');
 
 // Show the error if the comment couldn't be inserted
 if (!empty($new_comment_error)) {
-    add_javascript('mDialog.notify("'._('Aviso'). ": $new_comment_error".'", 5);');
+    add_javascript('mDialog.notify("'._('Aviso').": $new_comment_error".'", 5);');
 }
 
 do_tabs("main", _('noticia'), true);
@@ -344,7 +345,7 @@ if (
 
     do_banner_promotions();
 
-    if (! $current_user->user_id) {
+    if (!$current_user->user_id) {
         do_best_stories();
     }
 
@@ -377,29 +378,31 @@ function print_story_tabs($option)
 
     $html = '';
     $html .= '<div class="select-wrapper"><select class="options-comments" onchange="location=this.value">';
-    $html .= '<option value="'.$globals['permalink'].'/standard">'._('ordenados'). '</option>';
-    $html .= '<option value="'.$globals['permalink'].'/threads" '.$active[10].'>'._('hilos'). '</option>';
-    $html .= '<option value="'.$globals['permalink'].'/best-comments" '.$active[2].'>'._('+ valorados'). '</option>';
+    $html .= '<option value="'.$globals['permalink'].'/standard">'._('ordenados').'</option>';
+    $html .= '<option value="'.$globals['permalink'].'/threads" '.$active[10].'>'._('hilos').'</option>';
+    $html .= '<option value="'.$globals['permalink'].'/best-comments" '.$active[2].'>'._('+ valorados').'</option>';
 
-    if (!$globals['bot']) { // Don't show "empty" pages to bots, Google can penalize too
+    if (!$globals['bot']) {
+        // Don't show "empty" pages to bots, Google can penalize too
         if ($globals['link']->sent_date > $globals['now'] - 86400 * 60) { // newer than 60 days
-            $html .= '<option value="'.$globals['permalink'].'/voters" '.$active[3].'>'._('votos'). '</option>';
+            $html .= '<option value="'.$globals['permalink'].'/voters" '.$active[3].'>'._('votos').'</option>';
         }
-        if ($globals['link']->sent_date > $globals['now'] - 86400 * 30) { // newer than 30 days
-            $html .= '<option value="'.$globals['permalink'].'/log" '.$active[4].'>'._('registros'). '</option>';
+        if ($globals['link']->sent_date > $globals['now'] - 86400 * 30) {
+            // newer than 30 days
+            $html .= '<option value="'.$globals['permalink'].'/log" '.$active[4].'>'._('registros').'</option>';
         }
         if ($globals['link']->date > $globals['now'] - $globals['time_enabled_comments']) {
-            $html .= '<option value="'.$globals['permalink'].'/sneak" '.$active[5].'>&micro;&nbsp;'. _('fisgona'). '</option>';
+            $html .= '<option value="'.$globals['permalink'].'/sneak" '.$active[5].'>&micro;&nbsp;'._('fisgona').'</option>';
         }
     }
 
     if ($current_user->user_id > 0) {
         if (($c = $db->get_var("SELECT count(*) FROM favorites WHERE favorite_type = 'link' and favorite_link_id=$link->id")) > 0) {
-            $html .= '<option value="'.$globals['permalink'].'/favorites" '.$active[6].'>'. _('favoritos'). "&nbsp;($c)</option>";
+            $html .= '<option value="'.$globals['permalink'].'/favorites" '.$active[6].'>'._('favoritos')."&nbsp;($c)</option>";
         }
     }
 
-    $html .= '<option value="'.$globals['permalink'].'/related" '.$active[8].'>'. _('relacionadas'). "</option>";
+    $html .= '<option value="'.$globals['permalink'].'/related" '.$active[8].'>'._('relacionadas')."</option>";
     $html .= '</select></div>';
 
     echo $html;
@@ -436,7 +439,7 @@ function do_comment_pages($total, $current, $reverse = true)
             continue;
         }
 
-        if ($total_pages < 7 || abs($i-$current) < 1 || $i < 3 || abs($i-$total_pages) < 2) {
+        if ($total_pages < 7 || abs($i - $current) < 1 || $i < 3 || abs($i - $total_pages) < 2) {
             echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" title="'._('ir a página')." $i".'">'.$i.'</a>';
             continue;
         }
@@ -451,7 +454,7 @@ function do_comment_pages($total, $current, $reverse = true)
     }
 
     if ($current < $total_pages) {
-        $i = $current+1;
+        $i = $current + 1;
         echo '<a href="'.get_comment_page_url($i, $total_pages, $query, $reverse).'" rel="next">&#187;</a>';
     } else {
         echo '<span class="nextprev">&#187;</span>';
@@ -464,7 +467,7 @@ function get_comment_page_url($i, $total, $query, $reverse = false)
 {
     global $globals;
 
-    if (($i == $total && $reverse) || ($i == 1 && ! $reverse)) {
+    if (($i == $total && $reverse) || ($i == 1 && !$reverse)) {
         return $query;
     }
 
@@ -492,7 +495,7 @@ function print_relevant_comments($link)
         return;
     }
 
-    if ($link->comments > 30 && $globals['now'] - $link->date < 86400*4) {
+    if ($link->comments > 30 && $globals['now'] - $link->date < 86400 * 4) {
         $do_cache = true;
     } else {
         $do_cache = false;
@@ -506,17 +509,17 @@ function print_relevant_comments($link)
         }
     }
 
-    $karma = intval($globals['comment_highlight_karma']/2);
-    $limit = min(15, intval($link->comments/10));
+    $karma = intval($globals['comment_highlight_karma'] / 2);
+    $limit = min(15, intval($link->comments / 10));
 
     // For the SQL
     $extra_limit = $limit * 2;
     $min_len = 32;
-    $min_karma = max(20, $karma/2);
+    $min_karma = max(20, $karma / 2);
     $min_votes = 4;
     $check_vote = $link->date - ($globals['now'] - $globals['time_enabled_votes']);
 
-    $now = intval($globals['now']/60) * 60;
+    $now = intval($globals['now'] / 60) * 60;
     $res = $db->get_results("select comment_id, comment_order, comment_karma, comment_karma + comment_order * 0.7 as val, length(comment_content) as comment_len, user_id, user_avatar, vote_value from comments LEFT JOIN votes ON ($check_vote > 0 and vote_type = 'links' and vote_link_id = comment_link_id and vote_user_id = comment_user_id), users where comment_link_id = $link->id and comment_votes >= $min_votes and comment_karma > $min_karma and length(comment_content) > $min_len and comment_user_id = user_id order by val desc limit $extra_limit");
 
     function cmp_comment_val($a, $b)
@@ -566,8 +569,8 @@ function print_relevant_comments($link)
             if (
                 !$self
                 && $obj->vote < 0
-                && $link->negatives < $link->votes * 0.5 // Don't show negative comment if already has many
-                && (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'])
+                && $link->negatives < $link->votes * 0.5// Don't show negative comment if already has many
+                 && (count($objects) < 6 || $comment->comment_karma > $globals['comment_highlight_karma'])
                 && count($res) >= count($objects)
             ) {
                 // Show the most negative relevant comment
@@ -580,7 +583,7 @@ function print_relevant_comments($link)
             }
         }
 
-        if (! $self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 1.5) {
+        if (!$self && count($objects) > 5 && $objects[0]->val > $globals['comment_highlight_karma'] * 1.5) {
             $self = get_highlighted_comment($objects[0]);
             $objects[0]->summary = true;
         }
@@ -600,7 +603,7 @@ function get_highlighted_comment($obj)
     // Read the object for printing the summary
     $self = Comment::from_db($obj->id);
     $self->link_id = $obj->link_id;
-    $self->link_permalink =  $obj->link_url;
+    $self->link_permalink = $obj->link_url;
 
     // Simplify text of the comment
     $self->prepare_summary_text(1000);
@@ -668,8 +671,8 @@ function get_qanda($link)
 }
 
 /* Show a very simple list of questions and answers
-   ready to copy&paste for eldiario.es
-*/
+ready to copy&paste for eldiario.es
+ */
 function do_qanda_text($link)
 {
     global $globals, $db;
