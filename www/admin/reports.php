@@ -158,7 +158,7 @@ function update_status_debate_mail($report)
 {
     global $db, $globals;
 
-    if (empty($globals['adm_list_email'])) {
+    if (empty($globals['adm_email'])) {
         return;
     }
 
@@ -185,7 +185,7 @@ function update_status_debate_mail($report)
         .$comment->comment_content
         ."\n\n".'Link: <a href="'.$url.'">'.$url.'</a>';
 
-    send_mail($globals['adm_list_email'], $subject, $message);
+    send_mail($globals['adm_email'], $subject, $message);
 }
 
 function calculate_statistics()
