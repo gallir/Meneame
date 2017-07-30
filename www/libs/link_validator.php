@@ -111,13 +111,7 @@ class LinkValidator
 
     public function checkDuplicates()
     {
-        global $globals;
-
-        if ($this->user->admin) {
-            return $this;
-        }
-
-        if (empty($this->link->url) || !($found = Link::duplicates($this->link->url))) {
+        if ($this->user->admin || empty($this->link->url) || !($found = Link::duplicates($this->link->url))) {
             return $this;
         }
 
