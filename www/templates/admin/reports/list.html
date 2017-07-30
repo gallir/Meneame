@@ -92,7 +92,7 @@
                 {% if i==0 %}
 
                     <td class="text-center" rowspan="{{ row.num_lines }}">
-                        {{ report. id }}
+                        {{ report.id }}
                     </td>
 
                     <td class="text-center" rowspan="{{ row.num_lines }}">
@@ -108,33 +108,7 @@
                     </td>
 
                     <td class="normal text-center">
-                        {% if report.reason == 'insult' %}
-                            Insultos directos
-                        {% endif %}
-                        {% if report.reason == 'incites_hatred' %}
-                            Incitación al odio
-                        {% endif %}
-                        {% if report.reason == 'advertising' %}
-                            Promoción comercial de productos o servicios
-                        {% endif %}
-                        {% if report.reason == 'violence_porn' %}
-                            Material pornográfico o de violencia gráfica
-                        {% endif %}
-                        {% if report.reason == 'private_data' %}
-                            Contiene datos personales propios o de un tercero
-                        {% endif %}
-                        {% if report.reason == 'legality' %}
-                            Incumple la legalidad española vigente
-                        {% endif %}
-                        {% if report.reason == 'violate_rules' %}
-                            Viola las normas de uso
-                        {% endif %}
-                        {% if report.reason == 'inappropriate_content' %}
-                            Contenido inapropiado
-                        {% endif %}
-                        {% if report.reason == 'spam' %}
-                            Spam
-                        {% endif %}
+                        {% exec report.getReasonTitle %}
                     </td>
                     {#
                     <td class="text-center">
@@ -201,33 +175,7 @@
                     </td>
 
                     <td class="normal text-center">
-                        {% if report.reason == 'insult' %}
-                        Insultos directos
-                        {% endif %}
-                        {% if report.reason == 'incites_hatred' %}
-                        Incitación al odio
-                        {% endif %}
-                        {% if report.reason == 'advertising' %}
-                        Promoción comercial de productos o servicios
-                        {% endif %}
-                        {% if report.reason == 'violence_porn' %}
-                        Material pornográfico o de violencia gráfica
-                        {% endif %}
-                        {% if report.reason == 'private_data' %}
-                        Contiene datos personales propios o de un tercero
-                        {% endif %}
-                        {% if report.reason == 'legality' %}
-                        Incumple la legalidad española vigente
-                        {% endif %}
-                        {% if report.reason == 'violate_rules' %}
-                        Viola las normas de uso
-                        {% endif %}
-                        {% if report.reason == 'inappropriate_content' %}
-                        Contenido inapropiado
-                        {% endif %}
-                        {% if report.reason == 'spam' %}
-                        Spam
-                        {% endif %}
+                        {% exec report.getReasonTitle %}
                     </td>
                     <td class="text-center">
                         <a class="fancybox admin-button" href="{{ globals.base_url }}admin/report_ajax.php?id={{ report.ref_id }}&reason={{ report.reason }}&process=get_reporters" title="Información de reportes">Ver</a>
@@ -235,22 +183,22 @@
                     <td class="text-center">{{ report.date }}</td>
                     <td class="text-center">
                         <form method="post" action="{{ _SERVER.REQUEST_URI|escape }}">
-
                             <input type="hidden" name="op" value="change_status">
                             <input type="hidden" name="report_id" value="{{ report.id }}">
                             <input type="hidden" name="key" value="{{ key }}">
+
                             <select name="new_report_status" onchange="this.form.submit()">
                                 <option value="pending" {% if report.status=="pending" %} selected="selected" {% endif %}>
-                                    pending
+                                    pendiente
                                 </option>
                                 <option value="debate" {% if report.status=="debate" %} selected="selected" {% endif %}>
-                                    debate
+                                    en debate
                                 </option>
                                 <option value="penalized" {% if report.status=="penalized" %} selected="selected" {% endif %}>
-                                    penalized
+                                    penalizado
                                 </option>
                                 <option value="dismissed" {% if report.status=="dismissed" %} selected="selected" {% endif %}>
-                                    dismissed
+                                    descartado
                                 </option>
                             </select>
                         </form>

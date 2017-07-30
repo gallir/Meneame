@@ -15,29 +15,42 @@ class Report extends LCPBase
     const REPORT_STATUS_PENALIZED = 'penalized';
     const REPORT_STATUS_DISMISSED = 'dismissed';
 
-    const REPORT_REASON_VIOLATES_RULES = 'violate_rules';
-    const REPORT_REASON_INAPPROPRIATE_CONTENT = 'inappropriate_content';
-    const REPORT_REASON_SPAM = 'spam';
-    const REPORT_REASON_INSULT_THREAT = 'insult';
-    const REPORT_REASON_INCITES_HATRED = 'incites_hatred';
-    const REPORT_REASON_ADVERTISING = 'advertising';
-    const REPORT_REASON_VIOLENCE_OR_PORN = 'violence_porn';
-    const REPORT_REASON_REVEILS_PRIVATE_DATA = 'private_data';
-    const REPORT_REASON_BREACH_LEGALITY = 'legality';
+    const SQL_COMMENT = '
+        report_id as id, report_type as type, report_date as date, report_modified as modified, report_status as status, report_reason as reason, reporters.user_id as reporter_id, reporters.user_level as reporter_user_level, reporters.user_login as reporter_user_login, authors.user_id as author_id, authors.user_level as author_user_level, authors.user_login as author_user_login, revisors.user_id as revisor_id, revisors.user_level as revisor_user_level, revisors.user_login as revisor_user_login, report_ip as ip, comment_id as ref_id, comment_order, comment_link_id, link_uri as comment_link_uri FROM reports
+        LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
+        LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
+        LEFT JOIN links on (comments.comment_link_id = links.link_id)
+        LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
+        LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by)
+    ';
 
-    const SQL_COMMENT = " report_id as id, report_type as type, report_date as date, report_modified as modified, report_status as status, report_reason as reason, reporters.user_id as reporter_id, reporters.user_level as reporter_user_level, reporters.user_login as reporter_user_login, authors.user_id as author_id, authors.user_level as author_user_level, authors.user_login as author_user_login, revisors.user_id as revisor_id, revisors.user_level as revisor_user_level, revisors.user_login as revisor_user_login, report_ip as ip, comment_id as ref_id, comment_order, comment_link_id, link_uri as comment_link_uri FROM reports
-    LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
-    LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
-    LEFT JOIN links on (comments.comment_link_id = links.link_id)
-    LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
-    LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by) ";
+    const SQL_COMMENT_GROUPED = '
+        COUNT(*) as report_num, report_id as id, report_type as type, report_date as date, report_modified as modified, report_status as status, report_reason as reason, reporters.user_id as reporter_id, reporters.user_level as reporter_user_level, reporters.user_login as reporter_user_login, authors.user_id as author_id, authors.user_level as author_user_level, authors.user_login as author_user_login, revisors.user_id as revisor_id, revisors.user_level as revisor_user_level, revisors.user_login as revisor_user_login, report_ip as ip, comment_id as ref_id, comment_order, comment_link_id, link_uri as comment_link_uri FROM reports
+        LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
+        LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
+        LEFT JOIN links on (comments.comment_link_id = links.link_id)
+        LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
+        LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by)
+    ';
 
-    const SQL_COMMENT_GROUPED = " count(*) as report_num, report_id as id, report_type as type, report_date as date, report_modified as modified, report_status as status, report_reason as reason, reporters.user_id as reporter_id, reporters.user_level as reporter_user_level, reporters.user_login as reporter_user_login, authors.user_id as author_id, authors.user_level as author_user_level, authors.user_login as author_user_login, revisors.user_id as revisor_id, revisors.user_level as revisor_user_level, revisors.user_login as revisor_user_login, report_ip as ip, comment_id as ref_id, comment_order, comment_link_id, link_uri as comment_link_uri FROM reports
-    LEFT JOIN users as reporters on (reporters.user_id = report_user_id)
-    LEFT JOIN comments on (comments.comment_id = reports.report_ref_id)
-    LEFT JOIN links on (comments.comment_link_id = links.link_id)
-    LEFT JOIN users as authors on (authors.user_id = comments.comment_user_id)
-    LEFT JOIN users as revisors on (revisors.user_id = reports.report_revised_by) ";
+    public static $statuses = [
+        'pending' => 'Pendiente',
+        'debate' => 'En debate',
+        'penalized' => 'Penalizado',
+        'dismissed' => 'Descartado',
+    ];
+
+    public static $reasons = [
+        'inappropriate_content' => 'Contenido inapropiado',
+        'private_data' => 'Contiene datos personales propios o de un tercero',
+        'incites_hatred' => 'Incitación al odio',
+        'legality' => 'Incumple la legalidad española vigente',
+        'insult' => 'Insultos directos',
+        'violence_porn' => 'Material pornográfico o de violencia gráfica',
+        'advertising' => 'Promoción comercial de productos o servicios',
+        'spam' => 'Spam',
+        'violate_rules' => 'Viola las normas de uso',
+    ];
 
     // sql fields to build an object from mysql
     public $id = 0;
@@ -56,28 +69,23 @@ class Report extends LCPBase
     {
         global $db;
 
-        $selector = "report_id = $id and report_type = '$report_type'";
-
-        if ($report_type == Report::REPORT_TYPE_LINK_COMMENT) {
-            $sql = "SELECT" . Report::SQL_COMMENT . "WHERE $selector";
+        if ($report_type !== Report::REPORT_TYPE_LINK_COMMENT) {
+            return;
         }
 
-        return $db->get_object($sql, 'Report');
+        return $db->get_object('
+            SELECT '.Report::SQL_COMMENT.'
+            WHERE (
+                report_id = '.(int)$id.'
+                AND report_type = "'.$db->escape($report_type).'"
+            )
+            LIMIT 1;
+        ', 'Report');
     }
 
     public static function is_valid_reason($reason)
     {
-        return in_array($reason, array(
-            self::REPORT_REASON_INAPPROPRIATE_CONTENT,
-            self::REPORT_REASON_SPAM,
-            self::REPORT_REASON_VIOLATES_RULES,
-            self::REPORT_REASON_INSULT_THREAT,
-            self::REPORT_REASON_INCITES_HATRED,
-            self::REPORT_REASON_ADVERTISING,
-            self::REPORT_REASON_VIOLENCE_OR_PORN,
-            self::REPORT_REASON_REVEILS_PRIVATE_DATA,
-            self::REPORT_REASON_BREACH_LEGALITY
-        ));
+        return in_array($reason, array(static::$reasons));
     }
 
     public static function getValidOrder($column, $mode)
@@ -100,28 +108,51 @@ class Report extends LCPBase
     {
         global $db, $current_user;
 
-        $sql = "select count(*) from reports where report_ref_id=$report_ref_id and report_user_id={$current_user->user_id}";
-        $already_reported = boolval($db->get_var($sql));
-
-        return $already_reported;
+        return (bool)$db->get_var('
+            SELECT COUNT(*)
+            FROM reports
+            WHERE (
+                report_ref_id = "'.(int)$report_ref_id.'"
+                AND report_user_id = "'.(int)$current_user->user_id.'"
+            );
+        ');
     }
 
     public static function check_report_user_limit()
     {
         global $db, $current_user, $globals;
 
-        $sql = "select count(*) from reports where report_user_id={$current_user->user_id} and (NOW() - report_date) < 86400";
-        $number_reports_24h = $db->get_var($sql);
+        $count = (int)$db->get_var('
+            SELECT COUNT(*)
+            FROM reports
+            WHERE (
+                report_user_id = "'.(int)$current_user->user_id.'"
+                AND (NOW() - report_date) < 86400
+            );
+        ');
 
-        return $number_reports_24h < $globals['max_reports_for_comments'];
+        return $count < $globals['max_reports_for_comments'];
     }
 
-    public static function get_total_in_status($status, $type = self::REPORT_TYPE_LINK_COMMENT)
+    public static function getTotals()
     {
         global $db;
 
-        $sql = "select count(*) from reports where report_status='$status' and report_type='$type'";
-        return $db->get_var($sql);
+        return $db->get_results('
+            SELECT COUNT(*) `total`, report_status `status`
+            FROM `reports`
+            GROUP BY `status`;
+        ');
+    }
+
+    public function getStatusTitle()
+    {
+        return static::$statuses[$this->status];
+    }
+
+    public function getReasonTitle()
+    {
+        return static::$reasons[$this->reason];
     }
 
     public function store()
@@ -131,6 +162,7 @@ class Report extends LCPBase
         if (!$this->date) {
             $this->date = $globals['now'];
         }
+
         $report_date = $this->date;
         $report_type = $this->type;
         $report_reason = $this->reason;
