@@ -117,7 +117,7 @@ class LinkValidator
             return $this;
         }
 
-        if (!($found = Link::duplicates($this->link->url))) {
+        if (empty($this->link->url) || !($found = Link::duplicates($this->link->url))) {
             return $this;
         }
 
