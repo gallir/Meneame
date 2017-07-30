@@ -153,7 +153,6 @@ function check_save_report($comment, $link_id)
     $report->ref_id = $comment->id;
 
     // Check report state
-
     $report_status = $db->get_var('
         SELECT `report_status`
         FROM `reports`
