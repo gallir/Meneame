@@ -32,15 +32,10 @@ $link->change_status = !$link->is_new
 
 $link->url_title = mb_substr($link->url_title, 0, 200);
 
-if (mb_strlen($link->url_description) > 40) {
-    $link->content = $link->url_description;
-}
-
 $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
-if (empty($link->url)) {
-    $link->poll = new Poll;
-    $link->poll->read('link_id', $link->id);
+if ($link->url && ($metas = getMetasFromUrl($link->url)) && !empty($metas['description'])) {
+    $link->url_description = $metas['description'];
 }
 
 $link->has_thumb();

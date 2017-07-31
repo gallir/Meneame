@@ -165,7 +165,7 @@ function check_email($email)
 {
     global $globals;
 
-    require_once(mnminclude.'ban.php');
+    require_once mnminclude.'ban.php';
 
     if (!preg_match('/^[a-z0-9_\-\.]+(\+[a-z0-9_\-\.]+)*@[a-z0-9_\-\.]+\.[a-z]{2,6}$/i', $email)) {
         return false;
@@ -204,7 +204,7 @@ function check_password($password)
     return preg_match("/^(?=.{6,})(?=(.*[a-z].*))(?=(.*[A-Z0-9].*)).*$/", $password);
 }
 
-function txt_time_diff($from, $now=0)
+function txt_time_diff($from, $now = 0)
 {
     global $globals;
 
@@ -249,13 +249,13 @@ function txt_time_diff($from, $now=0)
         return ' '._('nada');
     }
 
-    return ' '.$secs.' '. _('segundos');
+    return ' '.$secs.' '._('segundos');
 }
 
 function txt_shorter($string, $len = 70)
 {
     if (mb_strlen($string) > $len) {
-        return mb_substr($string, 0, $len-3).'...';
+        return mb_substr($string, 0, $len - 3).'...';
     }
 
     return $string;
@@ -312,7 +312,7 @@ function clean_text_with_tags($string, $wrap = 0, $replace_nl = true, $maxlength
             return "</$matches[2]>";
         }
 
-        $open_tags[] =  $matches[2];
+        $open_tags[] = $matches[2];
 
         return "<$matches[2]>";
     }, $string);
@@ -337,7 +337,7 @@ function close_tags(&$string)
         }
 
         if ($matches[1] && ($matches[1][0] === '/')) {
-            if (count($open_tags) && $open_tags[count($open_tags)-1] == $matches[2]) {
+            if (count($open_tags) && $open_tags[count($open_tags) - 1] == $matches[2]) {
                 array_pop($open_tags);
             } else {
                 return ' '; // Don't allow misplaced or wrong tags
@@ -355,7 +355,7 @@ function clean_lines($string)
     return preg_replace('/[\n\r]{6,}/', "\n\n", $string);
 }
 
-function html_fix($html)
+function getDomFromHtml($html)
 {
     libxml_use_internal_errors(true);
 
@@ -367,7 +367,12 @@ function html_fix($html)
 
     libxml_use_internal_errors(false);
 
-    return html_remove_headers($DOM->saveHTML());
+    return $DOM;
+}
+
+function html_fix($html)
+{
+    return html_remove_headers(getDomFromHtml($html)->saveHTML());
 }
 
 function html_xpath_clean($html, $attributes = array('src', 'href'))
@@ -376,14 +381,8 @@ function html_xpath_clean($html, $attributes = array('src', 'href'))
         return '';
     }
 
-    $DOM = new DOMDocument;
-    $DOM->recover = true;
-    $DOM->preserveWhiteSpace = false;
-    $DOM->substituteEntities = false;
-    $DOM->loadHtml('<?xml encoding="UTF-8">'.$html, LIBXML_NOBLANKS | LIBXML_ERR_NONE);
-
+    $DOM = getDomFromHtml($html);
     $xpath = new DOMXPath($DOM);
-
     $query = '//@*';
 
     if ($attributes) {
@@ -503,7 +502,7 @@ function get_comment_page_suffix($page_size, $order, $total = 0)
         return '';
     }
 
-    return '/'.ceil($order/$page_size);
+    return '/'.ceil($order / $page_size);
 }
 
 function get_current_page()
@@ -568,13 +567,16 @@ function get_human_date($date, $format, $locale = 'es_ES.UTF-8')
     return $date;
 }
 
-function get_month($timestamp) {
-    $months = [ 1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril', 5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto', 9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'];
+function get_month($timestamp)
+{
+    $months = [1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril', 5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto', 9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'];
+
     return $months[intval(strftime('%m', $timestamp))];
 }
 
-function get_year($timestamp) {
-    return  intval(strftime('%Y', $timestamp));
+function get_year($timestamp)
+{
+    return intval(strftime('%Y', $timestamp));
 }
 
 function get_server_name()
@@ -625,7 +627,8 @@ function get_form_auth_ip()
 {
     global $globals, $site_key;
 
-    if (check_form_auth_ip()) { // We reuse the values
+    if (check_form_auth_ip()) {
+        // We reuse the values
         $ip = $_REQUEST['userip'];
         $scheme = $_REQUEST['userscheme'];
         $control = $_REQUEST['useripcontrol'];
@@ -697,7 +700,7 @@ function get_avatar_url($user, $avatar, $size, $fullurl = true)
 
     // If it does not get avatar status, check the database
     if ($user > 0 && $avatar < 0) {
-        $avatar = (int)$db->get_var("select user_avatar from users where user_id = $user");
+        $avatar = (int) $db->get_var("select user_avatar from users where user_id = $user");
     }
 
     if ($avatar <= 0) {
@@ -760,7 +763,7 @@ function get_security_key($time = false)
     }
 
     // We shift 8 bits to avoid key errors with mobiles/3G that change IP frequently
-    $ip_key = $globals['user_ip_int']>>8;
+    $ip_key = $globals['user_ip_int'] >> 8;
 
     return $time.'-'.base64_encode($time.$ip_key); // Faster, not needed more complex for anoymous users
 }
@@ -882,7 +885,7 @@ function guess_user_id($str)
 
     $str = $db->escape(mb_substr($str, 0, 64));
 
-    return (int)$db->get_var('SELECT user_id FROM users WHERE user_login = "'.$str.'" LIMIT 1;');
+    return (int) $db->get_var('SELECT user_id FROM users WHERE user_login = "'.$str.'" LIMIT 1;');
 }
 
 function put_smileys($str)
@@ -912,7 +915,7 @@ function put_emojis_callback($matches)
             'cry' => 'cry.gif" alt=":\'(" title=":cry: :\'(" width="18" height="18"',
             'ffu' => 'ffu.png" alt=":ffu:" title=":ffu:" width="23" height="18"',
             'goatse' => 'goatse.png" alt=":goatse:" title=":goatse:" width="18" height="18"',
-            'grin' =>'grin.png" alt=":-D" title=":-D" width="18" height="18"',
+            'grin' => 'grin.png" alt=":-D" title=":-D" width="18" height="18"',
             'hug' => 'hug.png" alt=":hug:" title=":hug:" width="35" height="18"',
             'huh' => 'huh.png" alt="?(" title="?(" width="16" height="21"',
             'kiss' => 'kiss.gif" alt=":-*" title=":-* :*" width="18" height="18"',
@@ -922,7 +925,7 @@ function put_emojis_callback($matches)
             'palm' => 'palm.png" alt=":palm:" title=":palm:" width="18" height="18"',
             'roll' => 'roll.gif" alt=":roll:" title=":roll:" width="18" height="18"',
             'sad' => 'sad.png" alt=":-(" title=":-(" width="18" height="18"',
-            'shame' =>'shame.png" alt="¬¬" title="¬¬ :shame:" width="18" height="18"',
+            'shame' => 'shame.png" alt="¬¬" title="¬¬ :shame:" width="18" height="18"',
             'shit' => 'shit.png" alt=":shit:" title=":shit:" width="18" height="18"',
             'shocked' => 'shocked.gif" alt=":-O" title=":-O" width="18" height="18"',
             'smiley' => 'smiley.png" alt=":-)" title=":-)" width="18" height="18"',
@@ -1025,7 +1028,7 @@ function meta_get_current()
     $globals['meta_current'] = '';
 
     if (!empty($_REQUEST['meta']) && ($_REQUEST['meta'][0] === '_')) {
-        $globals['meta']  = clean_input_string($_REQUEST['meta']);
+        $globals['meta'] = clean_input_string($_REQUEST['meta']);
     } else {
         $globals['meta'] = '';
     }
@@ -1073,7 +1076,7 @@ function fork($uri)
         return false;
     }
 
-    @fputs($sock, "GET {$globals['base_url_general']}$uri HTTP/1.0\r\n" . "Host: {$_SERVER['SERVER_NAME']}\r\n\r\n");
+    @fputs($sock, "GET {$globals['base_url_general']}$uri HTTP/1.0\r\n"."Host: {$_SERVER['SERVER_NAME']}\r\n\r\n");
 
     return true;
 }
@@ -1182,7 +1185,7 @@ function memcache_mdelete($key)
 }
 
 // Generic function to get content from an url
-function get_url($url, $referer = false, $max = 500000, $log =true)
+function get_url($url, $referer = false, $max = 500000, $log = true)
 {
     global $globals;
 
@@ -1207,7 +1210,7 @@ function get_url($url, $referer = false, $max = 500000, $log =true)
 
     if (!$session) {
         $session = curl_init();
-        $previous_host =  $parsed['host'];
+        $previous_host = $parsed['host'];
     }
 
     $url = preg_replace('/ /', '%20', $url);
@@ -1236,7 +1239,7 @@ function get_url($url, $referer = false, $max = 500000, $log =true)
     $response = @curl_exec($session);
 
     if (!$response && $log) {
-        syslog(LOG_INFO, "Meneame: CURL error " . curl_getinfo($session, CURLINFO_EFFECTIVE_URL) . ": " .curl_error($session));
+        syslog(LOG_INFO, "Meneame: CURL error ".curl_getinfo($session, CURLINFO_EFFECTIVE_URL).": ".curl_error($session));
         return false;
     }
 
@@ -1334,7 +1337,7 @@ function clear_unicode_spaces($input)
         "\xe1\x9a\x80", // 'OGHAM SPACE MARK' (U+1680)
         "\xe1\xa0\x8e", // 'MONGOLIAN VOWEL SEPARATOR' (U+180E)
 
-    /* Allow theses spaces
+        /* Allow theses spaces
         "\xe2\x80\x80", // 'EN QUAD' (U+2000)
         "\xe2\x80\x81", // 'EM QUAD' (U+2001)
         "\xe2\x80\x82", // 'EN SPACE' (U+2002)
@@ -1346,7 +1349,7 @@ function clear_unicode_spaces($input)
         "\xe2\x80\x88", // 'PUNCTUATION SPACE' (U+2008)
         "\xe2\x80\x89", // 'THIN SPACE' (U+2009)
         "\xe2\x80\x8a", // 'HAIR SPACE' (U+200A)
-    */
+         */
 
         "\xe2\x80\xa8", // 'LINE SEPARATOR' (U+2028)
         "\xe2\x80\xa9", // 'PARAGRAPH SEPARATOR' (U+2029)
@@ -1447,7 +1450,7 @@ function inet_ptod($ip_address)
     $packed_ip = inet_pton($ip_address);
 
     if ($packed_ip === false) {
-        syslog(LOG_INFO, "Bad ip address in inet_pton: $ip_address X-Forwarded: " . $_SERVER["HTTP_X_FORWARDED_FOR"]);
+        syslog(LOG_INFO, "Bad ip address in inet_pton: $ip_address X-Forwarded: ".$_SERVER["HTTP_X_FORWARDED_FOR"]);
         return 0;
     }
 
@@ -1455,11 +1458,11 @@ function inet_ptod($ip_address)
 
     foreach ($parts as &$part) {
         if ($part < 0) {
-            $part = bcadd((string)$part, '4294967296');
+            $part = bcadd((string) $part, '4294967296');
         }
 
         if (!is_string($part)) {
-            $part = (string)$part;
+            $part = (string) $part;
         }
     }
 
@@ -1495,7 +1498,7 @@ function inet_dtop($decimal)
             $part = bcsub($part, '4294967296');
         }
 
-        $part = (int)$part;
+        $part = (int) $part;
     }
 
     $ip_address = inet_ntop(pack('N4', $parts[1], $parts[2], $parts[3], $parts[4]));
@@ -1518,7 +1521,7 @@ function http_cache($maxage = 30)
     }
 
     if ($globals['cache-control']) {
-        header('Cache-Control: ' . implode(', ', $globals['cache-control']));
+        header('Cache-Control: '.implode(', ', $globals['cache-control']));
     } else {
         header('Cache-Control: s-maxage='.$maxage);
     }
@@ -1526,7 +1529,8 @@ function http_cache($maxage = 30)
 
 // Used to store countes, in order to avoid expensives select count(*)
 function get_count($key, $seconds = 7200)
-{ // Every two hours by default
+{
+    // Every two hours by default
     global $db;
 
     $res = $db->get_row("select `count` from counts where `key` = '$key' and date > date_sub(now(), interval $seconds second)");
@@ -1741,7 +1745,8 @@ function check_ip_noaccess($steps = 0)
         $cache_key = false;
     }
 
-    if ($steps < 2 && $cache_key) { // Don't check cache if >= 2
+    if ($steps < 2 && $cache_key) {
+        // Don't check cache if >= 2
         $match = memcache_mget($cache_key);
 
         if ($match !== false) {
@@ -1860,11 +1865,30 @@ function d($title, $message = null, $trace = false)
 
     if ($trace) {
         foreach (array_slice(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), 1) as $row) {
-            echo($cli ? "\n" : '<br>').dTraceLine($row);
+            echo ($cli ? "\n" : '<br>').dTraceLine($row);
         }
     }
 
     echo $cli ? "\n" : '</pre>';
+}
+
+function getMetasFromUrl($url)
+{
+    if (!($html = @file_get_contents($url))) {
+        return;
+    }
+
+    $metas = [];
+
+    foreach ((new DOMXPath(getDomFromHtml($html)))->query('//head/meta') as $node) {
+        $name = str_replace('og:', '', $node->getAttribute('name') ?: $node->getAttribute('property'));
+
+        if ($name && empty($metas[$name])) {
+            $metas[$name] = $node->getAttribute('content');
+        }
+    }
+
+    return $metas;
 }
 
 function dd($title, $message = null, $trace = false)
@@ -1899,8 +1923,8 @@ function show_errors($enabled = true)
 
     static $previous;
 
-    ini_set('display_errors', (int)$enabled);
-    ini_set('display_startup_errors', (int)$enabled);
+    ini_set('display_errors', (int) $enabled);
+    ini_set('display_startup_errors', (int) $enabled);
 
     if (empty($previous)) {
         $previous = error_reporting();
