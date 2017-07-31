@@ -180,7 +180,7 @@ if ($links) {
         $link->max_len = 600;
 
         if ($globals['show_promoted_articles'] ) {
-            Haanga::Safe_Load('link_promoted_articles.html', compact('counter', 'promoted_articles'));
+            Haanga::Safe_Load('private/promoted_articles.html', compact('counter', 'promoted_articles'));
         }
 
         Haanga::Safe_Load('private/ad-interlinks.html', ['counter' => $counter, 'page_size' => $page_size, 'sponsored_link' => $sponsored_link, 'official_subs' => $official_subs, 'widget_popular_articles' => $widget_popular_articles]);
