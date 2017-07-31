@@ -32,10 +32,6 @@ $link->change_status = !$link->is_new
     && ($link->votes > 0 && ($link->status !== 'published' || $current_user->user_level === 'god' || $link->is_sub_owner)
     && ((!$link->discarded && $current_user->user_id == $link->author) || $current_user->admin || $link->is_sub_owner));
 
-if (mb_strlen($link->url_description) > 40) {
-    $link->content = $link->url_description;
-}
-
 $link->chars_left = $site_properties['intro_max_len'] - mb_strlen(html_entity_decode($link->content, ENT_COMPAT, 'UTF-8'), 'UTF-8');
 
 if ($link->is_new) {

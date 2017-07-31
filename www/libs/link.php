@@ -26,6 +26,7 @@ class Link extends LCPBase
     public $modified = 0;
     public $url = false;
     public $url_title = '';
+    public $url_description = '';
     public $encoding = false;
     public $status = 'discard';
     public $type = '';
@@ -125,7 +126,7 @@ class Link extends LCPBase
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
-                AND link_karma >= '. $globals['widget_popular_articles_min_karma'] .'
+                AND link_karma >= '.$globals['widget_popular_articles_min_karma'].'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
@@ -142,7 +143,7 @@ class Link extends LCPBase
         $article_ids = $db->get_col($sql);
 
         if (count($article_ids <= $limit)) {
-            $sql_distinct_articles = (count($article_ids) > 0) ? ' AND link_id NOT IN ('. implode(",", $article_ids) .') ': '';
+            $sql_distinct_articles = (count($article_ids) > 0) ? ' AND link_id NOT IN ('.implode(",", $article_ids).') ' : '';
 
             $sql_extra_articles = '
             SELECT DISTINCT link
@@ -153,7 +154,7 @@ class Link extends LCPBase
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
-                AND link_karma >= '. $globals['widget_popular_articles_extra_min_karma'] . $sql_distinct_articles . '
+                AND link_karma >= '.$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
@@ -164,11 +165,11 @@ class Link extends LCPBase
                     )
                 )
             ) ORDER BY sub_statuses.date DESC
-            LIMIT '.(int) ($limit-count($article_ids)).';
+            LIMIT '.(int) ($limit - count($article_ids)).';
         ';
 
-         $article_extra_ids = $db->get_col($sql_extra_articles);
-         $total_article_ids = array_merge($article_ids, $article_extra_ids);
+            $article_extra_ids = $db->get_col($sql_extra_articles);
+            $total_article_ids = array_merge($article_ids, $article_extra_ids);
 
         } else {
             $total_article_ids = $article_ids;
@@ -760,14 +761,6 @@ class Link extends LCPBase
             }
         }
 
-        if (preg_match(
-            '/< *meta +name=[\'"]description[\'"] +content=[\'"]([^<>]+)[\'"] *\/*>/si',
-            $this->html,
-            $matches
-        )) {
-            $this->url_description = clean_text_with_tags($matches[1], 0, false, 400);
-        }
-
         return true;
     }
 
@@ -1279,8 +1272,7 @@ class Link extends LCPBase
         $this->get_box_class();
 
         if ($this->do_inline_friend_votes) {
-            $this->friend_votes = $db->get_results(
-                '
+            $this->friend_votes = $db->get_results('
                 SELECT vote_user_id AS user_id, vote_value, user_avatar,
                     user_login, UNIX_TIMESTAMP(vote_date) AS ts,
                     INET_NTOA(vote_ip_int) AS ip
@@ -1298,8 +1290,7 @@ class Link extends LCPBase
                     AND vote_user_id != "'.$this->author.'"
                 )
                 ORDER BY vote_date DESC
-            '
-            );
+            ');
         }
 
         if ($this->poll === true) {

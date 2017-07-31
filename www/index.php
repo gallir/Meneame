@@ -183,7 +183,13 @@ if ($links) {
             Haanga::Safe_Load('private/promoted_articles.html', compact('counter', 'promoted_articles'));
         }
 
-        Haanga::Safe_Load('private/ad-interlinks.html', ['counter' => $counter, 'page_size' => $page_size, 'sponsored_link' => $sponsored_link, 'official_subs' => $official_subs, 'widget_popular_articles' => $widget_popular_articles]);
+        Haanga::Safe_Load('private/ad-interlinks.html', [
+            'counter' => $counter,
+            'page_size' => $page_size,
+            'sponsored_link' => $sponsored_link,
+            'official_subs' => $official_subs,
+            'widget_popular_articles' => $widget_popular_articles
+        ]);
 
         $link->print_summary();
 
