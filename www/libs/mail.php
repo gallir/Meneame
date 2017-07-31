@@ -41,7 +41,7 @@ function send_mail_list($subject, $message)
     }
 
     $headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
-        'From: '.$globals['adm_list_email_from'].">\n".
+        'From: '.$globals['adm_list_email_from']."\n".
         'Reply-To: '.$globals['adm_list_email']."\n".
         'X-Mailer: meneame.net' . "\n".
         'MIME-Version: 1.0' . "\n";
