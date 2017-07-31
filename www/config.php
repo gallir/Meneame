@@ -83,6 +83,8 @@ $globals['db_use_transactions'] = true; // Disable it if you use MyISAM and have
 
 // Administrator email
 //$globals['adm_email'] = 'admin@administrador'
+//$globals['adm_list_email'] = 'admin@administrador'
+//$globals['adm_list_email_from'] = 'admin@administrador'
 
 //Specify the static web server, wiith port included, use same document root as the main server (i.e. base_url is used
 // Don't forget to add a redirect to ooops.php in case of 404 error, for example in NGINX:

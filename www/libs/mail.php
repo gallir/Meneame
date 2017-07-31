@@ -32,6 +32,23 @@ function send_mail($to, $subject, $message)
     return mail($to, $subject, $message, $headers);
 }
 
+function send_mail_list($subject, $message)
+{
+    global $globals;
+
+    if (empty($globals['adm_list_email']) || empty($globals['adm_list_email_from'])) {
+        return;
+    }
+
+    $headers = 'Content-Type: text/plain; charset="utf-8"'."\n" .
+        'From: '.$globals['adm_list_email_from'].">\n".
+        'Reply-To: '.$globals['adm_list_email']."\n".
+        'X-Mailer: meneame.net' . "\n".
+        'MIME-Version: 1.0' . "\n";
+
+    return mail($globals['adm_list_email'], $subject, $message, $headers);
+}
+
 function send_recover_mail($user, $echo = true)
 {
     global $site_key, $globals;

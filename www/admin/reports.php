@@ -171,7 +171,9 @@ function update_status_debate_mail($report)
         LIMIT 1;
     ');
 
-    $url = $globals['base_url'].'story/'.$report->comment_link_uri.'/c0'.$report->comment_order.'#c-'.$report->comment_order;
+    $url = $globals['scheme'].'//'.get_server_name()
+        .$globals['base_url'].'story/'.$report->comment_link_uri
+        .'/c0'.$report->comment_order.'#c-'.$report->comment_order;
 
     $subject = 'Reporte ID '.$report->id
         .': ['.$report->author_user_login.']'
@@ -185,7 +187,7 @@ function update_status_debate_mail($report)
         .$comment->comment_content
         ."\n\n".'Link: <a href="'.$url.'">'.$url.'</a>';
 
-    send_mail($globals['adm_email'], $subject, $message);
+    send_mail_list($subject, $message);
 }
 
 function calculate_statistics()
