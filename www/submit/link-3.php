@@ -28,5 +28,6 @@ Haanga::Load('story/submit/link-3.html', array(
     'site_properties' => $site_properties,
     'link' => $link,
     'error' => $error,
-    'warning' => $warning
+    'warning' => $warning,
+    'related' => ($link->url ? $link->get_related(6) : null)
 ));
