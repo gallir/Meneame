@@ -158,10 +158,6 @@ function update_status_debate_mail($report)
 {
     global $db, $globals;
 
-    if (empty($globals['adm_email'])) {
-        return;
-    }
-
     require_once(mnminclude.'mail.php');
 
     $comment = $db->get_row('
