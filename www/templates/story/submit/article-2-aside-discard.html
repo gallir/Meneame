@@ -2,7 +2,7 @@
     <br class="clearfix" />
 
     <div class="btn-group">
-        <button type="button" type="submit" class="btn btn-gray" data-toggle="modal" data-target="#modal-save">
+        <button type="button" class="btn btn-gray" data-toggle="modal" data-target="#modal-save">
             <i class="fa fa-cloud-upload"></i>
             {% trans _('Publicar') %}
         </button>
@@ -17,6 +17,14 @@
                     {% trans _('Guardar borrador') %}
                 </button>
             </li>
+
+            {% if link.author == current_user.user_id %}
+            <li>
+                <button type="button" data-toggle="modal" data-target="#modal-delete">
+                    {% trans _('Eliminar borrador') %}
+                </button>
+            </li>
+            {% endif %}
         </ul>
     </div>
 
@@ -94,6 +102,7 @@
     </div>
 </div>
 
+{% if link.author == current_user.user_id %}
 <div class="modal modal-mnm fade" id="modal-delete" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -101,6 +110,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+
                 <h4 class="modal-title">{% trans _('Eliminar borrador') %}</h4>
             </div>
 
@@ -109,7 +119,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="submit" class="btn btn-danger">
+                <button type="submit" class="btn btn-danger" name="delete" value="1">
                     <i class="fa fa-trash"></i>
                     {% trans _('Eliminar') %}
                 </button>
@@ -117,3 +127,4 @@
         </div>
     </div>
 </div>
+{% endif %}

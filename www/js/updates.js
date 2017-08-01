@@ -698,6 +698,11 @@ function showPoll() {
                 }, 3000);
             }, 'json');
         });
+
+        $('button[name="delete"]').on('click', function(e) {
+            $(this).closest('form').find('[required]').removeAttr('required');
+            return true;
+        });
     };
 
     INIT.formRegister();

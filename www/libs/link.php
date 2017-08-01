@@ -2752,6 +2752,36 @@ class Link extends LCPBase
         return $globals['scheme'].get_avatar_url($this->author, $this->avatar, 25, false);
     }
 
+    public function delete()
+    {
+        global $current_user, $db;
+
+        if (
+            $this->votes
+            || ($this->author != $current_user->user_id)
+            || ($this->status !== 'discard')
+            || ($this->content_type !== 'article')
+        ) {
+            throw new Exception(_('No es posible borrar este envío'));
+        }
+
+        Log::insert('link_delete', $this->id, $current_user->user_id, serialize($this));
+
+        $db->query('
+            DELETE FROM `links`
+            WHERE (
+                `link_id` = "'.$this->id.'"
+                AND `link_author` = "'.$current_user->user_id.'"
+                AND `link_status` = "discard"
+                AND `link_content_type` = "article"
+                AND `link_votes` = 0
+            )
+            LIMIT 1;
+        ');
+
+        return true;
+    }
+
     public static function getUserArticleDraftsCount()
     {
         global $current_user, $db;
