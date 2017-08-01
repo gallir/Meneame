@@ -181,7 +181,7 @@ function update_status_debate_mail($report)
         .' por "'.$report->getReasonTitle().'":'
         ."\n\n".'['.$comment->comment_date.'] '
         .$comment->comment_content
-        ."\n\n".'Link: <a href="'.$url.'">'.$url.'</a>';
+        ."\n\n".'Link: '.$url;
 
     send_mail_list($subject, $message);
 }
