@@ -292,11 +292,26 @@ class Upload
         global $current_user, $globals;
 
         // Check __again__ the limits
-        Upload::current_user_limit_exceded($file['size']);
+        //Upload::current_user_limit_exceded($file['size']);
+        $size = $file['size'];
 
-        if ($type && ! preg_match("/^$type\/[^ ]+$/", $file['type'])) {
-            return false;
+        // Check current_user file upload limits
+        if ($size > $globals['media_max_size']) {
+            return _('tamaño excedido');
         }
+        if ($current_user->user_karma < $globals['media_min_karma']) {
+            return _('karma bajo');
+        }
+        if (Upload::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) {
+            return _('máximas subidas diarias excedidas');
+        }
+        if (Upload::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) {
+            return _('máximos bytes por día excedidos');
+        }
+        if ($type && ! preg_match("/^$type\/[^ ]+$/", $file['type'])) {
+            return _('tipo no válido');
+        }
+
         $this->mime = $file['type'];
         $this->user = $current_user->user_id;
         Upload::create_cache_dir($this->id);
