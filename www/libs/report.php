@@ -85,7 +85,7 @@ class Report extends LCPBase
 
     public static function is_valid_reason($reason)
     {
-        return in_array($reason, array(static::$reasons));
+        return array_key_exists($reason, self::$reasons);
     }
 
     public static function getValidOrder($column, $mode)
@@ -147,12 +147,12 @@ class Report extends LCPBase
 
     public function getStatusTitle()
     {
-        return static::$statuses[$this->status];
+        return self::$statuses[$this->status];
     }
 
     public function getReasonTitle()
     {
-        return static::$reasons[$this->reason];
+        return self::$reasons[$this->reason];
     }
 
     public function store()

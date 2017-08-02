@@ -422,7 +422,7 @@ class Strike
 
     public static function isValidReason($reason)
     {
-        return isset(self::$reasons[$reason]);
+        return array_key_exists($reason, self::$reasons);
     }
 
     public static function getById($id)
