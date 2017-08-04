@@ -8,7 +8,7 @@
         {% for row in next %}
         <div class="guest">
             <a title="{{ row.title }}" href="{{ row.link }}">
-                <img alt="{{ row.title }}" src="{{ row.image }}" />
+                <img alt="{{ row.title }}" src="{{ row.getMediaImage }}" />
 
                 <div class="guest-name">{{ row.title }}</div>
                 <div class="guest-description">{{ row.subtitle }}</div>
@@ -28,7 +28,7 @@
         {% for row in previous %}
         <div class="guest">
             <a title="{{ row.title }}" href="{{ row.link }}">
-                <img alt="{{ row.title }}" src="{{ row.image }}" />
+                <img alt="{{ row.title }}" src="{{ row.getMediaImage }}" />
 
                 <div class="guest-name">{{ row.title }}</div>
                 <div class="guest-description">{{ row.subtitle }}</div>
