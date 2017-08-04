@@ -2178,7 +2178,168 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     content: "Enlace al vídeo:";
 }
 
+/** PREGUNTAME **/
 
+.sidebox-rounded {
+    margin-bottom: 25px;
+    background: url({{ globals.base_static }}templates/private/preguntame/img/shadow.png) no-repeat 0 px 40 px;
+}
+
+.sidebox > div {
+    margin-right: 0px;
+    padding-bottom: 6px;
+}
+
+.sidebox-rounded div.next {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+    font-size: 15px;
+    color: #9B9B9B;
+}
+
+.sidebox-rounded div.soon {
+    margin: -10px auto 0 auto;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: 15px;
+    color: #9B9B9B;
+    background-color: #fff;
+    width: 110px;
+}
+
+.sidebox-rounded div.finished {
+    padding: 5px 0px;
+    margin-bottom: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #ff6300;
+    background-color: #dadada;
+}
+
+.sidebox-rounded .header {
+    background-color: #f8f8f8;
+    font-size: 11px;
+    height: 40px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.sidebox-rounded.orange .header {
+    background: #e35614;
+}
+
+.sidebox-rounded.orange .header a {
+    color: #FFF;
+}
+
+.sidebox-rounded .body {
+    border-bottom: 1px solid #dadada;
+    border-left: 1px solid #dadada;
+    border-right: 1px solid #dadada;
+}
+
+.sidebox-rounded .guest {
+    padding: 3px 20px 20px 20px;
+}
+
+.sidebox-rounded h4 {
+    position: relative;
+    font-weight: normal;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    padding-top: 5px;
+}
+
+.sidebox-rounded h4 a, .sidebox-rounded h4 span {
+    display: block;
+    padding: 8px;
+    color: #7e7e7e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sidebox-rounded h5 {
+    padding: 0px;
+    margin: 0 2px 0 50px;
+    font-size: 90%;
+    font-weight: normal;
+}
+
+.sidebox-rounded h5 a {
+    text-decoration: none;
+    color: #666;
+}
+
+.sidebox-rounded h5 a:hover {
+    color: #e35614;
+}
+
+.sidebox-rounded .date {
+    color: #e35614;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.sidebox-rounded .guest img {
+    width: 55px;
+    height: 55px;
+    float: left;
+    margin-right: 10px;
+}
+
+.sidebox-rounded .guest {
+    font-size: 14px;
+}
+
+.sidebox-rounded .guest a {
+    text-decoration: none;
+}
+
+.sidebox-rounded .guest-name {
+    font-weight: bold;
+    font-size: 15px;
+    color: #5d5d5d;
+}
+
+.sidebox-rounded .guest-description {
+    color: #5d5d5d;
+    font-size: 12px;
+}
+
+.sidebox-rounded .datetime {
+    color: #e35614;
+    font-size: 13px;
+    margin-top: 5px;
+    padding-left: 65px;
+}
+
+.sidebox-rounded .sponsored {
+    font-size: 12px;
+    font-weight: bold;
+    color: #e35614;
+    border: 1px solid #e35614;
+    padding: 2px;
+    background-color: #fff;
+    margin-left: 5px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+
+.sidebox-rounded a.show-responses {
+    color: #ff6300;
+    margin-top: 5px;
+    display: block;
+    margin-left: 66px;
+}
+
+/** PREGUNTAME **/
 
 div.article-container {
     display:flex;

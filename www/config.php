@@ -455,10 +455,14 @@ $globals['article_promoted_min_votes'] = 40;
 $globals['article_promoted_min_karma'] = 50;
 $globals['article_promoted_max_time_from_publish'] = 100; // Article max time from published in hours
 
+$globals['preguntame_home_sidebar'] = false;
+
 // The maximun amount of annonymous votes vs user votes in 1/2 hour
 // 3 means 3 times annonymous votes as user votes in that period
 $globals['anon_to_user_votes'] = 0.2;
+
 $site_key = 12345679;
+
 // Check this
 $globals['anon_karma']  = 4;
 

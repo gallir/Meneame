@@ -1255,6 +1255,14 @@ function do_sidebar_block($name = 'default')
     Haanga::Safe_Load('private/sidebar-block-' . $name . '.html');
 }
 
+function do_sidebar_preguntame()
+{
+    Haanga::Load('preguntame/home-sidebar.html', [
+        'next' => Preguntame::next(),
+        'previous' => Preguntame::previous()
+    ]);
+}
+
 function print_follow_sub($id)
 {
     global $current_user;
