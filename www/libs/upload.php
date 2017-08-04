@@ -12,7 +12,13 @@ class Upload
     {
         global $globals;
 
-        return $globals['scheme'].'//'.get_server_name().$globals['base_url_general']."backend/media?type=$type&amp;id=$id&amp;version=$version&amp;ts=$ts&amp;".str_replace('/', '.', $mime);
+        return $globals['scheme'].'//'.get_server_name()
+            .$globals['base_url_general']
+            .'backend/media?type='.$type
+            .'&amp;id='.$id
+            .'&amp;version='.$version
+            .'&amp;ts='.$ts
+            .'&amp;'.str_replace('/', '.', $mime);
     }
 
     public static function is_thumb_public($type)

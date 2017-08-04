@@ -16,7 +16,7 @@
             <tbody>
                 {% for row in list %}
                 <tr>
-                    <td class="text-center"><img src="{{ row.image }}" width="50" height="50" /></td>
+                    <td class="text-center"><img src="{{ row.getMediaImage }}" width="50" height="50" /></td>
                     <td>
                         <a href="{{ globals.base_url }}admin/preguntame.php?op=new&amp;id={{ row.id }}">{{ row.title }}</a>
                     </td>

@@ -8,7 +8,6 @@ CREATE TABLE `preguntame` (
   `title` varchar(120),
   `subtitle` varchar(120),
   `link` varchar(250),
-  `image` varchar(250),
   `start_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `enabled` boolean NOT NULL DEFAULT 0,

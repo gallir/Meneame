@@ -12,20 +12,36 @@ class Preguntame
     public $title;
     public $subtitle;
     public $link;
-    public $image;
     public $start_at;
     public $end_at;
     public $enabled;
     public $admin_id;
+
+    public $media_size;
+    public $media_mime;
+    public $media_extension;
+    public $media_access;
+    public $media_date;
+
+    const SQL_SELECT = '
+        SELECT `preguntame`.*,  `media`.`size` `media_size`, `media`.`mime` `media_mime`,
+            `media`.`extension` `media_extension`, `media`.`access` `media_access`,
+            UNIX_TIMESTAMP(`media`.`date`) `media_date`
+        FROM `preguntame`
+        LEFT JOIN `media` ON (
+            `media`.`type`="preguntame"
+            AND `media`.`id` = `preguntame`.`id`
+            AND `media`.`version` = 0
+        )
+    ';
 
     public static function getById($id)
     {
         global $db;
 
         return $db->get_object('
-            SELECT *
-            FROM `preguntame`
-            WHERE `id` = "'.(int)$id.'"
+            '.static::SQL_SELECT.'
+            WHERE `preguntame`.`id` = "'.(int)$id.'"
             LIMIT 1;
         ', 'Preguntame');
     }
@@ -35,9 +51,8 @@ class Preguntame
         global $db;
 
         return $db->get_results('
-            SELECT *
-            FROM `preguntame`
-            ORDER BY `start_at` DESC
+            '.static::SQL_SELECT.'
+            ORDER BY `preguntame`.`start_at` DESC
             LIMIT '.(int)$offset.', '.(int)$limit.';
         ', 'Preguntame');
     }
@@ -54,10 +69,9 @@ class Preguntame
         global $db;
 
         return $db->get_results('
-            SELECT *
-            FROM `preguntame`
-            WHERE `end_at` > NOW()
-            ORDER BY `end_at` ASC;
+            '.static::SQL_SELECT.'
+            WHERE `preguntame`.`end_at` > NOW()
+            ORDER BY `preguntame`.`end_at` ASC;
         ', 'Preguntame');
     }
 
@@ -66,10 +80,9 @@ class Preguntame
         global $db;
 
         return $db->get_results('
-            SELECT *
-            FROM `preguntame`
-            WHERE `end_at` < NOW()
-            ORDER BY `end_at` DESC;
+            '.static::SQL_SELECT.'
+            WHERE `preguntame`.`end_at` < NOW()
+            ORDER BY `preguntame`.`end_at` DESC;
         ', 'Preguntame');
     }
 
@@ -159,30 +172,15 @@ class Preguntame
 
         global $db;
 
-        $version = 1 + (int)$db->get_var('
-            SELECT `version`
-            FROM `media`
-            WHERE (
-                `type` = "preguntame"
-                AND `id` = "'.$this->id.'"
-            )
-            ORDER BY `version` DESC
-            LIMIT 1;
-        ');
-
-        $media = new Upload('preguntame', $this->id, $version);
+        $media = new Upload('preguntame', $this->id, 0);
 
         if (($result = $media->from_temporal($_FILES['image'])) !== true) {
             throw new Exception($result);
         }
+    }
 
-        $this->image = Upload::get_url('preguntame', $this->id, $version, 0, $media->mime);
-
-        $db->query('
-            UPDATE `preguntame`
-            SET `image` = "'.$this->image.'"
-            WHERE `id` = "'.(int)$this->id.'"
-            LIMIT 1;
-        ');
+    public function getMediaImage()
+    {
+        return Upload::get_url('preguntame', $this->id, 0, $this->media_date, $this->media_mime);
     }
 }
