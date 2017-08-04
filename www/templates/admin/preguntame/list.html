@@ -5,6 +5,7 @@
         <table class="table table-condensed table-striped table-hover" style="font-size: 10pt">
             <thead>
                 <tr>
+                    <th class="text-center">{% trans _('Imágen') %}</th>
                     <th>{% trans _('Título') %}</th>
                     <th class="text-center">{% trans _('Inicio') %}</th>
                     <th class="text-center">{% trans _('Fin') %}</th>
@@ -15,6 +16,7 @@
             <tbody>
                 {% for row in list %}
                 <tr>
+                    <td class="text-center"><img src="{{ row.image }}" width="50" height="50" /></td>
                     <td>
                         <a href="{{ globals.base_url }}admin/preguntame.php?op=new&amp;id={{ row.id }}">{{ row.title }}</a>
                     </td>

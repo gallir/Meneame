@@ -32,10 +32,47 @@ class Preguntame
         $this->admin_id = (int)$current_user->user_id;
 
         if ($this->id) {
-            return $this->update();
+            $this->update();
+        } else {
+            $this->insert();
         }
 
-        return $this->insert();
+        $this->storeImage();
+    }
+
+    private function storeImage()
+    {
+        if (empty($_FILES['image']['tmp_name'])) {
+            return;
+        }
+
+        global $db;
+
+        $version = 1 + (int)$db->get_var('
+            SELECT `version`
+            FROM `media`
+            WHERE (
+                `type` = "preguntame"
+                AND `id` = "'.$this->id.'"
+            )
+            ORDER BY `version` DESC
+            LIMIT 1;
+        ');
+
+        $media = new Upload('preguntame', $this->id, $version);
+
+        if (($result = $media->from_temporal($_FILES['image'])) !== true) {
+            throw new Exception($result);
+        }
+
+        $this->image = Upload::get_url('preguntame', $id, $version, 0, $media->mime);
+
+        $db->query('
+            UPDATE `preguntame`
+            SET `image` = "'.$this->image.'"
+            WHERE `id` = "'.(int)$this->id.'"
+            LIMIT 1;
+        ');
     }
 
     private function update()
@@ -48,12 +85,11 @@ class Preguntame
                 `title` = "'.$this->title.'",
                 `subtitle` = "'.$this->subtitle.'",
                 `link` = "'.$this->link.'",
-                `image` = "'.$this->image.'",
                 `start_at` = "'.$this->start_at.'",
                 `end_at` = "'.$this->end_at.'",
                 `enabled` = "'.$this->enabled.'",
                 `admin_id` = "'.$this->admin_id.'"
-            WHERE id = "'.(int)$this->id.'"
+            WHERE `id` = "'.(int)$this->id.'"
             LIMIT 1;
         ');
     }
@@ -62,13 +98,16 @@ class Preguntame
     {
         global $db;
 
+        if (empty($this->image)) {
+            throw new Exception('La imagen es obligatoria');
+        }
+
         $response = $db->query('
             INSERT INTO `preguntame`
             SET
                 `title` = "'.$this->title.'",
                 `subtitle` = "'.$this->subtitle.'",
                 `link` = "'.$this->link.'",
-                `image` = "'.$this->image.'",
                 `start_at` = "'.$this->start_at.'",
                 `end_at` = "'.$this->end_at.'",
                 `enabled` = "'.$this->enabled.'",
