@@ -82,7 +82,7 @@ class Upload
 
         $dir = Upload::get_cache_dir($key);
 
-        if (is_dir($key)) {
+        if (is_dir($dir)) {
             return true;
         }
 

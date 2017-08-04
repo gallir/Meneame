@@ -176,7 +176,7 @@ class Preguntame
             throw new Exception($result);
         }
 
-        $this->image = Upload::get_url('preguntame', $id, $version, 0, $media->mime);
+        $this->image = Upload::get_url('preguntame', $this->id, $version, 0, $media->mime);
 
         $db->query('
             UPDATE `preguntame`
