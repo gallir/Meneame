@@ -611,22 +611,51 @@ function showPoll() {
 
         var $textarea = $('.form textarea[name="bodytext"]');
 
-        function imageHandler() {
-            var value = prompt('{% trans _('Enlace de la imagen:') %}');
+        function selectLocalUpload() {
+            var $input = $(document.createElement('input')).attr('type', 'file');
+            $input.click();
 
-            if (!value) {
-                return;
-            }
+            $input.change(function(){
+                var $file = $(this).prop('files')[0];
 
-            if (value.indexOf('https://') !== 0) {
-                return alert('{% trans _('Sólo se permiten URLs bajo HTTPS') %}');
-            }
+                if (/^(image\/png)|(image\/jpg)|(image\/jpeg)/.test($file.type)) {
+                    saveToServer($file);
+                } else {
+                    alert("Solo se pueden subir imágenes .png y .jpg");
+                }
+            });
+        }
 
-            if (!value.match(/\.(png|jpg|jpeg|gif)$/i)) {
-                return alert('{% trans _('Sólo se permiten URLs que finalicen en jpg, png y gif') %}');
-            }
+        function saveToServer($file) {
+            var fd = new FormData();
+            fd.append( 'image', $file );
 
-            this.quill.insertEmbed(this.quill.getSelection().index, 'image', value, Quill.sources.USER);
+            $(".ql-toolbar").append('<div class="loading">Cargando imagen... </div>');
+            $.ajax({
+                url:  base_url + 'backend/upload.php?type=link&id=' + $(".section-article-submit input[name='id']").val(),
+                data: fd,
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                success: function(data){
+                    $(".ql-toolbar .loading").remove();
+
+                    if (!data.error) {
+                        var url = data.url.replace(/&amp;/g, '&');
+                        insertIntoEditor(url);
+                    } else {
+                        return mDialog.notify(data.error, 5);
+                    }
+                },
+                error: function(){
+                    $(".ql-toolbar .loading").remove();
+                }
+            });
+        }
+
+        function insertIntoEditor(url) {
+            var range = $quill.getSelection();
+            $quill.insertEmbed(range.index, 'image', url);
         }
 
         var $quill = new Quill('#editor', {
@@ -641,7 +670,7 @@ function showPoll() {
                         [{'list': 'ordered'}, {'list': 'bullet'}, 'blockquote']
                     ],
                     handlers: {
-                        image: imageHandler
+                        image: selectLocalUpload
                     }
                 }
             }
