@@ -80,11 +80,12 @@ class Upload
     {
         global $globals;
 
-        if (file_exists(Upload::get_cache_dir($key))) {
+        $dir = Upload::get_cache_dir($key);
+
+        if (is_dir($key)) {
             return true;
         }
 
-        $dir = Upload::get_cache_dir($key);
         $old_mask = umask(0);
         $res = @mkdir($dir, 0777, true);
 
@@ -168,10 +169,10 @@ class Upload
         $this->version = $version;
         $this->stored = false;
 
-        if (!$time) {
-            $this->date = $globals['now'];
-        } else {
+        if ($time) {
             $this->date = $time;
+        } else {
+            $this->date = $globals['now'];
         }
 
         $this->dim1 = $this->dim2 = 0;
@@ -244,6 +245,7 @@ class Upload
         if (!$this->read) {
             $this->read();
         }
+
         if (!$this->read) {
             return false;
         }
