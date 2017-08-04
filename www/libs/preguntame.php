@@ -10,12 +10,13 @@ class Preguntame
 {
     public $id;
     public $title;
+    public $subtitle;
     public $link;
     public $image;
     public $start_at;
     public $end_at;
     public $enabled;
-    public $visible;
+    public $admin_id;
 
     public static function getById($id)
     {
