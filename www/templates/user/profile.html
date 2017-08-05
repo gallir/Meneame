@@ -1,15 +1,3 @@
-{% if (strike && (user.id == current_user.user_id OR current_user.user_level == 'god' OR current_user.user_level == 'admin')) %}
-<div class="alert alert-danger">
-    <h3 class="mb-20">{% trans _('Actualmente dispones de un %s aplicado') strike.type %}:</h3>
-
-    <p><strong>{% trans _('Motivo') %}:</strong> {{ strike.reason_message }}</p>
-    <p><strong>{% trans _('Karma anterior') %}:</strong> {{ strike.karma_old }}</p>
-    <p><strong>{% trans _('Karma actual') %}:</strong> {{ strike.karma_new }}</p>
-    <p><strong>{% trans _('Karma final') %}:</strong> {{ strike.karma_restore }}</p>
-    <p><strong>{% trans _('Finaliza') %}:</strong> +-{{ strike.expires_at }}</p>
-</div>
-{% endif %}
-
 <table class="table table-condensed">
     {% if user.username %}
 
@@ -194,4 +182,18 @@
 <div class="text-center">
     {% exec print_oauth_icons _REQUEST.return as foo %}
 </div>
+{% endif %}
+
+{% if (strikes && (user.id == current_user.user_id OR (current_user.user_level === 'god') OR (current_user.user_level === 'admin'))) %}
+
+<h3>{% trans _('Penalizaciones Acumuladas') %}</h3>
+
+{% for strike in strikes %}
+<div class="alert alert-danger">
+    <p><strong>{% trans _('Penalización / Motivo') %}:</strong> {{ strike.type }} / {{ strike.reason_message }}</p>
+    <p><strong>{% trans _('Karma anterior / durante penalización / final') %}:</strong> {{ strike.karma_old }} / {{ strike.karma_new }} / {{ strike.karma_restore }}</p>
+    <p><strong>{% trans _('Inicio / Fin') %}:</strong> {{ strike.date }} &raquo; {{ strike.expires_at }}</p>
+</div>
+{% endfor %}
+
 {% endif %}
