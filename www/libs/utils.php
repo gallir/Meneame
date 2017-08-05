@@ -1874,14 +1874,24 @@ function d($title, $message = null, $trace = false)
 
 function getMetasFromUrl($url)
 {
-    if (!($html = @file_get_contents($url))) {
+    $html = @file_get_contents($url, false, stream_context_create(array(
+        'http' => array(
+            'timeout' => 5,
+            'user_agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'
+        ),
+        'ssl' => array(
+            'verify_peer' => false
+        )
+    )));
+
+    if (empty($html)) {
         return;
     }
 
     $metas = [];
 
     foreach ((new DOMXPath(getDomFromHtml($html)))->query('//head/meta') as $node) {
-        $name = str_replace('og:', '', $node->getAttribute('name') ?: $node->getAttribute('property'));
+        $name = preg_replace('/^[^:]*:/', '', $node->getAttribute('name') ?: $node->getAttribute('property'));
 
         if ($name && empty($metas[$name])) {
             $metas[$name] = $node->getAttribute('content');
