@@ -2332,7 +2332,7 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     -moz-border-radius: 3px;
 }
 
-.sidebox-rounded a.show-responses {
+.sidebox-rounded .show-responses {
     color: #ff6300;
     margin-top: 5px;
     display: block;

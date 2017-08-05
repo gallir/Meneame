@@ -3,7 +3,7 @@
 
     <div class="body">
         {% if next %}
-        <div class="next">SIGUIENTES</div>
+        <div class="finished">SIGUIENTES</div>
 
         {% for row in next %}
         <div class="guest">
@@ -14,7 +14,7 @@
                 <div class="guest-description">{{ row.subtitle }}</div>
 
                 {% if row.link %}
-                <a href="{{ row.link }}" class="show-responses">Ver respuestas &raquo;</a>
+                <span class="show-responses">Ver respuestas &raquo;</span>
                 {% endif %}
             </a>
         </div>
@@ -33,7 +33,7 @@
                 <div class="guest-name">{{ row.title }}</div>
                 <div class="guest-description">{{ row.subtitle }}</div>
 
-                <a href="{{ row.link }}" class="show-responses">Ver respuestas &raquo;</a>
+                <span class="show-responses">Ver respuestas &raquo;</span>
             </a>
         </div>
         {% endfor %}
