@@ -29,7 +29,7 @@ class Preguntame
             UNIX_TIMESTAMP(`media`.`date`) `media_date`
         FROM `preguntame`
         LEFT JOIN `media` ON (
-            `media`.`type`="preguntame"
+            `media`.`type`= "preguntame"
             AND `media`.`id` = `preguntame`.`id`
             AND `media`.`version` = 0
         )
