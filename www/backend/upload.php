@@ -33,7 +33,7 @@ $version = ($version === null) ? 0 : ($version + 1);
 $media = new Upload('link', $link->id, $version);
 
 if (($result = $media->from_temporal($_FILES['image'])) === true) {
-    $response =[
+    $response = [
         'url' => Upload::get_url('link', $id, $version, 0, $media->mime),
         'error' => false,
     ];

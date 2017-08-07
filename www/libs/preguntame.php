@@ -70,7 +70,10 @@ class Preguntame
 
         return $db->get_results('
             '.static::SQL_SELECT.'
-            WHERE `preguntame`.`end_at` > NOW()
+            WHERE (
+                `preguntame`.`end_at` > NOW()
+                AND `preguntame`.`enabled` = 1
+            )
             ORDER BY `preguntame`.`end_at` ASC;
         ', 'Preguntame');
     }
@@ -81,7 +84,10 @@ class Preguntame
 
         return $db->get_results('
             '.static::SQL_SELECT.'
-            WHERE `preguntame`.`end_at` < NOW()
+            WHERE (
+                `preguntame`.`end_at` < NOW()
+                AND `preguntame`.`enabled` = 1
+            )
             ORDER BY `preguntame`.`end_at` DESC;
         ', 'Preguntame');
     }
