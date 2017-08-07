@@ -17,11 +17,26 @@ if (!$link || !$current_user->authenticated || ($current_user->user_id != $link-
     die;
 }
 
-$media = new Upload('link', $link->id, 0);
+$version = (int)$db->get_var('
+    SELECT `version`
+    FROM `media`
+    WHERE (
+        `id` = "'.$link->id.'"
+        AND `type` = "link"
+    )
+    ORDER BY `version` DESC
+    LIMIT 1;
+');
+
+if ($version) {
+    $version++;
+}
+
+$media = new Upload('link', $link->id, $version);
 
 if (($result = $media->from_temporal($_FILES['image'])) === true) {
     $response =[
-        'url' => Upload::get_url('link', $id, 0, 0, $media->mime),
+        'url' => Upload::get_url('link', $id, $version, 0, $media->mime),
         'error' => false,
     ];
 } else {
