@@ -3,22 +3,21 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//		http://www.affero.org/oagpl.html
+//        http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
-
 
 class Upload
 {
-    public static function get_url($type, $id, $version = 0, $ts = 0, $mime='image/jpg')
+    public static function get_url($type, $id, $version = 0, $ts = 0, $mime = 'image/jpg')
     {
         global $globals;
+
         return $globals['scheme'].'//'.get_server_name().$globals['base_url_general']."backend/media?type=$type&amp;id=$id&amp;version=$version&amp;ts=$ts&amp;".str_replace('/', '.', $mime);
     }
 
     public static function is_thumb_public($type)
     {
-        $types = array('post', 'comment', 'sub_logo', 'link');
-        return in_array($type, $types);
+        return in_array($type, array('post', 'comment', 'sub_logo', 'link'));
     }
 
     public static function thumb_sizes($type, $key = false)
@@ -26,36 +25,42 @@ class Upload
         global $globals;
 
         $size = $globals['media_thumb_size'];
+
         switch ($type) {
             case 'sub_logo':
                 $all = array('media_thumb' => array(false, $globals['media_sublogo_height'] * 2, false));
                 break;
+
             case 'link':
-                if (! empty($globals['thumb_size'])) {
+                if (!empty($globals['thumb_size'])) {
                     $size = $globals['thumb_size'];
                 }
+
             default:
-                $all = array('media_thumb' => array($size, $size, true),
-                    'media_thumb_2x' => array($size * 2, $size * 2, true));
+                $all = array(
+                    'media_thumb' => array($size, $size, true),
+                    'media_thumb_2x' => array($size * 2, $size * 2, true)
+                );
         }
 
         if ($key) {
             return $all[$key];
-        } else {
-            arsort($all); // Ordered by size, descending
-            return $all;
         }
+
+        arsort($all); // Ordered by size, descending
+
+        return $all;
     }
 
     public static function get_cache_relative_dir($key = false)
     {
         global $globals;
 
-        if (!$key) {
-            return $globals['cache_dir'];
-        } else {
+        if ($key) {
             return $globals['cache_dir'].sprintf("/%02x/%02x", ($key >> 16) & 255, ($key >> 8) & 255);
         }
+
+        return $globals['cache_dir'];
     }
 
     public static function get_cache_dir($key = false)
@@ -64,11 +69,11 @@ class Upload
 
         // Very fast cache dir generator for two levels
         // mask == 2^8 - 1 or 1 << 8 -1
-        if (! $key) {
-            return mnmpath.'/'.$globals['cache_dir'];
-        } else {
-            return mnmpath. '/' . Upload::get_cache_relative_dir($key);
+        if ($key) {
+            return mnmpath.'/'.Upload::get_cache_relative_dir($key);
         }
+
+        return mnmpath.'/'.$globals['cache_dir'];
     }
 
     public static function create_cache_dir($key = false)
@@ -78,10 +83,13 @@ class Upload
         if (file_exists(Upload::get_cache_dir($key))) {
             return true;
         }
+
         $dir = Upload::get_cache_dir($key);
         $old_mask = umask(0);
         $res = @mkdir($dir, 0777, true);
+
         umask($old_mask);
+
         return $res;
     }
 
@@ -93,26 +101,30 @@ class Upload
         if ($size > $globals['media_max_size']) {
             return _('tamaño excedido');
         }
+
         if ($current_user->user_karma < $globals['media_min_karma']) {
             return _('karma bajo');
         }
+
         if (Upload::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) {
             return _('máximas subidas diarias excedidas');
         }
+
         if (Upload::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) {
             return _('máximos bytes por día excedidos');
         }
+
         return false;
     }
-
 
     public static function user_bytes_uploaded($user, $hours = false)
     {
         global $db;
 
-        if (! $user > 0) {
+        if (!$user > 0) {
             return 0;
         }
+
         if ($hours) {
             $date_limit = "and date > date_sub(now(), interval $hours hour)";
         } else {
@@ -126,7 +138,7 @@ class Upload
     {
         global $db;
 
-        if (! $user > 0) {
+        if (!$user > 0) {
             return 0;
         }
 
@@ -155,11 +167,13 @@ class Upload
         $this->access = 'restricted';
         $this->version = $version;
         $this->stored = false;
-        if (! $time) {
+
+        if (!$time) {
             $this->date = $globals['now'];
         } else {
             $this->date = $time;
         }
+
         $this->dim1 = $this->dim2 = 0;
     }
 
@@ -167,7 +181,7 @@ class Upload
     {
         global $db, $current_user, $globals;
 
-        if (! $this->user) {
+        if (!$this->user) {
             $this->user = $current_user->user_id;
         }
 
@@ -175,11 +189,13 @@ class Upload
         $extension = $db->escape($this->extension);
         $access = $db->escape($this->access);
         $res = $db->query("REPLACE INTO media (type, id, version, user, `to`, access, mime, extension, size, date, dim1, dim2) VALUES ('$this->type', $this->id, $this->version, $this->user, $this->to, '$access', '$mime', '$extension', $this->size, FROM_UNIXTIME($this->date), $this->dim1, $this->dim2)");
+
         if ($res) {
             $this->stored = true;
         }
 
         $this->backup();
+
         return true;
     }
 
@@ -209,10 +225,14 @@ class Upload
             foreach (get_object_vars($result) as $var => $value) {
                 $this->$var = $value;
             }
+
             $this->read = true;
+
             return true;
         }
+
         $this->read = false;
+
         return false;
     }
 
@@ -221,68 +241,80 @@ class Upload
         global $db, $globals;
 
         // Check is read to read all data
-        if (! $this->read) {
+        if (!$this->read) {
             $this->read();
         }
-        if (! $this->read) {
+        if (!$this->read) {
             return false;
         }
 
         $this->clean();
         $this->delete_backup();
+
         $db->query("delete from media where type = '$this->type' and id = $this->id and version = $this->version");
     }
 
     public function clean()
     {
         $this->delete_thumbs();
+
         @unlink($this->pathname());
     }
 
     public function delete_thumbs()
     {
         foreach (Upload::thumb_sizes($this->type) as $k => $s) {
-            $pattern = $this->thumb_pathname($k) . '.*';
-            array_map('unlink', glob($pattern));
+            array_map('unlink', glob($this->thumb_pathname($k).'.*'));
         }
     }
 
     public function create_thumbs($key = false)
     {
-        if ($this->type == 'private' || $this->access == 'private') {
+        if (($this->type === 'private') || ($this->access === 'private')) {
             return false;
         }
+
         $pathname = $this->pathname();
 
-        if (! file_exists($pathname)) {
-            if (! $this->restore()) {
+        if (!file_exists($pathname)) {
+            if (!$this->restore()) {
                 return false;
             }
         }
 
-        require_once(mnminclude."simpleimage.php");
+        require_once mnminclude.'simpleimage.php';
+
         $thumb = new SimpleImage();
         $thumb->load($pathname);
-        if (! $thumb->load($pathname)) {
-            $alternate_image = mnmpath . "/img/common/picture02.png";
+
+        if (!$thumb->load($pathname)) {
+            $alternate_image = mnmpath."/img/common/picture02.png";
+
             syslog(LOG_INFO, "Meneame, trying alternate thumb ($alternate_image) for $pathname");
+
             if (!$thumb->load($alternate_image)) {
                 return false;
             }
         }
 
         $res = 0;
+
         foreach (Upload::thumb_sizes($this->type) as $k => $s) {
             if ($key && $key != $k) {
                 continue;
-            } // Generate just what was requested
+            }
+
+            // Generate just what was requested
             $thumb->resize($s[0], $s[1], $s[2]);
-            if (($name = $thumb->save($this->thumb_pathname($k)))) { // SimpleImage->save return the final name
+
+            if (($name = $thumb->save($this->thumb_pathname($k)))) {
+                // SimpleImage->save return the final name
                 $res++;
                 @chmod($name, 0777);
                 $this->thumb = $thumb;
             }
         }
+
         return $res;
     }
 
@@ -314,17 +346,21 @@ class Upload
 
         $this->mime = $file['type'];
         $this->user = $current_user->user_id;
+
         Upload::create_cache_dir($this->id);
-        if (move_uploaded_file($file['tmp_name'], $this->pathname())) {
-            @chmod($this->pathname(), 0777);
-            $this->check_size_and_rotation($this->pathname());
-            $this->delete_thumbs();
-            $this->create_thumbs();
-            return $this->store();
-        } else {
-            syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
+
+        if (!@move_uploaded_file($file['tmp_name'], $this->pathname())) {
+            syslog(LOG_INFO, "Meneame, error moving to ".$this->pathname());
+            return false;
         }
-        return false;
+
+        @chmod($this->pathname(), 0777);
+
+        $this->check_size_and_rotation($this->pathname());
+        $this->delete_thumbs();
+        $this->create_thumbs();
+
+        return $this->store();
     }
 
     // Store the image from a file uploaded with AJAX
@@ -332,8 +368,9 @@ class Upload
     {
         global $current_user, $globals;
 
-        $pathname = Upload::get_cache_dir() . '/tmp/' . $filename;
-        if (! file_exists($pathname)) {
+        $pathname = Upload::get_cache_dir().'/tmp/'.$filename;
+
+        if (!file_exists($pathname)) {
             return false;
         }
 
@@ -344,22 +381,27 @@ class Upload
 
         $this->mime = $type;
         $this->user = $current_user->user_id;
-        Upload::create_cache_dir($this->id);
-        if (rename($pathname, $this->pathname())) {
-            $this->check_size_and_rotation($this->pathname());
-            $this->delete_thumbs();
 
-            // Check if it exists a thumb and save it
-            $thumbname = Upload::get_cache_dir() . "/tmp/tmp_thumb-$filename";
-            if (file_exists($thumbname)) {
-                @unlink($thumbname);
-            }
-            $this->create_thumbs();
-            return $this->store();
-        } else {
-            syslog(LOG_INFO, "Meneame, error moving to " . $this->pathname());
+        Upload::create_cache_dir($this->id);
+
+        if (!@rename($pathname, $this->pathname())) {
+            syslog(LOG_INFO, "Meneame, error moving to ".$this->pathname());
+            return false;
         }
-        return false;
+
+        $this->check_size_and_rotation($this->pathname());
+        $this->delete_thumbs();
+
+        // Check if it exists a thumb and save it
+        $thumbname = Upload::get_cache_dir()."/tmp/tmp_thumb-$filename";
+
+        if (file_exists($thumbname)) {
+            @unlink($thumbname);
+        }
+
+        $this->create_thumbs();
+
+        return $this->store();
     }
 
     // Check if the file has been uploaded from AJAX or the form
@@ -370,8 +412,9 @@ class Upload
         }
 
         if (!empty($_FILES[$field]['tmp_name'])) {
-            return $this->from_temporal($_FILES['image'], $type);
+            return $this->from_temporal($_FILES[$field], $type);
         }
+
         return false;
     }
 
@@ -409,9 +452,10 @@ class Upload
 
     public function readfile()
     {
-        if (! file_exists($this->pathname())) {
+        if (!file_exists($this->pathname())) {
             $this->restore();
         }
+
         return readfile($this->pathname());
     }
 
@@ -419,7 +463,6 @@ class Upload
     {
         return filesize($this->pathname());
     }
-
 
     // Call S3 functions
     public function backup()
@@ -429,6 +472,7 @@ class Upload
         if ($globals['Amazon_S3_media_bucket'] && $globals['Amazon_S3_upload']) {
             return Media::put($this->pathname(), $this->type);
         }
+
         return true;
     }
 
@@ -436,12 +480,17 @@ class Upload
     {
         global $globals;
 
-        if ($globals['Amazon_S3_media_bucket']) {
-            Upload::create_cache_dir($this->id);
-            $res = Media::get($this->filename(), $this->type, $this->pathname());
-            @chmod($this->pathname(), 0777);
-            return $res;
+        if (!$globals['Amazon_S3_media_bucket']) {
+            return;
         }
+
+        Upload::create_cache_dir($this->id);
+
+        $res = Media::get($this->filename(), $this->type, $this->pathname());
+
+        @chmod($this->pathname(), 0777);
+
+        return $res;
     }
 
     public function delete_backup()
@@ -455,12 +504,12 @@ class Upload
 
     public function thumb_pathname($key = 'media_thumb')
     {
-        return $this->path() . "/$key-$this->type-$this->id";
+        return $this->path()."/$key-$this->type-$this->id";
     }
 
     public function check_size_and_rotation($pathname)
     {
-        require_once(mnminclude."simpleimage.php");
+        require_once mnminclude."simpleimage.php";
 
         $original = $pathname;
         $tmp = "$pathname.tmp";
@@ -468,11 +517,10 @@ class Upload
         $max_size = 2048;
 
         $image = new SimpleImage();
-        if ($image->rotate_exif($pathname)) {
-            if ($image->save($tmp)) {
-                $pathname = $tmp;
-                clearstatcache();
-            }
+
+        if ($image->rotate_exif($pathname) && $image->save($tmp)) {
+            $pathname = $tmp;
+            clearstatcache();
         }
 
         if ($image->load($pathname)) {
@@ -481,15 +529,18 @@ class Upload
             $this->extension = $image->extension;
         }
 
-        if (filesize($pathname) > 1024*1024) { // Bigger than 1 MB
-            if ($image->image &&  ($dim1 > $max_size || $dim2 > $max_size)) {
+        if (filesize($pathname) > 1024 * 1024) {
+            // Bigger than 1 MB
+            if ($image->image && ($dim1 > $max_size || $dim2 > $max_size)) {
                 if ($dim1 > $dim2) {
                     $image->resizeToWidth($max_size);
                 } else {
                     $image->resizeToHeight($max_size);
                 }
+
                 $dim1 = $image->getWidth();
                 $dim2 = $image->getHeight();
+
                 if ($image->save($tmp)) {
                     $pathname = $tmp;
                     clearstatcache();
@@ -497,14 +548,13 @@ class Upload
             }
         }
 
-        if ($pathname != $original && file_exists($pathname)) {
-            if (! @rename($pathname, $original)) {
-                syslog(LOG_INFO, "Error renaming file $pathname -> $original");
-                @unlink($pathname);
-            }
+        if (($pathname != $original) && file_exists($pathname) && !@rename($pathname, $original)) {
+            syslog(LOG_INFO, "Error renaming file $pathname -> $original");
+            @unlink($pathname);
         }
 
         $this->size = filesize($original);
+
         @chmod($original, 0777);
 
         $dim1 = $image->getWidth();
@@ -513,6 +563,7 @@ class Upload
         if ($dim1 > 0) {
             $this->dim1 = $dim1;
         }
+
         if ($dim2 > 0) {
             $this->dim2 = $dim2;
         }

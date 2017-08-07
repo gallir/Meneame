@@ -1,0 +1,29 @@
+<div id="singlewrap">
+    <div class="genericform">
+        [ <a href="{{ globals.base_url }}admin/preguntame.php?op=new">{% trans _('Nuevo Pregúntame') %}</a> ]
+
+        <table class="table table-condensed table-striped table-hover" style="font-size: 10pt">
+            <thead>
+                <tr>
+                    <th>{% trans _('Título') %}</th>
+                    <th class="text-center">{% trans _('Inicio') %}</th>
+                    <th class="text-center">{% trans _('Fin') %}</th>
+                    <th class="text-center">{% trans _('Activo') %}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for row in list %}
+                <tr>
+                    <td>
+                        <a href="{{ globals.base_url }}admin/preguntame.php?op=new&amp;id={{ row.id }}">{{ row.title }}</a>
+                    </td>
+                    <td class="text-center">{{ row.start_at }}</td>
+                    <td class="text-center">{{ row.end_at }}</td>
+                    <td class="text-center">{{ row.enabled }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
