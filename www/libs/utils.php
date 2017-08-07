@@ -377,6 +377,8 @@ function html_fix($html)
 
 function html_xpath_clean($html, $attributes = array('src', 'href'))
 {
+    global $globals;
+
     if (empty($html)) {
         return '';
     }
@@ -395,8 +397,9 @@ function html_xpath_clean($html, $attributes = array('src', 'href'))
 
     foreach ($xpath->query('//img') as $node) {
         $src = $node->getAttribute('src');
+        $local = ($globals['server_name'] === parse_url($src, PHP_URL_HOST));
 
-        if (!preg_match('#^https://.*\.(png|jpg|jpeg|gif)$#i', $src)) {
+        if (($local === false) && !preg_match('#^https://.*\.(png|jpg|jpeg|gif)$#i', $src)) {
             $node->parentNode->removeChild($node);
         }
     }

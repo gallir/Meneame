@@ -517,10 +517,10 @@ class Upload
 
     public function check_size_and_rotation($pathname)
     {
-        require_once mnminclude."simpleimage.php";
+        require_once mnminclude.'simpleimage.php';
 
         $original = $pathname;
-        $tmp = "$pathname.tmp";
+        $tmp = $pathname.'.tmp';
 
         $max_size = 2048;
 
@@ -537,26 +537,24 @@ class Upload
             $this->extension = $image->extension;
         }
 
-        if (filesize($pathname) > 1024 * 1024) {
-            // Bigger than 1 MB
-            if ($image->image && ($dim1 > $max_size || $dim2 > $max_size)) {
-                if ($dim1 > $dim2) {
-                    $image->resizeToWidth($max_size);
-                } else {
-                    $image->resizeToHeight($max_size);
-                }
+        // Bigger than 1 MB
+        if ((filesize($pathname) > 1024 * 1024) && ($image->image && ($dim1 > $max_size || $dim2 > $max_size))) {
+            if ($dim1 > $dim2) {
+                $image->resizeToWidth($max_size);
+            } else {
+                $image->resizeToHeight($max_size);
+            }
 
-                $dim1 = $image->getWidth();
-                $dim2 = $image->getHeight();
+            $dim1 = $image->getWidth();
+            $dim2 = $image->getHeight();
 
-                if ($image->save($tmp)) {
-                    $pathname = $tmp;
-                    clearstatcache();
-                }
+            if ($image->save($tmp)) {
+                $pathname = $tmp;
+                clearstatcache();
             }
         }
 
-        if (($pathname != $original) && file_exists($pathname) && !@rename($pathname, $original)) {
+        if (($pathname !== $original) && file_exists($pathname) && !@rename($pathname, $original)) {
             syslog(LOG_INFO, "Error renaming file $pathname -> $original");
             @unlink($pathname);
         }

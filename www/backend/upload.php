@@ -13,7 +13,7 @@ if (!empty($_REQUEST['id']) && ($id = intval($_REQUEST['id'])) > 0) {
     $link = Link::from_db($id);
 }
 
-if (!$link || !$current_user->authenticated || ($current_user->user_id != $link->author)) {
+if (!$link || !$current_user->authenticated || (($current_user->user_id != $link->author) && !$current_user->admin)) {
     die;
 }
 
