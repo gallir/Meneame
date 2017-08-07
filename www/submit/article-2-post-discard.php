@@ -8,6 +8,22 @@
 
 defined('mnminclude') or die();
 
+if (!empty($_POST['delete']) && $_POST['delete'] === '1') {
+    try {
+        $link->delete();
+
+        die(header('Location: '.$current_user->get_uri('articles_discard')));
+    } catch (Exception $e) {
+        $error = $e->getMessage();
+    }
+
+    if ($globals['is_ajax']) {
+        responseJson($error, false);
+    }
+
+    return addFormError($error);
+}
+
 $sub_id = (int)$_POST['sub_id'];
 
 $link->sub_changed = $link->sub_id != $sub_id;

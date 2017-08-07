@@ -23,11 +23,29 @@ $addresses = array();
 
 if ($current_user->user_id == $user->id || ($current_user->user_level === 'god' && !$user->admin)) {
     // gods and admins know each other for sure, keep privacy
-    $dbaddresses = $db->get_results("select distinct(vote_ip_int) as ip from votes where vote_type in ('links', 'comments', 'posts') and vote_user_id = $user->id order by vote_date desc limit 30");
+    $dbaddresses = $db->get_results('
+        SELECT DISTINCT(vote_ip_int) ip
+        FROM votes
+        WHERE (
+            vote_type IN ("links", "comments", "posts")
+            AND vote_user_id = "'.(int)$user->id.'"
+        )
+        ORDER BY vote_date DESC
+        LIMIT 30;
+    ');
 
     // Try with comments
     if (!$dbaddresses) {
-        $dbaddresses = $db->get_results("select distinct(comment_ip_int) as ip from comments where comment_user_id = $user->id and comment_date > date_sub(now(), interval 30 day) order by comment_date desc limit 30");
+        $dbaddresses = $db->get_results('
+            SELECT DISTINCT(comment_ip_int) ip
+            FROM comments
+            WHERE (
+                comment_user_id = "'.(int)$user->id.'"
+                AND comment_date > DATE_SUB(NOW(), INTERVAL 30 DAY)
+            )
+            ORDER BY comment_date DESC
+            LIMIT 30;
+        ');
     }
 
     if ($dbaddresses) {
@@ -42,17 +60,22 @@ if ($current_user->user_id == $user->id || ($current_user->user_level === 'god' 
 }
 
 if ($current_user->user_id == $user->id || $current_user->admin) {
-    $strike = (new Strike($user))->getUserCurrentStrike();
+    $strikes = (new Strike($user))->getUserStrikes();
 } else {
-    $strike = null;
+    $strikes = null;
 }
 
 $show_email = $current_user->user_id > 0 && !empty($user->public_info) && ($current_user->user_id == $user->id || $current_user->user_level === 'god');
 
-$clones_from = "and clon_date > date_sub(now(), interval 30 day)";
-
 if ($current_user->admin) {
-    $nclones = $db->get_var("select count(distinct clon_to) from clones where clon_from = $user->id $clones_from");
+    $nclones = $db->get_var('
+        SELECT COUNT(DISTINCT clon_to)
+        FROM clones
+        WHERE (
+            clon_from = "'.(int)$user->id.'"
+            AND clon_date > DATE_SUB(NOW(), INTERVAL 30 DAY)
+        );
+    ');
 }
 
 if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
@@ -61,5 +84,5 @@ if ($current_user->user_id > 0 && $current_user->user_id != $user->id) {
 
 return Haanga::Load('user/profile.html', compact(
     'user', 'url', 'nofollow', 'show_email', 'entropy', 'percent', 'nclones',
-    'addresses', 'strike', 'friend_icon'
+    'addresses', 'strikes', 'friend_icon'
 ));
