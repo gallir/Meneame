@@ -1443,7 +1443,7 @@ ul.slick-dots li button {
 .story-blog .main-content .text ol,
 .section.section-article-submit .input-editable ul,
 .section.section-article-submit .input-editable ol {
-    margin: 0;
+    margin: 0 0 25px 0;
     padding: 0;
     padding-left: 20px;
 }
