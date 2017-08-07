@@ -17,7 +17,7 @@ if (!$link || !$current_user->authenticated || ($current_user->user_id != $link-
     die;
 }
 
-$version = (int)$db->get_var('
+$version = $db->get_var('
     SELECT `version`
     FROM `media`
     WHERE (
@@ -28,9 +28,7 @@ $version = (int)$db->get_var('
     LIMIT 1;
 ');
 
-if ($version) {
-    $version++;
-}
+$version = ($version === null) ? 0 : ($version + 1);
 
 $media = new Upload('link', $link->id, $version);
 
