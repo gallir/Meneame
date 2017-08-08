@@ -92,10 +92,14 @@ if ($tab_option == 0) {
 
 /*** SIDEBAR ****/
 echo '<div id="sidebar">';
+
 do_sub_message_right();
 do_banner_right();
 do_last_subs('published');
-do_sidebar_block('preguntame');
+
+if ($globals['preguntame_home_sidebar']) {
+    do_sidebar_preguntame();
+}
 
 if ($globals['show_popular_published']) {
     do_active_stories();

@@ -28,20 +28,3 @@ CREATE TABLE `strikes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 SET FOREIGN_KEY_CHECKS=1;
-
-/*
-UPDATE `users`, `strikes`
-SET `user_karma` = `strike_karma_restore`
-WHERE (
-  `user_id` = `strike_user_id`
-  AND `strike_expires_at` < NOW()
-  AND `strike_restored` = 0
-);
-
-UPDATE `strikes`
-SET `strike_restored` = 1
-WHERE (
-  `strike_expires_at` < NOW()
-  AND `strike_restored` = 0
-);
-*/

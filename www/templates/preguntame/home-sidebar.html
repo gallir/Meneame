@@ -1,0 +1,47 @@
+{% if next OR previous %}
+
+<div class="sidebox-rounded orange">
+    <div class="header"><h4><a href="https://www.meneame.net/m/Pregúntame">PREGÚNTAME</a></h4></div>
+
+    <div class="body">
+        {% if next %}
+        <div class="finished">SIGUIENTES</div>
+
+        {% for row in next %}
+        <div class="guest">
+            <a title="{{ row.title }}" href="{{ row.link }}">
+                <img alt="{{ row.title }}" src="{{ row.getMediaImage }}" />
+
+                <div class="guest-name">{{ row.title }}</div>
+                <div class="guest-description">{{ row.subtitle }}</div>
+
+                {% if row.link %}
+                <span class="show-responses">Ver respuestas &raquo;</span>
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+
+        {% endif %}
+
+        {% if previous %}
+        <div class="finished">FINALIZADOS</div>
+
+        {% for row in previous %}
+        <div class="guest">
+            <a title="{{ row.title }}" href="{{ row.link }}">
+                <img alt="{{ row.title }}" src="{{ row.getMediaImage }}" />
+
+                <div class="guest-name">{{ row.title }}</div>
+                <div class="guest-description">{{ row.subtitle }}</div>
+
+                <span class="show-responses">Ver respuestas &raquo;</span>
+            </a>
+        </div>
+        {% endfor %}
+
+        {% endif %}
+    </div>
+</div>
+
+{% endif %}
