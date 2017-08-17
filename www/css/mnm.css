@@ -653,7 +653,7 @@ ul#userinfo li.search {
     text-transform: uppercase;
 }
 
-.dropdown span.button-new {
+.dropdown-menu.menu-subheader span.button-new {
     display: none;
 }
 
