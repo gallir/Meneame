@@ -653,6 +653,10 @@ ul#userinfo li.search {
     text-transform: uppercase;
 }
 
+.dropdown-menu.menu-subheader span.button-new {
+    display: none;
+}
+
 .menu01-itemsl li {
     margin-right: 20px;
 }
