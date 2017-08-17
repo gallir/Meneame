@@ -167,7 +167,7 @@ function update_status_debate_mail($report)
         LIMIT 1;
     ');
 
-    $url = $globals['scheme'].'//'.get_server_name().$globals['base_url'].'c/'.$report->comment_id;
+    $url = $globals['scheme'].'//'.get_server_name().$globals['base_url'].'c/'.$comment->comment_id;
 
     $subject = 'Reporte ID '.$report->id
         .': ['.$report->author_user_login.']'
