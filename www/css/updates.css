@@ -949,6 +949,7 @@ a.action-link span {
 
 .widget-popular-links-slider .title {
     margin-top: 10px;
+    direction: ltr;
 }
 
 .widget-popular-links-slider .title a {
@@ -967,6 +968,7 @@ a.action-link span {
     text-overflow: ellipsis;
     margin-top: 10px;
     margin-bottom: 10px;
+    direction: ltr;
 }
 
 .widget-popular-links-slider .link-info a.author {
