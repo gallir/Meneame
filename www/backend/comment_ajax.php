@@ -16,7 +16,7 @@ http_cache();
 
 header('Content-Type: application/json; charset=utf-8');
 
-$link_id = $parent = $comment = $link = false;
+$link_id = $comment = $link = false;
 
 if (isset($_REQUEST['reply_to']) && ($reply_to = intval($_REQUEST['reply_to'])) > 0) {
     $res = $db->get_row("select comment_link_id, comment_order from comments where comment_id=$reply_to");
@@ -26,11 +26,10 @@ if (isset($_REQUEST['reply_to']) && ($reply_to = intval($_REQUEST['reply_to'])) 
     }
 
     $link_id = $res->comment_link_id;
-    $parent = $res->comment_order;
     $comment = new Comment();
 
-    if ($parent) {
-        $comment->content = "#$parent ";
+    if ($res->comment_order) {
+        $comment->content = '#'.$res->comment_order.' ';
     }
 } elseif (!empty($_REQUEST['id']) && ($id = intval($_REQUEST['id'])) > 0) {
     $comment = Comment::from_db($id);
@@ -173,6 +172,10 @@ function check_and_save($comment, $link)
         }
 
         if ($error = User::checkReferencesToIgnores($comment->content)) {
+            return $error;
+        }
+
+        if ($error = User::checkReferencesToLinkCommentsIgnores($link, $comment->content)) {
             return $error;
         }
 
