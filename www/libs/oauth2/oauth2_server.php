@@ -9,12 +9,11 @@ class OAuth2Server
 
     private function __construct()
     {
-
         $this->storage = $this->configureStorage();
 
         $this->server = new \OAuth2\Server($this->storage, [
-            'allow_implicit' => false,
-            'enforce_state' => false
+            'allow_implicit' => true,
+            'enforce_state' => true
         ]);
         $this->server->addGrantType(new \OAuth2\GrantType\AuthorizationCode($this->storage));
         $this->server->addGrantType(new \OAuth2\GrantType\ClientCredentials($this->storage));
