@@ -79,7 +79,8 @@ function do_save($row)
     $row->image = $_POST['image'];
     $row->start_at = $_POST['start_at'];
     $row->end_at = $_POST['end_at'];
-    $row->enabled = $_POST['enabled'];
+    $row->sponsored = !empty($_POST['sponsored']);
+    $row->enabled = !empty($_POST['enabled']);
 
     $row->store();
 
