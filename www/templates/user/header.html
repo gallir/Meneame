@@ -7,7 +7,7 @@
         <div class="section-profile-header-info">
             <h1>{{ user.username }}</h1>
             <p class="info">{% exec text_to_html user.bio %}</p>
-            <p><strong>{% trans _('En menéame desde') %} {% exec get_month user.date %} de {% exec get_year user.date %}</strong>
+            <p><strong>{% trans _('En menéame desde') %} {% exec Time::month user.date %} de {% exec Time::year user.date %}</strong>
 
             {% if user.id == current_user.user_id OR current_user.user_level === "god" %}
             <div class="mt-20">

@@ -139,6 +139,7 @@ return array(
     'Strike' => $baseDir . '/www/libs/strike.php',
     'Tabs' => $baseDir . '/www/libs/tabs.php',
     'Tag' => $baseDir . '/www/libs/tags.php',
+    'Time' => $baseDir . '/www/libs/time.php',
     'Trackback' => $baseDir . '/www/libs/trackback.php',
     'Twemojis' => $baseDir . '/www/libs/twemojis.php',
     'Upload' => $baseDir . '/www/libs/upload.php',
