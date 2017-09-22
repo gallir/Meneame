@@ -2326,7 +2326,7 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     font-weight: bold;
     color: #e35614;
     border: 1px solid #e35614;
-    padding: 2px;
+    padding: 2px 4px;
     background-color: #fff;
     margin-left: 5px;
     border-radius: 3px;

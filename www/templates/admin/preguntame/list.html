@@ -9,6 +9,7 @@
                     <th>{% trans _('Título') %}</th>
                     <th class="text-center">{% trans _('Inicio') %}</th>
                     <th class="text-center">{% trans _('Fin') %}</th>
+                    <th class="text-center">{% trans _('Patrocinado') %}</th>
                     <th class="text-center">{% trans _('Activo') %}</th>
                 </tr>
             </thead>
@@ -22,7 +23,8 @@
                     </td>
                     <td class="text-center">{{ row.start_at }}</td>
                     <td class="text-center">{{ row.end_at }}</td>
-                    <td class="text-center">{{ row.enabled }}</td>
+                    <td class="text-center">{{ row.sponsored ? _('Sí') : _('No') }}</td>
+                    <td class="text-center">{{ row.enabled ? _('Sí') : _('No') }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
