@@ -2341,6 +2341,10 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     margin-left: 66px;
 }
 
+.sidebox-rounded .show-responses .sponsored {
+    font-size: 10px;
+}
+
 /** PREGUNTAME **/
 
 div.article-container {
