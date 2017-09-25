@@ -623,33 +623,43 @@ class User
 
         $do_cache = ($this->date < $globals['now'] - 86400); // Don't cache for new users
         $cache_time = 7200;
-        $stats = new Annotation("user_stats-$this->id");
+        $stats = new Annotation('user_stats-'.$this->id);
+        $time = (int)$db->get_var('
+            SELECT UNIX_TIMESTAMP(MAX(vote_date))
+            FROM votes
+            WHERE (
+                vote_user_id = "'.(int)$this->id.'"
+                AND vote_type IN ("links", "posts", "comments")
+            );
+        ');
 
         if (
             $do_cache && $stats->read()
             && (
-                $stats->time > $globals['now'] - $cache_time
-                || $globals['bot'] || $current_user->user_id == 0
-                || $stats->time > intval($db->get_var("select unix_timestamp(max(vote_date)) from votes where vote_user_id = $this->id and vote_type in ('links', 'posts', 'comments')"))
+                ($stats->time > ($globals['now'] - $cache_time))
+                || $globals['bot']
+                || $current_user->user_id == 0
+                || ($stats->time > $time)
             )
         ) {
             $obj = unserialize($stats->text);
         } elseif ($globals['bot'] || $current_user->user_id == 0) {
             return; // Don't calculate stats por bots
-        }
+        } else {
+            $obj = (object)[
+                'total_votes' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id;"),
+                'total_links' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM links WHERE link_author = $this->id and link_votes > 0;"),
+                'published_links' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM links WHERE link_author = $this->id AND link_status = 'published';"),
+                'total_comments' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM comments WHERE comment_user_id = $this->id;"),
+                'total_posts' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM posts WHERE post_user_id = $this->id;"),
+                'total_friends' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM friends WHERE friend_to = $this->id;"),
+//                'total_images' => Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private'),
+            ];
 
-        $obj = new stdClass;
-        $obj->total_votes = (int) $db->get_var("SELECT count(*) FROM votes WHERE vote_type='links' and vote_user_id = $this->id");
-        $obj->total_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id and link_votes > 0");
-        $obj->published_links = (int) $db->get_var("SELECT count(*) FROM links WHERE link_author = $this->id AND link_status = 'published'");
-        $obj->total_comments = (int) $db->get_var("SELECT count(*) FROM comments WHERE comment_user_id = $this->id");
-        $obj->total_posts = (int) $db->get_var("SELECT count(*) FROM posts WHERE post_user_id = $this->id");
-        $obj->total_friends = (int) $db->get_var("select count(*) from friends where friend_to = $this->id");
-        $obj->total_images = Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private');
-
-        if ($do_cache) {
-            $stats->text = serialize($obj);
-            $stats->store($globals['now'] + 86400 * 90); // Expires in 90 days
+            if ($do_cache) {
+                $stats->text = serialize($obj);
+                $stats->store($globals['now'] + 86400 * 90); // Expires in 90 days
+            }
         }
 
         foreach (get_object_vars($obj) as $var => $value) {
