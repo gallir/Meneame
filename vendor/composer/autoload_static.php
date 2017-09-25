@@ -230,6 +230,7 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'Strike' => __DIR__ . '/../..' . '/www/libs/strike.php',
         'Tabs' => __DIR__ . '/../..' . '/www/libs/tabs.php',
         'Tag' => __DIR__ . '/../..' . '/www/libs/tags.php',
+        'Time' => __DIR__ . '/../..' . '/www/libs/time.php',
         'Trackback' => __DIR__ . '/../..' . '/www/libs/trackback.php',
         'Twemojis' => __DIR__ . '/../..' . '/www/libs/twemojis.php',
         'Upload' => __DIR__ . '/../..' . '/www/libs/upload.php',

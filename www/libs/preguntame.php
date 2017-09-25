@@ -14,6 +14,7 @@ class Preguntame
     public $link;
     public $start_at;
     public $end_at;
+    public $sponsored;
     public $enabled;
     public $admin_id;
 
@@ -103,6 +104,7 @@ class Preguntame
         $this->start_at = date('Y-m-d H:i:s', strtotime($this->start_at));
         $this->end_at = date('Y-m-d H:i:s', strtotime($this->end_at));
 
+        $this->sponsored = (bool)$this->sponsored;
         $this->enabled = (bool)$this->enabled;
         $this->admin_id = (int)$current_user->user_id;
 
@@ -140,6 +142,7 @@ class Preguntame
                 `link` = "'.$this->link.'",
                 `start_at` = "'.$this->start_at.'",
                 `end_at` = "'.$this->end_at.'",
+                `sponsored` = "'.$this->sponsored.'",
                 `enabled` = "'.$this->enabled.'",
                 `admin_id` = "'.$this->admin_id.'"
             WHERE `id` = "'.(int)$this->id.'"
@@ -159,6 +162,7 @@ class Preguntame
                 `link` = "'.$this->link.'",
                 `start_at` = "'.$this->start_at.'",
                 `end_at` = "'.$this->end_at.'",
+                `sponsored` = "'.$this->sponsored.'",
                 `enabled` = "'.$this->enabled.'",
                 `admin_id` = "'.$this->admin_id.'";
         ');

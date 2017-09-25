@@ -43,12 +43,27 @@
                 <input type="text" id="end_at" name="end_at" value="{{ row.end_at }}" class="form-control" required />
             </div>
 
-            <div class="form-group">
-                <div class="checkbox checkbox-inline">
-                    <label>
-                        <input type="checkbox" id="enabled" name="enabled" {% if row.enabled %} checked {% endif %} />
-                        {% trans _('Activo') %}
-                    </label>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group text-center">
+                        <div class="checkbox checkbox-inline">
+                            <label>
+                                <input type="checkbox" id="sponsored" name="sponsored" {% if row.sponsored %} checked {% endif %} />
+                                {% trans _('Patrocinado') %}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group text-center">
+                        <div class="checkbox checkbox-inline">
+                            <label>
+                                <input type="checkbox" id="enabled" name="enabled" {% if row.enabled %} checked {% endif %} />
+                                {% trans _('Activo') %}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -570,18 +570,6 @@ function get_human_date($date, $format, $locale = 'es_ES.UTF-8')
     return $date;
 }
 
-function get_month($timestamp)
-{
-    $months = [1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril', 5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto', 9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'];
-
-    return $months[intval(strftime('%m', $timestamp))];
-}
-
-function get_year($timestamp)
-{
-    return intval(strftime('%Y', $timestamp));
-}
-
 function get_server_name()
 {
     global $globals;
@@ -1880,11 +1868,11 @@ function getMetasFromUrl($url)
     $html = @file_get_contents($url, false, stream_context_create(array(
         'http' => array(
             'timeout' => 5,
-            'user_agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36'
+            'user_agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36',
         ),
         'ssl' => array(
-            'verify_peer' => false
-        )
+            'verify_peer' => false,
+        ),
     )));
 
     if (empty($html)) {

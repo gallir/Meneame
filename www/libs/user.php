@@ -1056,7 +1056,7 @@ class User
         }, $users[1]);
 
         $query = '
-            SELECT SQL_CACHE COUNT(*)
+            SELECT SQL_CACHE `users`.`user_login`
             FROM `friends`, `users`
             WHERE (
                 `users`.`user_login` IN ("'.implode('","', $users).'")
@@ -1064,12 +1064,44 @@ class User
                 AND `friends`.`friend_type` = "manual"
                 AND `friends`.`friend_to` = "'.(int)$current_user->user_id.'"
                 AND `friends`.`friend_value` < 0
-            )
-            LIMIT 1;
+            );
         ';
 
-        if ((int)$db->get_var($query)) {
-            return _('No es posible hacer referencias a usuarios que te tienen ignorado.');
+        if ($ignored = $db->get_col($query)) {
+            return sprintf(_('No es posible hacer referencias a usuarios que te tienen ignorado (%s).'), implode(', ', $ignored));
+        }
+    }
+
+    public static function checkReferencesToLinkCommentsIgnores($link, $message)
+    {
+        global $db, $current_user;
+
+        if (empty($current_user->user_id) || empty($message) || (strpos($message, '#') === false)) {
+            return;
+        }
+
+        preg_match_all('/#([0-9]+)/', $message, $references);
+
+        if (empty($references[1])) {
+            return;
+        }
+
+        $query = '
+            SELECT SQL_CACHE `users`.`user_login`
+            FROM `comments`, `friends`, `users`
+            WHERE (
+                `comments`.`comment_link_id` = "'.(int)$link->id.'"
+                AND `comments`.`comment_order` IN ("'.implode('","', $references[1]).'")
+                AND `users`.`user_id` = `comments`.`comment_user_id`
+                AND `friends`.`friend_from` = `users`.`user_id`
+                AND `friends`.`friend_type` = "manual"
+                AND `friends`.`friend_to` = "'.(int)$current_user->user_id.'"
+                AND `friends`.`friend_value` < 0
+            );
+        ';
+
+        if ($ignored = $db->get_col($query)) {
+            return sprintf(_('No es posible hacer referencias a usuarios que te tienen ignorado (%s).'), implode(', ', $ignored));
         }
     }
 }

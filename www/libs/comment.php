@@ -641,7 +641,7 @@ class Comment extends LCPBase
             // Don't check in case of admin comments or higher karma
 
             // Avoid astroturfing from the same link's author
-            if ($link->status != 'published' && $link->ip == $globals['user_ip'] && $link->author != $comment->author) {
+            if ($link->status !== 'published' && $link->ip == $globals['user_ip'] && $link->author != $comment->author) {
                 UserAuth::insert_clon($comment->author, $link->author, $link->ip);
                 syslog(LOG_NOTICE, "Meneame, comment-link astroturfing ($current_user->user_login, $link->ip): ".$link->get_permalink());
                 return _('no se puede comentar desde la misma IP del autor del envío');
@@ -724,6 +724,10 @@ class Comment extends LCPBase
         }
 
         if ($error = User::checkReferencesToIgnores($comment->content)) {
+            return $error;
+        }
+
+        if ($error = User::checkReferencesToLinkCommentsIgnores($link, $comment->content)) {
             return $error;
         }
 
