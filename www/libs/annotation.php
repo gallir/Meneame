@@ -3,45 +3,60 @@
 // Ricardo Galli <gallir at uib dot es>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-//		http://www.affero.org/oagpl.html
+//        http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 class Annotation
 {
-    public $key = false;
-    public $time;
+    const SQL_SELECT = '
+            SELECT UNIX_TIMESTAMP(annotation_time) AS `time`, UNIX_TIMESTAMP(annotation_expire) AS `expire`, annotation_text AS `text`
+            FROM annotations
+            WHERE (
+                annotation_key = "%s"
+                AND (
+                    annotation_expire IS NULL
+                    OR annotation_expire > NOW()
+                )
+            );
+    ';
+
+    public $key = '';
+    public $time = 0;
     public $text = '';
 
-    public function Annotation($key = false)
+    public static function queryFromKey($key)
     {
-        $this->key = $key;
-        return;
+        global $db;
+
+        return sprintf(self::SQL_SELECT, $db->escape($key));
     }
 
     public static function from_db($key)
     {
         global $db;
 
-        $key = $db->escape($key);
-        if (($result = $db->get_object("SELECT UNIX_TIMESTAMP(annotation_time) as time, UNIX_TIMESTAMP(annotation_expire) as expire, annotation_text as text FROM annotations WHERE annotation_key = '$key' and (annotation_expire is null or annotation_expire > now())", 'Annotation'))) {
-            return $result;
-        }
-        return false;
+        return $db->get_object(static::queryFromKey($key), 'Annotation');
+    }
+
+    public function __construct($key = false)
+    {
+        $this->key = $key;
     }
 
     public static function get_text($key)
     {
-        $annotation = Annotation::from_db($key);
-        if ($annotation) {
+        if ($annotation = static::from_db($key)) {
             return $annotation->text;
         }
+
         return '';
     }
 
     public static function store_text($key, $text, $expire = false)
     {
-        $annotation = new Annotation($key);
+        $annotation = new self($key);
         $annotation->text = $text;
+
         return $annotation->store($expire);
     }
 
@@ -53,8 +68,10 @@ class Annotation
             return false;
         }
 
-        $key = $db->escape($this->key);
-        return $db->query("DELETE FROM annotations WHERE annotation_key = '$key'");
+        return $db->query('
+            DELETE FROM annotations
+            WHERE annotation_key = "'.$db->escape($this->key).'";
+        ');
     }
 
     public function store($expire = false)
@@ -65,14 +82,16 @@ class Annotation
             return false;
         }
 
-        if (! $expire) {
-            $expire = 'null';
+        if ($expire) {
+            $expire = 'FROM_UNIXTIME('.(int)$expire.')';
         } else {
-            $expire = "FROM_UNIXTIME($expire)";
+            $expire = 'NULL';
         }
-        $key = $db->escape($this->key);
-        $text = $db->escape($this->text);
-        return $db->query("REPLACE INTO annotations (annotation_key, annotation_text, annotation_expire) VALUES ('$key', '$text', $expire)");
+
+        return $db->query('
+            REPLACE INTO annotations (annotation_key, annotation_text, annotation_expire)
+            VALUES ("'.$db->escape($this->key).'", "'.$db->escape($this->text).'", '.$expire.');
+        ');
     }
 
     public function read($key = false)
@@ -83,28 +102,30 @@ class Annotation
             $this->key = $key;
         }
 
-        $key =    $db->escape($this->key);
-        if (($result = $db->get_row("SELECT UNIX_TIMESTAMP(annotation_time) as time, UNIX_TIMESTAMP(annotation_expire) as expire, annotation_text as text FROM annotations WHERE annotation_key = '$key' and (annotation_expire is null or annotation_expire > now())"))) {
-            foreach (get_object_vars($result) as $var => $value) {
-                $this->$var = $value;
-            }
-            return true;
+        if (!($result = $db->get_row(static::queryFromKey($this->key)))) {
+            return false;
         }
-        return false;
+
+        foreach (get_object_vars($result) as $var => $value) {
+            $this->$var = $value;
+        }
+
+        return true;
     }
 
     public function append($text)
     {
-        if ($text) {
-            $this->read();
-            $this->text .= $text;
-            $this->store();
+        if (empty($text)) {
+            return;
         }
+
+        $this->read();
+        $this->text .= $text;
+        $this->store();
     }
 
     public function optimize()
     {
         // For compatibility with old versions
-        global $db;
     }
 }
