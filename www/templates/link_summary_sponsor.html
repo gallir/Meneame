@@ -6,6 +6,10 @@
             <div class="clics"></div>
         </div>
 
+        {% if self.thumb_uri %}
+        <a href="{{ self.media_url }}" class="fancybox thumbnail-wrapper" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt="{{ self.title }}" class='thumbnail lazy'/></a>
+        {% endif %}
+
         <h2><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title}}</a></h2>
 
         <div class="news-submitted">
