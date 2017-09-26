@@ -1,10 +1,11 @@
-{% if sponsored %}
-    {% try_include 'private/sponsored/link.html' %}
+{% if self.sponsored %}
+    {% include 'link_summary_sponsor.html' %}
 {% else %}
     {% if globals.mobile %}
         {% include 'mobile/link_summary.html' %}
     {% else %}
-    <div class="news-summary{% if tag=='promoted_article' %} promoted-article{% endif %}">
+
+    <div class="news-summary{% if tag == 'promoted_article' %} promoted-article{% endif %}">
         <div class="news-body">
             {% if self.show_shakebox %}
             <div class="news-shakeit {{ self.box_class }}">
@@ -223,8 +224,8 @@
                 {% endif %}
 
                 {# {% if globals.ads %}<!-- google_ad_section_end -->{% endif %} #}
-
             </div> {# div.news-body #}
+
             <div class="news-details">
                 {% if type != 'short' %}
 
@@ -234,15 +235,15 @@
                     <span class="votes-down" data-toggle="tooltip" data-placement="top" title="Votos negativos"><i class="fa fa-arrow-circle-down"></i> <span id="a-neg-{{ self.id }}"><strong>{{ self.negatives }}</strong></span></span>
 
                     <span class="tool karma" data-toggle="tooltip" data-placement="top" title="Karma">
-                            <span class="karma-letter">K</span>
-                            <span class="karma-value" id="a-karma-{{ self.id }}">
-                                {% if self.status == 'published' && self.sub_karma > 0 %}
-                                    {{ self.sub_karma|intval }}
-                                {% else %}
-                                    {{ self.karma|intval }}
-                                {% endif %}
-                            </span>
+                        <span class="karma-letter">K</span>
+                        <span class="karma-value" id="a-karma-{{ self.id }}">
+                            {% if self.status == 'published' && self.sub_karma > 0 %}
+                                {{ self.sub_karma|intval }}
+                            {% else %}
+                                {{ self.karma|intval }}
+                            {% endif %}
                         </span>
+                    </span>
 
                     {% if globals.submnm|subid != self.sub_id %}
                     <span class="tool sub-name">
@@ -309,28 +310,28 @@
                     <span class="votes-down" data-toggle="tooltip" data-placement="top" title="Votos negativos"><i class="fa fa-arrow-circle-down"></i> <span id="a-neg-{{ self.id }}"><strong>{{ self.negatives }}</strong></span></span>
 
                     <span class="tool karma" data-toggle="tooltip" data-placement="top" title="Karma">
-                            <span class="karma-letter">K</span>
-                            <span class="karma-value" id="a-karma-{{ self.id }}">
-                                {% if self.status == 'published' && self.sub_karma > 0 %}
-                                    {{ self.sub_karma|intval }}
-                                {% else %}
-                                    {{ self.karma|intval }}
-                                {% endif %}
-                            </span>
+                        <span class="karma-letter">K</span>
+                        <span class="karma-value" id="a-karma-{{ self.id }}">
+                            {% if self.status == 'published' && self.sub_karma > 0 %}
+                                {{ self.sub_karma|intval }}
+                            {% else %}
+                                {{ self.karma|intval }}
+                            {% endif %}
                         </span>
+                    </span>
 
                     {% if globals.submnm|subid != self.sub_id %}
                     <span class="tool sub-name">
-                            <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
-                               class="subname"
-                               {% if self.sub_owner > 0 %}
-                                style="
-                                    {% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
-                                    {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
-                                "
-                            {% endif %}
-                            >{{ self.sub_name }}</a>
-                        </span>
+                        <a href="{{ globals.base_url_general }}m/{{ self.sub_name }}{% if self.status != 'published' %}/queue{% endif %}"
+                           class="subname"
+                           {% if self.sub_owner > 0 %}
+                            style="
+                                {% if self.sub_color1 %}color:{{ self.sub_color1 }} !important;{% endif %}
+                                {% if self.sub_color2 %}background-color:{{ self.sub_color2 }} !important;{% endif %}
+                            "
+                        {% endif %}
+                        >{{ self.sub_name }}</a>
+                    </span>
                     {% endif %}
 
                     {% if self.can_vote_negative %}

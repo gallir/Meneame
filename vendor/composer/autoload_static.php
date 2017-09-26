@@ -226,6 +226,7 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'SimpleImage' => __DIR__ . '/../..' . '/www/libs/simpleimage.php',
         'SitesMgr' => __DIR__ . '/../..' . '/www/libs/sites.php',
         'SphinxClient' => __DIR__ . '/../..' . '/www/libs/sphinxapi.php',
+        'Sponsor' => __DIR__ . '/../..' . '/www/libs/sponsor.php',
         'Storage' => __DIR__ . '/../..' . '/www/libs/oauth2/storage.php',
         'Strike' => __DIR__ . '/../..' . '/www/libs/strike.php',
         'Tabs' => __DIR__ . '/../..' . '/www/libs/tabs.php',

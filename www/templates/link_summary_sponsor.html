@@ -1,0 +1,64 @@
+<div class="news-summary sponsored">
+    <div class="news-body">
+        <div class="news-shakeit">
+            <div class="votes"></div>
+            <div class="menealo"><span>{% trans _('PUBLICIDAD') %}</span></div>
+            <div class="clics"></div>
+        </div>
+
+        <h2><a href="{{ self.permalink }}" class="l:{{ self.id }}">{{ self.title}}</a></h2>
+
+        <div class="news-submitted">
+            <a href="{{ self.username | useruri }}" class="tooltip u:{{ self.author }}"><img
+                src="{{ globals.base_static }}img/g.gif"
+                data-src="{% exec get_avatar_url self.author, self.avatar, 25, false %}"
+                data-2x="s:-25.:-40." alt="" class="lazy"/>
+            </a>
+
+            {% trans _('por') %} <a href="{% exec get_user_uri self.username, 'history' %}">{{ self.username }}</a>
+
+            {% if self.url %}
+                {% trans _('a') %} <span class="showmytitle" title="{{ url }}">{{ self.url_str }}</span>
+            {% endif %}
+        </div>
+
+        <p class="text-sponsor">{{ self.content }}</p>
+
+        {% if type != 'preview' && self.is_editable %}
+        &nbsp;&nbsp;<a href="{% get_url 'editlink?id=' self.id '&amp;user=' current_user.user_id %}" title="{% trans _('editar noticia') %} #{{ self.id }}"><img class="mini-icon-text" src="{{ globals.base_static }}img/common/edit-misc01.png" alt="edit" width="18" height="12"/></a>
+        {% endif %}
+
+        <div style="clear:both;"></div>
+
+        <div class="news-details">
+            <div class="news-details-main">
+                <a class="comments" href="{{ self.relative_permalink }}" title="{% trans _('comentarios de') %}: «{{ self.title }}»">
+                    <i class="fa fa-comments"></i>{% if self.comments > 0 %}{{ self.comments }} {% trans _("comentarios") %}{% else %}{% trans _("sin comentarios") %}{% endif %}
+                </a>
+
+                {% if ! self.is_discarded %}
+
+                {% set link = self.permalink %}
+                {% set title = self.title %}
+
+                {% exec self.get_short_permalink as short_link %}
+
+                <button class="social-share"><i class="fa fa-share-alt"></i>{% trans _('compartir') %}</button>
+
+                {% include "share.html" %}
+
+                {% endif %}
+
+                {% if current_user.user_id > 0 %}
+
+                {% if not globals.mobile %}
+                <button data-toggle="tooltip" data-placement="top" title="{% trans _("Guardar para después") %}" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></button>
+                {% else %}
+                <button title="{% trans _("Guardar para después") %}" id="favl-{{ self.id }}" onclick="add_remove_fav('favl-{{ self.id }}', 'link', {{ self.id }})" {% if self.favorite %} class="save link favorite on" {% else %} class="save link favorite" {% endif %}></button>
+                {% endif %}
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

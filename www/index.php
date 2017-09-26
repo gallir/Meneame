@@ -135,27 +135,39 @@ do_sub_description();
 
 do_banner_top_news();
 
+$globals['site_id'] = SitesMgr::my_id();
+
 if ($page == 1 && empty($globals['meta']) && ($top = Link::top())) {
-    Haanga::Load("link_top.html", array('self' => $top));
+    Haanga::Load('link_top.html', array('self' => $top));
 }
 
-$order_by = "ORDER BY date DESC ";
+$order_by = 'ORDER BY date DESC ';
 
 if (!$rows) {
-    $rows = $db->get_var("SELECT SQL_CACHE count(*) FROM sub_statuses $from WHERE $where");
+    $rows = $db->get_var('SELECT SQL_CACHE count(*) FROM sub_statuses '.$from.' WHERE '.$where.';');
 }
 
 // We use a "INNER JOIN" in order to avoid "order by" whith filesorting. It was very bad for high pages
-$sql = "SELECT" . Link::SQL . "INNER JOIN (SELECT link FROM sub_statuses $from WHERE $where $order_by LIMIT $offset,$page_size) as ids ON (ids.link = link_id)";
+$sql = '
+    SELECT '.Link::SQL.'
+    INNER JOIN (
+        SELECT link
+        FROM sub_statuses '.$from.'
+        WHERE '.$where.'
+        '.$order_by.'
+        LIMIT '.$offset.', '.$page_size.'
+    ) AS ids ON (ids.link = link_id);
+';
 
-$globals['site_id'] = SitesMgr::my_id();
+$links = $db->get_results($sql, 'Link');
 
-// Search for sponsored link
-if (!empty($globals['sponsored_link_uri'])) {
-    $sponsored_link = Link::from_db($globals['sponsored_link_uri'], 'uri');
+if (($sponsor = Sponsor::getCurrent()) && ($sponsored_link = Link::from_db($sponsor->link))) {
+    $links = array_filter($links, function ($value) use ($sponsored_link) {
+        return $sponsored_link->id !== $value->id;
+    });
+} else {
+    $sponsored_link = null;
 }
-
-$links = $db->get_results($sql, "Link");
 
 if ($links) {
     $all_ids = array_map(function ($value) {
@@ -188,7 +200,7 @@ if ($links) {
         }
 
         Haanga::Safe_Load('private/ad-interlinks.html', [
-            'counter' => $counter,
+            'counter' => $counter++,
             'page_size' => $page_size,
             'sponsored_link' => $sponsored_link,
             'official_subs' => $official_subs,
@@ -196,8 +208,6 @@ if ($links) {
         ]);
 
         $link->print_summary();
-
-        $counter++;
     }
 }
 

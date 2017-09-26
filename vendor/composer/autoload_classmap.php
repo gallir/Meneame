@@ -135,6 +135,7 @@ return array(
     'SimpleImage' => $baseDir . '/www/libs/simpleimage.php',
     'SitesMgr' => $baseDir . '/www/libs/sites.php',
     'SphinxClient' => $baseDir . '/www/libs/sphinxapi.php',
+    'Sponsor' => $baseDir . '/www/libs/sponsor.php',
     'Storage' => $baseDir . '/www/libs/oauth2/storage.php',
     'Strike' => $baseDir . '/www/libs/strike.php',
     'Tabs' => $baseDir . '/www/libs/tabs.php',
