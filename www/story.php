@@ -304,13 +304,23 @@ $globals['extra_head'] .= '<link rel="canonical" href="'.$link->get_canonical_pe
 // add also a rel to the comments rss
 $globals['extra_head'] .= '<link rel="alternate" type="application/rss+xml" title="'._('comentarios esta noticia').'" href="'.$globals['scheme'].'//'.get_server_name().$globals['base_url'].'comments_rss?id='.$link->id.'" />';
 
+$globals['header_banner'] = '';
+
 if ($link->sponsored && ($sponsor = Sponsor::getByLinkId($link->id))) {
     if ($sponsor->css) {
         $globals['extra_head'] .= '<style>'.$sponsor->css.'</style>';
     }
 
     if ($sponsor->banner && !$globals['mobile']) {
-        $globals['header_banner'] = '<img src="'.$sponsor->banner.'" alt="'.$link->title.'" />';
+        $sponsor_banner = $sponsor->banner;
+    } elseif ($sponsor->banner_mobile && $globals['mobile']) {
+        $sponsor_banner = $sponsor->banner_mobile;
+    } else {
+        $sponsor_banner = false;
+    }
+
+    if ($sponsor_banner) {
+        $globals['header_banner'] = '<img src="'.$sponsor_banner.'" alt="'.$link->title.'" />';
 
         if ($sponsor->external) {
             $globals['header_banner'] = '<a href="'.$sponsor->external.'" target="_blank">'.$globals['header_banner'].'</a>';

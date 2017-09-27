@@ -1,12 +1,12 @@
 <div class="news-summary sponsored">
-    <div class="news-body">
+    <div class="news-body {% if globals.mobile %}mobile{% endif %}">
         <div class="news-shakeit">
             <div class="votes"></div>
             <div class="menealo"><span>{% trans _('PUBLICIDAD') %}</span></div>
             <div class="clics"></div>
         </div>
 
-        {% if self.thumb_uri %}
+        {% if !globals.mobile AND self.thumb_uri %}
         <a href="{{ self.media_url }}" class="fancybox thumbnail-wrapper" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt="{{ self.title }}" class='thumbnail lazy'/></a>
         {% endif %}
 
@@ -25,6 +25,10 @@
                 {% trans _('a') %} <span class="showmytitle" title="{{ url }}">{{ self.url_str }}</span>
             {% endif %}
         </div>
+
+        {% if globals.mobile AND self.thumb_uri %}
+        <a href="{{ self.media_url }}" class="fancybox thumbnail-wrapper" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt="{{ self.title }}" class='thumbnail lazy'/></a>
+        {% endif %}
 
         <p class="text-sponsor">{{ self.content }}</p>
 
