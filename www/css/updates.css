@@ -2407,6 +2407,7 @@ div.article-container div#editor {
 .news-summary.sponsored .news-body .text-sponsor {
     float: left;
     width: 70%;
+    margin-bottom: 10px;
 }
 
 .news-summary.sponsored .news-body .icon-sponsor {
