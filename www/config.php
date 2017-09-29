@@ -344,7 +344,7 @@ $globals['do_websnapr'] = false;
 //$globals['kalooga_categories'] = array(27, 28);
 
 // Automatic thumbnails size
-$globals['thumb_size'] = 60;
+$globals['thumb_size'] = 155;
 $globals['medium_thumb_size'] = 420;
 
 // Amazon setup

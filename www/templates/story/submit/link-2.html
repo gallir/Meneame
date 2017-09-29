@@ -160,7 +160,7 @@
             <label>{% trans _('Obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
             {% endif %}
 
-            {% if site_properties.allow_images %}
+            {% if current_user.admin > 0 OR site_properties.allow_images %}
 
             <input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
             &nbsp;&nbsp;&nbsp;&nbsp;
