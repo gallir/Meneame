@@ -1,0 +1,88 @@
+<section class="section section-medium">
+    <div class="container">
+        <form class="form" method="post" autocomplete="off" enctype="multipart/form-data">
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="link" class="title">{% trans _('ID del Envío') %} *</label>
+
+                <input type="number" id="link" name="link" value="{{ row.link }}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="external" class="title">{% trans _('Link Externo') %}</label>
+
+                <input type="text" id="external" name="external" value="{{ row.external }}" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="start_at" class="title">{% trans _('Comienza el (AAAA-MM-DD HH:MM)') %} *</label>
+
+                <input type="text" id="start_at" name="start_at" value="{{ row.start_at }}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="end_at" class="title">{% trans _('Finaliza el (AAAA-MM-DD HH:MM)') %} *</label>
+
+                <input type="text" id="end_at" name="end_at" value="{{ row.end_at }}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="banner" class="title">{% trans _('Banner para Escritorio') %}</label>
+
+                <div class="input-group">
+                    <input type="file" id="banner" name="banner" class="form-control" />
+
+                    {% if row.banner %}
+                    <span class="input-group-btn">
+                        <a href="{{ row.banner }}" target="_blank" class="btn btn-default">
+                            <i class="glyphicon glyphicon-camera"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="banner_mobile" class="title">{% trans _('Banner para Móvil') %}</label>
+
+                <div class="input-group">
+                    <input type="file" id="banner_mobile" name="banner_mobile" class="form-control" />
+
+                    {% if row.banner_mobile %}
+                    <span class="input-group-btn">
+                        <a href="{{ row.banner_mobile }}" target="_blank" class="btn btn-default">
+                            <i class="glyphicon glyphicon-camera"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="css" class="title">{% trans _('Estilos personalizados') %}</label>
+
+                <textarea id="css" name="css" class="form-control" rows="5" style="height: auto;">{{ row.css }}</textarea>
+            </div>
+
+            <div class="form-group text-center">
+                <div class="checkbox checkbox-inline">
+                    <label>
+                        <input type="checkbox" id="enabled" name="enabled" {% if row.enabled %} checked {% endif %} />
+                        {% trans _('Activo') %}
+                    </label>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="pull-right">
+                    <button type="submit" name="save" value="true" class="btn btn-mnm">
+                        {% if row.id %}{% trans _('Guardar modificaciones') %}{% else %}{% trans _('Crear') %}{% endif %}
+                    </button>
+                </div>
+            </footer>
+        </form>
+    </div>
+</section>

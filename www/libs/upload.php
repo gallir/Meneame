@@ -8,6 +8,21 @@
 
 class Upload
 {
+    public $id;
+    public $type;
+    public $to;
+    public $access;
+    public $version;
+    public $stored;
+    public $size;
+    public $date;
+    public $dim1;
+    public $dim2;
+    public $mime;
+    public $extension;
+
+    public $user;
+
     public static function get_url($type, $id, $version = 0, $ts = 0, $mime = 'image/jpg')
     {
         global $globals;

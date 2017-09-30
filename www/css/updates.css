@@ -2360,6 +2360,106 @@ div.article-container div#editor {
     order: 3;
 }
 
+/** SPONSOR **/
+.news-summary.sponsored .news-body {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #fff9f0;
+    border-bottom: 5px solid #ff6400;
+}
+
+.news-summary.sponsored .news-body .votes {
+    height: 15px;
+}
+
+.news-summary.sponsored .news-body .menealo span {
+    color: #fff;
+    font-size: 10px;
+    padding-top: 6px;
+}
+
+.news-summary.sponsored .news-body .clics {
+    height: 30px;
+}
+
+.news-summary.sponsored .news-body .news-submitted div {
+    padding-top: 5px;
+}
+
+.news-summary.sponsored .news-body .news-submitted a.houser {
+    color: #ff6400
+}
+
+.news-summary.sponsored .news-body span.sponsor {
+    background-color: #ff6300;
+    color: #fff;
+    padding: 2px 4px;
+    position: absolute;
+    top: 28px;
+    right: 0px;
+}
+
+.news-summary.sponsored .news-body .news-submitted a.showmytitle {
+    color: #000;
+    font-weight: bold;
+}
+
+.news-summary.sponsored .news-body .text-sponsor {
+    float: left;
+    width: 70%;
+    margin-bottom: 10px;
+}
+
+.news-summary.sponsored .news-body .icon-sponsor {
+    text-align: right;
+    margin-top: -10px;
+}
+
+.news-summary.sponsored .news-body .icon-sponsor a {
+    text-decoration: none;
+    position: relative;
+}
+
+.news-summary.sponsored .news-shakeit {
+    top: 20px;
+}
+
+.news-summary.sponsored .icon-sponsor img.sponsor-logo {
+    position: relative;
+    right: 25px;
+    top: 28px;
+}
+
+@media only screen and (max-device-width: 480px) {
+    .news-body.ads .text-sponsor {
+        width: 100%;
+    }
+
+    .news-shakeit.ads {
+        top: 0px;
+    }
+
+    .news-body.ads .icon-sponsor {
+        margin-top: -25px;
+        float: right;
+    }
+
+    .icon-sponsor img.sponsor-logo {
+        width: 110px;
+        position: relative;
+        top: 28px;
+        right: 0px;
+    }
+
+}
+
+@media only screen and (max-device-width: 1000px) {
+    .news-body.ads span.sponsor {
+        top: 68px;
+        right: 12px;
+    }
+}
+
 @media (max-width: 1024px) {
     #nav-panel .searchform .searchbox {
         padding-left: 25px;

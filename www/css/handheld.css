@@ -552,3 +552,12 @@ div.subs-listing-wrapper {
     width: 100%;
     overflow-y: scroll;
 }
+
+.news-summary.sponsored .news-shakeit {
+    top: 0;
+}
+
+.news-summary.sponsored .news-body .text-sponsor {
+    float: none;
+    width: auto;
+}
