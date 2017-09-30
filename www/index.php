@@ -42,7 +42,7 @@ switch ($globals['meta']) {
     case '_subs':
         if ($current_user->user_id && $current_user->has_subs) {
             $from_time = '"' . date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']) . '"';
-            $where = "id in ($current_user->subs) AND status='published' AND id = origen and date > $from_time";
+            $where = "id IN ($current_user->subs) AND status='published' AND id = origen AND date > $from_time";
             $rows = -1;
 
             $tab_option = 7; // Show "personal" as default
@@ -56,7 +56,7 @@ switch ($globals['meta']) {
     case '_*':
         $from_time = '"' . date("Y-m-d H:00:00", $globals['now'] - $globals['time_enabled_comments']) . '"';
         $from = ", subs";
-        $where = "sub_statuses.status='published' AND sub_statuses.id = sub_statuses.origen and sub_statuses.date > $from_time and sub_statuses.origen = subs.id and subs.owner > 0";
+        $where = "sub_statuses.status='published' AND sub_statuses.id = sub_statuses.origen AND sub_statuses.date > $from_time AND sub_statuses.origen = subs.id AND subs.owner > 0";
         $rows = -1;
         $tab_option = 8;
 
@@ -71,7 +71,7 @@ switch ($globals['meta']) {
 
         $from_time = '"' . date("Y-m-d H:00:00", $globals['now'] - 86400 * 4) . '"';
         $from = ", friends, links";
-        $where = "sub_statuses.id = " . SitesMgr::my_id() . " AND date > $from_time and status='published' and friend_type='manual' and friend_from = $current_user->user_id and friend_to=link_author and friend_value > 0 and link_id = link";
+        $where = "sub_statuses.id = " . SitesMgr::my_id() . " AND date > $from_time AND status = 'published' AND friend_type = 'manual' AND friend_from = $current_user->user_id AND friend_to=link_author AND friend_value > 0 AND link_id = link";
         $rows = -1;
         $tab_option = 1; // Friends
 
@@ -80,7 +80,7 @@ switch ($globals['meta']) {
     default:
         $tab_option = 0; // All
         $rows = Link::count('published');
-        $where = "sub_statuses.id = " . SitesMgr::my_id() . " AND status='published' ";
+        $where = "sub_statuses.id = " . SitesMgr::my_id() . " AND status = 'published' ";
 
 }
 
@@ -143,6 +143,12 @@ if ($page == 1 && empty($globals['meta']) && ($top = Link::top())) {
 
 $order_by = 'ORDER BY date DESC ';
 
+if (($sponsor = Sponsor::getCurrent()) && ($sponsored_link = Link::from_db($sponsor->link))) {
+    $where .= ' AND link != "'.$sponsored_link->id.'" ';
+} else {
+    $sponsored_link = null;
+}
+
 if (!$rows) {
     $rows = $db->get_var('SELECT SQL_CACHE count(*) FROM sub_statuses '.$from.' WHERE '.$where.';');
 }
@@ -161,14 +167,6 @@ $sql = '
 
 $links = $db->get_results($sql, 'Link');
 
-if (($sponsor = Sponsor::getCurrent()) && ($sponsored_link = Link::from_db($sponsor->link))) {
-    $links = array_filter($links, function ($value) use ($sponsored_link) {
-        return $sponsored_link->id !== $value->id;
-    });
-} else {
-    $sponsored_link = null;
-}
-
 if ($links) {
     $all_ids = array_map(function ($value) {
         return $value->id;
@@ -179,10 +177,10 @@ if ($links) {
 
     $official_subs = get_data_widget_official_subs();
 
-    $counter = 0;
-
     if ($globals['show_promoted_articles'] ) {
         $promoted_articles = Link::getPromotedArticles();
+    } else {
+        $promoted_articles = [];
     }
 
     if ($globals['show_widget_popular_articles']) {
@@ -190,6 +188,8 @@ if ($links) {
     } else {
         $widget_popular_articles = [];
     }
+
+    $counter = 0;
 
     foreach ($links as $link) {
         $link->poll = $pollCollection->get($link->id);

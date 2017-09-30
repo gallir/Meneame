@@ -155,7 +155,7 @@ class Link extends LCPBase
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
-                AND link_karma >= '.$globals['widget_popular_articles_min_karma'].'
+                AND link_karma >= '.(int)$globals['widget_popular_articles_min_karma'].'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
@@ -183,7 +183,7 @@ class Link extends LCPBase
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
-                AND link_karma >= '.$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
+                AND link_karma >= '.(int)$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
@@ -238,8 +238,8 @@ class Link extends LCPBase
                 AND sub_statuses.link = link_id
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['article_promoted_max_time_from_publish'] * 3600).'"
                 AND sub_statuses.origen = subs.id
-                AND link_karma > '.$globals['article_promoted_min_karma'].'
-                AND (link_votes + link_negatives + link_anonymous) > '.$globals['article_promoted_min_votes'].'
+                AND link_karma > '.(int)$globals['article_promoted_min_karma'].'
+                AND (link_votes + link_negatives + link_anonymous) > '.(int)$globals['article_promoted_min_votes'].'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
