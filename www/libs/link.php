@@ -60,22 +60,56 @@ class Link extends LCPBase
 
     // sql fields to build an object from mysql
     const SQL = '
-        link_id as id, link_nsfw as nsfw, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, UNIX_TIMESTAMP(sub_statuses.date) as sub_date, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date, UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, user_adchannel, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, UNIX_TIMESTAMP(creation.date) as sub_date_origen, subs.color1 as sub_color1, subs.color2 as sub_color2, subs.page_mode as page_mode, favorite_link_id as favorite, favorite_link_readed as favorite_readed, clicks.counter as clicks, votes.vote_value as voted, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM links
-        INNER JOIN users on (user_id = link_author)
-        LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
-        LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
-        LEFT JOIN votes ON (link_date > @enabled_votes and vote_type="links" and vote_link_id = links.link_id and vote_user_id = @user_id and ( @user_id > 0  OR vote_ip_int = @ip_int ) )
-        LEFT JOIN favorites ON (@user_id > 0 and favorite_user_id =  @user_id and favorite_type = "link" and favorite_link_id = links.link_id)
-        LEFT JOIN link_clicks as clicks on (clicks.id = links.link_id)
-        LEFT JOIN media ON (media.type="link" and media.id = link_id and media.version = 0)
+        link_id AS id, link_nsfw AS nsfw, link_author AS author, link_blog AS blog, link_status AS status,
+        sub_statuses.status AS sub_status, sub_statuses.id AS sub_status_id, UNIX_TIMESTAMP(sub_statuses.date) AS sub_date,
+        link_votes AS votes, link_negatives AS negatives, link_anonymous AS anonymous, link_votes_avg AS votes_avg,
+        link_votes + link_anonymous AS total_votes, link_comments AS comments, link_karma AS karma,
+        sub_statuses.karma AS sub_karma, link_randkey AS randkey, link_url AS url, link_uri AS uri,
+        link_url_title AS url_title, link_title AS title, link_tags AS tags, link_content AS content,
+        UNIX_TIMESTAMP(link_date) AS date, UNIX_TIMESTAMP(link_sent_date) AS sent_date,
+        UNIX_TIMESTAMP(link_published_date) AS published_date, UNIX_TIMESTAMP(link_modified) AS modified,
+        link_content_type AS content_type, link_ip AS ip, link_thumb_status AS thumb_status,
+        user_login AS username, user_email AS email, user_avatar AS avatar, user_karma AS user_karma,
+        user_level AS user_level, user_adcode, user_adchannel, subs.name AS sub_name, subs.id AS sub_id,
+        subs.server_name, subs.sub AS is_sub, subs.owner AS sub_owner, subs.base_url, subs.created_from,
+        subs.allow_main_link, creation.status AS sub_status_origen, UNIX_TIMESTAMP(creation.date) AS sub_date_origen,
+        subs.color1 AS sub_color1, subs.color2 AS sub_color2, subs.page_mode AS page_mode, favorite_link_id AS favorite,
+        favorite_link_readed AS favorite_readed, clicks.counter AS clicks, votes.vote_value AS voted,
+        media.size AS media_size, media.mime AS media_mime, media.extension AS media_extension,
+        media.access AS media_access, UNIX_TIMESTAMP(media.date) AS media_date, sponsors.id AS sponsored, 1 AS `read`
+        FROM links
+        INNER JOIN users ON (user_id = link_author)
+        LEFT JOIN sub_statuses ON (@site_id > 0 AND sub_statuses.id = @site_id AND sub_statuses.link = links.link_id)
+        LEFT JOIN (sub_statuses as creation, subs) ON (creation.link = links.link_id AND creation.id=creation.origen AND creation.id=subs.id)
+        LEFT JOIN votes ON (link_date > @enabled_votes AND vote_type="links" AND vote_link_id = links.link_id AND vote_user_id = @user_id AND ( @user_id > 0  OR vote_ip_int = @ip_int ) )
+        LEFT JOIN favorites ON (@user_id > 0 AND favorite_user_id =  @user_id AND favorite_type = "link" AND favorite_link_id = links.link_id)
+        LEFT JOIN link_clicks as clicks ON (clicks.id = links.link_id)
+        LEFT JOIN media ON (media.type = "link" AND media.id = link_id AND media.version = 0)
+        LEFT JOIN sponsors ON (sponsors.link = links.link_id AND sponsors.enabled = 1)
     ';
 
     const SQL_BASIC = '
-        link_id as id, link_nsfw as nsfw, link_author as author, link_blog as blog, link_status as status, sub_statuses.status as sub_status, sub_statuses.id as sub_status_id, link_votes as votes, link_negatives as negatives, link_anonymous as anonymous, link_votes_avg as votes_avg, link_votes + link_anonymous as total_votes, link_comments as comments, link_karma as karma, sub_statuses.karma as sub_karma, link_randkey as randkey, link_url as url, link_uri as uri, link_url_title as url_title, link_title as title, link_tags as tags, link_content as content, UNIX_TIMESTAMP(link_date) as date,   UNIX_TIMESTAMP(link_sent_date) as sent_date, UNIX_TIMESTAMP(link_published_date) as published_date, UNIX_TIMESTAMP(link_modified) as modified, link_content_type as content_type, link_ip as ip, link_thumb_status as thumb_status, user_login as username, user_email as email, user_avatar as avatar, user_karma as user_karma, user_level as user_level, user_adcode, subs.name as sub_name, subs.id as sub_id, subs.server_name, subs.sub as is_sub, subs.owner as sub_owner, subs.base_url, subs.created_from, subs.allow_main_link, creation.status as sub_status_origen, media.size as media_size, media.mime as media_mime, media.extension as media_extension, media.access as media_access, UNIX_TIMESTAMP(media.date) as media_date, 1 as `read` FROM links
-        INNER JOIN users on (user_id = link_author)
-        LEFT JOIN sub_statuses ON (@site_id > 0 and sub_statuses.id = @site_id and sub_statuses.link = links.link_id)
-        LEFT JOIN (sub_statuses as creation, subs) ON (creation.link=links.link_id and creation.id=creation.origen and creation.id=subs.id)
-        LEFT JOIN media ON (media.type="link" and media.id = link_id and media.version = 0)
+        link_id AS id, link_nsfw AS nsfw, link_author AS author, link_blog AS blog, link_status AS status,
+        sub_statuses.status AS sub_status, sub_statuses.id AS sub_status_id, link_votes AS votes,
+        link_negatives AS negatives, link_anonymous AS anonymous, link_votes_avg AS votes_avg,
+        link_votes + link_anonymous AS total_votes, link_comments AS comments, link_karma AS karma,
+        sub_statuses.karma AS sub_karma, link_randkey AS randkey, link_url AS url, link_uri AS uri,
+        link_url_title AS url_title, link_title AS title, link_tags AS tags, link_content AS content,
+        UNIX_TIMESTAMP(link_date) AS date,   UNIX_TIMESTAMP(link_sent_date) AS sent_date,
+        UNIX_TIMESTAMP(link_published_date) AS published_date, UNIX_TIMESTAMP(link_modified) AS modified,
+        link_content_type AS content_type, link_ip AS ip, link_thumb_status AS thumb_status,
+        user_login AS username, user_email AS email, user_avatar AS avatar, user_karma AS user_karma,
+        user_level AS user_level, user_adcode, subs.name AS sub_name, subs.id AS sub_id, subs.server_name,
+        subs.sub AS is_sub, subs.owner AS sub_owner, subs.base_url, subs.created_from, subs.allow_main_link,
+        creation.status AS sub_status_origen, media.size AS media_size, media.mime AS media_mime,
+        media.extension AS media_extension, media.access AS media_access, UNIX_TIMESTAMP(media.date) AS media_date,
+        sponsors.id AS sponsored, 1 AS `read`
+        FROM links
+        INNER JOIN users ON (user_id = link_author)
+        LEFT JOIN sub_statuses ON (@site_id > 0 AND sub_statuses.id = @site_id AND sub_statuses.link = links.link_id)
+        LEFT JOIN (sub_statuses AS creation, subs) ON (creation.link=links.link_id AND creation.id = creation.origen AND creation.id=subs.id)
+        LEFT JOIN media ON (media.type = "link" AND media.id = link_id AND media.version = 0)
+        LEFT JOIN sponsors ON (sponsors.link = links.link_id AND sponsors.enabled = 1)
     ';
 
     public static function from_db($id, $key = 'id', $complete = true)
@@ -84,15 +118,10 @@ class Link extends LCPBase
 
         SitesMgr::my_id(); // Force to read current sub_id
 
-        switch ($key) {
-            case 'uri':
-                $id = $db->escape($id);
-                $selector = "link_uri = '$id'";
-                break;
-
-            default:
-                $id = intval($id);
-                $selector = "link_id = $id";
+        if ($key === 'uri') {
+            $selector = 'link_uri = "'.$db->escape($id).'"';
+        } else {
+            $selector = 'link_id = "'.(int)$id.'"';
         }
 
         if ($complete) {
@@ -126,7 +155,7 @@ class Link extends LCPBase
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
-                AND link_karma >= '.$globals['widget_popular_articles_min_karma'].'
+                AND link_karma >= '.(int)$globals['widget_popular_articles_min_karma'].'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
@@ -154,7 +183,7 @@ class Link extends LCPBase
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
-                AND link_karma >= '.$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
+                AND link_karma >= '.(int)$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses
@@ -209,8 +238,8 @@ class Link extends LCPBase
                 AND sub_statuses.link = link_id
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['article_promoted_max_time_from_publish'] * 3600).'"
                 AND sub_statuses.origen = subs.id
-                AND link_karma > '.$globals['article_promoted_min_karma'].'
-                AND (link_votes + link_negatives + link_anonymous) > '.$globals['article_promoted_min_votes'].'
+                AND link_karma > '.(int)$globals['article_promoted_min_karma'].'
+                AND (link_votes + link_negatives + link_anonymous) > '.(int)$globals['article_promoted_min_votes'].'
                 AND NOT EXISTS (
                     SELECT link
                     FROM sub_statuses

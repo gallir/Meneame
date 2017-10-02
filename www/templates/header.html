@@ -146,7 +146,6 @@
         </script>
 
         <div id="header">
-
             <div class="header-menu-wrapper">
                 <div id="header-menu" class="mnm-center-in-wrap">
                     <div class="header-menu01"{% if globals.mobile %} style="display:none;"{% endif %}>
@@ -240,6 +239,10 @@
             </div>
             {% endif %}
         </div><!--header-->
+
+        {% if globals.header_banner %}
+        <div id="header-banner">{{ globals.header_banner }}</div>
+        {% endif %}
 
         <div id="variable">
             <div id="wrap">

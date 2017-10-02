@@ -5,40 +5,38 @@
             <div class="alert alert-danger">{{ error }}</div>
             {% endif %}
 
-            <input type="hidden" name="created_from" value="{{ row.id }}"/>
-
             <div class="form-group">
-                <label for="name" class="title">{% trans _('Título del Pregúntame') %} *</label>
+                <label for="title" class="title">{% trans _('Título del Pregúntame') %} *</label>
 
                 <input type="text" id="title" name="title" value="{{ row.title }}" class="form-control" required />
             </div>
 
             <div class="form-group">
-                <label for="name" class="title">{% trans _('Subtítulo') %} *</label>
+                <label for="subtitle" class="title">{% trans _('Subtítulo') %} *</label>
 
                 <input type="text" id="subtitle" name="subtitle" value="{{ row.subtitle }}" class="form-control" required />
             </div>
 
             <div class="form-group">
-                <label for="name" class="title">{% trans _('Link al envío') %}</label>
+                <label for="link" class="title">{% trans _('Link al envío') %}</label>
 
                 <input type="text" id="link" name="link" value="{{ row.link }}" class="form-control" />
             </div>
 
             <div class="form-group">
-                <label for="name" class="title">{% trans _('Imagen') %} *</label>
+                <label for="image" class="title">{% trans _('Imagen') %} *</label>
 
                 <input type="file" id="image" name="image" class="form-control" />
             </div>
 
             <div class="form-group">
-                <label for="name" class="title">{% trans _('Comienza el (AAAA-MM-DD HH:MM)') %} *</label>
+                <label for="start_at" class="title">{% trans _('Comienza el (AAAA-MM-DD HH:MM)') %} *</label>
 
                 <input type="text" id="start_at" name="start_at" value="{{ row.start_at }}" class="form-control" required />
             </div>
 
             <div class="form-group">
-                <label for="name" class="title">{% trans _('Finaliza el (AAAA-MM-DD HH:MM)') %} *</label>
+                <label for="end_at" class="title">{% trans _('Finaliza el (AAAA-MM-DD HH:MM)') %} *</label>
 
                 <input type="text" id="end_at" name="end_at" value="{{ row.end_at }}" class="form-control" required />
             </div>

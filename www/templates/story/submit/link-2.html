@@ -160,24 +160,7 @@
             <label>{% trans _('Obtener imagen (puede tardar varios segundos)') %}: <input type="checkbox" name="thumb_get" value="1"/></label><br/>
             {% endif %}
 
-            <label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:60%" /></label><br/>
-
-            {% endif %}
-
-            <label>{% trans _('Actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
-
-            {% endif %}
-
-            <div class="mt-20">
-                {% if link.is_new %}
-                <input type="button" class="button" onclick="window.location = '{{ globals.base_url }}';" value="{% trans _('Cancelar') %}" />&nbsp;&nbsp;
-                <input type="submit" class="button" value="{% trans _('Continuar') %} &#187;" />
-                {% else %}
-                <input type="submit" class="button" value="{% trans _('Guardar y Finalizar') %} &#187;" />
-                {% endif %}
-            </div>
-
-            {% if site_properties.allow_images %}
+            {% if current_user.admin > 0 OR site_properties.allow_images %}
 
             <input type="hidden" name="MAX_FILE_SIZE" value="{{ globals.media_max_size }}" />
             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -197,6 +180,23 @@
             </script>
 
             {% endif %}
+
+            <label>{% trans _('o especificar url de la imagen') %}: <input type="url" name="thumb_url" style="width:60%" /></label><br/>
+
+            {% endif %}
+
+            <label>{% trans _('Actualizar url') %}: <input type="checkbox" name="uri_update" value="1"/></label><br/>
+
+            {% endif %}
+
+            <div class="mt-20">
+                {% if link.is_new %}
+                <input type="button" class="button" onclick="window.location = '{{ globals.base_url }}';" value="{% trans _('Cancelar') %}" />&nbsp;&nbsp;
+                <input type="submit" class="button" value="{% trans _('Continuar') %} &#187;" />
+                {% else %}
+                <input type="submit" class="button" value="{% trans _('Guardar y Finalizar') %} &#187;" />
+                {% endif %}
+            </div>
         </fieldset>
     </form>
 </div>

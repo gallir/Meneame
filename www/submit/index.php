@@ -50,14 +50,10 @@ header('X-XSS-Protection: 0');
 
 if ($type === 'article') {
     require __DIR__.'/article-'.getStep().'.php';
-} elseif ($link->is_new) {
-    if ($link->read()) {
-        require __DIR__.'/link-'.getStep().'.php';
-    } else {
-        require __DIR__.'/link-1.php';
-    }
+} elseif ($link->read()) {
+    require __DIR__.'/link-'.getStep().'.php';
 } else {
-    require __DIR__.'/link-edit.php';
+    require __DIR__.'/link-1.php';
 }
 
 do_footer();
