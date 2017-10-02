@@ -11,13 +11,6 @@ require_once __DIR__.'/../config.php';
 require_once mnminclude.'sneak.php';
 require_once mnminclude.'ban.php';
 
-if (check_ban_ip() || check_ban_proxy()) {
-    header('HTTP/1.0 403 Not authorized');
-    header('Cache-Control: max-age=10, must-revalidate');
-    header('Expires: '.date('r', time() + 10));
-    die;
-}
-
 $events = array();
 $data = array();
 

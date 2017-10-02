@@ -14,14 +14,6 @@ $globals['alternate_db_server'] = 'api';
 $globals['max_load'] = 6;
 
 require_once __DIR__.'/../config.php';
-require_once mnminclude.'ban.php';
-
-if (check_ban_ip() || check_ban_proxy()) {
-    header('HTTP/1.0 403 Not authorized');
-    header('Cache-Control: max-age=10, must-revalidate');
-    header('Expires: '.date('r', time() + 10));
-    die;
-}
 
 // Free connections fast
 ini_set('default_socket_timeout', 2);
