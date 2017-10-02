@@ -10,11 +10,14 @@ function check_ban_proxy()
 {
     global $globals;
 
-    if ($ban = check_ban($globals['user_ip'], 'proxy')) {
-        return $ban;
-    }
+    return check_ban($globals['user_ip'], 'proxy') ?: check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
+}
 
-    return check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
+function check_ban_ip()
+{
+    global $globals;
+
+    return check_ban($globals['user_ip'], 'ip') ?: check_ban($_SERVER['REMOTE_ADDR'], 'ip');
 }
 
 function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = false)
