@@ -36,9 +36,9 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
                 $email = $db->escape($ban_text);
                 // It's a full email address, don't check subdomains
                 $where = "ban_text = '$email' AND ban_type='email' AND (ban_expire IS null OR ban_expire > now())";
-            }
 
-            break;
+                break;
+            }
         case 'hostname':
         case 'punished_hostname':
             // Clean protocol and path/arguments
