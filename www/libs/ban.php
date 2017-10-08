@@ -107,6 +107,13 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
     return $ban;
 }
 
+function check_domain_disposable($domain)
+{
+    $value = json_decode(getUrlAsBrowser('https://open.kickbox.io/v1/disposable/'.$domain));
+
+    return $value && $value->disposable;
+}
+
 function subclasses_list($ip)
 {
     // TODO: do it for IPv6, for at most the first 48 bits

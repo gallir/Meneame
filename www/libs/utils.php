@@ -171,14 +171,18 @@ function check_email($email)
         return false;
     }
 
-    $username = preg_replace('/@.+$/', '', $email);
+    list($username, $domain) = explode('@', $email);
 
     if ((substr_count($username, '.') > 3) || preg_match('/\.{2,}/', $username)) {
         return false; // Doesn't allow "..+" or more than 2 dots
     }
 
     // check both, the full address and the domain
-    if (check_ban($email, 'email') || check_ban(preg_replace('/^.*@/', '', $email), 'email')) {
+    if (check_ban($email, 'email') || check_ban($domain, 'email')) {
+        return false;
+    }
+
+    if (check_domain_disposable($domain)) {
         return false;
     }
 
@@ -1863,17 +1867,22 @@ function d($title, $message = null, $trace = false)
     echo $cli ? "\n" : '</pre>';
 }
 
-function getMetasFromUrl($url)
+function getUrlAsBrowser($url)
 {
-    $html = @file_get_contents($url, false, stream_context_create(array(
+    return @file_get_contents($url, false, stream_context_create(array(
         'http' => array(
             'timeout' => 5,
-            'user_agent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.71 Safari/537.36',
+            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
         ),
         'ssl' => array(
             'verify_peer' => false,
         ),
     )));
+}
+
+function getMetasFromUrl($url)
+{
+    $html = getUrlAsBrowser($url);
 
     if (empty($html)) {
         return;
