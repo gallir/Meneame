@@ -485,6 +485,7 @@ if (!stristr(setlocale(LC_CTYPE, 0), 'utf-8')) {
 
 define('mnmpath', __DIR__);
 define('mnminclude', __DIR__.'/libs/');
+define('mnmvendor', dirname(__DIR__).'/vendor/');
 
 ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
 

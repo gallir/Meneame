@@ -109,9 +109,16 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 
 function check_domain_disposable($domain)
 {
-    $value = json_decode(getUrlAsBrowser('https://open.kickbox.io/v1/disposable/'.$domain));
+    $domains = json_decode(file_get_contents(mnmvendor.'/ivolo/disposable-email-domains/index.json'));
 
-    return $value && $value->disposable;
+    if (in_array($domain, $domains)) {
+        return true;
+    }
+
+    $domains = json_decode(file_get_contents(mnmvendor.'/ivolo/disposable-email-domains/wildcard.json'));
+    $domain = implode('.', array_slice(explode('.', $domain), -2));
+
+    return in_array($domain, $domains);
 }
 
 function subclasses_list($ip)
