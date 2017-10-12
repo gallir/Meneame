@@ -171,11 +171,11 @@ class Mafia
             return $value->user_id;
         };
 
-        $ids = array_values(array_filter(array_intersect(
+        $ids = call_user_func_array('array_intersect', array_filter([
             array_map($map, $this->current['users']),
             array_map($map, $this->previous['users']),
             array_map($map, $this->next['users'])
-        )));
+        ]));
 
         $filter = function ($value) use ($ids) {
             return in_array($value->user_id, $ids);

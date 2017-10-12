@@ -20,7 +20,11 @@
     <div class="rows">
         <div class="col-sm-4">
             <h2 class="text-center">Consultada</h2>
-            <h3 class="m-20"><a href="?url={{ current.link.get_permalink }}">{{ current.link.title }}</a></h3>
+
+            <h3 class="m-20">
+                <a href="?url={{ current.link.get_permalink }}">{{ current.link.title }}</a>
+                <a href="{{ current.link.get_permalink }}" target="_blank"><i class="fa fa-external-link"></i></a>
+            </h3>
 
             <table class="table table-condensed">
                 <thead>
@@ -45,9 +49,11 @@
 
         <div class="col-sm-4">
             <h2 class="text-center">Anterior</h2>
+
             <h3 class="m-20">
                 {% if previous.link %}
                 <a href="?url={{ previous.link.get_permalink }}">{{ previous.link.title }}</a>
+                <a href="{{ previous.link.get_permalink }}" target="_blank"><i class="fa fa-external-link"></i></a>
                 {% else %}
                 Sin envío previo
                 {% endif %}
@@ -79,6 +85,7 @@
             <h3 class="m-20">
                 {% if next.link %}
                 <a href="?url={{ next.link.get_permalink }}">{{ next.link.title }}</a>
+                <a href="{{ next.link.get_permalink }}" target="_blank"><i class="fa fa-external-link"></i></a>
                 {% else %}
                 Sin envío posterior
                 {% endif %}
