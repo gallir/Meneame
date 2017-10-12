@@ -186,7 +186,6 @@ class Mafia
         $this->current['users'] = array_filter($this->current['users'], $filter);
         $this->previous['users'] = array_filter($this->previous['users'], $filter);
         $this->next['users'] = array_filter($this->next['users'], $filter);
-
     }
 
     protected function setError($error)
