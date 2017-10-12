@@ -114,6 +114,7 @@ return array(
     'LinkValidator' => $baseDir . '/www/libs/link_validator.php',
     'Log' => $baseDir . '/www/libs/log.php',
     'LogAdmin' => $baseDir . '/www/libs/log_admin.php',
+    'Mafia' => $baseDir . '/www/libs/mafia.php',
     'Media' => $baseDir . '/www/libs/media.php',
     'MenuOption' => $baseDir . '/www/libs/html1.php',
     'OAuth2Server' => $baseDir . '/www/libs/oauth2/oauth2_server.php',

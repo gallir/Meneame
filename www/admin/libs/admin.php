@@ -28,6 +28,7 @@ function do_admin_tabs($tab_selected = false)
         'noaccess' => 'bans.php?tab=noaccess',
         'preguntame' => 'preguntame.php',
         'patrocinios' => 'sponsors.php',
+        'mafia' => 'mafia.php'
     ];
 
     Haanga::Load('admin/tabs.html', compact('tabs', 'tab_selected'));
