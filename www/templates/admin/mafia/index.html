@@ -28,11 +28,13 @@
 
     <div class="rows">
         <div class="col-sm-4">
+            {% set link = current.link %}
+
             <h2 class="text-center">Consultada</h2>
 
             <h3 class="m-20">
-                <a href="?url={{ current.link.get_permalink }}&amp;published={{ published }}">{{ current.link.title }}</a>
-                <a href="{{ current.link.get_permalink }}" target="_blank"><i class="fa fa-external-link"></i></a>
+                <a href="?url={{ link.get_permalink() }}&amp;published={{ published }}">{{ link->title }}</a>
+                <a href="{{ link.get_permalink() }}" target="_blank"><i class="fa fa-external-link"></i></a>
             </h3>
 
             <table class="table table-condensed">
@@ -57,12 +59,14 @@
         </div>
 
         <div class="col-sm-4">
+            {% set link = previous.link %}
+
             <h2 class="text-center">Anterior</h2>
 
             <h3 class="m-20">
                 {% if previous.link %}
-                <a href="?url={{ previous.link.get_permalink }}&amp;published={{ published }}">{{ previous.link.title }}</a>
-                <a href="{{ previous.link.get_permalink }}" target="_blank"><i class="fa fa-external-link"></i></a>
+                <a href="?url={{ link.get_permalink() }}&amp;published={{ published }}">{{ link.title }}</a>
+                <a href="{{ link.get_permalink() }}" target="_blank"><i class="fa fa-external-link"></i></a>
                 {% else %}
                 Sin envío previo
                 {% endif %}
@@ -90,12 +94,14 @@
         </div>
 
         <div class="col-sm-4">
+            {% set link = next.link %}
+
             <h2 class="text-center">Siguiente</h2>
 
             <h3 class="m-20">
                 {% if next.link %}
-                <a href="?url={{ previous.link.get_permalink }}&amp;published={{ published }}">{{ previous.link.title }}</a>
-                <a href="{{ previous.link.get_permalink }}" target="_blank"><i class="fa fa-external-link"></i></a>
+                <a href="?url={{ link.get_permalink() }}&amp;published={{ published }}">{{ link.title }}</a>
+                <a href="{{ link.get_permalink() }}" target="_blank"><i class="fa fa-external-link"></i></a>
                 {% else %}
                 Sin envío posterior
                 {% endif %}
