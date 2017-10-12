@@ -12,7 +12,7 @@ require_once __DIR__.'/../config.php';
 require_once mnminclude.'html1.php';
 require_once __DIR__.'/libs/admin.php';
 
-$selected_tab = 'sponsors';
+$selected_tab = 'patrocinios';
 
 switch ($_REQUEST['op'] ?: 'list') {
     case 'list':
