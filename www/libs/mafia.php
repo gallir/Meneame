@@ -170,7 +170,7 @@ class Mafia
     protected function filterCommonUsers()
     {
         $map = function ($value) {
-            return $value->id;
+            return $value->user_id;
         };
 
         $ids = array_values(array_filter(array_intersect(
@@ -180,7 +180,7 @@ class Mafia
         )));
 
         $filter = function ($value) use ($ids) {
-            return in_array($value->id, $ids);
+            return in_array($value->user_id, $ids);
         };
 
         $this->current['users'] = array_filter($this->current['users'], $filter);
