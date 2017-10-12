@@ -17,8 +17,11 @@ do_admin_tabs('mafia');
 
 $mafia = new Mafia($_REQUEST['url']);
 
+$mafia->setPublished($_REQUEST['published']);
+
 Haanga::Load('admin/mafia/index.html', [
     'url' => $_REQUEST['url'],
+    'published' => $_REQUEST['published'],
     'mafia' => $mafia,
     'current' => $mafia->getCurrent(),
     'previous' => $mafia->getPrevious(),

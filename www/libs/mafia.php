@@ -13,6 +13,7 @@ class Mafia
     protected $url;
     protected $valid;
     protected $error;
+    protected $published;
 
     protected $current = [];
     protected $previous = [];
@@ -38,6 +39,73 @@ class Mafia
     public function getLink()
     {
         return $this->link;
+    }
+
+    public function setPublished($published)
+    {
+        $this->published = (bool)$published;
+
+        return $this;
+    }
+
+    public function getCurrent()
+    {
+        if ($this->valid !== true) {
+            return [];
+        }
+
+        if ($this->current) {
+            return $this->current;
+        }
+
+        $this->current['link'] = $this->link;
+        $this->current['users'] = $this->getUsers($this->link->id);
+
+        return $this->current;
+    }
+
+    public function getPrevious()
+    {
+        if ($this->valid !== true) {
+            return [];
+        }
+
+        if ($this->previous) {
+            return $this->previous;
+        }
+
+        global $db, $globals;
+
+        $this->previous['link'] = $this->getRelatedLink($this->link->id, $this->link->url, '<');
+
+        if ($this->previous['link']) {
+            $this->previous['users'] = $this->getUsers($this->previous['link']->id);
+        } else {
+            $this->previous['users'] = [];
+        }
+
+        return $this->previous;
+    }
+
+    public function getNext()
+    {
+        if ($this->valid !== true) {
+            return [];
+        }
+
+        if ($this->next) {
+            return $this->next;
+        }
+
+        $this->next['link'] = $this->getRelatedLink($this->link->id, $this->link->url, '>');
+
+        if ($this->next['link']) {
+            $this->next['users'] = $this->getUsers($this->next['link']->id);
+        } else {
+            $this->next['users'] = [];
+        }
+
+        return $this->next;
     }
 
     protected function validate()
@@ -73,98 +141,6 @@ class Mafia
         $this->filterCommonUsers();
     }
 
-    public function getCurrent()
-    {
-        if ($this->valid !== true) {
-            return [];
-        }
-
-        if ($this->current) {
-            return $this->current;
-        }
-
-        $this->current['link'] = $this->link;
-        $this->current['users'] = $this->getUsers($this->link->id);
-
-        return $this->current;
-    }
-
-    public function getPrevious()
-    {
-        if ($this->valid !== true) {
-            return [];
-        }
-
-        if ($this->previous) {
-            return $this->previous;
-        }
-
-        global $db, $globals;
-
-        $this->previous['link'] = null;
-        $this->previous['users'] = [];
-
-        $link = $db->get_var('
-            SELECT `link_id`
-            FROM `links`
-            WHERE (
-                `link_id` < "'.$this->link->id.'"
-                AND `link_url` LIKE "%'.$this->getDomain($this->link->url).'/%"
-            )
-            ORDER BY `link_id` DESC
-            LIMIT 1;
-        ');
-
-        if (empty($link)) {
-            return $this->previous;
-        }
-
-        $link = Link::from_db($link);
-
-        $this->previous['link'] = $link;
-        $this->previous['users'] = $this->getUsers($link->id);
-
-        return $this->previous;
-    }
-
-    public function getNext()
-    {
-        if ($this->valid !== true) {
-            return [];
-        }
-
-        if ($this->next) {
-            return $this->next;
-        }
-
-        global $db, $globals;
-
-        $this->next['link'] = null;
-        $this->next['users'] = [];
-
-        $link = $db->get_var('
-            SELECT `link_id`
-            FROM `links`
-            WHERE (
-                `link_id` > "'.$this->link->id.'"
-                AND `link_url` LIKE "%'.$this->getDomain($this->link->url).'/%"
-            )
-            ORDER BY `link_id` ASC
-            LIMIT 1;
-        ');
-
-        if (empty($link)) {
-            return $this->next;
-        }
-
-        $link = Link::from_db($link);
-
-        $this->next['link'] = $link;
-        $this->next['users'] = $this->getUsers($link->id);
-
-        return $this->next;
-    }
-
     protected function filterCommonUsers()
     {
         $map = function ($value) {
@@ -196,6 +172,25 @@ class Mafia
     protected function getDomain($url)
     {
         return implode('.', array_slice(explode('.', parse_url($url, PHP_URL_HOST)), -2));
+    }
+
+    protected function getRelatedLink($id, $url, $relation)
+    {
+        global $db;
+
+        $link = $db->get_var('
+            SELECT `link_id`
+            FROM `links`
+            WHERE (
+                `link_id` '.$relation.' "'.$id.'"
+                AND `link_url` LIKE "%'.$this->getDomain($url).'/%"
+                '.($this->published ? 'AND `link_status` = "published"' : '').'
+            )
+            ORDER BY `link_id` '.(($relation === '>') ? 'ASC' : 'DESC').'
+            LIMIT 1;
+        ');
+
+        return $link ? Link::from_db($link) : null;
     }
 
     protected function getUsers($link_id)
