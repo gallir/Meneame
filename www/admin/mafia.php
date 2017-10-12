@@ -15,9 +15,7 @@ require_once __DIR__.'/libs/admin.php';
 do_header(_('Mafia'));
 do_admin_tabs('mafia');
 
-$mafia = new Mafia($_REQUEST['url']);
-
-$mafia->setPublished($_REQUEST['published']);
+$mafia = new Mafia($_REQUEST['url'], $_REQUEST['published']);
 
 Haanga::Load('admin/mafia/index.html', [
     'url' => $_REQUEST['url'],

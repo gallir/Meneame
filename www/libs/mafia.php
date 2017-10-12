@@ -19,9 +19,10 @@ class Mafia
     protected $previous = [];
     protected $next = [];
 
-    public function __construct($url)
+    public function __construct($url, $published = false)
     {
         $this->url = $url;
+        $this->published = (bool)$published;
 
         $this->validate();
     }
@@ -39,13 +40,6 @@ class Mafia
     public function getLink()
     {
         return $this->link;
-    }
-
-    public function setPublished($published)
-    {
-        $this->published = (bool)$published;
-
-        return $this;
     }
 
     public function getCurrent()
