@@ -109,16 +109,7 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
 
 function check_domain_disposable($domain)
 {
-    $domains = json_decode(file_get_contents(mnmvendor.'/ivolo/disposable-email-domains/index.json'));
-
-    if (in_array($domain, $domains)) {
-        return true;
-    }
-
-    $domains = json_decode(file_get_contents(mnmvendor.'/ivolo/disposable-email-domains/wildcard.json'));
-    $domain = implode('.', array_slice(explode('.', $domain), -2));
-
-    return in_array($domain, $domains);
+    return !Eusonlito\DisposableEmail\Check::domain($domain);
 }
 
 function subclasses_list($ip)

@@ -1,0 +1,45 @@
+{
+    "name": "eusonlito/disposable-email-validator",
+    "description": "A PHP package to detect disposable emails based on multiple lists.",
+    "keywords": ["disposable", "fake", "emails", "email", "spam", "validate"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lito",
+            "email": "lito@eordes.com"
+        }
+    ],
+    "require": {
+        "php" : ">=5.4"
+    },
+    "require-dev": {
+        "ivolo/disposable-email-domains": "master-dev",
+        "mattketmo/email-checker": "master-dev",
+        "fgribreau/mailchecker": "master-dev",
+        "martenson/disposable-email-domains": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Eusonlito\\DisposableEmail\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url":  "https://github.com/ivolo/disposable-email-domains.git",
+            "reference": "master"
+        },
+        {
+            "type": "package",
+            "package": {
+              "name": "martenson/disposable-email-domains",
+              "version": "1",
+              "source": {
+                "url": "https://github.com/martenson/disposable-email-domains",
+                "type": "git",
+                "reference": "master"
+              }
+            }
+        }
+    ]
+}

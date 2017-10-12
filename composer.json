@@ -8,7 +8,8 @@
     "facebook/graph-sdk": "^5.5",
     "jms/serializer": "^1.7",
     "symfony/yaml": "^3.3",
-    "doctrine/cache": "^1.6"
+    "doctrine/cache": "^1.6",
+    "eusonlito/disposable-email-validator": "^0.1.1"
   },
   "autoload": {
     "classmap": [

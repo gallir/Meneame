@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "86c59107929835708bd0169fb2d19533",
+    "hash": "0620d7adead09028c1e0044052de45bb",
+    "content-hash": "622037a3afd7fe284b00d5b034c9a049",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -60,7 +61,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2017-01-06T23:20:00+00:00"
+            "time": "2017-01-06 23:20:00"
         },
         {
             "name": "crodas/haanga",
@@ -90,7 +91,7 @@
                 }
             ],
             "description": "Template compiler for PHP, Django-style (as much as possible). Pretty efficent by avoiding to have anything at run-time.",
-            "time": "2016-02-06T07:04:31+00:00"
+            "time": "2016-02-06 07:04:31"
         },
         {
             "name": "doctrine/annotations",
@@ -158,7 +159,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2015-08-31T12:32:49+00:00"
+            "time": "2015-08-31 12:32:49"
         },
         {
             "name": "doctrine/cache",
@@ -228,7 +229,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2016-10-29T11:16:17+00:00"
+            "time": "2016-10-29 11:16:17"
         },
         {
             "name": "doctrine/instantiator",
@@ -282,7 +283,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "doctrine/lexer",
@@ -336,7 +337,57 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09T13:34:57+00:00"
+            "time": "2014-09-09 13:34:57"
+        },
+        {
+            "name": "eusonlito/disposable-email-validator",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eusonlito/disposable-email-validator.git",
+                "reference": "49fe67fc6432c3cbd427184675dd8753776fa600"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eusonlito/disposable-email-validator/zipball/49fe67fc6432c3cbd427184675dd8753776fa600",
+                "reference": "49fe67fc6432c3cbd427184675dd8753776fa600",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "fgribreau/mailchecker": "master-dev",
+                "ivolo/disposable-email-domains": "master-dev",
+                "martenson/disposable-email-domains": "*",
+                "mattketmo/email-checker": "master-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eusonlito\\DisposableEmail\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lito",
+                    "email": "lito@eordes.com"
+                }
+            ],
+            "description": "A PHP package to detect disposable emails based on multiple lists.",
+            "keywords": [
+                "disposable",
+                "email",
+                "emails",
+                "fake",
+                "spam",
+                "validate"
+            ],
+            "time": "2017-10-11 20:41:34"
         },
         {
             "name": "facebook/graph-sdk",
@@ -394,7 +445,7 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2017-04-20T14:15:02+00:00"
+            "time": "2017-04-20 14:15:02"
         },
         {
             "name": "jms/metadata",
@@ -445,7 +496,7 @@
                 "xml",
                 "yaml"
             ],
-            "time": "2016-12-05T10:18:33+00:00"
+            "time": "2016-12-05 10:18:33"
         },
         {
             "name": "jms/parser-lib",
@@ -480,7 +531,7 @@
                 "Apache2"
             ],
             "description": "A library for easily creating recursive-descent parsers.",
-            "time": "2012-11-18T18:08:43+00:00"
+            "time": "2012-11-18 18:08:43"
         },
         {
             "name": "jms/serializer",
@@ -559,7 +610,7 @@
                 "serialization",
                 "xml"
             ],
-            "time": "2017-05-15T08:35:42+00:00"
+            "time": "2017-05-15 08:35:42"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -607,7 +658,7 @@
                 "sequence",
                 "set"
             ],
-            "time": "2015-05-17T12:39:23+00:00"
+            "time": "2015-05-17 12:39:23"
         },
         {
             "name": "phpoption/phpoption",
@@ -657,7 +708,7 @@
                 "php",
                 "type"
             ],
-            "time": "2015-07-25T16:39:46+00:00"
+            "time": "2015-07-25 16:39:46"
         },
         {
             "name": "symfony/yaml",
@@ -712,7 +763,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-02T22:05:06+00:00"
+            "time": "2017-06-02 22:05:06"
         }
     ],
     "packages-dev": [],
