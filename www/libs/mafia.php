@@ -110,7 +110,6 @@ class Mafia
             WHERE (
                 `link_id` < "'.$this->link->id.'"
                 AND `link_url` LIKE "%'.$this->getDomain($this->link->url).'/%"
-                AND `link_status` = "published"
             )
             ORDER BY `link_id` DESC
             LIMIT 1;
@@ -149,7 +148,6 @@ class Mafia
             WHERE (
                 `link_id` > "'.$this->link->id.'"
                 AND `link_url` LIKE "%'.$this->getDomain($this->link->url).'/%"
-                AND `link_status` = "published"
             )
             ORDER BY `link_id` ASC
             LIMIT 1;
