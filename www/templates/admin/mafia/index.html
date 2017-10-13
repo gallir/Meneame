@@ -30,7 +30,7 @@
         <div class="col-sm-4">
             {% set link = current.link %}
 
-            <h2 class="text-center">Consultada<br/>{% exec date 'Y-m-d H:i:s' link.published_date %}</h2>
+            <h2 class="text-center">Consultada<br/>{% exec date 'Y-m-d H:i:s' link->published_date %}</h2>
 
             <h3 class="m-20">
                 <a href="?url={{ link.get_permalink() }}&amp;published={{ published }}">{{ link->title }}</a>
@@ -61,7 +61,7 @@
         <div class="col-sm-4">
             {% set link = previous.link %}
 
-            <h2 class="text-center">Anterior<br/>{% exec date 'Y-m-d H:i:s' link.published_date %}</h2>
+            <h2 class="text-center">Anterior<br/>{% exec date 'Y-m-d H:i:s' link->published_date %}</h2>
 
             <h3 class="m-20">
                 {% if previous.link %}
@@ -96,7 +96,7 @@
         <div class="col-sm-4">
             {% set link = next.link %}
 
-            <h2 class="text-center">Siguiente<br/>{% exec date 'Y-m-d H:i:s' link.published_date %}</h2>
+            <h2 class="text-center">Siguiente<br/>{% exec date 'Y-m-d H:i:s' link->published_date %}</h2>
 
             <h3 class="m-20">
                 {% if next.link %}
