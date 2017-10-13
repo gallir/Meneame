@@ -8,23 +8,26 @@
 
 class Mafia
 {
-    public $link;
-
-    protected $url;
     protected $valid;
     protected $error;
-    protected $published;
 
-    protected $current = [];
-    protected $previous = [];
-    protected $next = [];
+    protected $ids = [];
+    protected $links = [];
+    protected $users = [];
 
-    public function __construct($url, $published = false)
+    public function __construct($uri, $ids)
     {
-        $this->url = $url;
-        $this->published = (bool)$published;
+        if (!$this->validate($uri)) {
+            return $this;
+        }
 
-        $this->validate();
+        $this->links = $this->loadRelatedLinks($this->link);
+
+        if ($ids) {
+            array_map(function ($value) use ($ids) {
+                $value->selected = in_array($value->link_id, $ids);
+            }, $this->links);
+        }
     }
 
     public function isValid()
@@ -37,123 +40,88 @@ class Mafia
         return $this->error;
     }
 
-    public function getLink()
+    public function getLinks()
     {
-        return $this->link;
+        return $this->links;
     }
 
-    public function getCurrent()
-    {
-        if ($this->valid !== true) {
-            return [];
-        }
-
-        if ($this->current) {
-            return $this->current;
-        }
-
-        $this->current['link'] = $this->link;
-        $this->current['users'] = $this->getUsers($this->link->id);
-
-        return $this->current;
-    }
-
-    public function getPrevious()
+    public function getUsers()
     {
         if ($this->valid !== true) {
             return [];
         }
 
-        if ($this->previous) {
-            return $this->previous;
+        if ($this->users) {
+            return $this->users;
         }
 
-        global $db, $globals;
+        $ids = array_filter(array_map(function ($value) {
+            return $value->selected ? $value->link_id : null;
+        }, $this->links));
 
-        $this->previous['link'] = $this->getRelatedLink($this->link->id, $this->link->url, '<');
-
-        if ($this->previous['link']) {
-            $this->previous['users'] = $this->getUsers($this->previous['link']->id);
-        } else {
-            $this->previous['users'] = [];
-        }
-
-        return $this->previous;
+        return $this->getUsersByLinks($ids);
     }
 
-    public function getNext()
-    {
-        if ($this->valid !== true) {
-            return [];
-        }
-
-        if ($this->next) {
-            return $this->next;
-        }
-
-        $this->next['link'] = $this->getRelatedLink($this->link->id, $this->link->url, '>');
-
-        if ($this->next['link']) {
-            $this->next['users'] = $this->getUsers($this->next['link']->id);
-        } else {
-            $this->next['users'] = [];
-        }
-
-        return $this->next;
-    }
-
-    protected function validate()
+    protected function validate($uri)
     {
         global $globals;
 
-        if (empty($this->url)) {
+        if (empty($uri)) {
             return $this->setError('No se ha indicado una URL');
         }
 
-        if (parse_url($this->url, PHP_URL_HOST) !== $globals['server_name']) {
-            return $this->setError(sprintf('Sólo se permiten links de %s', $globals['server_name']));
-        }
-
-        $path = array_values(array_filter(explode('/', parse_url($this->url, PHP_URL_PATH))));
-
-        if ($path[0] !== 'story') {
-            return $this->setError('La URL no parece correcta');
-        }
-
-        $this->link = Link::from_db($path[1], 'uri');
+        $this->link = $this->getLinkByUri($uri);
 
         if (empty($this->link)) {
             return $this->setError('Envío no encontrado');
         }
 
-        $this->valid = true;
-
-        $this->getCurrent();
-        $this->getPrevious();
-        $this->getNext();
-
-        $this->filterCommonUsers();
+        return $this->valid = true;
     }
 
-    protected function filterCommonUsers()
+    protected function getLinkByUri($uri)
     {
-        $map = function ($value) {
-            return $value->user_id;
-        };
+        global $db;
 
-        $ids = call_user_func_array('array_intersect', array_filter([
-            array_map($map, $this->current['users']),
-            array_map($map, $this->previous['users']),
-            array_map($map, $this->next['users'])
-        ]));
+        return $db->get_row('
+            SELECT *, true AS `selected`
+            FROM `links`
+            WHERE `link_uri` = "'.$db->escape($uri).'"
+            LIMIT 1;
+        ');
+    }
 
-        $filter = function ($value) use ($ids) {
-            return in_array($value->user_id, $ids);
-        };
+    protected function loadRelatedLinks($link)
+    {
+        global $db;
 
-        $this->current['users'] = array_filter($this->current['users'], $filter);
-        $this->previous['users'] = array_filter($this->previous['users'], $filter);
-        $this->next['users'] = array_filter($this->next['users'], $filter);
+        $domain = $this->getDomain($link->link_url);
+
+        return array_merge(
+            $db->get_results('
+                SELECT *, true AS `selected`
+                FROM `links`
+                WHERE (
+                    `link_id` < "'.(int)$link->link_id.'"
+                    AND `link_url` LIKE "%'.$domain.'/%"
+                )
+                ORDER BY `link_id` DESC
+                LIMIT 5;
+            '),
+
+            [$link],
+
+            $db->get_results('
+                SELECT *, true AS `selected`
+                FROM `links`
+                WHERE (
+                    `link_id` > "'.(int)$link->link_id.'"
+                    AND `link_url` LIKE "%'.$domain.'/%"
+                )
+                ORDER BY `link_id` ASC
+                LIMIT 5;
+            ')
+        );
     }
 
     protected function setError($error)
@@ -163,49 +131,35 @@ class Mafia
         return $this->valid = false;
     }
 
-    protected function getDomain($url)
+    protected function getDomain($uri)
     {
-        return implode('.', array_slice(explode('.', parse_url($url, PHP_URL_HOST)), -2));
+        return implode('.', array_slice(explode('.', parse_url($uri, PHP_URL_HOST)), -2));
     }
 
-    protected function getRelatedLink($id, $url, $relation)
-    {
-        global $db;
-
-        $link = $db->get_var('
-            SELECT `link_id`
-            FROM `links`
-            WHERE (
-                `link_id` '.$relation.' "'.$id.'"
-                AND `link_url` LIKE "%'.$this->getDomain($url).'/%"
-                '.($this->published ? 'AND `link_status` = "published"' : '').'
-            )
-            ORDER BY `link_id` '.(($relation === '>') ? 'ASC' : 'DESC').'
-            LIMIT 1;
-        ');
-
-        return $link ? Link::from_db($link) : null;
-    }
-
-    protected function getUsers($link_id)
+    protected function getUsersByLinks(array $link_ids)
     {
         global $db, $globals;
 
         $users = $db->get_results('
-            SELECT `users`.`user_id`, `users`.`user_login`, `votes`.`vote_date`, INET_NTOA(`votes`.`vote_ip_int`) `vote_ip`
+            SELECT `users`.`user_id`, `users`.`user_login`
             FROM `users`, `votes`
             WHERE (
                 `votes`.`vote_type` = "links"
-                AND `votes`.`vote_link_id` = "'.$link_id.'"
+                AND `votes`.`vote_link_id` IN ("'.implode('","', $link_ids).'")
                 AND `users`.`user_id` = `votes`.`vote_user_id`
+                AND `votes`.`vote_value` > 0
             )
-            ORDER BY `votes`.`vote_date` ASC;
+            GROUP BY `users`.`user_id`
+            HAVING COUNT(`users`.`user_id`) = "'.count($link_ids).'";
         ');
 
         foreach ($users as $user) {
             $user->user_link = $globals['base_url_general'].'user/'.htmlspecialchars($user->user_login).'/'.$user->user_id;
-            $user->vote_ip = preg_replace('/[0-9]+$/', 'XXX', $user->vote_ip);
         }
+
+        usort($users, function ($a, $b) {
+            return ($a->user_login > $b->user_login) ? 1 : -1;
+        });
 
         return $users;
     }
