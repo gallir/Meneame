@@ -61,7 +61,7 @@
         <div class="col-sm-4">
             {% set link = previous.link %}
 
-            <h2 class="text-center">Anterior<br/>{% exec date 'Y-m-d H:i:s' link->sent_date %}</h2>
+            <h2 class="text-center">Anterior{% if previous.link %}<br/>{% exec date 'Y-m-d H:i:s' link->sent_date %}{% endif %}</h2>
 
             <h3 class="m-20">
                 {% if previous.link %}
@@ -96,7 +96,7 @@
         <div class="col-sm-4">
             {% set link = next.link %}
 
-            <h2 class="text-center">Siguiente<br/>{% exec date 'Y-m-d H:i:s' link->sent_date %}</h2>
+            <h2 class="text-center">Siguiente{% if next.link %}<br/>{% exec date 'Y-m-d H:i:s' link->sent_date %}{% endif %}</h2>
 
             <h3 class="m-20">
                 {% if next.link %}
