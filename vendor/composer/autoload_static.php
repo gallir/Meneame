@@ -213,6 +213,7 @@ class ComposerStaticInitb851a258c88ec1d06c8fded0093f053c
         'LinkValidator' => __DIR__ . '/../..' . '/www/libs/link_validator.php',
         'Log' => __DIR__ . '/../..' . '/www/libs/log.php',
         'LogAdmin' => __DIR__ . '/../..' . '/www/libs/log_admin.php',
+        'Mafia' => __DIR__ . '/../..' . '/www/libs/mafia.php',
         'Media' => __DIR__ . '/../..' . '/www/libs/media.php',
         'MenuOption' => __DIR__ . '/../..' . '/www/libs/html1.php',
         'OAuth2Server' => __DIR__ . '/../..' . '/www/libs/oauth2/oauth2_server.php',

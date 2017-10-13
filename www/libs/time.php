@@ -15,12 +15,12 @@ class Time
 
     public static function year($date)
     {
-        return (int)static::strftime('%Y', $date);
+        return (int) static::strftime('%Y', $date);
     }
 
     public static function yearShort($date)
     {
-        return (int)static::strftime('%g', $date);
+        return (int) static::strftime('%g', $date);
     }
 
     public static function month($date)
@@ -37,8 +37,8 @@ class Time
             9 => _('septiembre'),
             10 => _('octubre'),
             11 => _('noviembre'),
-            12 => _('diciembre')
-        ][(int)static::strftime('%m', $date)];
+            12 => _('diciembre'),
+        ][(int) static::strftime('%m', $date)];
     }
 
     public static function monthSort($date)
@@ -56,7 +56,7 @@ class Time
             5 => _('viernes'),
             6 => _('sábado'),
             7 => _('domingo'),
-        ][(int)static::strftime('%u', $date)];
+        ][(int) static::strftime('%u', $date)];
     }
 
     public static function dayShort($date)
@@ -72,6 +72,60 @@ class Time
     public static function dayMonthSortHour($date)
     {
         return static::strftime('%e', $date).'/'.static::monthSort($date).' - '.static::hour($date).'h';
+    }
+
+    public static function diff($from, $now = 0)
+    {
+        global $globals;
+
+        if (!preg_match('/^[0-9]+$/', $from)) {
+            $from = strtotime($from);
+        }
+
+        if (empty($now)) {
+            $now = $globals['now'];
+        }
+
+        $diff = $now - $from;
+        $days = intval($diff / 86400);
+
+        $diff = $diff % 86400;
+        $hours = intval($diff / 3600);
+
+        $diff = $diff % 3600;
+        $minutes = intval($diff / 60);
+
+        $secs = $diff % 60;
+
+        if ($days > 1) {
+            $txt = $days.' '._('días');
+        } elseif ($days === 1) {
+            $txt = $days.' '._('día');
+        } else {
+            $txt = '';
+        }
+
+        if ($hours > 1) {
+            $txt .= ' '.$hours.' '._('horas');
+        } elseif ($hours === 1) {
+            $txt .= ' '.$hours.' '._('hora');
+        }
+
+        if ($minutes > 1) {
+            $txt .= ' '.$minutes.' '._('minutos');
+        } elseif ($minutes === 1) {
+            $txt .= ' '.$minutes.' '._('minuto');
+        }
+
+        if ($txt) {
+            return trim($txt);
+        }
+
+        if ($secs < 5) {
+            return _('nada');
+        }
+
+        return $secs.' '._('segundos');
     }
 
     public static function leftTo($date)

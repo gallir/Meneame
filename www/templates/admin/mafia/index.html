@@ -1,0 +1,135 @@
+<section class="section section-medium">
+    <form class="form" method="get">
+        <div class="form-group">
+            <input type="url" name="url" value="{{ url }}" placeholder="{% trans _('URL a validar') %}" class="form-control" required />
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="published" value="1" {% if published %} checked {% endif %}>
+                    {% trans _('Comparar sólo con publicadas') %}
+                </label>
+            </div>
+        </div>
+    </form>
+
+    {% if url %}
+
+    {% if !mafia.isValid %}
+
+    <div class="alert alert-danger">
+        {{ mafia.getError }}
+    </div>
+
+    {% else %}
+
+    <div class="m-20">&nbsp;</div>
+
+    <div class="rows">
+        <div class="col-sm-4">
+            {% set link = current.link %}
+
+            <h2 class="text-center">Consultada<br/>{% exec date 'Y-m-d H:i:s' link->sent_date %}</h2>
+
+            <h3 class="m-20">
+                <a href="?url={{ link.get_permalink() }}&amp;published={{ published }}">{{ link->title }}</a>
+                <a href="{{ link.get_permalink() }}" target="_blank"><i class="fa fa-external-link"></i></a>
+            </h3>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Voto</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for user in current.users %}
+                    <tr>
+                        <td><a href="{{ user.user_link }}" target="_blank">{% exec substr user.user_login 0 20 %}</a></td>
+                        <td class="nowrap">{{ user.vote_date }}</td>
+                        <td class="nowrap text-right">{{ user.vote_ip }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-4">
+            {% set link = previous.link %}
+
+            <h2 class="text-center">Anterior<br/>{% exec date 'Y-m-d H:i:s' link->sent_date %}</h2>
+
+            <h3 class="m-20">
+                {% if previous.link %}
+                <a href="?url={{ link.get_permalink() }}&amp;published={{ published }}">{{ link.title }}</a>
+                <a href="{{ link.get_permalink() }}" target="_blank"><i class="fa fa-external-link"></i></a>
+                {% else %}
+                Sin envío previo
+                {% endif %}
+            </h3>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Voto</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for user in previous.users %}
+                    <tr>
+                        <td><a href="{{ user.user_link }}" target="_blank">{% exec substr user.user_login 0 20 %}</a></td>
+                        <td class="nowrap">{{ user.vote_date }}</td>
+                        <td class="nowrap text-right">{{ user.vote_ip }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-4">
+            {% set link = next.link %}
+
+            <h2 class="text-center">Siguiente<br/>{% exec date 'Y-m-d H:i:s' link->sent_date %}</h2>
+
+            <h3 class="m-20">
+                {% if next.link %}
+                <a href="?url={{ link.get_permalink() }}&amp;published={{ published }}">{{ link.title }}</a>
+                <a href="{{ link.get_permalink() }}" target="_blank"><i class="fa fa-external-link"></i></a>
+                {% else %}
+                Sin envío posterior
+                {% endif %}
+            </h3>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Voto</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for user in next.users %}
+                    <tr>
+                        <td><a href="{{ user.user_link }}" target="_blank">{% exec substr user.user_login 0 20 %}</a></td>
+                        <td class="nowrap">{{ user.vote_date }}</td>
+                        <td class="nowrap text-right">{{ user.vote_ip }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% endif %}
+
+    {% endif %}
+</section>
