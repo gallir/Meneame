@@ -77,7 +77,7 @@ class Check
     private static function domains()
     {
         if (empty(static::$domains)) {
-            static::$domains = static::require('domains');
+            static::$domains = static::load('domains');
         }
 
         return static::$domains;
@@ -89,7 +89,7 @@ class Check
     private static function wildcards()
     {
         if (empty(static::$wildcards)) {
-            static::$wildcards = static::require('wildcards');
+            static::$wildcards = static::load('wildcards');
         }
 
         return static::$wildcards;
@@ -100,7 +100,7 @@ class Check
      *
      * @return array
      */
-    private function require($name)
+    private function load($name)
     {
         return require dirname(__DIR__).'/data/'.$name.'.php';
     }

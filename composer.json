@@ -3,13 +3,15 @@
   "description": "Source code for Meneame aggregator",
   "license": "AFFERO GENERAL PUBLIC LICENSE",
   "require": {
-    "bshaffer/oauth2-server-php": "~1.8",
-    "crodas/Haanga": "~1.0.7",
-    "facebook/graph-sdk": "^5.5",
-    "jms/serializer": "^1.7",
-    "symfony/yaml": "^3.3",
-    "doctrine/cache": "^1.6",
-    "eusonlito/disposable-email-validator": "^0.1.1"
+    "bshaffer/oauth2-server-php": "1.8.*",
+    "crodas/Haanga": "1.0.*",
+    "facebook/graph-sdk": "5.5.*",
+    "jms/serializer": "1.7.*",
+    "doctrine/annotations": "1.2.*",
+    "doctrine/cache": "1.6.*",
+    "doctrine/instantiator": "1.1.*",
+    "symfony/yaml": "3.3.*",
+    "eusonlito/disposable-email-validator": "0.1.*"
   },
   "autoload": {
     "classmap": [

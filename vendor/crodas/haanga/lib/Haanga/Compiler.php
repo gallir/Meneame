@@ -64,13 +64,13 @@ class Haanga_Compiler
      */
     protected $context;
     /**
-     *  Table which contains all variables
+     *  Table which contains all variables 
      *  aliases defined in the template
      */
     protected $var_alias;
     /**
      *  Flag the current variable as safe. This means
-     *  that escape won't be called if autoescape is
+     *  that escape won't be called if autoescape is 
      *  activated (which is activated by default)
      */
     public $var_is_safe=FALSE;
@@ -90,7 +90,7 @@ class Haanga_Compiler
      *  Debug file
      */
     protected $debug;
-    // }}}
+    // }}} 
 
     function __construct()
     {
@@ -100,7 +100,7 @@ class Haanga_Compiler
         }
     }
 
-    public function getScopeVariable($part = NULL, $string = FALSE)
+    public function getScopeVariable($part = NULL, $string = FALSE) 
     {
         static $var = NULL;
 
@@ -194,7 +194,7 @@ class Haanga_Compiler
             break;
         }
     }
-    // }}}
+    // }}} 
 
     // setDebug($file) {{{
     function setDebug($file)
@@ -263,7 +263,7 @@ class Haanga_Compiler
         if (isset($parsed[0]) && $parsed[0]['operation'] == 'base') {
             /* {% base ... %} found */
             $base  = $parsed[0][0];
-            $code .= $this->get_base_template($base);
+            $code .= $this->get_base_template($base); 
             unset($parsed[0]);
         }
 
@@ -309,7 +309,7 @@ class Haanga_Compiler
                 $body->do_endif();
             }
         }
-
+        
         if ($this->prepend_op->stack_size() > 0) {
             $this->prepend_op->append_ast($body);
             $body = $this->prepend_op;
@@ -340,7 +340,7 @@ class Haanga_Compiler
      *
      *  @return Generated PHP code
      */
-    final function compile_file($file, $safe=FALSE, $context=array())
+    final function compile_file($file, $safe=FALSE, $context=array()) 
     {
         if (!is_readable($file)) {
             throw new Haanga_Compiler_Exception("$file is not a file");
@@ -362,7 +362,7 @@ class Haanga_Compiler
 
     // getOpCodes($code, $file='') {{{
     /**
-     *  Compile the $code and return the "opcodes"
+     *  Compile the $code and return the "opcodes" 
      *  (the Abstract syntax tree).
      *
      *  @param string $code Template content
@@ -392,7 +392,7 @@ class Haanga_Compiler
      *  Throw an exception and appends information about the template (the path and
      *  the last processed line).
      *
-     *
+     *  
      */
     public function Error($err)
     {
@@ -425,7 +425,7 @@ class Haanga_Compiler
 
     // get_base_template($base) {{{
     /**
-     *  Handle {% base  "" %} definition. By default only
+     *  Handle {% base  "" %} definition. By default only 
      *  static (string) are supported, but this can be overrided
      *  on subclasses.
      *
@@ -548,7 +548,7 @@ class Haanga_Compiler
     protected function generate_op_if($details, &$body)
     {
         if (self::$if_empty && $this->is_var_filter($details['expr']) && count($details['expr']['var_filter']) == 1) {
-            /* if we are doing if <Variable> it should check
+            /* if we are doing if <Variable> it should check 
                if it exists without throw any warning */
             $expr = $details['expr'];
             $expr['var_filter'][] = 'empty';
@@ -587,7 +587,7 @@ class Haanga_Compiler
         return array($comp->get_template_name(), $code);
     }
     // }}}
-
+    
     // include "file.html" | include <var1> {{{
     protected function generate_op_include($details, &$body)
     {
@@ -597,7 +597,7 @@ class Haanga_Compiler
         list($name,$code) = $this->compile_required_template($details[0]['string']);
         $this->append .= "\n\n{$code}";
         $this->do_print($body,
-            hexec($this->get_function_name($name),
+            hexec($this->get_function_name($name), 
             $this->getScopeVariable(), TRUE, hvar('blocks'))
         );
     }
@@ -630,22 +630,22 @@ class Haanga_Compiler
 
     // get_var_filtered {{{
     /**
-     *  This method handles all the filtered variable (piped_list(X)'s
+     *  This method handles all the filtered variable (piped_list(X)'s 
      *  output in the parser.
      *
-     *
+     *  
      *  @param array $variable      (Output of piped_list(B) (parser))
      *  @param array &$varname      Variable name
      *  @param bool  $accept_string  TRUE is string output are OK (ie: block.parent)
      *
-     *  @return expr
+     *  @return expr  
      *
      */
     function get_filtered_var($variable, &$varname, $accept_string=NULL)
     {
         $this->var_is_safe = FALSE;
 
-        if ($accept_string === NULL && is_array($variable[0]) &&
+        if ($accept_string === NULL && is_array($variable[0]) && 
             !Haanga_AST::is_exec($variable[0])) {
             $accept_string = !empty($variable[0]['string'])
                 || $variable[0][0] === 'block';
@@ -660,7 +660,7 @@ class Haanga_Compiler
             } else {
                 $target = $this->generate_variable_name($variable[0]);
             }
-
+            
             if (!empty($variable[0][0]) && $variable[0][0] == 'block') {
                 /* block.super can't have any filter */
                 throw new Exception("This variable can't have any filter");
@@ -685,7 +685,7 @@ class Haanga_Compiler
         } else {
             if (Haanga_AST::is_exec($variable[0])) {
                 return $variable[0];
-            }
+            } 
 
             $details = $this->generate_variable_name($variable[0]);
             $varname = $variable[0];
@@ -710,7 +710,7 @@ class Haanga_Compiler
     /**
      *  Generate code to print a variable with its filters, if there is any.
      *
-     *  All variable (except those flagged as |safe) are automatically
+     *  All variable (except those flagged as |safe) are automatically 
      *  escaped if autoescape is "on".
      *
      */
@@ -735,7 +735,7 @@ class Haanga_Compiler
         /* comments are annoying */
         //$body->comment($details['comment']);
     }
-    // }}}
+    // }}} 
 
     // {% block 'name' %} ... {% endblock %} {{{
     protected function generate_op_block($details, &$body)
@@ -778,7 +778,7 @@ class Haanga_Compiler
          *  isset previous block (parent block)?
          *  TRUE
          *      has reference to self::$block_var ?
-         *      TRUE
+         *      TRUE    
          *          replace self::$block_var for current block value (buffer)
          *      FALSE
          *          print parent block
@@ -806,7 +806,7 @@ class Haanga_Compiler
         array_pop($this->blocks);
         $this->in_block--;
 
-    }
+    } 
     // }}}
 
     // regroup <var1> by <field> as <foo> {{{
@@ -824,7 +824,7 @@ class Haanga_Compiler
 
         $body->decl('temp_group', array());
 
-        $body->do_foreach($varname, 'item', NULL,
+        $body->do_foreach($varname, 'item', NULL, 
             hcode()->decl(hvar('temp_group', $var, NULL), hvar('item'))
         );
 
@@ -832,7 +832,7 @@ class Haanga_Compiler
         $body->decl($details['as'], array());
         $body->do_foreach('temp_group', 'item', 'group',
             hcode()->decl(
-                hvar($details['as'], NULL),
+                hvar($details['as'], NULL), 
                 array("grouper" => hvar('group'), "list"    => hvar('item'))
             )
         );
@@ -846,18 +846,18 @@ class Haanga_Compiler
      *
      *  These two functions are useful to detect if a variable
      *  separated by dot (foo.bar) is an array or object. To avoid
-     *  overhead we decide it at compile time, rather than
+     *  overhead we decide it at compile time, rather than 
      *  ask over and over at rendering time.
      *
      *  foo.bar:
      *      + If foo exists at compile time,
-     *        and it is an array, it would be foo['bar']
+     *        and it is an array, it would be foo['bar'] 
      *        otherwise it'd be foo->bar.
      *      + If foo don't exists at compile time,
      *        it would be foo->bar if the compiler option
      *        dot_as_object is TRUE (by default) otherwise
      *        it'd be foo['bar']
-     *
+     * 
      *  @author crodas
      *  @author gallir (ideas)
      *
@@ -883,7 +883,7 @@ class Haanga_Compiler
                     if (is_array($part) && isset($part['object'])) {
                         if (is_array($part['object']) && isset($part['object']['var'])) {
                             /* object $foo->$bar */
-                            $name = $part['object']['var'];
+                            $name = $part['object']['var']; 
                             $name = $this->get_context($name);
                             if (!isset($var->$name)) {
                                 return NULL;
@@ -941,7 +941,7 @@ class Haanga_Compiler
 
         return $default===NULL ? self::$dot_as_object : $default;
     }
-    // }}}
+    // }}} 
 
     // Get variable name {{{
     function generate_variable_name($variable, $special=true)
@@ -958,15 +958,15 @@ class Haanga_Compiler
 
                 switch ($variable[1]['object']) {
                 case 'counter':
-                    $this->forloop[$this->forid]['counter'] = TRUE;
+                    $this->forloop[$this->forid]['counter'] = TRUE; 
                     $variable = 'forcounter1_'.$this->forid;
                     break;
                 case 'counter0':
-                    $this->forloop[$this->forid]['counter0'] = TRUE;
+                    $this->forloop[$this->forid]['counter0'] = TRUE; 
                     $variable = 'forcounter0_'.$this->forid;
                     break;
                 case 'last':
-                    $this->forloop[$this->forid]['counter'] = TRUE;
+                    $this->forloop[$this->forid]['counter'] = TRUE; 
                     $this->forloop[$this->forid]['last']    = TRUE;
                     $variable = 'islast_'.$this->forid;
                     break;
@@ -1039,12 +1039,12 @@ class Haanga_Compiler
                     $is_obj = $this->var_is_object($var_part, 'unknown');
 
                     if ( $is_obj === TRUE || ($is_obj == 'unknown' && !$def_arr)) {
-                        $variable[$i] = array('object' => $variable[$i]);
+                        $variable[$i] = array('object' => $variable[$i]); 
                     }
                 }
 
                 break;
-            }
+            } 
 
         } else if (isset($this->var_alias[$variable])) {
             $variable = $this->var_alias[$variable]['var'];
@@ -1061,7 +1061,7 @@ class Haanga_Compiler
         $code->doesPrint = TRUE;
 
         if (self::$strip_whitespace && Haanga_AST::is_str($stmt)) {
-            $stmt['string'] = preg_replace('/\s+/', ' ', $stmt['string']);
+            $stmt['string'] = preg_replace('/\s+/', ' ', $stmt['string']); 
         }
 
         if ($this->ob_start == 0) {
@@ -1127,7 +1127,7 @@ class Haanga_Compiler
 
         $oid  = $this->forid;
         $size = hvar('psize_'.$oid);
-
+        
         // counter {{{
         if (isset($this->forloop[$oid]['counter'])) {
             $var   = hvar('forcounter1_'.$oid);
@@ -1199,7 +1199,7 @@ class Haanga_Compiler
 
             if ($this->is_safe(hvar($varname))) {
                 $this->set_unsafe($details['variable']);
-            }
+            }            
         } else {
             for ($i=0; $i < 2; $i++) {
                 if (Haanga_AST::is_var($details['range'][$i])) {
@@ -1301,7 +1301,7 @@ class Haanga_Compiler
 
     // ob_Start(array &$body) {{{
     /**
-     *  Start a new buffering
+     *  Start a new buffering  
      *
      */
     function ob_start(&$body)
@@ -1339,7 +1339,7 @@ class Haanga_Compiler
 
 
         $tag_name    = $details['name'];
-        $tagFunction = $tags->getFunctionAlias($tag_name);
+        $tagFunction = $tags->getFunctionAlias($tag_name); 
 
         if (!$tagFunction && !$tags->hasGenerator($tag_name)) {
             $function = $this->get_custom_tag($tag_name, isset($details['as']));
@@ -1347,8 +1347,8 @@ class Haanga_Compiler
             $function = $tagFunction;
         }
         if (isset($details['body'])) {
-            /*
-               if the custom tag has 'body'
+            /* 
+               if the custom tag has 'body' 
                then it behave the same way as a filter
             */
             $this->ob_start($body);
@@ -1361,7 +1361,7 @@ class Haanga_Compiler
                     throw new Exception("Invalid output of custom filter {$tag_name}");
                 }
                 if ($exec->stack_size() >= 2 || $exec->doesPrint) {
-                    /*
+                    /* 
                         The generator returned more than one statement,
                         so we assume the output is already handled
                         by one of those stmts.
@@ -1385,7 +1385,7 @@ class Haanga_Compiler
             $exec = $tags->generator($tag_name, $this, $details['list'], $var);
             if ($exec InstanceOf Haanga_AST) {
                 if ($exec->stack_size() >= 2 || $exec->doesPrint || $var !== NULL) {
-                    /*
+                    /* 
                         The generator returned more than one statement,
                         so we assume the output is already handled
                         by one of those stmts.
@@ -1403,7 +1403,7 @@ class Haanga_Compiler
                 $exec->param($arg);
             }
         }
-
+        
         if ($var) {
             $body->decl($var, $exec);
         } else {
@@ -1440,15 +1440,15 @@ class Haanga_Compiler
         if (!$filter) {
             $filter = Haanga_Extension::getInstance('Filter');
         }
-
+        
         if (is_array($name)) {
             /*
-               prepare array for ($func_name, $arg1, $arg2 ... )
-               where $arg1 = last expression and $arg2.. $argX is
-               defined in the template
+               prepare array for ($func_name, $arg1, $arg2 ... ) 
+               where $arg1 = last expression and $arg2.. $argX is 
+               defined in the template 
              */
             $args = array_merge($args, $name['args']);
-            $name = $name[0];
+            $name = $name[0]; 
         }
 
         if (!$filter->isValid($name)) {
@@ -1471,7 +1471,7 @@ class Haanga_Compiler
 
         $args = array_merge(array($fnc), $args);
         $exec = call_user_func_array('hexec', $args);
-
+        
         return $exec;
     }
 

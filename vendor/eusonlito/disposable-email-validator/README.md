@@ -9,7 +9,7 @@ Validate emails against multiple databases with disposable email domains.
 Current databases (domains, wildcard and whitelist):
 
 * https://github.com/ivolo/disposable-email-domains
-* https://github.com/mattketmo/email-checker
+* https://github.com/MattKetmo/EmailChecker
 * https://github.com/fgribreau/mailchecker
 * https://github.com/martenson/disposable-email-domains
 

@@ -142,7 +142,7 @@ class Memory implements AuthorizationCodeInterface,
                     // address is an object with subfields
                     $userClaims['address'] = $this->getUserClaim($validClaim, $userDetails['address'] ?: $userDetails);
                 } else {
-                    $userClaims = array_merge($userClaims, $this->getUserClaim($validClaim, $userDetails));
+                    $userClaims = array_merge($this->getUserClaim($validClaim, $userDetails));
                 }
             }
         }
@@ -236,13 +236,7 @@ class Memory implements AuthorizationCodeInterface,
 
     public function unsetRefreshToken($refresh_token)
     {
-        if (isset($this->refreshTokens[$refresh_token])) {
-            unset($this->refreshTokens[$refresh_token]);
-
-            return true;
-        }
-
-        return false;
+        unset($this->refreshTokens[$refresh_token]);
     }
 
     public function setRefreshTokens($refresh_tokens)
@@ -265,13 +259,7 @@ class Memory implements AuthorizationCodeInterface,
 
     public function unsetAccessToken($access_token)
     {
-        if (isset($this->accessTokens[$access_token])) {
-            unset($this->accessTokens[$access_token]);
-
-            return true;
-        }
-
-        return false;
+        unset($this->accessTokens[$access_token]);
     }
 
     public function scopeExists($scope)
