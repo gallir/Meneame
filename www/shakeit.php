@@ -122,6 +122,7 @@ echo '<div id="sidebar">';
     //do_last_blogs();
     //do_best_comments();
     //do_categories_cloud('queued', 24);
+    do_banner_promotions();
     do_vertical_tags('queued');
 echo '</div>' . "\n";
 /*** END SIDEBAR ***/
@@ -139,6 +140,8 @@ echo '<div id="newswrap">'."\n";
         $pollCollection = new PollCollection;
         $pollCollection->loadSimpleFromRelatedIds('link_id', $all_ids);
 
+        $counter = 0;
+
         foreach ($links as $link) {
             if ($link->votes == 0 && $link->author != $current_user->user_id) {
                 continue;
@@ -147,7 +150,13 @@ echo '<div id="newswrap">'."\n";
             $link->poll = $pollCollection->get($link->id);
             $link->max_len = 600;
 
+            Haanga::Safe_Load('private/ad-interlinks.html', [
+                'counter' => $counter,
+                'page_size' => $page_size
+            ]);
+
             $link->print_summary('full', ($offset < 1000) ? 16 : null);
+            $counter++;
         }
     }
 
