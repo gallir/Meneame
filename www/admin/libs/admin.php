@@ -39,12 +39,10 @@ function URLQuery()
     parse_str($_SERVER['QUERY_STRING'], $data);
 
     $args = func_get_args();
-    $count = count($args);
-    $changes = array();
 
-    for ($i = 0; $i < $count; $i += 2) {
-        $changes[$args[$i]] = $args[$i + 1];
+    for ($i = 0, $count = count($args); $i < $count; $i += 2) {
+        $data[$args[$i]] = $args[$i + 1];
     }
 
-    return http_build_query(array_filter(array_replace($data, $changes)));
+    return http_build_query(array_filter($data));
 }
