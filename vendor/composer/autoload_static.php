@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
+class ComposerStaticInit982e99603abf7e931d3651829d24ceda
 {
     public static $files = array (
         'c65d09b6820da036953a371c8c73a9b1' => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook/polyfills.php',
@@ -19,6 +19,10 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'F' => 
         array (
             'Facebook\\' => 9,
+        ),
+        'E' => 
+        array (
+            'Eusonlito\\DisposableEmail\\' => 26,
         ),
         'D' => 
         array (
@@ -35,6 +39,10 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'Facebook\\' => 
         array (
             0 => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook',
+        ),
+        'Eusonlito\\DisposableEmail\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/eusonlito/disposable-email-validator/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -205,6 +213,7 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
         'LinkValidator' => __DIR__ . '/../..' . '/www/libs/link_validator.php',
         'Log' => __DIR__ . '/../..' . '/www/libs/log.php',
         'LogAdmin' => __DIR__ . '/../..' . '/www/libs/log_admin.php',
+        'Mafia' => __DIR__ . '/../..' . '/www/libs/mafia.php',
         'Media' => __DIR__ . '/../..' . '/www/libs/media.php',
         'MenuOption' => __DIR__ . '/../..' . '/www/libs/html1.php',
         'OAuth2Server' => __DIR__ . '/../..' . '/www/libs/oauth2/oauth2_server.php',
@@ -244,10 +253,10 @@ class ComposerStaticInitce3b85d78542d457e7e9da82a1654802
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitce3b85d78542d457e7e9da82a1654802::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitce3b85d78542d457e7e9da82a1654802::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitce3b85d78542d457e7e9da82a1654802::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitce3b85d78542d457e7e9da82a1654802::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit982e99603abf7e931d3651829d24ceda::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit982e99603abf7e931d3651829d24ceda::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit982e99603abf7e931d3651829d24ceda::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit982e99603abf7e931d3651829d24ceda::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -10,11 +10,14 @@ function check_ban_proxy()
 {
     global $globals;
 
-    if ($ban = check_ban($globals['user_ip'], 'proxy')) {
-        return $ban;
-    }
+    return check_ban($globals['user_ip'], 'proxy') ?: check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
+}
 
-    return check_ban($_SERVER['REMOTE_ADDR'], 'proxy');
+function check_ban_ip()
+{
+    global $globals;
+
+    return check_ban($globals['user_ip'], 'ip') ?: check_ban($_SERVER['REMOTE_ADDR'], 'ip');
 }
 
 function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = false)
@@ -33,9 +36,9 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
                 $email = $db->escape($ban_text);
                 // It's a full email address, don't check subdomains
                 $where = "ban_text = '$email' AND ban_type='email' AND (ban_expire IS null OR ban_expire > now())";
-            }
 
-            break;
+                break;
+            }
         case 'hostname':
         case 'punished_hostname':
             // Clean protocol and path/arguments
@@ -102,6 +105,11 @@ function check_ban($ban_text, $ban_type, $check_valid = true, $first_level = fal
     $ban['comment'] = $match->ban_comment;
 
     return $ban;
+}
+
+function check_domain_disposable($domain)
+{
+    return !Eusonlito\DisposableEmail\Check::domain($domain);
 }
 
 function subclasses_list($ip)

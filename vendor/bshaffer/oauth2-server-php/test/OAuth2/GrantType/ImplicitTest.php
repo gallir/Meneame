@@ -125,7 +125,7 @@ class ImplicitTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('fragment', $parts);
         parse_str($parts['fragment'], $params);
 
-        $this->assertFalse(isset($params['fake']));
+        $this->assertFalse(isset($parmas['fake']));
         $this->assertArrayHasKey('state', $params);
         $this->assertEquals($params['state'], 'test');
     }

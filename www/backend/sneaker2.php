@@ -11,7 +11,6 @@ require_once __DIR__.'/../config.php';
 require_once mnminclude.'sneak.php';
 require_once mnminclude.'ban.php';
 
-
 $events = array();
 $data = array();
 

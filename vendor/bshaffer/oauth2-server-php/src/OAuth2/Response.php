@@ -176,7 +176,7 @@ class Response implements ResponseInterface
     {
         switch ($format) {
             case 'json':
-                return $this->parameters ? json_encode($this->parameters) : '';
+                return json_encode($this->parameters);
             case 'xml':
                 // this only works for single-level arrays
                 $xml = new \SimpleXMLElement('<response/>');
@@ -212,7 +212,7 @@ class Response implements ResponseInterface
         foreach ($this->getHttpHeaders() as $name => $header) {
             header(sprintf('%s: %s', $name, $header));
         }
-        echo $this->getResponseBody();
+        echo $this->getResponseBody($format);
     }
 
     public function setError($statusCode, $error, $errorDescription = null, $errorUri = null)

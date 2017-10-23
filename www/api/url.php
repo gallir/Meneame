@@ -12,6 +12,7 @@ $globals['no_auth'] = true;
 $globals['alternate_db_server'] = 'api';
 
 $globals['max_load'] = 6;
+
 require_once __DIR__.'/../config.php';
 
 // Free connections fast

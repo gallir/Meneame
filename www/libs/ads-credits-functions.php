@@ -26,7 +26,7 @@ function do_banner($template, $mobile = false)
 
 function do_banner_private($template, $mobile = false)
 {
-    do_banner('private/'.$template);
+    do_banner('private/'.$template, $mobile);
 }
 
 function do_banner_inc($template, $mobile = false)

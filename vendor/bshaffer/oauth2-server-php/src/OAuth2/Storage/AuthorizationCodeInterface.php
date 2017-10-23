@@ -71,7 +71,7 @@ interface AuthorizationCodeInterface
     public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null);
 
     /**
-     * once an Authorization Code is used, it must be expired
+     * once an Authorization Code is used, it must be exipired
      *
      * @see http://tools.ietf.org/html/rfc6749#section-4.1.2
      *

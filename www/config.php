@@ -344,7 +344,7 @@ $globals['do_websnapr'] = false;
 //$globals['kalooga_categories'] = array(27, 28);
 
 // Automatic thumbnails size
-$globals['thumb_size'] = 155;
+$globals['thumb_size'] = 60;
 $globals['medium_thumb_size'] = 420;
 
 // Amazon setup
@@ -485,6 +485,7 @@ if (!stristr(setlocale(LC_CTYPE, 0), 'utf-8')) {
 
 define('mnmpath', __DIR__);
 define('mnminclude', __DIR__.'/libs/');
+define('mnmvendor', dirname(__DIR__).'/vendor/');
 
 ini_set('include_path', '.:'.mnminclude.':'.mnmpath);
 

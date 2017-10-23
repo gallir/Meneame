@@ -1,0 +1,58 @@
+<section class="section section-medium">
+    <form class="form" method="post">
+        <div class="form-group">
+            <input type="text" name="uri" value="{{ uri }}" placeholder="{% trans _('Slug del envío a validar') %}" class="form-control" required />
+        </div>
+
+        {% if uri %}
+
+        {% if !mafia.isValid %}
+
+        <div class="alert alert-danger">
+            {{ mafia.getError }}
+        </div>
+
+        {% else %}
+
+        <div class="m-20">
+            {% for link in links %}
+            <p>
+                <label>
+                    <input type="checkbox" name="link_ids[]" value="{{ link.link_id }}" {% if link.selected %} checked {% endif %} />
+                    [{{ link.link_date }}]
+                    <span class="label label-default">{{ link.link_status }}</span>
+                    <span class="badge badge-default">{{ link.link_votes }}</span>
+                </label>
+
+                <strong><a href="?uri={{ link.link_uri }}">{{ link.link_title }}</a></strong>
+            </p>
+            {% endfor %}
+        </div>
+
+        <footer class="footer m-20 clearfix">
+            <div class="pull-right">
+                <button type="submit" class="btn btn-mnm">Actualizar</button>
+            </div>
+        </footer>
+
+        {% if users %}
+
+        <div class="alert alert-success">Hay un total de {% exec count users %} usuarios coincidentes</div>
+
+        <div class="m-20">
+            {% for user in users %}
+            <a href="{{ user.user_link }}" class="label label-info" target="_blank">{{ user.user_login }}</a>
+            {% endfor %}
+        </div>
+
+        {% else %}
+
+        <div class="alert alert-warning">No hay usuarios coincidentes entre todos los envíos seleccionados</div>
+
+        {% endif %}
+
+        {% endif %}
+
+        {% endif %}
+    </form>
+</section>

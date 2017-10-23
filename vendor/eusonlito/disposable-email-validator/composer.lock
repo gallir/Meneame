@@ -1,0 +1,148 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "a20a81a11ab9b10e502d3854312de8c4",
+    "content-hash": "b08c6d771602571f2953a2be6ac16e46",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "fgribreau/mailchecker",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FGRibreau/mailchecker.git",
+                "reference": "a5f8012482562b51bb6f5c9d998308ba425331c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FGRibreau/mailchecker/zipball/a5f8012482562b51bb6f5c9d998308ba425331c1",
+                "reference": "a5f8012482562b51bb6f5c9d998308ba425331c1",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "platform/php/MailChecker.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Temporary (disposable/throwaway) email detection library. Covers 1987 fake email providers.",
+            "keywords": [
+                "detection",
+                "email",
+                "fake"
+            ],
+            "time": "2017-09-25 21:22:27"
+        },
+        {
+            "name": "ivolo/disposable-email-domains",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ivolo/disposable-email-domains.git",
+                "reference": "0c1fd4c69614111f243e36d874e5af1e2fbabc26"
+            },
+            "type": "library",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ilya Volodarsky",
+                    "email": "ivolodarsky@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "disposable domains list",
+            "keywords": [
+                "disposable",
+                "domains"
+            ],
+            "time": "2017-10-11 14:58:58"
+        },
+        {
+            "name": "martenson/disposable-email-domains",
+            "version": "1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/martenson/disposable-email-domains",
+                "reference": "master"
+            },
+            "type": "library"
+        },
+        {
+            "name": "mattketmo/email-checker",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MattKetmo/EmailChecker.git",
+                "reference": "4d8042b1685e53a917bb065bce163a97da11de06"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MattKetmo/EmailChecker/zipball/4d8042b1685e53a917bb065bce163a97da11de06",
+                "reference": "4d8042b1685e53a917bb065bce163a97da11de06",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.4 || ^7.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "^1.9",
+                "knplabs/gaufrette": "^0.1",
+                "phpunit/phpunit": "^4.8",
+                "symfony/validator": "^2.1"
+            },
+            "suggest": {
+                "knplabs/gaufrette": "Use filesystem abstraction layer to read data",
+                "symfony/validator": "Add validation constraints"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "EmailChecker\\": "src/EmailChecker"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthieu Moquet",
+                    "email": "matthieu@moquet.net"
+                }
+            ],
+            "description": "Throwaway email detection library",
+            "keywords": [
+                "check",
+                "disposable",
+                "email",
+                "throwaway"
+            ],
+            "time": "2017-10-11 11:06:03"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "ivolo/disposable-email-domains": 20,
+        "mattketmo/email-checker": 20,
+        "fgribreau/mailchecker": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.4"
+    },
+    "platform-dev": []
+}
