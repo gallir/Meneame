@@ -31,7 +31,7 @@
                     <span class="badge badge-default">{{ link.link_votes }}</span>
                 </label>
 
-                <strong><a href="?uri={{ link.link_uri }}">{{ link.link_title }}</a></strong>
+                <strong><a href="?uri={{ link.link_uri }}&amp;published={{ published }}">{{ link.link_title }}</a></strong>
             </p>
             {% endfor %}
         </div>
