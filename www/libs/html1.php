@@ -481,11 +481,11 @@ function get_subs_subscriptions(array $main = array())
 
 function get_sub_selected($selected)
 {
-    global $globals;
+    global $globals, $current_user;
 
     $selected = $selected ?: SitesMgr::my_id();
 
-    if (SitesMgr::can_send($selected) && ($sub = SitesMgr::get_info($selected))) {
+    if ((SitesMgr::can_send($selected) || $current_user->user_level === 'god' ) && ($sub = SitesMgr::get_info($selected))) {
         return $sub;
     }
 }
