@@ -4,6 +4,13 @@
             <input type="text" name="uri" value="{{ uri }}" placeholder="{% trans _('Slug del envío a validar') %}" class="form-control" required />
         </div>
 
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="published" value="1" {% if published %} checked {% endif %} />
+                Sólo envíos publicados
+            </label>
+        </div>
+
         {% if uri %}
 
         {% if !mafia.isValid %}
@@ -24,7 +31,7 @@
                     <span class="badge badge-default">{{ link.link_votes }}</span>
                 </label>
 
-                <strong><a href="?uri={{ link.link_uri }}">{{ link.link_title }}</a></strong>
+                <strong><a href="?uri={{ link.link_uri }}&amp;published={{ published }}">{{ link.link_title }}</a></strong>
             </p>
             {% endfor %}
         </div>
@@ -45,11 +52,11 @@
             {% endfor %}
         </div>
 
-        {% else %}
+        {% else %} {% if link_ids %}
 
         <div class="alert alert-warning">No hay usuarios coincidentes entre todos los envíos seleccionados</div>
 
-        {% endif %}
+        {% endif %} {% endif %}
 
         {% endif %}
 

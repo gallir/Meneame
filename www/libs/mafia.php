@@ -10,24 +10,28 @@ class Mafia
 {
     protected $valid;
     protected $error;
+    protected $published;
 
     protected $ids = [];
     protected $links = [];
     protected $users = [];
 
-    public function __construct($uri, $ids)
+    public function __construct($uri, $published, $ids)
     {
         if (!$this->validate($uri)) {
             return $this;
         }
 
+        $this->published = $published;
         $this->links = $this->loadRelatedLinks($this->link);
 
-        if ($ids) {
-            array_map(function ($value) use ($ids) {
-                $value->selected = in_array($value->link_id, $ids);
-            }, $this->links);
+        if (empty($ids)) {
+            return;
         }
+
+        array_map(function ($value) use ($ids) {
+            $value->selected = in_array($value->link_id, $ids);
+        }, $this->links);
     }
 
     public function isValid()
@@ -70,6 +74,14 @@ class Mafia
             return $this->setError('No se ha indicado una URL');
         }
 
+        if (strstr($uri, '/')) {
+            if (!preg_match('#/story/([^/]+)#', $uri, $uri)) {
+                return $this->setError('La URL indicada no es correcta');
+            }
+
+            $uri = $uri[1];
+        }
+
         $this->link = $this->getLinkByUri($uri);
 
         if (empty($this->link)) {
@@ -84,7 +96,7 @@ class Mafia
         global $db;
 
         return $db->get_row('
-            SELECT *, true AS `selected`
+            SELECT *, false AS `selected`
             FROM `links`
             WHERE `link_uri` = "'.$db->escape($uri).'"
             LIMIT 1;
@@ -98,25 +110,27 @@ class Mafia
         $domain = $this->getDomain($link->link_url);
 
         return array_merge(
+            [$link],
+
             $db->get_results('
-                SELECT *, true AS `selected`
+                SELECT *, false AS `selected`
                 FROM `links`
                 WHERE (
                     `link_id` < "'.(int)$link->link_id.'"
                     AND `link_url` LIKE "%'.$domain.'/%"
+                    '.($this->published ? 'AND link_status = "published"' : '').'
                 )
                 ORDER BY `link_id` DESC
                 LIMIT 5;
             '),
 
-            [$link],
-
             $db->get_results('
-                SELECT *, true AS `selected`
+                SELECT *, false AS `selected`
                 FROM `links`
                 WHERE (
                     `link_id` > "'.(int)$link->link_id.'"
                     AND `link_url` LIKE "%'.$domain.'/%"
+                    '.($this->published ? 'AND link_status = "published"' : '').'
                 )
                 ORDER BY `link_id` ASC
                 LIMIT 5;

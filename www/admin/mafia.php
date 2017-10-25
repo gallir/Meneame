@@ -15,10 +15,12 @@ require_once __DIR__.'/libs/admin.php';
 do_header(_('Mafia'));
 do_admin_tabs('mafia');
 
-$mafia = new Mafia($_REQUEST['uri'], $_REQUEST['link_ids']);
+$mafia = new Mafia($_REQUEST['uri'], $_REQUEST['published'], $_REQUEST['link_ids']);
 
 Haanga::Load('admin/mafia/index.html', [
     'uri' => $_REQUEST['uri'],
+    'published' => $_REQUEST['published'],
+    'link_ids' => $_REQUEST['link_ids'],
     'mafia' => $mafia,
     'links' => $mafia->getLinks(),
     'users' => $mafia->getUsers(),
