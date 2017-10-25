@@ -659,7 +659,7 @@ class Comment extends LCPBase
             return _('texto muy breve o caracteres no válidos');
         }
 
-        if (!$current_user->admin) {
+        if (!$current_user->admin && ($link->author != $comment->author)) {
             $comment->get_links();
 
             if ($comment->banned && $current_user->Date() > $globals['now'] - 86400) {
