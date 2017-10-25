@@ -85,7 +85,7 @@ class LinkValidator
 
     public function checkSiteSend()
     {
-        if ($this->link->sub_id > 0 && !SitesMgr::can_send($this->link->sub_id)) {
+        if ($this->link->sub_id > 0 && !SitesMgr::can_send($this->link->sub_id) && $this->user->user_level !== 'god') {
             $this->setError(__('Los envíos en %s están deshabilitados.', $this->link->sub_name));
         }
 
