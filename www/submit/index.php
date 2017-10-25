@@ -13,7 +13,7 @@ $globals['ads'] = false;
 
 force_authentication();
 
-if (!SitesMgr::can_send()) {
+if (!SitesMgr::can_send() && $current_user->user_level !== 'god') {
     die(header('Location: '.$globals['base_url']));
 }
 
