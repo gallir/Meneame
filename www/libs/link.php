@@ -152,6 +152,7 @@ class Link extends LCPBase
             WHERE (
                 link_content_type = "article"
                 AND link_status IN ("queued", "published")
+                AND subs.private = 0
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
@@ -175,31 +176,31 @@ class Link extends LCPBase
             $sql_distinct_articles = (count($article_ids) > 0) ? ' AND link_id NOT IN ('.implode(",", $article_ids).') ' : '';
 
             $sql_extra_articles = '
-            SELECT DISTINCT link
-            FROM sub_statuses, subs, links
-            WHERE (
-                link_content_type = "article"
-                AND link_status IN ("queued", "published")
-                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
-                AND sub_statuses.link = link_id
-                AND sub_statuses.origen = subs.id
-                AND link_karma >= '.(int)$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
-                AND NOT EXISTS (
-                    SELECT link
-                    FROM sub_statuses
-                    WHERE (
-                        sub_statuses.id = "'.SitesMgr::getMainSiteId().'"
-                        AND sub_statuses.status = "published"
-                        AND link = link_id
+                SELECT DISTINCT link
+                FROM sub_statuses, subs, links
+                WHERE (
+                    link_content_type = "article"
+                    AND link_status IN ("queued", "published")
+                    AND subs.private = 0
+                    AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
+                    AND sub_statuses.link = link_id
+                    AND sub_statuses.origen = subs.id
+                    AND link_karma >= '.(int)$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
+                    AND NOT EXISTS (
+                        SELECT link
+                        FROM sub_statuses
+                        WHERE (
+                            sub_statuses.id = "'.SitesMgr::getMainSiteId().'"
+                            AND sub_statuses.status = "published"
+                            AND link = link_id
+                        )
                     )
-                )
-            ) ORDER BY sub_statuses.date DESC
-            LIMIT '.(int) ($limit - count($article_ids)).';
-        ';
+                ) ORDER BY sub_statuses.date DESC
+                LIMIT '.(int) ($limit - count($article_ids)).';
+            ';
 
             $article_extra_ids = $db->get_col($sql_extra_articles);
             $total_article_ids = array_merge($article_ids, $article_extra_ids);
-
         } else {
             $total_article_ids = $article_ids;
         }
@@ -235,6 +236,7 @@ class Link extends LCPBase
             WHERE (
                 link_content_type = "article"
                 AND link_status IN ("queued", "published")
+                AND subs.private = 0
                 AND sub_statuses.link = link_id
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['article_promoted_max_time_from_publish'] * 3600).'"
                 AND sub_statuses.origen = subs.id
