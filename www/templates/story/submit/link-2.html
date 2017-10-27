@@ -189,6 +189,24 @@
 
             {% endif %}
 
+            {% if link.poll %}
+
+            {% set poll = link.poll %}
+
+            {% if !poll.id OR !poll.votes %}
+
+            <div class="pull-right">
+                <button type="button" class="btn btn-mnm btn-sm" data-show-poll="true">
+                    <i class="fa fa-bar-chart"></i>
+                </button>
+            </div>
+
+            {% endif %}
+
+            {% include 'poll_form.html' %}
+
+            {% endif %}
+
             <div class="mt-20">
                 {% if link.is_new %}
                 <input type="button" class="button" onclick="window.location = '{{ globals.base_url }}';" value="{% trans _('Cancelar') %}" />&nbsp;&nbsp;

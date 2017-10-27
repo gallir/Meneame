@@ -38,6 +38,11 @@ if ($link->url && ($metas = getMetasFromUrl($link->url)) && !empty($metas['descr
     $link->url_description = $metas['description'];
 }
 
+$link->poll = new Poll;
+
+$link->poll->read('link_id', $link->id);
+$link->poll->link_id = $link->id;
+
 $link->has_thumb();
 $link->key = md5($link->randkey.$current_user->user_id.$current_user->user_email.$site_key.get_server_name());
 
