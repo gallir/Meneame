@@ -75,9 +75,7 @@ function save_post($message_id)
     }
 
     if (!empty($_FILES['image']['tmp_name'])) {
-        $limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);
-
-        if ($limit_exceded) {
+        if ($limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size'])) {
             die('ERROR: ' . $limit_exceded);
         }
     }
