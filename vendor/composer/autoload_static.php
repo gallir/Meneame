@@ -245,6 +245,7 @@ class ComposerStaticInit982e99603abf7e931d3651829d24ceda
         'Twemojis' => __DIR__ . '/../..' . '/www/libs/twemojis.php',
         'Upload' => __DIR__ . '/../..' . '/www/libs/upload.php',
         'User' => __DIR__ . '/../..' . '/www/libs/user.php',
+        'UserAdmin' => __DIR__ . '/../..' . '/www/libs/user_admin.php',
         'UserAuth' => __DIR__ . '/../..' . '/www/libs/login.php',
         'Vote' => __DIR__ . '/../..' . '/www/libs/votes.php',
         'WebThumb' => __DIR__ . '/../..' . '/www/libs/webimages.php',

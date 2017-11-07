@@ -146,6 +146,7 @@ return array(
     'Twemojis' => $baseDir . '/www/libs/twemojis.php',
     'Upload' => $baseDir . '/www/libs/upload.php',
     'User' => $baseDir . '/www/libs/user.php',
+    'UserAdmin' => $baseDir . '/www/libs/user_admin.php',
     'UserAuth' => $baseDir . '/www/libs/login.php',
     'Vote' => $baseDir . '/www/libs/votes.php',
     'WebThumb' => $baseDir . '/www/libs/webimages.php',
