@@ -14,6 +14,8 @@ require_once __DIR__.'/libs/admin.php';
 
 $selected_tab = 'preguntame';
 
+adminAllowed($selected_tab);
+
 switch ($_REQUEST['op'] ?: 'list') {
     case 'list':
         do_header(_('Pregúntame'));

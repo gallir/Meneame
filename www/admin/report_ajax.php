@@ -1,6 +1,6 @@
 <?php
-
 $globals['skip_check_ip_noaccess'] = true;
+
 require_once __DIR__.'/../config.php';
 require_once mnminclude.'html1.php';
 require_once __DIR__.'/libs/admin.php';
@@ -41,6 +41,7 @@ if ($_GET['process'] == 'get_reporters') {
 
     echo '<div style="width:550px;padding: 5px 5px;text-align:left">';
     echo '<div style="padding-top: 20px;min-width:350px">';
+
     if ($reporters) {
         echo '<div class="reporters-list">';
         foreach ($reporters as $reporter) {

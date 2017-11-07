@@ -16,6 +16,8 @@ if (!$current_user->admin) {
 
 function do_admin_tabs($tab_selected = false)
 {
+    global $current_user;
+
     $tabs = [
         'admin_logs' => 'logs.php',
         'comment_reports' => 'reports.php',
@@ -27,11 +29,22 @@ function do_admin_tabs($tab_selected = false)
         'words' => 'bans.php?tab=words',
         'noaccess' => 'bans.php?tab=noaccess',
         'preguntame' => 'preguntame.php',
-        'patrocinios' => 'sponsors.php',
+        'sponsors' => 'sponsors.php',
         'mafia' => 'mafia.php'
     ];
 
+    $tabs = array_intersect_key($tabs, array_flip(UserAdmin::sections($current_user->user_id)));
+
     Haanga::Load('admin/tabs.html', compact('tabs', 'tab_selected'));
+}
+
+function adminAllowed($section)
+{
+    global $current_user;
+
+    if (!UserAdmin::exists($current_user->user_id, $section)) {
+        die(Haanga::Load('admin/no_access.html'));
+    }
 }
 
 function URLQuery()
