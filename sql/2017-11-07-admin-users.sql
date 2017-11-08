@@ -62,7 +62,7 @@ DROP PROCEDURE insertUsersAdmin;
 
 DELETE `admin_users` FROM `users`, `admin_users` WHERE (
   `users`.`user_level` != 'god'
-  AND `admin_users`.`id` = `users`.`user_id`
+  AND `admin_users`.`admin_id` = `users`.`user_id`
   AND `admin_users`.`section_id` IN (
     SELECT `id` FROM `admin_sections` WHERE `name` IN ('admin_users', 'preguntame', 'sponsors')
   )
