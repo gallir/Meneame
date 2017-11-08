@@ -4,8 +4,6 @@ defined('config_done') or die();
 $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_js'][] = 'jquery.user_autocomplete.js';
 $globals['extra_css'][] = 'jquery.autocomplete.css';
-$globals['extra_css'][] = 'bootstrap.min.css';
-$globals['extra_css'][] = 'bootstrap-theme.min.css';
 $globals['extra_css'][] = 'admin.css';
 $globals['extra_js'][] = '../admin/js/admin.js';
 $globals['ads'] = false;
