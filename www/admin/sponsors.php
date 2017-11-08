@@ -54,6 +54,7 @@ function do_new($selected_tab)
     }
 
     $row = $row ?: (new Sponsor);
+    $error = null;
 
     try {
         do_save($row);

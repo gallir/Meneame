@@ -49,6 +49,21 @@ class AdminUser
         ');
     }
 
+    public static function sectionsJoindedUserId($admin_id)
+    {
+        global $db;
+
+        return $db->get_results('
+            SELECT `admin_sections`.`id`, `admin_sections`.`name`, `admin_users`.`admin_id`
+            FROM `admin_sections`
+            LEFT JOIN `admin_users` ON (
+                `admin_users`.`section_id` = `admin_sections`.`id`
+                AND `admin_users`.`admin_id` = "'.(int)$admin_id.'"
+            )
+            ORDER BY `admin_sections`.`name` ASC;
+        ');
+    }
+
     public static function listing()
     {
         global $db;
@@ -68,5 +83,27 @@ class AdminUser
         }
 
         return $list;
+    }
+
+    public static function relateAdminWithSectionIds($admin_id, array $ids)
+    {
+        global $db;
+
+        $admin_id = (int)$admin_id;
+
+        $db->query('
+            DELETE FROM `admin_users`
+            WHERE `admin_id` = "'.$admin_id.'";
+        ');
+
+        $db->query('
+            INSERT INTO `admin_users`
+            (`admin_id`, `section_id`)
+            (
+                SELECT "'.$admin_id.'", `id`
+                FROM `admin_sections`
+                WHERE `id` IN ('.DbHelper::implodedIds($ids).')
+            );
+        ');
     }
 }

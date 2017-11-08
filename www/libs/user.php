@@ -42,42 +42,80 @@ class User
 
     private $friendship;
 
-    const SQL = "user_id as id, user_login as username, user_login_register as username_register, user_level as level, user_comment_pref as comment_pref, UNIX_TIMESTAMP(user_date) as date, user_ip as ip, UNIX_TIMESTAMP(user_modification) as modification, user_pass as pass, user_email as email, user_email_register as email_register, user_names as names, user_lang as lang, user_karma as karma, user_avatar as avatar, user_public_info as public_info, user_url as url, user_adcode as adcode, user_adchannel as adchannel, user_phone as phone";
+    const SQL = '
+        `user_id` `id`, `user_login` `username`, `user_login_register` `username_register`,
+        `user_level` `level`, `user_comment_pref` `comment_pref`, UNIX_TIMESTAMP(`user_date`) `date`,
+        `user_ip` `ip`, UNIX_TIMESTAMP(`user_modification`) `modification`, `user_pass` `pass`,
+        `user_email` `email`, `user_email_register` `email_register`, `user_names` `names`,
+        `user_lang` `lang`, `user_karma` `karma`, `user_avatar` `avatar`, `user_public_info` `public_info`,
+        `user_url` `url`, `user_adcode` `adcode`, `user_adchannel` `adchannel`, `user_phone` `phone`
+    ';
 
     public static function get_notification($id, $type)
     {
         global $db;
 
-        $r =  intval($db->get_var("select counter from notifications where user = $id and type = '$type'"));
+        $r = (int)$db->get_var('
+            SELECT `counter`
+            FROM `notifications`
+            WHERE (
+                `user` = "'.(int)$id.'"
+                AND `type` = "'.$db->escape($type).'"
+            );
+        ');
 
-        if ($r < 0) {
-            User::reset_notification($id, $type);
-            return 0;
+        if ($r >= 0) {
+            return $r;
         }
-        return $r;
+
+        User::reset_notification($id, $type);
+
+        return 0;
     }
 
     public static function add_notification($id, $type, $value = 1)
     {
         global $db;
 
-        if (is_null(User::get_notification($id, $type))) {
-            return false;
-        }
+        $id = (int)$id;
+        $value = (int)$value;
+        $type = $db->escape($type);
 
         if ($value < 0) {
             $value = abs($value);
-            return $db->query("update notifications set counter = counter-$value where user=$id and type = '$type' and counter >= $value");
+
+            return $db->query('
+                UPDATE `notifications`
+                SET `counter` = IF(`counter` - '.$value.' < 0, 0, `counter` - '.$value.')
+                WHERE (
+                    `user` = "'.$id.'"
+                    AND `type` = "'.$type.'"
+                    AND `counter` >= "'.$value.'"
+                );
+            ');
         }
 
-        return $db->query("insert into notifications (user, type, counter) values ($id, '$type', $value) on duplicate key update counter=counter+$value");
+        return $db->query('
+            INSERT INTO `notifications`
+            (`user`, `type`, `counter`)
+            VALUES ("'.$id.'", "'.$type.'", "'.$value.'")
+            ON DUPLICATE KEY UPDATE `counter` = `counter` + '.$value.';
+        ');
     }
 
     public static function reset_notification($id, $type, $value = 0)
     {
         global $db;
 
-        return $db->query("replace into notifications (user, type, counter) values ($id, '$type', $value)");
+        $id = (int)$id;
+        $value = (int)$value;
+        $type = $db->escape($type);
+
+        return $db->query('
+            REPLACE INTO `notifications`
+            (`user`, `type`, `counter`)
+            VALUES ("'.$id.'", "'.$type.'", "'.$value.'");
+        ');
     }
 
     public static function get_valid_username($name)
@@ -92,6 +130,18 @@ class User
         }
 
         return substr($name, 0, 24);
+    }
+
+    public static function getById($id)
+    {
+        global $db;
+
+        return $db->get_row('
+            SELECT *
+            FROM `users`
+            WHERE `user_id` = "'.(int)$id.'"
+            LIMIT 1;
+        ');
     }
 
     public static function get_username($id)

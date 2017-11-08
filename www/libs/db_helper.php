@@ -8,19 +8,24 @@
 
 class DbHelper
 {
+    public static function filter(array $ids)
+    {
+        return array_values(array_filter(array_unique($ids)));
+    }
+
     public static function integerIds(array $ids)
     {
-        return array_values(array_filter(array_unique(array_map('intval', $ids))));
+        return static::filter(array_map('intval', $ids));
     }
 
     public static function stringsUnique(array $strings)
     {
-        return array_values(array_filter(array_unique(array_map('trim', $strings))));
+        return static::filter(array_map('trim', $strings));
     }
 
     public static function implodedIds(array $ids)
     {
-        return implode(',', self::integerIds($ids));
+        return implode(',', self::integerIds($ids)) ?: 0;
     }
 
     public static function queryPlain($query)

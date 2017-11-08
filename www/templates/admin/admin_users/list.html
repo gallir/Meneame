@@ -15,7 +15,11 @@
             <tbody>
                 {% for row in list %}
                 <tr>
-                    <th>{{ row.user_login }}</th>
+                    <th>
+                        <a href="?op=new&amp;id={{ row.user_id }}">
+                            {{ row.user_login }}
+                        </a>
+                    </th>
                     <th>{{ row.user_level }}</th>
 
                     {% for section in sections %}
