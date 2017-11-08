@@ -33,7 +33,7 @@ function twitter_post($auth, $text, $short_url, $image = false)
 
     $api_args = array("empty_param" => null);
 
-    $maxlen = 140 - 24; // minus the url length
+    $maxlen = 280 - 24; // minus the url length
     if ($image) {
         $maxlen -= 24;
         echo "Adding image: $image\n";
