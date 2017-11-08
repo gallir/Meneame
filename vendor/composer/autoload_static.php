@@ -105,6 +105,7 @@ class ComposerStaticInit982e99603abf7e931d3651829d24ceda
     );
 
     public static $classMap = array (
+        'AdminUser' => __DIR__ . '/../..' . '/www/libs/admin_user.php',
         'Annotation' => __DIR__ . '/../..' . '/www/libs/annotation.php',
         'Ban' => __DIR__ . '/../..' . '/www/libs/ban.php',
         'BaseFacebook' => __DIR__ . '/../..' . '/www/libs/facebook/base_facebook.php',
@@ -245,7 +246,6 @@ class ComposerStaticInit982e99603abf7e931d3651829d24ceda
         'Twemojis' => __DIR__ . '/../..' . '/www/libs/twemojis.php',
         'Upload' => __DIR__ . '/../..' . '/www/libs/upload.php',
         'User' => __DIR__ . '/../..' . '/www/libs/user.php',
-        'UserAdmin' => __DIR__ . '/../..' . '/www/libs/user_admin.php',
         'UserAuth' => __DIR__ . '/../..' . '/www/libs/login.php',
         'Vote' => __DIR__ . '/../..' . '/www/libs/votes.php',
         'WebThumb' => __DIR__ . '/../..' . '/www/libs/webimages.php',

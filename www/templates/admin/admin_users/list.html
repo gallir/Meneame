@@ -1,0 +1,35 @@
+<div id="singlewrap">
+    <div class="genericform">
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>{% trans _('Usuario') %}</th>
+                    <th>{% trans _('Nivel') %}</th>
+
+                    {% for section in sections %}
+                    <th class="text-center">{{ section }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for row in list %}
+                <tr>
+                    <th>{{ row.user_login }}</th>
+                    <th>{{ row.user_level }}</th>
+
+                    {% for section in sections %}
+                    <td class="text-center">
+                        {% if in_array(section, row.sections) %}
+                        <span class="label label-success">Sí</span>
+                        {% else %}
+                        <span class="label label-danger">No</span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

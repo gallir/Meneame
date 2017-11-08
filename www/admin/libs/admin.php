@@ -14,11 +14,9 @@ if (!$current_user->admin) {
     die(Haanga::Load('admin/no_access.html'));
 }
 
-function do_admin_tabs($tab_selected = false)
+function get_admin_tabs()
 {
-    global $current_user;
-
-    $tabs = [
+    return [
         'admin_logs' => 'logs.php',
         'comment_reports' => 'reports.php',
         'strikes' => 'strikes.php',
@@ -30,19 +28,26 @@ function do_admin_tabs($tab_selected = false)
         'noaccess' => 'bans.php?tab=noaccess',
         'preguntame' => 'preguntame.php',
         'sponsors' => 'sponsors.php',
-        'mafia' => 'mafia.php'
+        'mafia' => 'mafia.php',
+        'admin_users' => 'admin_users.php'
     ];
+}
 
-    $tabs = array_intersect_key($tabs, array_flip(UserAdmin::sections($current_user->user_id)));
+function do_admin_tabs($tab_selected = false)
+{
+    global $current_user;
 
-    Haanga::Load('admin/tabs.html', compact('tabs', 'tab_selected'));
+    Haanga::Load('admin/tabs.html', [
+        'tabs' => array_intersect_key(get_admin_tabs(), array_flip(AdminUser::sectionsByAdminId($current_user->user_id))),
+        'tab_selected' => $tab_selected
+    ]);
 }
 
 function adminAllowed($section)
 {
     global $current_user;
 
-    if (!UserAdmin::exists($current_user->user_id, $section)) {
+    if (!AdminUser::allowed($current_user->user_id, $section)) {
         die(Haanga::Load('admin/no_access.html'));
     }
 }
