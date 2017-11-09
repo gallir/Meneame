@@ -76,7 +76,7 @@ $sql = '
         )
         ORDER BY sub_statuses.date DESC
         LIMIT '.$offset.', '.$page_size.'
-    ) AS ids ON (ids.link = link_id)
+    ) AS ids ON (ids.link = link_id);
 ';
 
 $links = $db->get_results($sql, 'Link');
