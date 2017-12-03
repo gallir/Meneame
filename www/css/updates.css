@@ -1963,6 +1963,10 @@ ul.slick-dots li button {
     border-left: 1px solid #dfdfdf;
 }
 
+.no-margin {
+    margin: 0 !important;
+}
+
 .no-margin-left {
     margin-left: 0 !important;
 }
