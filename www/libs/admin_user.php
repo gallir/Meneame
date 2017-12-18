@@ -8,6 +8,19 @@
 
 class AdminUser
 {
+    public static function levels()
+    {
+        return ['admin', 'god'];
+    }
+
+    public static function sectionsDefault()
+    {
+        return [
+            'admin_logs', 'comment_reports', 'strikes', 'hostname', 'punished_hostname',
+            'email', 'ip', 'words', 'noaccess', 'mafia'
+        ];
+    }
+
     public static function allowed($admin_id, $section)
     {
         global $db;
@@ -83,6 +96,40 @@ class AdminUser
         }
 
         return $list;
+    }
+
+    public static function changeLevel($user, $previous, $new)
+    {
+        global $db;
+
+        $levels = static::levels();
+        $previous = in_array($previous, $levels);
+        $new = in_array($new, $levels);
+
+        if (!$user->id || (!$previous && !$new) || ($previous && $new)) {
+            return;
+        }
+
+        if ($previous) {
+            return $db->query('
+                DELETE FROM `admin_users`
+                WHERE `admin_id` = "'.(int)$user->id.'";
+            ');
+        }
+
+        if (!$new) {
+            return;
+        }
+
+        $db->query('
+            INSERT INTO `admin_users`
+            (`admin_id`, `section_id`)
+            (
+                SELECT "'.(int)$user->id.'", `id`
+                FROM `admin_sections`
+                WHERE `name` IN ("'.implode('", "', static::sectionsDefault()).'")
+            );
+        ');
     }
 
     public static function relateAdminWithSectionIds($admin_id, array $ids)

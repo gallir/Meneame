@@ -581,6 +581,35 @@ class User
         return ($this->friendship() === 1);
     }
 
+    public function read()
+    {
+        global $db, $current_user;
+
+        $id = $this->id;
+
+        if ($this->id > 0) {
+            $where = "user_id = $id";
+        } elseif (!empty($this->username)) {
+            $where = "user_login='".$db->escape(mb_substr($this->username, 0, 64))."'";
+        } elseif (!empty($this->email)) {
+            $where = "user_email='".$db->escape(mb_substr($this->email, 0, 64))."' and user_level != 'disabled' and user_level != 'autodisabled'";
+        }
+
+        $this->stats = false;
+
+        if (empty($where) || !($result = $db->get_row("SELECT ".User::SQL." FROM users WHERE $where limit 1"))) {
+            return $this->read = false;
+        }
+
+        foreach (get_object_vars($result) as $var => $value) {
+            $this->$var = $value;
+        }
+
+        $this->admin = (($this->level === 'admin') || ($this->level === 'god'));
+
+        return $this->read = true;
+    }
+
     public function store($full_save = true)
     {
         global $db, $current_user, $globals;
@@ -589,11 +618,6 @@ class User
             $this->date = $globals['now'];
         }
 
-    /*
-        if($full_save && empty($this->ip)) {
-            $this->ip=$globals['user_ip'];
-        }
-        */
         $user_login = $db->escape($this->username);
         $user_login_register = $db->escape($this->username_register);
         $user_level = $this->level;
@@ -628,35 +652,6 @@ class User
         if ($this->meta_modified) {
             $this->meta_store();
         }
-    }
-
-    public function read()
-    {
-        global $db, $current_user;
-
-        $id = $this->id;
-
-        if ($this->id > 0) {
-            $where = "user_id = $id";
-        } elseif (!empty($this->username)) {
-            $where = "user_login='".$db->escape(mb_substr($this->username, 0, 64))."'";
-        } elseif (!empty($this->email)) {
-            $where = "user_email='".$db->escape(mb_substr($this->email, 0, 64))."' and user_level != 'disabled' and user_level != 'autodisabled'";
-        }
-
-        $this->stats = false;
-
-        if (empty($where) || !($result = $db->get_row("SELECT ".User::SQL." FROM users WHERE $where limit 1"))) {
-            return $this->read = false;
-        }
-
-        foreach (get_object_vars($result) as $var => $value) {
-            $this->$var = $value;
-        }
-
-        $this->admin = (($this->level === 'admin') || ($this->level === 'god'));
-
-        return $this->read = true;
     }
 
     public function all_stats()
