@@ -363,15 +363,11 @@ if (
         echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
     }
 
-    if (!$current_user->user_id) {
-        do_most_clicked_stories();
-    }
+    do_most_clicked_stories();
 
     do_banner_promotions();
 
-    if (!$current_user->user_id) {
-        do_best_stories();
-    }
+    do_best_stories();
 
     do_rss_box();
 
