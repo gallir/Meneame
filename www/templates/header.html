@@ -45,6 +45,10 @@
         <meta name="twitter:image" content="{{ globals.thumbnail }}" />
         {% endif %}
 
+        {% if globals.meta_type %}
+        <meta property="og:type" content="{{ globals.meta_type }}">
+        {% endif %}
+
         <meta property="og:url" content="{{ globals.permalink }}">
         <meta property="og:title" content="{{ title }}">
         <meta property="og:description" content="{{ globals.description }}">

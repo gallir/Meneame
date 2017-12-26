@@ -274,6 +274,7 @@ switch ($url_args[1]) {
 $globals['link'] = $link;
 $globals['link_id'] = $link->id;
 $globals['permalink'] = $globals['link']->get_permalink();
+$gloabls['meta_type'] = 'article';
 
 // to avoid search engines penalisation
 if ($link->status !== 'published' && $globals['now'] - $link->date > 864000) {
@@ -332,7 +333,7 @@ if ($link->has_thumb()) {
     $globals['thumbnail'] = $link->media_url;
 }
 
-$globals['description'] = text_to_summary($link->content, 250);
+$globals['description'] = text_to_summary($link->content, 160);
 
 do_header($link->title, 'post');
 
