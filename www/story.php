@@ -330,7 +330,7 @@ if ($link->sponsored && ($sponsor = Sponsor::getByLinkId($link->id))) {
 }
 
 if ($link->has_thumb()) {
-    $globals['thumbnail'] = $link->get_media()->url();
+    $globals['thumbnail'] = $link->media_url;
 }
 
 $globals['description'] = text_to_summary($link->content, 160);
