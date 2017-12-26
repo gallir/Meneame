@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="{{ globals.lang }}" prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8" />
+
+        <meta name="ROBOTS" content="NOARCHIVE" />
+        <meta name="generator" content="meneame" />
+        <meta name="referrer" content="always">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+        {% if globals.css_webfonts %}
+        <link href="{{ globals.css_webfonts }}" rel="stylesheet" type="text/css">
+        {% endif %}
+
+        {% if globals.noindex %}
+        <meta name="robots" content="noindex,nofollow" />
+        {% endif %}
+
+        {% if globals.tags %}
+        <meta name="keywords" content="{{ globals.tags }}" />
+        {% endif %}
+
+        {% if globals.description %}
+        <meta name="description" content="{{ globals.description }}" />
+        {% endif %}
+
+        {% if globals.permalink AND title %}
+
+        {% if globals.thumbnail %}
+        <meta property="og:image" content="{{ globals.thumbnail }}" />
+        {% endif %}
+
+        {% if globals.meta_type %}
+        <meta property="og:type" content="{{ globals.meta_type }}">
+        {% endif %}
+
+        <meta property="og:url" content="{{ globals.permalink }}">
+        <meta property="og:title" content="{{ title }}">
+        <meta property="og:description" content="{{ globals.description }}">
+
+        {% endif %}
+
+        <title>{{ title }}</title>
+
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        {% if globals.use_fontawesome_cdn %}
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        {% else %}
+        <link href="{{ globals.base_static }}css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all" />
+        {% endif %}
+
+        {% for css in globals.extra_css %}
+
+        {% if css|substr:"0, 4" == 'http' OR css|substr:"0, 2" == '//' %}
+        <link href="{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% else %}
+        <link href="{{ globals.base_static }}css/{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% endif %}
+
+        {% endfor %}
+
+        {% for css in globals.extra_vendor_css %}
+        <link href="{{ globals.base_static }}vendor/{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% endfor %}
+
+        {% if globals.css_main %}
+        <link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{ globals.css_main }}" rel="stylesheet" type="text/css" media="all" />
+        {% endif %}
+
+        {# <meta name="mobile-web-app-capable" content="yes"> #}
+
+        {% if globals.favicon %}
+        <link rel="shortcut icon" href="{{ globals.base_static }}{{ globals.favicon }}" type="image/x-icon" />
+        {% else %}
+
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ globals.base_static }}apple-touch-icon.png?v=E6bENepwgd">
+        <link rel="icon" type="image/png" href="{{ globals.base_static }}favicon-32x32.png?v=E6bENepwgd" sizes="32x32">
+        <link rel="icon" type="image/png" href="{{ globals.base_static }}favicon-16x16.png?v=E6bENepwgd" sizes="16x16">
+        <link rel="manifest" href="{{ globals.base_static }}manifest.json?v=E6bENepwgd">
+        <link rel="mask-icon" href="{{ globals.base_static }}safari-pinned-tab.svg?v=E6bENepwgd" color="#5bbad5">
+        <link rel="shortcut icon" href="{{ globals.base_static }}favicon.ico?v=E6bENepwgd">
+        <meta name="theme-color" content="#ffffff">
+
+        {% endif %}
+
+        <link rel="license" href="http://creativecommons.org/licenses/by/3.0/es/"/>
+
+        {# <script src="{{ globals.base_url_general }}js/{{ globals.js_basic }}" type="text/javascript" charset="utf-8"></script> #}
+
+        {% if globals.extra_head %}
+            {{ globals.extra_head }}
+        {% endif %}
+
+        {% try_include 'private/stats.html' %}
+        {% try_include 'private/header.html' %}
+    </head>
+
+    <body>
+        <div class="header-top-wrapper pinned" style="{% if this_site.color1 %}color:{{ this_site.color1 }};{% endif %}{% if this_site.color2 %}background-color:{{ this_site.color2 }};{% endif %}">
+            <div id="header-top" class="mnm-center-in-wrap">
+                <a href="{{ globals.base_url_general }}" title="{% trans _('portada') %} {{ globals.site_name }}" id="header-logo" class="logo-mnm">
+                    <img src="{{ globals.base_url_general }}img/mnm/logo-white.svg" alt="{% trans _('Logo Menéame') %}" height="30" onerror="this.onerror = null; this.src = '{{ globals.base_url_general }}img/mnm/logo-white.png'" />
+                </a>
+            </div>
+        </div>
+
+        <div id="header">
+            {% if this_site.sub %}
+            <div class="header-sub-wrapper">
+                <div class="header-sub"><a href="{{ this_site.url }}">{{ this_site.name_long }}</a></div>
+            </div>
+            {% endif %}
+        </div><!--header-->
+
+        {% if globals.header_banner %}
+        <div id="header-banner">{{ globals.header_banner }}</div>
+        {% endif %}
+
+        <div id="variable">
+            <div id="wrap">
+                {% exec do_banner_top as foo %}
+
+                <div id="container">
+                    <div id="newswrap">
+                        {% exec link.print_summary 'full' 0 true 'mobile/link_summary_amp.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -266,6 +266,10 @@ switch ($url_args[1]) {
         do_qanda_text($link);
         die;
 
+    case 'amp':
+        $globals['view'] = 'amp';
+        break;
+
     default:
         do_error(_('página inexistente'), 404);
 }
@@ -334,6 +338,10 @@ if ($link->has_thumb()) {
 }
 
 $globals['description'] = text_to_summary($link->content, 160);
+
+if ($globals['view'] === 'amp') {
+    require __DIR__.'/story-amp.php';
+}
 
 do_header($link->title, 'post');
 
