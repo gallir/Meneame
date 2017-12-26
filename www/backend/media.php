@@ -19,22 +19,22 @@ if (empty($type) || !$id) {
 $media = new Upload($type, $id, $version);
 
 /* The user requests to delete the image */
-if (!empty($_REQUEST['op'])) {
-    if ($_REQUEST['op'] == 'delete') {
-        delete_image($media);
-        exit(0);
-    }
+if (!empty($_REQUEST['op']) && ($_REQUEST['op'] === 'delete')) {
+    delete_image($media);
+    exit(0);
 }
 
 if (!$media->read()) {
     not_found();
 }
 
-if (!$globals['media_public'] && $media->access === 'restricted' && !$current_user->user_id > 0) {
+if (!$globals['media_public'] && ($media->access === 'restricted') && !$current_user->user_id > 0) {
     error_image(_('Debe estar autentificado'));
     die;
-} elseif ($media->type == 'private'
-    && ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))) {
+} elseif (
+    ($media->type === 'private')
+    && ($current_user->user_id <= 0 || ($media->user != $current_user->user_id && $media->to != $current_user->user_id))
+) {
     error_image(_('No está autorizado'));
     die;
 }
@@ -44,9 +44,10 @@ header('Last-Modified: '.date('r', $media->date));
 header('Cache-Control: max-age=3600');
 
 if (!empty($media->mime)) {
-    $ext = explode("/", $media->mime);
-    $ext = $ext[count($ext) - 1];
+    $ext = explode('/', $media->mime);
+    $ext = end($ext);
 }
+
 header("Content-Disposition: filename=meneame-media-$type-$id.".$ext);
 
 if ($media->file_exists() && !empty($globals['xsendfile'])) {
@@ -56,18 +57,19 @@ if ($media->file_exists() && !empty($globals['xsendfile'])) {
     internal;
     }
      */
-    header($globals['xsendfile'].': '.$media->url());
-    die;
+    die(header($globals['xsendfile'].': '.$media->url()));
 }
 
-header("Content-Length: ".$media->filesize());
+header('Content-Length: '.$media->filesize());
+
 $media->readfile();
+
 exit(0);
 
 function error_image($message)
 {
-    header("HTTP/1.0 403 Not authorized");
-    header("Content-type: image/png");
+    header('HTTP/1.0 403 Not authorized');
+    header('Content-type: image/png');
     header('Cache-Control: max-age=10, must-revalidate');
     header('Expires: '.date('r', time() + 10));
     readfile(mnmpath.'/img/common/access_denied-01.png');
@@ -88,10 +90,12 @@ function delete_image($media)
         $r['text'] = _('no autorizado');
     } else {
         $media->delete();
+
         $r['ok'] = 1;
         $r['text'] = _('imagen eliminada');
     }
+
     header('Content-Type: application/json; charset=UTF-8');
-    echo json_encode($r);
-    exit(0);
+
+    die(json_encode($r));
 }

@@ -91,7 +91,7 @@ class Upload
         // Very fast cache dir generator for two levels
         // mask == 2^8 - 1 or 1 << 8 -1
         if ($key) {
-            return mnmpath.'/'.Upload::get_cache_relative_dir($key);
+            return mnmpath.'/'.static::get_cache_relative_dir($key);
         }
 
         return mnmpath.'/'.$globals['cache_dir'];
@@ -101,7 +101,7 @@ class Upload
     {
         global $globals;
 
-        $dir = Upload::get_cache_dir($key);
+        $dir = static::get_cache_dir($key);
 
         if (is_dir($dir)) {
             return true;
@@ -128,11 +128,11 @@ class Upload
             return _('karma bajo');
         }
 
-        if (Upload::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) {
+        if (static::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) {
             return _('máximas subidas diarias excedidas');
         }
 
-        if (Upload::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) {
+        if (static::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) {
             return _('máximos bytes por día excedidos');
         }
 
@@ -286,7 +286,7 @@ class Upload
 
     public function delete_thumbs()
     {
-        foreach (Upload::thumb_sizes($this->type) as $k => $s) {
+        foreach (static::thumb_sizes($this->type) as $k => $s) {
             array_map('unlink', glob($this->thumb_pathname($k).'.*'));
         }
     }
@@ -322,7 +322,7 @@ class Upload
 
         $res = 0;
 
-        foreach (Upload::thumb_sizes($this->type) as $k => $s) {
+        foreach (static::thumb_sizes($this->type) as $k => $s) {
             if ($key && $key != $k) {
                 continue;
             }
@@ -347,7 +347,7 @@ class Upload
         global $current_user, $globals;
 
         // Check __again__ the limits
-        //Upload::current_user_limit_exceded($file['size']);
+        //static::current_user_limit_exceded($file['size']);
         $size = $file['size'];
 
         // Check current_user file upload limits
@@ -357,10 +357,10 @@ class Upload
         if ($current_user->user_karma < $globals['media_min_karma']) {
             return _('karma bajo');
         }
-        if (Upload::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) {
+        if (static::user_uploads($current_user->user_id, 24) > $globals['media_max_upload_per_day']) {
             return _('máximas subidas diarias excedidas');
         }
-        if (Upload::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) {
+        if (static::user_bytes_uploaded($current_user->user_id, 24) > $globals['media_max_bytes_per_day'] * 1.2) {
             return _('máximos bytes por día excedidos');
         }
         if ($type && ! preg_match("/^$type\/[^ ]+$/", $file['type'])) {
@@ -370,7 +370,7 @@ class Upload
         $this->mime = $file['type'];
         $this->user = $current_user->user_id;
 
-        Upload::create_cache_dir($this->id);
+        static::create_cache_dir($this->id);
 
         if (!@move_uploaded_file($file['tmp_name'], $this->pathname())) {
             syslog(LOG_INFO, "Meneame, error moving to ".$this->pathname());
@@ -391,7 +391,7 @@ class Upload
     {
         global $current_user, $globals;
 
-        $pathname = Upload::get_cache_dir().'/tmp/'.$filename;
+        $pathname = static::get_cache_dir().'/tmp/'.$filename;
 
         if (!file_exists($pathname)) {
             return false;
@@ -399,13 +399,13 @@ class Upload
 
         // Check __again__ the limits
         if ($current_user->user_id > 0) {
-            Upload::current_user_limit_exceded(filesize($pathname));
+            static::current_user_limit_exceded(filesize($pathname));
         }
 
         $this->mime = $type;
         $this->user = $current_user->user_id;
 
-        Upload::create_cache_dir($this->id);
+        static::create_cache_dir($this->id);
 
         if (!@rename($pathname, $this->pathname())) {
             syslog(LOG_INFO, "Meneame, error moving to ".$this->pathname());
@@ -416,7 +416,7 @@ class Upload
         $this->delete_thumbs();
 
         // Check if it exists a thumb and save it
-        $thumbname = Upload::get_cache_dir()."/tmp/tmp_thumb-$filename";
+        $thumbname = static::get_cache_dir()."/tmp/tmp_thumb-$filename";
 
         if (file_exists($thumbname)) {
             @unlink($thumbname);
@@ -448,24 +448,24 @@ class Upload
 
     public function pathname()
     {
-        return Upload::get_cache_dir($this->id).'/'.$this->filename();
+        return static::get_cache_dir($this->id).'/'.$this->filename();
     }
 
     public function pathname_relative()
     {
-        return Upload::get_cache_relative_dir($this->id).'/'.$this->filename();
+        return static::get_cache_relative_dir($this->id).'/'.$this->filename();
     }
 
     public function path()
     {
-        return Upload::get_cache_dir($this->id);
+        return static::get_cache_dir($this->id);
     }
 
     public function url()
     {
         global $globals;
 
-        return $globals['base_url'].Upload::get_cache_relative_dir($this->id).'/'.$this->filename();
+        return $globals['base_url'].static::get_cache_relative_dir($this->id).'/'.$this->filename();
     }
 
     public function file_exists()
@@ -507,7 +507,7 @@ class Upload
             return;
         }
 
-        Upload::create_cache_dir($this->id);
+        static::create_cache_dir($this->id);
 
         $res = Media::get($this->filename(), $this->type, $this->pathname());
 
