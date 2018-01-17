@@ -172,7 +172,7 @@ class Link extends LCPBase
 
         $article_ids = $db->get_col($sql);
 
-        if (count($article_ids <= $limit)) {
+        if (count($article_ids) <= $limit) {
             $sql_distinct_articles = (count($article_ids) > 0) ? ' AND link_id NOT IN ('.implode(",", $article_ids).') ' : '';
 
             $sql_extra_articles = '
