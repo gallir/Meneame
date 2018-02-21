@@ -21,7 +21,7 @@ function getLinkByRequestId($link, $from)
     $link->read();
 
     if (empty($link->id) || !$link->read() || !$link->is_editable()) {
-        returnToStep(2, $link->id);
+        returnToStep(1);
     }
 
     return $link;
