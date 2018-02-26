@@ -20,6 +20,10 @@ function getLinkByRequestId($link, $from)
     $link->id = (int)(isset($from['id']) ? $from['id'] : 0);
     $link->read();
 
+    if (empty($link->id) || !$link->read() || !$link->is_editable()) {
+        returnToStep(1);
+    }
+
     return $link;
 }
 
