@@ -737,7 +737,7 @@ function showPoll() {
     };
 
     INIT.linkWithAnchor = function() {
-        if (is_mobile || !window.location.hash) {
+        if (!window.location.hash) {
             return;
         }
 
