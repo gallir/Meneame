@@ -337,7 +337,7 @@ if ($link->has_thumb()) {
     $globals['thumbnail'] = $link->media_url;
 }
 
-$globals['description'] = text_to_summary($link->content, 160);
+$globals['description'] = text_to_summary($link->content, 250);
 
 if ($globals['view'] === 'amp') {
     require __DIR__.'/story-amp.php';

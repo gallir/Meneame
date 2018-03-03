@@ -613,6 +613,7 @@ function showPoll() {
 
         function selectLocalUpload() {
             var $input = $(document.createElement('input')).attr('type', 'file');
+
             $input.click();
 
             $input.change(function(){
@@ -628,27 +629,28 @@ function showPoll() {
 
         function saveToServer($file) {
             var fd = new FormData();
-            fd.append( 'image', $file );
 
-            $(".ql-toolbar").append('<div class="loading">Cargando imagen... </div>');
+            fd.append('image', $file);
+
+            $('.ql-toolbar').append('<div class="loading">Cargando imagen... </div>');
+
             $.ajax({
-                url:  base_url + 'backend/upload.php?type=link&id=' + $(".section-article-submit input[name='id']").val(),
+                url: base_url + 'backend/upload.php?type=link&id=' + $(".section-article-submit input[name='id']").val(),
                 data: fd,
                 processData: false,
                 contentType: false,
                 type: 'POST',
                 success: function(data){
-                    $(".ql-toolbar .loading").remove();
+                    $('.ql-toolbar .loading').remove();
 
-                    if (!data.error) {
-                        var url = data.url.replace(/&amp;/g, '&');
-                        insertIntoEditor(url);
-                    } else {
+                    if (data.error) {
                         return mDialog.notify(data.error, 5);
                     }
+
+                    insertIntoEditor(data.url.replace(/&amp;/g, '&'));
                 },
                 error: function(){
-                    $(".ql-toolbar .loading").remove();
+                    $('.ql-toolbar .loading').remove();
                 }
             });
         }
@@ -734,6 +736,24 @@ function showPoll() {
         });
     };
 
+    INIT.linkWithAnchor = function() {
+        if (!window.location.hash) {
+            return;
+        }
+
+        var $e = $(window.location.hash),
+            $header = $('#header-top');
+
+        if (!$e.length || !$header.length) {
+            return;
+        }
+
+        $('html, body').animate({
+            scrollTop: ($e.offset().top - $header.height() - 10)
+        }, 500);
+    };
+
+    INIT.linkWithAnchor();
     INIT.formRegister();
     INIT.showSubDescription();
     INIT.formSubsSearch();
