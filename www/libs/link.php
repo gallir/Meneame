@@ -1568,7 +1568,7 @@ class Link extends LCPBase
     {
         global $current_user, $db, $globals;
 
-        if (!$current_user->user_id) {
+        if (!$current_user->user_id || !$this->id) {
             return false;
         }
 

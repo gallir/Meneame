@@ -32,7 +32,7 @@ $validator->setErrorCallback('addFormError');
 $validator->setWarningCallback('addFormWarning');
 
 if (!empty($_REQUEST['id'])) {
-    $link = getLinkByRequestId($link, $_REQUEST);
+    $link = getLinkEditableById($link, $_REQUEST['id']);
 }
 
 $link->is_new = !$link->votes && ($link->status === 'discard');
