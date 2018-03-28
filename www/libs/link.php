@@ -217,7 +217,7 @@ class Link extends LCPBase
             $article->url_str = preg_replace('/^www\./', '', parse_url($article->url, 1));
 
             $article->max_len = 200;
-            $article->content = substr(strip_tags($article->content), 0, $article->max_len + 1);
+            $article->content = substr(strip_tags($article->content), 0, $article->max_len * 2);
 
             $articles[] = $article;
         }
