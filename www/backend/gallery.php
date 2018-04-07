@@ -10,7 +10,7 @@ require_once __DIR__.'/../config.php';
 
 $user_id = intval($_GET['user']);
 
-$limit = 100;
+$limit = 200;
 $show_all = false;
 
 switch ($_GET['type']) {

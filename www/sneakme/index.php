@@ -187,6 +187,7 @@ if ($tab_option == 4) {
         _('favoritos') => $current_user->get_uri('notes_favorites'),
         _('conversación') . $conversation_extra => $current_user->get_uri('notes_conversation'),
         _('votos') => $current_user->get_uri('notes_votes'),
+        _('últimas imágenes') => "javascript:fancybox_gallery('post');",
         _('debates') . '&nbsp;&rarr;' => $globals['base_url'] . "between?type=posts&amp;u1=$current_user->user_login",
     );
 } else {
