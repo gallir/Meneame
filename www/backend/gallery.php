@@ -8,6 +8,20 @@
 
 require_once __DIR__.'/../config.php';
 
+header('Content-Type: text/html; charset=utf-8');
+
+unset($_GET['_']);
+
+if ($globals['memcache_host']) {
+    $memcache_key = md5('gallery-'.serialize($_GET));
+
+    if ($memcache_value = memcache_mget($memcache_key)) {
+        return Haanga::Load('backend/gallery.html', [
+            'images' => unserialize($memcache_value)
+        ]);
+    }
+}
+
 $user_id = intval($_GET['user']);
 
 $limit = 200;
@@ -34,8 +48,6 @@ if ($user_id > 0) {
 
     $limit = ($user_id == $current_user->user_id) ? 500 : 200;
 }
-
-header('Content-Type: text/html; charset=utf-8');
 
 $media = $db->get_results(DbHelper::queryPlain('
     SELECT `id`, `type`, `version`, UNIX_TIMESTAMP(`date`) AS `date`, `mime`, `user` AS `uid`, `user_login` AS `user`
@@ -99,7 +111,7 @@ if ($show_all === false) {
 $images = array();
 
 foreach ($media as $image) {
-    $karma = null;
+    $karma = 0;
 
     if ($show_all === false) {
         switch ($image->type) {
@@ -110,10 +122,6 @@ foreach ($media as $image) {
             case 'post':
                 $karma = isset($posts_karma[$image->id]) ? $posts_karma[$image->id] : 0;
                 break;
-
-            default:
-                $karma = 0;
-                break;
         }
     }
 
@@ -123,6 +131,12 @@ foreach ($media as $image) {
     }
 }
 
-if ($images) {
-    Haanga::Load('backend/gallery.html', compact('images'));
+if (empty($images)) {
+    return;
 }
+
+if ($globals['memcache_host']) {
+    memcache_madd($memcache_key, serialize($images), 600);
+}
+
+Haanga::Load('backend/gallery.html', compact('images'));
