@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "a20a81a11ab9b10e502d3854312de8c4",
-    "content-hash": "b08c6d771602571f2953a2be6ac16e46",
+    "content-hash": "00d39d3beae89c193dadfc585b8408cf",
     "packages": [],
     "packages-dev": [
         {
@@ -14,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FGRibreau/mailchecker.git",
-                "reference": "a5f8012482562b51bb6f5c9d998308ba425331c1"
+                "reference": "48b763afa4e130d1e2c0e058ec1578355d5b8c04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FGRibreau/mailchecker/zipball/a5f8012482562b51bb6f5c9d998308ba425331c1",
-                "reference": "a5f8012482562b51bb6f5c9d998308ba425331c1",
+                "url": "https://api.github.com/repos/FGRibreau/mailchecker/zipball/48b763afa4e130d1e2c0e058ec1578355d5b8c04",
+                "reference": "48b763afa4e130d1e2c0e058ec1578355d5b8c04",
                 "shasum": ""
             },
             "require-dev": {
@@ -41,7 +40,7 @@
                 "email",
                 "fake"
             ],
-            "time": "2017-09-25 21:22:27"
+            "time": "2018-04-10T14:17:42+00:00"
         },
         {
             "name": "ivolo/disposable-email-domains",
@@ -49,7 +48,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ivolo/disposable-email-domains.git",
-                "reference": "0c1fd4c69614111f243e36d874e5af1e2fbabc26"
+                "reference": "67c1fbc196483f6ff19e7346ccbda5e3683d1dce"
             },
             "type": "library",
             "license": [
@@ -67,7 +66,7 @@
                 "disposable",
                 "domains"
             ],
-            "time": "2017-10-11 14:58:58"
+            "time": "2018-04-19T15:45:28+00:00"
         },
         {
             "name": "martenson/disposable-email-domains",
@@ -85,12 +84,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MattKetmo/EmailChecker.git",
-                "reference": "4d8042b1685e53a917bb065bce163a97da11de06"
+                "reference": "2a40f33f8c67b843040dc34b9f623bf3644c808e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MattKetmo/EmailChecker/zipball/4d8042b1685e53a917bb065bce163a97da11de06",
-                "reference": "4d8042b1685e53a917bb065bce163a97da11de06",
+                "url": "https://api.github.com/repos/MattKetmo/EmailChecker/zipball/2a40f33f8c67b843040dc34b9f623bf3644c808e",
+                "reference": "2a40f33f8c67b843040dc34b9f623bf3644c808e",
                 "shasum": ""
             },
             "require": {
@@ -107,6 +106,16 @@
                 "symfony/validator": "Add validation constraints"
             },
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "EmailChecker\\Laravel\\EmailCheckerServiceProvider"
+                    ],
+                    "aliases": {
+                        "EmailChecker": "EmailChecker\\Laravel\\EmailCheckerFacade"
+                    }
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "EmailChecker\\": "src/EmailChecker"
@@ -129,7 +138,7 @@
                 "email",
                 "throwaway"
             ],
-            "time": "2017-10-11 11:06:03"
+            "time": "2018-04-08T14:04:30+00:00"
         }
     ],
     "aliases": [],
