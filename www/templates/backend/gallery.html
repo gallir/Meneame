@@ -23,7 +23,7 @@ function formatTitle() {
     var image_link;
 
     if (!is_mobile) {
-        image_link = '&nbsp;[<a href="' + this.href + '" target="_blank">{% trans _('imagen ') %}</a>]';
+        image_link = ' [<a href="' + this.href + '" target="_blank">{% trans _('imagen ') %}</a>]';
     } else {
         image_link = '';
     }
@@ -38,7 +38,7 @@ function formatTitle() {
         }
     }
 
-    who = '<div><a class="tooltip ' + tooltip_code + ':' + t_i_u[1] + '" href="' + url + '" target="_blank" style="margin-bottom: 4px"><span class="wideonly">' + type + '&nbsp;</span>' + t_i_u[2] + '</a>' + image_link + extra + '</div>';
+    who = '<div><a class="tooltip ' + tooltip_code + ':' + t_i_u[1] + '" href="' + url + '" target="_blank" style="margin-bottom: 4px"><span class="wideonly">' + type + '</span>' + t_i_u[2] + '</a>' + image_link + extra + '</div>';
 
     return who;
 }

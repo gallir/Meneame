@@ -12,14 +12,13 @@ require_once __DIR__.'/../config.php';
 require_once mnminclude.'html1.php';
 require_once __DIR__.'/libs/admin.php';
 
-$selected_tab = 'sponsors';
+$selected_tab = 'admin_users';
 
 adminAllowed($selected_tab);
 
 switch ($_REQUEST['op'] ?: 'list') {
     case 'list':
-        do_header(_('Patrocinios'));
-        do_admin_tabs($selected_tab);
+
         do_list($selected_tab);
         break;
 
@@ -32,28 +31,24 @@ do_footer();
 
 function do_list($selected_tab)
 {
-    global $db, $globals;
+    do_header(_('Usuarios Administradores'));
+    do_admin_tabs($selected_tab);
 
-    $page_size = 40;
-    $offset = (get_current_page() - 1) * $page_size;
-
-    Haanga::Load('admin/sponsors/list.html', [
+    Haanga::Load('admin/admin_users/list.html', [
         'selected_tab' => $selected_tab,
-        'list' => Sponsor::listing($offset, $page_size)
+        'sections' => AdminUser::sections(),
+        'list' => AdminUser::listing()
     ]);
-
-    do_pages(Sponsor::count(), $page_size, false);
 }
 
 function do_new($selected_tab)
 {
     $row = null;
 
-    if ($id = (int)$_GET['id']) {
-        $row = Sponsor::getById($id);
+    if (empty($_GET['id']) || !($row = User::getById($_GET['id']))) {
+        die(header('Location: '.parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
     }
 
-    $row = $row ?: (new Sponsor);
     $error = null;
 
     try {
@@ -62,12 +57,14 @@ function do_new($selected_tab)
         $error = $e->getMessage();
     }
 
-    do_header(_('Patrocinios'));
+    do_header(_('Usuarios Administradores'));
     do_admin_tabs($selected_tab);
 
-    Haanga::Load('admin/sponsors/new.html', compact(
-        'selected_tab', 'row', 'error'
-    ));
+    Haanga::Load('admin/admin_users/new.html', [
+        'row' => $row,
+        'error' => $error,
+        'sections' => AdminUser::sectionsJoindedUserId($row->user_id)
+    ]);
 }
 
 function do_save($row)
@@ -76,14 +73,7 @@ function do_save($row)
         return;
     }
 
-    $row->external = $_POST['external'];
-    $row->css = $_POST['css'];
-    $row->start_at = $_POST['start_at'];
-    $row->end_at = $_POST['end_at'];
-    $row->link = $_POST['link'];
-    $row->enabled = !empty($_POST['enabled']);
+    AdminUser::relateAdminWithSectionIds($row->user_id, (array)$_POST['section_ids']);
 
-    $row->store();
-
-    die(header('Location: '.parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));
+    die(header('Location: '.$_SERVER['REQUEST_URI']));
 }

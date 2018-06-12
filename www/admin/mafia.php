@@ -12,8 +12,12 @@ require_once __DIR__.'/../config.php';
 require_once mnminclude.'html1.php';
 require_once __DIR__.'/libs/admin.php';
 
+$selected_tab = 'mafia';
+
+adminAllowed($selected_tab);
+
 do_header(_('Mafia'));
-do_admin_tabs('mafia');
+do_admin_tabs($selected_tab);
 
 $mafia = new Mafia($_REQUEST['uri'], $_REQUEST['published'], $_REQUEST['link_ids']);
 

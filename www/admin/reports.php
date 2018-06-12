@@ -11,16 +11,14 @@ require_once __DIR__.'/../config.php';
 require_once mnminclude.'html1.php';
 require_once __DIR__.'/libs/admin.php';
 
+$selected_tab = 'comment_reports';
+
+adminAllowed($selected_tab);
+
 $page_size = 40;
 $offset = (get_current_page() - 1) * $page_size;
 
 $operation = $_REQUEST['op'] ?: 'list';
-
-if ($_REQUEST['tab']) {
-    $selected_tab = clean_input_string($_REQUEST['tab']);
-} else {
-    $selected_tab = 'comment_reports';
-}
 
 if (empty($_REQUEST['report_status'])) {
     $report_status = array('pending', 'debate');
@@ -36,14 +34,13 @@ if (!empty($_REQUEST['report_date'])) {
     $report_date = 'all';
 }
 
-$statistics = calculate_statistics();
 $key = get_security_key();
 
 switch ($operation) {
     case 'list':
         do_header(_('Comment reports'));
         do_admin_tabs($selected_tab);
-        do_report_list($selected_tab, $report_status, $report_date, $key, $statistics);
+        do_report_list($selected_tab, $report_status, $report_date, $key, calculate_statistics());
 
         break;
 

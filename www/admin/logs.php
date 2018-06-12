@@ -7,37 +7,35 @@
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
 $globals['skip_check_ip_noaccess'] = true;
+
 require_once __DIR__.'/../config.php';
 require_once mnminclude.'html1.php';
 require_once __DIR__.'/libs/admin.php';
+
+$selected_tab = 'admin_logs';
+
+adminAllowed($selected_tab);
 
 do_header(_('Admin logs'));
 
 $page_size = 40;
 $offset = (get_current_page() - 1) * $page_size;
 
-$operation = $_REQUEST["op"] ? $_REQUEST["op"] : 'list';
-$search = $_REQUEST["s"];
-$orderby = $_REQUEST["order_by"];
-
-$selected_tab = "admin_logs";
-if ($_REQUEST["tab"]) {
-    $selected_tab = clean_input_string($_REQUEST["tab"]);
-}
-
+$operation = $_REQUEST['op'] ?: 'list';
+$search = $_REQUEST['s'];
+$orderby = $_REQUEST['order_by'];
 $log_type = false;
-if (!empty($_REQUEST["log_type"])) {
-    $log_type = clean_input_string($_REQUEST["log_type"]);
+
+if (!empty($_REQUEST['log_type'])) {
+    $log_type = clean_input_string($_REQUEST['log_type']);
 }
 
 do_admin_tabs($selected_tab);
 
 $key = get_security_key();
 
-switch ($operation) {
-    case 'list':
-        do_log_list($selected_tab, $search, $log_type, $orderby, $key);
-        break;
+if ($operation === 'list') {
+    do_log_list($selected_tab, $search, $log_type, $orderby, $key);
 }
 
 do_footer();
@@ -48,16 +46,18 @@ function do_log_list($selected_tab, $search, $log_type, $orderby, $key)
 
     if (empty($orderby)) {
         $orderby = 'log_date';
-        $order = "DESC";
+        $order = 'DESC';
     } else {
         $orderby = preg_replace('/[^a-z_]/i', '', $orderby);
         if ($orderby == 'log_date') {
-            $order = "DESC";
+            $order = 'DESC';
         } else {
-            $order = "ASC";
+            $order = 'ASC';
         }
     }
+
     $where = 'WHERE 1=1';
+
     if ($log_type) {
         $where .= " AND log_type='" . $log_type. "'";
     }

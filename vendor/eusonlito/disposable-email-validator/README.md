@@ -23,7 +23,7 @@ composer require eusonlito/disposable-email-validator
 
 ## Usage
 
-Basic use of EmailChecker with built-in throwaway email list:
+Basic use of email validator against built-in domains list:
 
 ```php
 <?php

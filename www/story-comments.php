@@ -256,11 +256,8 @@ switch ($tab_option) {
 
         Comment::print_tree($tree, $link, 500, $sort_roots);
 
-        /* Force to show the last ad for anonymous users only */
-        if (! $current_user->user_id) {
-            $counter = $page_size = $globals['comments_page_size'];
-            Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
-        }
+        $counter = $page_size = $globals['comments_page_size'];
+        Haanga::Safe_Load('private/ad-interlinks.html', compact('counter', 'page_size'));
 
         do_comment_pages($link->comments, $current_page, false);
 

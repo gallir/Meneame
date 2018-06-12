@@ -100,7 +100,7 @@ class Check
      *
      * @return array
      */
-    private function load($name)
+    private static function load($name)
     {
         return require dirname(__DIR__).'/data/'.$name.'.php';
     }

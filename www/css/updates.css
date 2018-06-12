@@ -1963,6 +1963,10 @@ ul.slick-dots li button {
     border-left: 1px solid #dfdfdf;
 }
 
+.no-margin {
+    margin: 0 !important;
+}
+
 .no-margin-left {
     margin-left: 0 !important;
 }
@@ -2292,7 +2296,7 @@ input[type="email"].form-control, input[type="url"].form-control, input[type="se
     width: 55px;
     height: 55px;
     float: left;
-    margin-right: 10px;
+    margin: 0 10px 20px 0;
 }
 
 .sidebox-rounded .guest {

@@ -3,10 +3,10 @@
 // Menéame and Ricardo Galli <gallir at gallir dot com>.
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//      http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once(mnminclude.'favorites.php');
+require_once mnminclude.'favorites.php';
 
 class PrivateMessage extends LCPBase
 {
@@ -17,10 +17,10 @@ class PrivateMessage extends LCPBase
     public $content = '';
 
     const SQL = " SQL_NO_CACHE privates.id as id, privates.user as author, users.user_login as username, privates.`to` as `to`, users_to.user_login as to_username, users_to.user_avatar as to_avatar, randkey, privates.ip, users.user_avatar as avatar, texts.content as content, UNIX_TIMESTAMP(privates.date) as date, UNIX_TIMESTAMP(privates.read) as date_read, media.size as media_size, media.mime as media_mime, media.access as media_access, 1 as `read` FROM privates
-	LEFT JOIN users on (user_id = privates.user)
-	LEFT JOIN users as users_to on (users_to.user_id = privates.to)
-	LEFT JOIN texts on (texts.key = 'privates' and texts.id = privates.id)
-	LEFT JOIN media ON (media.type='private' and media.id = privates.id and media.version = 0) ";
+    LEFT JOIN users on (user_id = privates.user)
+    LEFT JOIN users as users_to on (users_to.user_id = privates.to)
+    LEFT JOIN texts on (texts.key = 'privates' and texts.id = privates.id)
+    LEFT JOIN media ON (media.type = 'private' and media.id = privates.id and media.version = 0) ";
 
     // Regular expression to detect referencies to other post, like @user,post_id
     const REF_PREG = "/(^|\W)@([^\s<>;:,\?\)]+(?:,\d+){0,1})/u";
@@ -49,7 +49,7 @@ class PrivateMessage extends LCPBase
 
         $friendship = User::friend_exists($to, $from);
         return $friendship > 0 ||
-            (! $friendship && intval($db->get_var("select count(*) from privates where user = $to and `to` = $from and date > date_sub(now(), interval 3 day)")) > 0);
+            (!$friendship && intval($db->get_var("select count(*) from privates where user = $to and `to` = $from and date > date_sub(now(), interval 3 day)")) > 0);
     }
 
     public function store($full = true)
@@ -58,10 +58,10 @@ class PrivateMessage extends LCPBase
 
         $db->transaction();
         if (!$this->date) {
-            $this->date=time();
+            $this->date = time();
         }
         $content = $db->escape($this->normalize_content());
-        if ($this->id===0) {
+        if ($this->id === 0) {
             $this->ip = $db->escape($globals['user_ip']);
             $db->query("INSERT INTO privates (user, `to`, ip, date, randkey) VALUES ($this->author, $this->to, '$this->ip', FROM_UNIXTIME($this->date), $this->randkey)");
             $this->id = $db->insert_id;
@@ -84,7 +84,7 @@ class PrivateMessage extends LCPBase
         }
     }
 
-    public function print_summary($length=0)
+    public function print_summary($length = 0)
     {
         global $current_user, $globals;
 
@@ -103,8 +103,7 @@ class PrivateMessage extends LCPBase
             $this->content = text_to_summary($this->content, $length);
         }
 
-        $this->content = $this->to_html($this->content) . $expand;
-
+        $this->content = $this->to_html($this->content).$expand;
 
         $vars = compact('post_meta_class', 'post_class', 'length');
 
@@ -113,7 +112,7 @@ class PrivateMessage extends LCPBase
         return Haanga::Load('priv_summary.html', $vars);
     }
 
-    public function print_user_avatar($size=40)
+    public function print_user_avatar($size = 40)
     {
         global $globals;
 

@@ -72,30 +72,21 @@ $sql = '
             AND sub_statuses.id = sub_statuses.origen
             AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['time_enabled_votes']).'"
             AND sub_statuses.origen = subs.id
-            AND subs.owner > 0
             '.($site->sub ? ('AND subs.id = "'.$site->id.'"') : '').'
         )
         ORDER BY sub_statuses.date DESC
         LIMIT '.$offset.', '.$page_size.'
-    ) AS ids ON (ids.link = link_id)
+    ) AS ids ON (ids.link = link_id);
 ';
 
 $links = $db->get_results($sql, 'Link');
 
 if ($links) {
-    $all_ids = array_map(function ($value) {
-        return $value->id;
-    }, $links);
-
-    $pollCollection = new PollCollection;
-    $pollCollection->loadSimpleFromRelatedIds('link_id', $all_ids);
-
     foreach ($links as $link) {
         if ($link->votes == 0 && $link->author != $current_user->user_id) {
             continue;
         }
 
-        $link->poll = $pollCollection->get($link->id);
         $link->max_len = 600;
         $link->print_summary('full', ($offset < 1000) ? 16 : null, false);
     }

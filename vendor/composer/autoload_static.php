@@ -105,6 +105,7 @@ class ComposerStaticInit982e99603abf7e931d3651829d24ceda
     );
 
     public static $classMap = array (
+        'AdminUser' => __DIR__ . '/../..' . '/www/libs/admin_user.php',
         'Annotation' => __DIR__ . '/../..' . '/www/libs/annotation.php',
         'Ban' => __DIR__ . '/../..' . '/www/libs/ban.php',
         'BaseFacebook' => __DIR__ . '/../..' . '/www/libs/facebook/base_facebook.php',

@@ -138,11 +138,11 @@ class Link extends LCPBase
         global $globals, $db;
 
         if ($globals['memcache_host']) {
-            $memcache_popular_articles = 'popular_articles';
-        }
+            $memcache_key = __CLASS__.'-'.__FUNCTION__;
 
-        if ($articles = unserialize(memcache_mget($memcache_popular_articles))) {
-            return $articles;
+            if ($memcache_value = memcache_mget($memcache_key)) {
+                return unserialize($memcache_value);
+            }
         }
 
         // Not in memcache
@@ -152,6 +152,7 @@ class Link extends LCPBase
             WHERE (
                 link_content_type = "article"
                 AND link_status IN ("queued", "published")
+                AND subs.private = 0
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_max_time']).'"
                 AND sub_statuses.link = link_id
                 AND sub_statuses.origen = subs.id
@@ -171,35 +172,34 @@ class Link extends LCPBase
 
         $article_ids = $db->get_col($sql);
 
-        if (count($article_ids <= $limit)) {
+        if (count($article_ids) <= $limit) {
             $sql_distinct_articles = (count($article_ids) > 0) ? ' AND link_id NOT IN ('.implode(",", $article_ids).') ' : '';
 
             $sql_extra_articles = '
-            SELECT DISTINCT link
-            FROM sub_statuses, subs, links
-            WHERE (
-                link_content_type = "article"
-                AND link_status IN ("queued", "published")
-                AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
-                AND sub_statuses.link = link_id
-                AND sub_statuses.origen = subs.id
-                AND link_karma >= '.(int)$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
-                AND NOT EXISTS (
-                    SELECT link
-                    FROM sub_statuses
-                    WHERE (
-                        sub_statuses.id = "'.SitesMgr::getMainSiteId().'"
-                        AND sub_statuses.status = "published"
-                        AND link = link_id
+                SELECT DISTINCT link
+                FROM sub_statuses, subs, links
+                WHERE (
+                    link_content_type = "article"
+                    AND link_status IN ("queued", "published")
+                    AND subs.private = 0
+                    AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['widget_popular_articles_extra_max_time']).'"
+                    AND sub_statuses.link = link_id
+                    AND sub_statuses.origen = subs.id
+                    AND link_karma >= '.(int)$globals['widget_popular_articles_extra_min_karma'].$sql_distinct_articles.'
+                    AND NOT EXISTS (
+                        SELECT link
+                        FROM sub_statuses
+                        WHERE (
+                            sub_statuses.id = "'.SitesMgr::getMainSiteId().'"
+                            AND sub_statuses.status = "published"
+                            AND link = link_id
+                        )
                     )
-                )
-            ) ORDER BY sub_statuses.date DESC
-            LIMIT '.(int) ($limit - count($article_ids)).';
-        ';
+                ) ORDER BY sub_statuses.date DESC
+                LIMIT '.(int) ($limit - count($article_ids)).';
+            ';
 
-            $article_extra_ids = $db->get_col($sql_extra_articles);
-            $total_article_ids = array_merge($article_ids, $article_extra_ids);
-
+            $total_article_ids = array_merge($article_ids, $db->get_col($sql_extra_articles));
         } else {
             $total_article_ids = $article_ids;
         }
@@ -217,10 +217,14 @@ class Link extends LCPBase
             $article->url_str = preg_replace('/^www\./', '', parse_url($article->url, 1));
 
             $article->max_len = 200;
+            $article->content = substr(strip_tags($article->content), 0, $article->max_len * 2);
+
             $articles[] = $article;
         }
 
-        memcache_madd($memcache_popular_articles, serialize($articles), 1800);
+        if ($globals['memcache_host']) {
+            memcache_madd($memcache_key, serialize($articles), 1800);
+        }
 
         return $articles;
     }
@@ -229,12 +233,21 @@ class Link extends LCPBase
     {
         global $globals, $db;
 
+        if ($globals['memcache_host']) {
+            $memcache_key = __CLASS__.'-'.__FUNCTION__;
+
+            if ($memcache_value = memcache_mget($memcache_key)) {
+                return unserialize($memcache_value);
+            }
+        }
+
         $sql = '
             SELECT DISTINCT link
             FROM sub_statuses, subs, links
             WHERE (
                 link_content_type = "article"
                 AND link_status IN ("queued", "published")
+                AND subs.private = 0
                 AND sub_statuses.link = link_id
                 AND sub_statuses.date > "'.date('Y-m-d H:00:00', $globals['now'] - $globals['article_promoted_max_time_from_publish'] * 3600).'"
                 AND sub_statuses.origen = subs.id
@@ -258,7 +271,13 @@ class Link extends LCPBase
         foreach ($db->get_col($sql) as $id) {
             $article = self::from_db($id);
             $article->max_len = 600;
+            $article->content = substr(strip_tags($article->content), 0, $article->max_len + 1);
+
             $articles[] = $article;
+        }
+
+        if ($globals['memcache_host']) {
+            memcache_madd($memcache_key, serialize($articles), 1800);
         }
 
         return $articles;
@@ -417,13 +436,11 @@ class Link extends LCPBase
             return false;
         }
 
-        $id = self::$clicked;
-
+        $id = (int)self::$clicked;
         self::$clicked = 0;
 
         if (!memcache_menabled()) {
-            $db->query("UPDATE link_clicks SET counter = counter + 1 WHERE id = $id");
-
+            $db->query('UPDATE link_clicks SET counter = counter + 1 WHERE id = "'.$id.'";');
             return true;
         }
 
@@ -443,7 +460,6 @@ class Link extends LCPBase
         // We use random to minimize race conditions for deleting the cache
         if ($globals['start_time'] - $cache['time'] <= (3.0 + rand(0, 100) / 100)) {
             memcache_madd($key, $cache);
-
             return;
         }
 
@@ -459,34 +475,39 @@ class Link extends LCPBase
         $tries = 0; // By the way, freaking locking timeouts with few updates per second with this technique
 
         while ($tries < 3) {
-            $error = false;
-            $total = 0;
             $r = true;
 
             $db->transaction();
 
             foreach ($cache as $id => $counter) {
-                if ($id > 0 && $counter > 0) {
-                    $r = $db->query(
-                        "INSERT INTO link_clicks (id, counter) VALUES ($id,$counter) ON DUPLICATE KEY UPDATE counter=counter+$counter"
-                    );
+                $id = (int)$id;
+                $counter = (int)$counter;
 
-                    if (!$r) {
-                        break;
-                    }
+                if (($id < 1) || ($counter < 1)) {
+                    continue;
+                }
 
-                    $total += $counter;
+                $r = $db->query('
+                    INSERT INTO `link_clicks` (`id`, `counter`)
+                    VALUES ('.$id.', '.$counter.')
+                    ON DUPLICATE KEY UPDATE `counter` = `counter` + '.$counter.';
+                ');
+
+                if (empty($r)) {
+                    break;
                 }
             }
 
             if ($r) {
                 $db->commit();
-                $tries = 100000; // Stop it
-            } else {
-                $tries++;
-                syslog(LOG_INFO, "failed $tries attempts in store_clicks");
-                $db->rollback();
+                break;
             }
+
+            $tries++;
+
+            syslog(LOG_INFO, "failed $tries attempts in store_clicks");
+
+            $db->rollback();
         }
 
         $db->show_errors = $show_errors;
@@ -1566,7 +1587,7 @@ class Link extends LCPBase
     {
         global $current_user, $db, $globals;
 
-        if (!$current_user->user_id) {
+        if (!$current_user->user_id || !$this->id) {
             return false;
         }
 

@@ -12,11 +12,9 @@ require_once __DIR__.'/../config.php';
 require_once mnminclude.'html1.php';
 require_once __DIR__.'/libs/admin.php';
 
-if (!empty($_REQUEST['tab'])) {
-    $selected_tab = clean_input_string($_REQUEST['tab']);
-} else {
-    $selected_tab = 'strikes';
-}
+$selected_tab = 'strikes';
+
+adminAllowed($selected_tab);
 
 switch ($_REQUEST['op'] ?: 'list') {
     case 'list':

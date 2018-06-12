@@ -249,10 +249,10 @@ if ($links) {
 			echo "		<georss:point>$latlng->lat $latlng->lng</georss:point>\n";
 		}
 		if (isset($_REQUEST['nohtml'])) {
-			$content = htmlentities2unicodeentities(strip_tags($link->content));
+			$content = utf8_for_xml(strip_tags($link->content));
 			echo "		<description>$content</description>\n";
 		} else {
-			$content = htmlentities2unicodeentities($link->to_html($link->content));
+			$content = utf8_for_xml($link->to_html($link->content));
 			echo '		<description><![CDATA[';
 			// In case of meta, only sends votes and karma
 			// developed for alianzo.com

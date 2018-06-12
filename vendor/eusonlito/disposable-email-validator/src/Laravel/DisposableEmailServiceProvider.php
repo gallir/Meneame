@@ -10,12 +10,12 @@ class DisposableEmailServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(EmailChecker $checker)
+    public function boot()
     {
         /*
          * Added a custom validator filter.
          */
-        $check = function ($attr, $value, $param, $validator) use ($checker) {
+        $check = function ($attr, $value) {
             return Check::domain(explode('@', $value)[1]);
         };
 

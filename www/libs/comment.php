@@ -697,9 +697,7 @@ class Comment extends LCPBase
 
         // Check image limits
         if (!empty($_FILES['image']['tmp_name'])) {
-            $limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size']);
-
-            if ($limit_exceded) {
+            if ($limit_exceded = Upload::current_user_limit_exceded($_FILES['image']['size'])) {
                 return $limit_exceded;
             }
         }

@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AdminUser' => $baseDir . '/www/libs/admin_user.php',
     'Annotation' => $baseDir . '/www/libs/annotation.php',
     'Ban' => $baseDir . '/www/libs/ban.php',
     'BaseFacebook' => $baseDir . '/www/libs/facebook/base_facebook.php',

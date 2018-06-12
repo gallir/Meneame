@@ -1,0 +1,34 @@
+<section class="section section-medium">
+    <div class="container">
+        <form class="form" method="post" autocomplete="off" enctype="multipart/form-data">
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <h1>{{ row.user_login }} <small>({{ row.user_level }})</small></h1>
+
+            <hr />
+
+            {% for section in sections %}
+
+            <div class="form-group">
+                <div class="checkbox checkbox-inline">
+                    <label>
+                        <input type="checkbox" name="section_ids[]" value="{{ section.id }}" {% if section.admin_id %} checked {% endif %} />
+                        {{ section.name }}
+                    </label>
+                </div>
+            </div>
+
+            {% endfor %}
+
+            <footer class="footer">
+                <div class="pull-right">
+                    <button type="submit" name="save" value="true" class="btn btn-mnm">
+                        {% trans _('Actualizar') %}
+                    </button>
+                </div>
+            </footer>
+        </form>
+    </div>
+</section>

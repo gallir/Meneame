@@ -274,6 +274,7 @@ switch ($url_args[1]) {
 $globals['link'] = $link;
 $globals['link_id'] = $link->id;
 $globals['permalink'] = $globals['link']->get_permalink();
+$gloabls['meta_type'] = 'article';
 
 // to avoid search engines penalisation
 if ($link->status !== 'published' && $globals['now'] - $link->date > 864000) {
@@ -363,15 +364,11 @@ if (
         echo '<div id="map" style="width:300px;height:200px;margin-bottom:25px;">&nbsp;</div>';
     }
 
-    if (!$current_user->user_id) {
-        do_most_clicked_stories();
-    }
+    do_most_clicked_stories();
 
     do_banner_promotions();
 
-    if (!$current_user->user_id) {
-        do_best_stories();
-    }
+    do_best_stories();
 
     do_rss_box();
 

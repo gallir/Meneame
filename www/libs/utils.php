@@ -1869,15 +1869,23 @@ function d($title, $message = null, $trace = false)
 
 function getUrlAsBrowser($url)
 {
-    return @file_get_contents($url, false, stream_context_create(array(
-        'http' => array(
-            'timeout' => 5,
-            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
-        ),
-        'ssl' => array(
-            'verify_peer' => false,
-        ),
-    )));
+    $curl = curl_init();
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36');
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($curl, CURLOPT_MAXREDIRS, 3);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+    curl_setopt($curl, CURLOPT_FAILONERROR, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+    $html = curl_exec($curl);
+
+    curl_close($curl);
+
+    return $html;
 }
 
 function getMetasFromUrl($url)

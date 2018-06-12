@@ -285,6 +285,7 @@ function save_profile()
     if ($admin_mode && !empty($_POST['user_level'])) {
         if ($user->level != $_POST['user_level']) {
             LogAdmin::insert('change_user_level', $user->id, $current_user->user_id, $user->level, $_POST['user_level']);
+            AdminUser::changeLevel($user, $user->level, $_POST['user_level']);
         }
 
         $user->level = $db->escape($_POST['user_level']);

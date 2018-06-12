@@ -45,6 +45,10 @@
         <meta name="twitter:image" content="{{ globals.thumbnail }}" />
         {% endif %}
 
+        {% if globals.meta_type %}
+        <meta property="og:type" content="{{ globals.meta_type }}">
+        {% endif %}
+
         <meta property="og:url" content="{{ globals.permalink }}">
         <meta property="og:title" content="{{ title }}">
         <meta property="og:description" content="{{ globals.description }}">
@@ -202,7 +206,7 @@
                         <a href="{{ globals.base_url_general }}subs" class="chevron-right">Descubrir subs</a>
                     </li>
                     <li>
-                        <a href="#" class="follow-subs chevron-right">Subs que sigues <span>{{ followed_subs|length }}</span></a>
+                        <a href="#" class="follow-subs chevron-right">Subs que sigues <span>{{ followed_subs|count }}</span></a>
 
                         <div class="subs-listing-wrapper">
                             <table class="subs-listing" style="display:none;">

@@ -42,42 +42,80 @@ class User
 
     private $friendship;
 
-    const SQL = "user_id as id, user_login as username, user_login_register as username_register, user_level as level, user_comment_pref as comment_pref, UNIX_TIMESTAMP(user_date) as date, user_ip as ip, UNIX_TIMESTAMP(user_modification) as modification, user_pass as pass, user_email as email, user_email_register as email_register, user_names as names, user_lang as lang, user_karma as karma, user_avatar as avatar, user_public_info as public_info, user_url as url, user_adcode as adcode, user_adchannel as adchannel, user_phone as phone";
+    const SQL = '
+        `user_id` `id`, `user_login` `username`, `user_login_register` `username_register`,
+        `user_level` `level`, `user_comment_pref` `comment_pref`, UNIX_TIMESTAMP(`user_date`) `date`,
+        `user_ip` `ip`, UNIX_TIMESTAMP(`user_modification`) `modification`, `user_pass` `pass`,
+        `user_email` `email`, `user_email_register` `email_register`, `user_names` `names`,
+        `user_lang` `lang`, `user_karma` `karma`, `user_avatar` `avatar`, `user_public_info` `public_info`,
+        `user_url` `url`, `user_adcode` `adcode`, `user_adchannel` `adchannel`, `user_phone` `phone`
+    ';
 
     public static function get_notification($id, $type)
     {
         global $db;
 
-        $r =  intval($db->get_var("select counter from notifications where user = $id and type = '$type'"));
+        $r = (int)$db->get_var('
+            SELECT `counter`
+            FROM `notifications`
+            WHERE (
+                `user` = "'.(int)$id.'"
+                AND `type` = "'.$db->escape($type).'"
+            );
+        ');
 
-        if ($r < 0) {
-            User::reset_notification($id, $type);
-            return 0;
+        if ($r >= 0) {
+            return $r;
         }
-        return $r;
+
+        User::reset_notification($id, $type);
+
+        return 0;
     }
 
     public static function add_notification($id, $type, $value = 1)
     {
         global $db;
 
-        if (is_null(User::get_notification($id, $type))) {
-            return false;
-        }
+        $id = (int)$id;
+        $value = (int)$value;
+        $type = $db->escape($type);
 
         if ($value < 0) {
             $value = abs($value);
-            return $db->query("update notifications set counter = counter-$value where user=$id and type = '$type' and counter >= $value");
+
+            return $db->query('
+                UPDATE `notifications`
+                SET `counter` = IF(`counter` - '.$value.' < 0, 0, `counter` - '.$value.')
+                WHERE (
+                    `user` = "'.$id.'"
+                    AND `type` = "'.$type.'"
+                    AND `counter` >= "'.$value.'"
+                );
+            ');
         }
 
-        return $db->query("insert into notifications (user, type, counter) values ($id, '$type', $value) on duplicate key update counter=counter+$value");
+        return $db->query('
+            INSERT INTO `notifications`
+            (`user`, `type`, `counter`)
+            VALUES ("'.$id.'", "'.$type.'", "'.$value.'")
+            ON DUPLICATE KEY UPDATE `counter` = `counter` + '.$value.';
+        ');
     }
 
     public static function reset_notification($id, $type, $value = 0)
     {
         global $db;
 
-        return $db->query("replace into notifications (user, type, counter) values ($id, '$type', $value)");
+        $id = (int)$id;
+        $value = (int)$value;
+        $type = $db->escape($type);
+
+        return $db->query('
+            REPLACE INTO `notifications`
+            (`user`, `type`, `counter`)
+            VALUES ("'.$id.'", "'.$type.'", "'.$value.'");
+        ');
     }
 
     public static function get_valid_username($name)
@@ -92,6 +130,18 @@ class User
         }
 
         return substr($name, 0, 24);
+    }
+
+    public static function getById($id)
+    {
+        global $db;
+
+        return $db->get_row('
+            SELECT *
+            FROM `users`
+            WHERE `user_id` = "'.(int)$id.'"
+            LIMIT 1;
+        ');
     }
 
     public static function get_username($id)
@@ -531,6 +581,35 @@ class User
         return ($this->friendship() === 1);
     }
 
+    public function read()
+    {
+        global $db, $current_user;
+
+        $id = $this->id;
+
+        if ($this->id > 0) {
+            $where = "user_id = $id";
+        } elseif (!empty($this->username)) {
+            $where = "user_login='".$db->escape(mb_substr($this->username, 0, 64))."'";
+        } elseif (!empty($this->email)) {
+            $where = "user_email='".$db->escape(mb_substr($this->email, 0, 64))."' and user_level != 'disabled' and user_level != 'autodisabled'";
+        }
+
+        $this->stats = false;
+
+        if (empty($where) || !($result = $db->get_row("SELECT ".User::SQL." FROM users WHERE $where limit 1"))) {
+            return $this->read = false;
+        }
+
+        foreach (get_object_vars($result) as $var => $value) {
+            $this->$var = $value;
+        }
+
+        $this->admin = (($this->level === 'admin') || ($this->level === 'god'));
+
+        return $this->read = true;
+    }
+
     public function store($full_save = true)
     {
         global $db, $current_user, $globals;
@@ -539,11 +618,6 @@ class User
             $this->date = $globals['now'];
         }
 
-    /*
-        if($full_save && empty($this->ip)) {
-            $this->ip=$globals['user_ip'];
-        }
-        */
         $user_login = $db->escape($this->username);
         $user_login_register = $db->escape($this->username_register);
         $user_level = $this->level;
@@ -580,35 +654,6 @@ class User
         }
     }
 
-    public function read()
-    {
-        global $db, $current_user;
-
-        $id = $this->id;
-
-        if ($this->id > 0) {
-            $where = "user_id = $id";
-        } elseif (!empty($this->username)) {
-            $where = "user_login='".$db->escape(mb_substr($this->username, 0, 64))."'";
-        } elseif (!empty($this->email)) {
-            $where = "user_email='".$db->escape(mb_substr($this->email, 0, 64))."' and user_level != 'disabled' and user_level != 'autodisabled'";
-        }
-
-        $this->stats = false;
-
-        if (empty($where) || !($result = $db->get_row("SELECT ".User::SQL." FROM users WHERE $where limit 1"))) {
-            return $this->read = false;
-        }
-
-        foreach (get_object_vars($result) as $var => $value) {
-            $this->$var = $value;
-        }
-
-        $this->admin = (($this->level === 'admin') || ($this->level === 'god'));
-
-        return $this->read = true;
-    }
-
     public function all_stats()
     {
         global $db, $globals, $current_user;
@@ -643,7 +688,7 @@ class User
             )
         ) {
             $obj = unserialize($stats->text);
-        } elseif ($globals['bot'] || $current_user->user_id == 0) {
+        } elseif ($globals['bot'] || !$current_user->user_id) {
             return; // Don't calculate stats por bots
         } else {
             $obj = (object)[
@@ -653,7 +698,7 @@ class User
                 'total_comments' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM comments WHERE comment_user_id = $this->id;"),
                 'total_posts' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM posts WHERE post_user_id = $this->id;"),
                 'total_friends' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM friends WHERE friend_to = $this->id;"),
-//                'total_images' => Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private'),
+                'total_images' => Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private'),
             ];
 
             if ($do_cache) {

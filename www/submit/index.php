@@ -13,7 +13,7 @@ $globals['ads'] = false;
 
 force_authentication();
 
-if (!SitesMgr::can_send()) {
+if (!SitesMgr::can_send() && $current_user->user_level !== 'god') {
     die(header('Location: '.$globals['base_url']));
 }
 
@@ -32,7 +32,7 @@ $validator->setErrorCallback('addFormError');
 $validator->setWarningCallback('addFormWarning');
 
 if (!empty($_REQUEST['id'])) {
-    $link = getLinkByRequestId($link, $_REQUEST);
+    $link = getLinkEditableById($link, $_REQUEST['id']);
 }
 
 $link->is_new = !$link->votes && ($link->status === 'discard');

@@ -37,6 +37,12 @@ try {
     return;
 }
 
+try {
+    require __DIR__.'/link-poll.php';
+} catch (Exception $e) {
+    return addFormError($e->getMessage());
+}
+
 // Check image upload or delete
 if ($_POST['image_delete']) {
     $link->delete_image();

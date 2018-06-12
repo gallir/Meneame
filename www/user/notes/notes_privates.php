@@ -8,14 +8,42 @@ if ($current_user->user_id != $user->id) {
 $globals['extra_js'][] = 'autocomplete/jquery.autocomplete.min.js';
 $globals['extra_js'][] = 'jquery.user_autocomplete.js';
 
-echo '<div class="clearfix mb-20">';
-echo '<a href="javascript:priv_new(0);" class="btn btn-mnm btn-inverted pull-right">+ '._('Nuevo privado').'</a>';
-echo '</div>';
+if (isset($_GET['q'])) {
+    $q = trim(str_replace(['"', "'", '\\', '%'], '', strip_tags($_GET['q'])));
+} else {
+    $q = '';
+}
+
+Haanga::Load('user/notes_private_header.html', [
+    'q' => $q
+]);
+
+$where = '"'.(int)$current_user->user_id.'" IN (`privates`.`user`, `privates`.`to`)';
+
+if ($q) {
+    $q_where = str_replace(' ', '%', $q);
+
+    $where .= ' AND (
+        `texts`.`content` LIKE "%'.$q_where.'%"
+        OR `users`.`user_login` = "'.$q_where.'"
+        OR `users_to`.`user_login` = "'.$q_where.'"
+    )';
+}
 
 $count = $db->get_var('
     SELECT SQL_CACHE COUNT(*)
-    FROM privates
-    WHERE "'.(int)$current_user->user_id.'" IN (privates.user, privates.to);
+    FROM `privates`
+    LEFT JOIN `users` on (
+        `user_id` = `privates`.`user`
+    )
+    LEFT JOIN `users` as `users_to` on (
+        `users_to`.`user_id` = `privates`.`to`
+    )
+    LEFT JOIN `texts` ON (
+        `texts`.`key` = "privates"
+        AND `texts`.`id` = `privates`.`id`
+    )
+    WHERE ('.$where.');
 ');
 
 if ($count === 0) {
@@ -24,8 +52,8 @@ if ($count === 0) {
 
 $privates = $db->get_results('
     SELECT '.PrivateMessage::SQL.'
-    WHERE "'.(int)$current_user->user_id.'" IN (privates.user, privates.to)
-    ORDER BY date DESC
+    WHERE ('.$where.')
+    ORDER BY `date` DESC
     LIMIT '.$offset.', '.$limit.';
 ', 'PrivateMessage');
 
