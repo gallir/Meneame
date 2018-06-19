@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "d78abf0759b9d7ce2abe7695a8adffef",
@@ -333,16 +333,16 @@
         },
         {
             "name": "eusonlito/disposable-email-validator",
-            "version": "0.1.3",
+            "version": "0.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eusonlito/disposable-email-validator.git",
-                "reference": "8d276cebc2f16c269bcd3ec9111319e4882bba6d"
+                "reference": "075d178b41e7fdef0ebaeb0ed39e0148b4bc1532"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eusonlito/disposable-email-validator/zipball/8d276cebc2f16c269bcd3ec9111319e4882bba6d",
-                "reference": "8d276cebc2f16c269bcd3ec9111319e4882bba6d",
+                "url": "https://api.github.com/repos/eusonlito/disposable-email-validator/zipball/075d178b41e7fdef0ebaeb0ed39e0148b4bc1532",
+                "reference": "075d178b41e7fdef0ebaeb0ed39e0148b4bc1532",
                 "shasum": ""
             },
             "require": {
@@ -379,7 +379,7 @@
                 "spam",
                 "validate"
             ],
-            "time": "2017-11-07T19:17:32+00:00"
+            "time": "2018-05-17T19:01:08+00:00"
         },
         {
             "name": "facebook/graph-sdk",
@@ -704,16 +704,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.10",
+            "version": "v3.3.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46"
+                "reference": "af615970e265543a26ee712c958404eb9b7ac93d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46",
-                "reference": "8c7bf1e7d5d6b05a690b715729cb4cd0c0a99c46",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/af615970e265543a26ee712c958404eb9b7ac93d",
+                "reference": "af615970e265543a26ee712c958404eb9b7ac93d",
                 "shasum": ""
             },
             "require": {
@@ -755,7 +755,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-10-05T14:43:42+00:00"
+            "time": "2018-01-20T15:04:53+00:00"
         }
     ],
     "packages-dev": [],

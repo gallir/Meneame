@@ -688,7 +688,7 @@ class User
             )
         ) {
             $obj = unserialize($stats->text);
-        } elseif ($globals['bot'] || $current_user->user_id == 0) {
+        } elseif ($globals['bot'] || !$current_user->user_id) {
             return; // Don't calculate stats por bots
         } else {
             $obj = (object)[
@@ -698,7 +698,7 @@ class User
                 'total_comments' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM comments WHERE comment_user_id = $this->id;"),
                 'total_posts' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM posts WHERE post_user_id = $this->id;"),
                 'total_friends' => (int) $db->get_var("SELECT SQL_CACHE COUNT(*) FROM friends WHERE friend_to = $this->id;"),
-//                'total_images' => Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private'),
+                'total_images' => Upload::user_uploads($this->id) - Upload::user_uploads($this->id, false, 'private'),
             ];
 
             if ($do_cache) {

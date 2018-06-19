@@ -15,10 +15,9 @@ function getStep()
     return in_array($step, array('1', '2', '3')) ? $step : '1';
 }
 
-function getLinkByRequestId($link, $from)
+function getLinkEditableById($link, $id)
 {
-    $link->id = (int)(isset($from['id']) ? $from['id'] : 0);
-    $link->read();
+    $link->id = (int)$id;
 
     if (empty($link->id) || !$link->read() || !$link->is_editable()) {
         returnToStep(1);

@@ -88,9 +88,10 @@
             <a href="{{ self.media_url }}" class="fancybox thumbnail-wrapper" title="{% trans _('miniatura') %}"><img data-2x='s:thumb:thumb_2x:' data-src='{{ self.thumb_uri }}' src="{{ globals.base_static }}img/g.gif" alt="{{ self.title }}" class='thumbnail lazy'/></a>
             {% endif %}
 
-            {% if tag== 'promoted_article' %}
+            {% if tag == 'promoted_article' %}
             <div class="tab-promoted-article">ARTÍCULO</div>
             {%endif%}
+
             <div class="center-content{% if not self.thumb_uri %} no-padding{% endif %}">
                 {% if self.url %}
 

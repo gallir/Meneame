@@ -40,8 +40,8 @@ if ($ids) {
     echo "Deleting $ids_str\n";
 
     $db->query('
-        DELETE FROM links
-        WHERE link_id IN ('.$ids.');
+        DELETE FROM `links`
+        WHERE `link_id` IN ('.$ids_str.');
     ');
 }
 

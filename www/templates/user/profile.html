@@ -69,6 +69,13 @@
         <td>{% exec get_date_time user.date %}</td>
     </tr>
 
+    {% if user.total_images %}
+    <tr>
+        <th>{% trans _('Imágenes') %}</th>
+        <td><a href="#" onclick="fancybox_gallery('all', {{ user.id }})">{{ user.total_images }}</a></td>
+    </tr>
+    {% endif %}
+
     {% if current_user.user_id == user.id OR current_user.user_level == 'god' %}
     <tr>
         <th>{% trans _('Email') %}</th>

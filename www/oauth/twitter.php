@@ -17,10 +17,10 @@
 
 // It's licensed under the AFFERO GENERAL PUBLIC LICENSE unless stated otherwise.
 // You can get copies of the licenses here:
-// 		http://www.affero.org/oagpl.html
+//         http://www.affero.org/oagpl.html
 // AFFERO GENERAL PUBLIC LICENSE is also included in the file called "COPYING".
 
-require_once('base.php');
+require_once 'base.php';
 
 class TwitterOAuth extends OAuthBase
 {
@@ -29,39 +29,52 @@ class TwitterOAuth extends OAuthBase
         global $globals;
 
         $server = 'api.twitter.com';
+
         $this->request_token_url = "https://$server/oauth/request_token";
         $this->access_token_url = "https://$server/oauth/access_token";
-        $this->authorize_url =  "https://$server/oauth/authenticate";
+        $this->authorize_url = "https://$server/oauth/authenticate";
         $this->credentials_url = "https://$server/1.1/account/verify_credentials.json";
 
-        if (! $globals['oauth']['twitter']['consumer_key'] || ! $globals['oauth']['twitter']['consumer_secret']) {
+        if (!$globals['oauth']['twitter']['consumer_key'] || !$globals['oauth']['twitter']['consumer_secret']) {
             $oauth = null;
         }
+
         $this->service = 'twitter';
         $this->oauth = new OAuth($globals['oauth']['twitter']['consumer_key'], $globals['oauth']['twitter']['consumer_secret'], OAUTH_SIG_METHOD_HMACSHA1, OAUTH_AUTH_TYPE_URI);
+
         parent::__construct();
     }
 
     public function authRequest()
     {
-        global $globals;
         try {
-            if (($request_token_info =
-                    $this->oauth->getRequestToken($this->request_token_url,
-                        $globals['scheme'].'//'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'))) {
-                // if [oauth_callback_confirmed] => true then is oauth 1.0a
-                setcookie('oauth_token', $request_token_info['oauth_token'], 0);
-                setcookie('oauth_token_secret', $request_token_info['oauth_token_secret'], 0);
-                $this->token_secret = $request_token_info['oauth_token_secret'];
-                $this->token = $request_token_info['oauth_token'];
-                header("Location: ".$this->authorize_url."?oauth_token=$this->token");
-                exit;
-            } else {
-                do_error(_('error obteniendo tokens'), false, false);
-            }
+            $this->redirectToAuthorizeUrl();
         } catch (Exception $e) {
-            do_error(_('error de conexión a') . " $this->service (authRequest)", false, false);
+            do_error(_('error de conexión a').' '.$this->service.' (authRequest)', false, false);
         }
+    }
+
+    protected function redirectToAuthorizeUrl()
+    {
+        global $globals;
+
+        $token = $this->oauth->getRequestToken(
+            $this->request_token_url,
+            $globals['scheme'].'//'.get_server_name().$globals['base_url'].'oauth/signin.php?service=twitter'
+        );
+
+        if (empty($token)) {
+            do_error(_('error obteniendo tokens'), false, false);
+        }
+
+        // if [oauth_callback_confirmed] => true then is oauth 1.0a
+        setcookie('oauth_token', $token['oauth_token'], 0);
+        setcookie('oauth_token_secret', $token['oauth_token_secret'], 0);
+
+        $this->token_secret = $token['oauth_token_secret'];
+        $this->token = $token['oauth_token'];
+
+        die(header('Location: '.$this->authorize_url.'?oauth_token='.$this->token));
     }
 
     public function authorize()
@@ -76,7 +89,7 @@ class TwitterOAuth extends OAuthBase
             try {
                 $access_token_info = $this->oauth->getAccessToken($this->access_token_url);
             } catch (Exception $e) {
-                do_error(_('error de conexión a') . " $this->service  (authorize1)", false, false);
+                do_error(_('error de conexión a')." $this->service  (authorize1)", false, false);
             }
         } else {
             do_error(_('acceso denegado'), false, false);
@@ -91,14 +104,14 @@ class TwitterOAuth extends OAuthBase
             try {
                 $data = $this->oauth->fetch($this->credentials_url);
             } catch (Exception $e) {
-                do_error(_('error de conexión a') . " $this->service (authorize2)", false, false);
+                do_error(_('error de conexión a')." $this->service (authorize2)", false, false);
             }
 
             if ($data) {
                 $response_info = $this->oauth->getLastResponse();
                 $response = json_decode($response_info);
                 if ($access_token_info['screen_name'] != $response->screen_name) {
-                    do_error(_('datos incorrectos') . " $this->service", false, false);
+                    do_error(_('datos incorrectos')." $this->service", false, false);
                 }
                 $this->url = $response->url;
                 $this->names = $response->name;
