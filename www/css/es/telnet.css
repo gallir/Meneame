@@ -8,6 +8,7 @@
 
 body {
     color: #167805;
+    background: #000;
     margin: 0;
     padding: 0;
     background: #000;
@@ -106,13 +107,6 @@ ul#userinfo a.notifications span {
     text-align: center;
     overflow: hidden;
 }
-
-
-/*
-.sneaker-item:hover {
-    background-color: #FFE2C5;
-}
-*/
 
 .sneaker-type img {
     border: none;
