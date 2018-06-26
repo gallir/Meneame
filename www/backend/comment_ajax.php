@@ -171,13 +171,8 @@ function check_and_save($comment, $link)
             return _('comentario no insertado, enlace a sitio deshabilitado (y usuario reciente)');
         }
 
-        if ($error = User::checkReferencesToIgnores($comment->content)) {
-            return $error;
-        }
-
-        if ($error = User::checkReferencesToLinkCommentsIgnores($link, $comment->content)) {
-            return $error;
-        }
+        $comment->content = User::removeReferencesToIgnores($comment->content);
+        $comment->content = User::removeReferencesToLinkCommentsIgnores($link, $comment->content);
 
         if (mb_strlen($comment->content) > 0) {
             $comment->store();

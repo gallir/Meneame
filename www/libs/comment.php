@@ -721,13 +721,8 @@ class Comment extends LCPBase
             return _('comentario duplicado');
         }
 
-        if ($error = User::checkReferencesToIgnores($comment->content)) {
-            return $error;
-        }
-
-        if ($error = User::checkReferencesToLinkCommentsIgnores($link, $comment->content)) {
-            return $error;
-        }
+        $comment->content = User::removeReferencesToIgnores($comment->content);
+        $comment->content = User::removeReferencesToLinkCommentsIgnores($link, $comment->content);
 
         if ($karma_penalty > 0) {
             $db->rollback();

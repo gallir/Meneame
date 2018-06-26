@@ -1122,9 +1122,20 @@ class User
             );
         ';
 
-        if ($ignored = $db->get_col($query)) {
-            return sprintf(_('No es posible hacer referencias a usuarios que te tienen ignorado (%s).'), implode(', ', $ignored));
+        return $db->get_col($query);
+    }
+
+    public static function removeReferencesToIgnores($message)
+    {
+        if (!($ignores = static::checkReferencesToIgnores($message))) {
+            return $message;
         }
+
+        foreach ($ignores as $user) {
+            $message = preg_replace('/@'.preg_quote($user, '/').'(,[0-9]+)?/', '', $message);
+        }
+
+        return $message;
     }
 
     public static function checkReferencesToLinkCommentsIgnores($link, $message)
@@ -1142,7 +1153,7 @@ class User
         }
 
         $query = '
-            SELECT SQL_CACHE `users`.`user_login`
+            SELECT SQL_CACHE `comments`.`comment_order`
             FROM `comments`, `friends`, `users`
             WHERE (
                 `comments`.`comment_link_id` = "'.(int)$link->id.'"
@@ -1155,8 +1166,19 @@ class User
             );
         ';
 
-        if ($ignored = $db->get_col($query)) {
-            return sprintf(_('No es posible hacer referencias a usuarios que te tienen ignorado (%s).'), implode(', ', $ignored));
+        return $db->get_col($query);
+    }
+
+    public static function removeReferencesToLinkCommentsIgnores($link, $message)
+    {
+        if (!($ignores = static::checkReferencesToLinkCommentsIgnores($link, $message))) {
+            return $message;
         }
+
+        foreach ($ignores as $order) {
+            $message = preg_replace('/#'.$order.'([^0-9]|$)/', '$1', $message);
+        }
+
+        return $message;
     }
 }

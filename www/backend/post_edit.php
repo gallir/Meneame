@@ -88,9 +88,7 @@ function save_post($post_id)
             $poll->read('post_id', $post->id);
             $poll->post_id = $post->id;
 
-            if ($error = User::checkReferencesToIgnores($post->content)) {
-                die('ERROR: '.$error);
-            }
+            $post->content = User::removeReferencesToIgnores($post->content);
 
             $db->transaction();
 
@@ -139,9 +137,7 @@ function save_post($post_id)
             die('ERROR: '._('comentario grabado previamente'));
         }
 
-        if ($error = User::checkReferencesToIgnores($post->content)) {
-            die('ERROR: '.$error);
-        }
+        $post->content = User::removeReferencesToIgnores($post->content);
 
         $poll = new Poll;
 
