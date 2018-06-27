@@ -22,6 +22,7 @@ if (PHP_SAPI !== 'cli' && !empty($globals['force_ssl']) && !$globals['https'] &&
 
 $globals['extra_js'] = array();
 $globals['extra_css'] = array();
+$globals['extra_css_after'] = array();
 
 $globals['extra_vendor_js'] = array();
 $globals['extra_vendor_css'] = array();

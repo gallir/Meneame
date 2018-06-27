@@ -90,6 +90,10 @@
         <link href="{{ globals.base_url_general }}v_{{ globals.v }}/css/{{ globals.css_main }}" rel="stylesheet" type="text/css" media="all" />
         {% endif %}
 
+        {% for css in globals.extra_css_after %}
+        <link href="{{ globals.base_static }}css/{{ css }}" rel="stylesheet" type="text/css" media="all" />
+        {% endfor %}
+
         {# <meta name="mobile-web-app-capable" content="yes"> #}
 
         {% if globals.favicon %}
